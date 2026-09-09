@@ -665,6 +665,26 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="saveInfoModal">
+        <div class="modal-box">
+            <h3>Save Schedule</h3>
+            <label for="authorInput" style="font-size: 12px; color: var(--text-muted);">Author:</label>
+            <input type="text" id="authorInput" placeholder="Author name">
+            <label for="wpsInput" style="font-size: 12px; color: var(--text-muted);">WPS Number:</label>
+            <input type="text" id="wpsInput" placeholder="WPS number">
+            <label for="noteInput" style="font-size: 12px; color: var(--text-muted);">Note (max 500 characters):</label>
+            <textarea id="noteInput" maxlength="500" rows="4"
+                style="width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; padding: 10px; font-size: 14px; margin: 8px 0 4px 0; font-family: inherit; resize: vertical;"></textarea>
+            <div id="noteCounter"
+                style="font-size: 11px; color: var(--text-muted); text-align: right; margin-bottom: 8px;">0 / 500</div>
+            <div class="modal-actions">
+                <button id="saveInfoCancelBtn" class="btn-secondary"
+                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                <button id="saveInfoConfirmBtn" class="btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         /* STATE */
         let loadedFiles = [];
@@ -1285,6 +1305,17 @@
             const content = document.getElementById("content");
             const list = document.createElement("div"); list.className = "panel";
             const header = document.createElement("div"); header.className = "panel-header"; header.textContent = "Segments";
+
+            // Add "Add Segmente" button
+            const addBtn = document.createElement("button");
+            addBtn.textContent = "Add Segmente";
+            addBtn.className = "btn-primary";
+            addBtn.style.marginLeft = "10px";
+            addBtn.style.padding = "4px 12px";
+            addBtn.style.fontSize = "12px";
+            addBtn.onclick = () => addSegment(file);
+            header.appendChild(addBtn);
+
             list.appendChild(header);
             const body = document.createElement("div"); body.className = "panel-content open";
 
@@ -1294,6 +1325,32 @@
             });
             list.appendChild(body); content.appendChild(list);
             if (file.sections.segments.length > 0) renderSegment(file.sections.segments[0]);
+        }
+
+        function addSegment(file) {
+            const segments = file.sections.segments;
+            if (!segments.length) return;
+
+            // Clone the last segment as a template for the new one
+            const lastSeg = segments[segments.length - 1];
+            const newSeg = lastSeg.cloneNode(true);
+
+            // Set the new segment index
+            const newIndex = segments.length;
+            newSeg.setAttribute("index", String(newIndex));
+
+            // Append to the root sched element
+            const root = file.xml.querySelector("sched") || file.xml.documentElement;
+            if (root) {
+                root.appendChild(newSeg);
+            }
+
+            // Update the sections reference
+            file.sections.segments = [...file.xml.querySelectorAll("segment")];
+
+            // Refresh the segment list
+            renderSegmentList(file);
+            document.getElementById("status").textContent = `Segment ${newIndex} added.`;
         }
 
         function renderSegment(seg) {
@@ -1414,12 +1471,88 @@
             });
         }
 
-        document.getElementById("saveBtn").onclick = () => {
-            if (activeFile < 0 || activeFile >= loadedFiles.length) return;
-            exportXmlFile(loadedFiles[activeFile].name, loadedFiles[activeFile].xml);
+        /* SAVE INFO MODAL */
+        let pendingSaveAction = null;
+
+        function updateNoteWithSaveInfo(file, author, wps, note) {
+            const desc = file.sections.description;
+            if (!desc) return;
+            let noteNode = desc.querySelector("note");
+            if (!noteNode) {
+                noteNode = desc.ownerDocument.createElement("note");
+                desc.appendChild(noteNode);
+            }
+
+            const fileChanges = changeLog.filter(entry => entry.fileName === file.name);
+
+            let noteText = "";
+            if (author) noteText += `Author: ${author}\n`;
+            if (wps) noteText += `WPS: ${wps}\n`;
+
+            if (fileChanges.length) {
+                noteText += "Changes:\n";
+                fileChanges.forEach(entry => {
+                    noteText += `- ${entry.section}${entry.segmentIndex ? " seg " + entry.segmentIndex : ""} ${entry.key}: ${entry.oldValue || "-"} -> ${entry.newValue || "-"}\n`;
+                });
+            }
+
+            if (note) noteText += `Note: ${note}\n`;
+
+            // Limit to 500 characters
+            noteText = noteText.slice(0, 500);
+            noteNode.textContent = noteText;
+        }
+
+        function showSaveInfoModal(callback) {
+            pendingSaveAction = callback;
+            document.getElementById("authorInput").value = "";
+            document.getElementById("wpsInput").value = "";
+            document.getElementById("noteInput").value = "";
+            document.getElementById("noteCounter").textContent = "0 / 500";
+            document.getElementById("saveInfoModal").classList.add("show");
+            document.getElementById("authorInput").focus();
+        }
+
+        document.getElementById("saveInfoCancelBtn").onclick = () => {
+            document.getElementById("saveInfoModal").classList.remove("show");
+            pendingSaveAction = null;
         };
 
-        document.getElementById("batchSaveBtn").onclick = () => saveSelectedFiles();
+        document.getElementById("saveInfoConfirmBtn").onclick = () => {
+            const author = document.getElementById("authorInput").value.trim();
+            const wps = document.getElementById("wpsInput").value.trim();
+            const note = document.getElementById("noteInput").value.trim();
+
+            document.getElementById("saveInfoModal").classList.remove("show");
+
+            if (pendingSaveAction) {
+                pendingSaveAction(author, wps, note);
+                pendingSaveAction = null;
+            }
+        };
+
+        document.getElementById("noteInput").oninput = () => {
+            const len = document.getElementById("noteInput").value.length;
+            document.getElementById("noteCounter").textContent = `${len} / 500`;
+        };
+
+        document.getElementById("saveBtn").onclick = () => {
+            if (activeFile < 0 || activeFile >= loadedFiles.length) return;
+            showSaveInfoModal((author, wps, note) => {
+                const file = loadedFiles[activeFile];
+                updateNoteWithSaveInfo(file, author, wps, note);
+                exportXmlFile(file.name, file.xml);
+            });
+        };
+
+        document.getElementById("batchSaveBtn").onclick = () => {
+            showSaveInfoModal((author, wps, note) => {
+                const filesToSave = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
+                const targetFiles = filesToSave.length ? filesToSave : loadedFiles;
+                targetFiles.forEach(file => updateNoteWithSaveInfo(file, author, wps, note));
+                saveSelectedFiles();
+            });
+        };
 
         const saveAsBtn = document.getElementById("saveAsBtn"); const saveAsModal = document.getElementById("saveAsModal");
         const customFileNameInput = document.getElementById("customFileName"); const modalCancelBtn = document.getElementById("modalCancelBtn");
@@ -1436,7 +1569,11 @@
             let name = customFileNameInput.value.trim(); if (!name) return;
             if (!name.toLowerCase().endsWith(".xml")) name += ".xml";
             if (activeFile >= 0 && loadedFiles[activeFile]) {
-                exportXmlFile(name, loadedFiles[activeFile].xml);
+                showSaveInfoModal((author, wps, note) => {
+                    const file = loadedFiles[activeFile];
+                    updateNoteWithSaveInfo(file, author, wps, note);
+                    exportXmlFile(name, file.xml);
+                });
             }
             saveAsModal.classList.remove("show");
         };
