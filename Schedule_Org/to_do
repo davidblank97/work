@@ -1,0 +1,5 @@
+Schedule layout muss für das neue Software Update angepasst werden 
+funktionen hinzufügen:
+beispiele /workspaces/work/Muster_schedules
+layout muss von der neusten version übernommen werden <config_version> . nicht die values. 
+ändere "jog_speed_edit_mode" immer value="1"

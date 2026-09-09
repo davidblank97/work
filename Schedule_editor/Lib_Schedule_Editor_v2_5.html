@@ -1,0 +1,2871 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Liburdi Schedule Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        /* --- MODERN ENTERPRISE DARK THEME --- */
+        :root {
+            --bg-main: #141416;
+            --bg-sidebar: #1b1b1f;
+            --bg-panel: #202024;
+            --bg-input: #18181c;
+            --border-color: #2d2d34;
+            --text-main: #f3f3f5;
+            --text-muted: #8e8e93;
+            --accent: #ff9800;
+            --accent-hover: #e68900;
+            --success: #4caf50;
+            --danger: #ff5252;
+            --danger-hover: #ff1744;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-main);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* SIDEBAR */
+        #sidebar {
+            width: 300px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        #sidebar h2 {
+            margin: 0;
+            padding: 20px 18px 8px 18px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        #fileList,
+        #sidebarItems {
+            padding: 0 8px;
+        }
+
+        .sidebar-item {
+            padding: 10px 14px;
+            margin: 2px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            color: #c5c5c9;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+        }
+
+        .sidebar-item.active {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .head-selector {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .head-selector-label {
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .head-option-btn {
+            width: 100%;
+            margin: 3px 0;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 152, 0, 0.4);
+            background: transparent;
+            color: var(--accent);
+            text-align: left;
+        }
+
+        .head-option-btn.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        /* Tools Section Separation */
+        .tools-section {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .delete-file-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 6px;
+            line-height: 1;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .delete-file-btn:hover {
+            background: rgba(255, 82, 82, 0.15);
+            color: var(--danger);
+        }
+
+        /* MAIN LAYOUT */
+        #main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-main);
+        }
+
+        #header {
+            padding: 14px 24px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        #header strong {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* FORM ELEMENTS */
+        input[type="file"] {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background: #2a2a30;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-main);
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        input[type="file"]::-webkit-file-upload-button:hover {
+            background: #35353c;
+        }
+
+        #searchBox {
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: #fff;
+            min-width: 220px;
+            max-width: 260px;
+            font-size: 13px;
+            transition: border-color 0.2s;
+            margin-left: auto;
+        }
+
+        #searchBox:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* BUTTONS */
+        button,
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        button:hover:not(:disabled),
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        button:disabled {
+            background: #2a2a30;
+            color: #555;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent !important;
+            color: var(--accent) !important;
+            border: 1px solid rgba(255, 152, 0, 0.4) !important;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 152, 0, 0.08) !important;
+            border-color: var(--accent) !important;
+        }
+
+        #resetChangesBtn {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        #resetChangesBtn:hover {
+            background: rgba(255, 82, 82, 0.08);
+            border-color: var(--danger);
+        }
+
+        /* CONTENT CONTAINER */
+        #content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        /* EDITABLE TITLE HEADER */
+        .file-title-container {
+            margin-bottom: 24px;
+            background: var(--bg-panel);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .file-title-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .file-title-input {
+            background: transparent;
+            border: 1px dashed #444;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        .file-title-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            border-style: solid;
+            background: var(--bg-input);
+        }
+
+        /* PANELS & TABLES */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 14px 20px;
+            background: #26262b;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 20px;
+            background: #1c1c21;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 10px 20px;
+            border-bottom: 1px solid #26262b;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        /* INPUTS IN TABLES */
+        .input-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 320px;
+            /* Limits width to look clean on wide screens */
+        }
+
+        td input {
+            flex: 1;
+            box-sizing: border-box;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--accent);
+            padding: 6px 10px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 13px;
+            transition: all 0.15s;
+        }
+
+        td input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.15);
+        }
+
+        td input.zero {
+            color: #55555c !important;
+        }
+
+        /* TOGGLE BUTTONS */
+        .unit-toggle-btn {
+            background: #2a2a30;
+            color: #a0a0a5;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 70px;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+
+        .unit-toggle-btn:hover {
+            background: #35353c;
+            color: #fff;
+        }
+
+        .unit-toggle-btn.mode-in {
+            color: #2196f3;
+            background: rgba(33, 150, 243, 0.08);
+            border-color: rgba(33, 150, 243, 0.3);
+        }
+
+        .unit-toggle-btn.mode-mm {
+            color: #4caf50;
+            background: rgba(76, 175, 80, 0.08);
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .unit-toggle-btn.mode-cmmin {
+            color: #00bcd4;
+            background: rgba(0, 188, 212, 0.08);
+            border-color: rgba(0, 188, 212, 0.3);
+        }
+
+        .unit-toggle-btn.mode-static {
+            color: #b388ff;
+            background: rgba(179, 136, 255, 0.08);
+            border-color: rgba(179, 136, 255, 0.3);
+        }
+
+        /* PARAMETER STATES */
+        .important-name {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .important-cell {
+            background: rgba(255, 152, 0, 0.02) !important;
+        }
+
+        .important-cell input {
+            border-color: rgba(255, 152, 0, 0.25);
+        }
+
+        .changed {
+            background: rgba(76, 175, 80, 0.06) !important;
+            border-color: var(--success) !important;
+            color: #fff !important;
+        }
+
+        /* BADGES */
+        .badge {
+            background: #2a2a30;
+            color: var(--accent);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* CONVERTER TOOL */
+        .converter-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .converter-field {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .converter-field label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .converter-field input {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        /* MODAL DIALOG */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .modal-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-box h3 {
+            margin-top: 0;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-box input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            padding: 10px;
+            font-size: 14px;
+            margin: 16px 0;
+        }
+
+        .modal-box input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .return-btn,
+        .batch-save-btn {
+            padding: 7px 14px;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border: 1px solid rgba(255, 152, 0, 0.45);
+            background: transparent;
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .return-btn:disabled,
+        .batch-save-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .diff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+        }
+
+        .diff-table th,
+        .diff-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 12px;
+        }
+
+        .diff-table th {
+            background: rgba(255, 152, 0, 0.08);
+            color: #fff;
+        }
+
+        .diff-status {
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        .diff-status.same {
+            color: var(--success);
+        }
+
+        /* FOOTER */
+        .footer {
+            padding: 12px 24px;
+            background: var(--bg-sidebar);
+            border-top: 1px solid var(--border-color);
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer b {
+            color: #fff;
+        }
+
+        /* UI refresh */
+        :root {
+            --bg-main: #f4f1eb;
+            --bg-sidebar: #20333b;
+            --bg-panel: #ffffff;
+            --bg-input: #fbfcfc;
+            --border-color: #d9e0df;
+            --text-main: #213038;
+            --text-muted: #718087;
+            --accent: #e8753a;
+            --accent-hover: #c95d27;
+            --success: #248a78;
+            --danger: #c84f54;
+            --danger-hover: #a93d43;
+            --teal: #2b8f8c;
+            --shadow-soft: 0 10px 30px rgba(31, 48, 56, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text-main);
+            font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+            letter-spacing: 0;
+        }
+
+        #sidebar {
+            width: 278px;
+            flex: 0 0 278px;
+            background: var(--bg-sidebar);
+            border-right: 0;
+            box-shadow: 8px 0 24px rgba(31, 48, 56, 0.1);
+        }
+
+        #sidebar h2 {
+            padding: 22px 20px 9px;
+            color: #a9c1c2;
+            font-size: 10px;
+            letter-spacing: 1.8px;
+        }
+
+        #fileList,
+        #sidebarItems {
+            padding: 0 12px;
+        }
+
+        .sidebar-item {
+            min-height: 40px;
+            padding: 10px 12px;
+            margin: 3px 0;
+            border-radius: 7px;
+            color: #d5e0df;
+            font-size: 13px;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .sidebar-item.active {
+            background: rgba(232, 117, 58, 0.18);
+            color: #ffb58e;
+            box-shadow: inset 3px 0 0 var(--accent);
+        }
+
+        .tools-section {
+            border-top-color: rgba(220, 239, 236, 0.15);
+            padding-bottom: 18px;
+        }
+
+        #main {
+            min-width: 0;
+            background: var(--bg-main);
+        }
+
+        #header {
+            padding: 16px 26px;
+            background: rgba(255, 255, 255, 0.88);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 14px rgba(31, 48, 56, 0.05);
+        }
+
+        #header strong {
+            color: var(--text-main);
+            font-size: 17px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-actions {
+            flex: 1;
+            min-width: 0;
+            gap: 7px;
+        }
+
+        input[type="file"] {
+            min-width: 190px;
+            color: var(--text-muted);
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background: #e9efed;
+            border-color: #ccd8d5;
+            color: var(--text-main);
+            border-radius: 6px;
+            padding: 8px 11px;
+        }
+
+        #searchBox {
+            min-width: 180px;
+            max-width: 280px;
+            padding: 9px 12px;
+            margin-left: auto;
+            background: #fff;
+            border-color: var(--border-color);
+            color: var(--text-main);
+            border-radius: 7px;
+        }
+
+        button,
+        .btn-primary {
+            min-height: 36px;
+            padding: 8px 13px;
+            border-radius: 7px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 12px;
+            letter-spacing: 0.1px;
+            box-shadow: 0 2px 5px rgba(200, 93, 39, 0.12);
+        }
+
+        button:hover:not(:disabled),
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        button:disabled {
+            background: #dce3e1;
+            color: #98a6a7;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: #fff !important;
+            color: #b9572c !important;
+            border-color: #e5b29a !important;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #fff4ee !important;
+            border-color: var(--accent) !important;
+        }
+
+        #content {
+            padding: 28px clamp(18px, 4vw, 48px);
+            background: linear-gradient(135deg, #f4f1eb 0%, #eef3f1 100%);
+        }
+
+        .file-title-container,
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .file-title-container {
+            margin-bottom: 22px;
+            padding: 20px;
+        }
+
+        .file-title-label,
+        .head-selector-label {
+            color: var(--text-muted);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+        }
+
+        .file-title-input {
+            border: 1px solid transparent;
+            color: var(--text-main);
+            font-size: 24px;
+            padding: 7px 9px;
+            border-radius: 7px;
+        }
+
+        .file-title-input:hover {
+            border-color: var(--border-color);
+        }
+
+        .file-title-input:focus {
+            background: #f7faf9;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(43, 143, 140, 0.12);
+        }
+
+        .head-selector {
+            border-top-color: var(--border-color);
+        }
+
+        .head-option-btn {
+            width: auto;
+            min-width: 148px;
+            margin: 3px 5px 0 0;
+            padding: 9px 12px;
+            background: #fff !important;
+            color: #4d6669 !important;
+            border: 1px solid #c9d8d5 !important;
+            box-shadow: none;
+        }
+
+        .head-option-btn:hover:not(:disabled) {
+            background: #eef7f5 !important;
+            border-color: var(--teal) !important;
+            color: #216f6e !important;
+        }
+
+        .head-option-btn.selected {
+            background: #e3f2ef !important;
+            border-color: var(--teal) !important;
+            color: #1e6e6c !important;
+            box-shadow: inset 0 0 0 1px var(--teal);
+        }
+
+        .panel {
+            margin-bottom: 18px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 15px 20px;
+            background: #f8faf9;
+            border-bottom-color: var(--border-color);
+            color: var(--text-main);
+            font-size: 13px;
+            letter-spacing: 0.2px;
+        }
+
+        .panel-content {
+            background: #fff;
+        }
+
+        table {
+            color: var(--text-main);
+        }
+
+        th {
+            padding: 11px 20px;
+            background: #f1f5f3;
+            color: var(--text-muted);
+            border-bottom-color: var(--border-color);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 10px 20px;
+            border-bottom-color: #e9efed;
+        }
+
+        tr:hover {
+            background: #f8fbfa;
+        }
+
+        td input,
+        .converter-field input,
+        .modal-box input[type="text"],
+        .modal-box textarea {
+            background: #fbfcfc;
+            border-color: #ccd9d6;
+            color: #2b7e7a;
+            border-radius: 7px;
+        }
+
+        .modal-box textarea {
+            color: var(--text-main) !important;
+        }
+
+        td input:focus,
+        .converter-field input:focus,
+        .modal-box input[type="text"]:focus,
+        .modal-box textarea:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(43, 143, 140, 0.12);
+        }
+
+        td input.zero {
+            color: #9aa8a9 !important;
+        }
+
+        .unit-toggle-btn {
+            background: #eef3f1;
+            color: #627577;
+            border-color: #cbd8d5;
+            border-radius: 7px;
+        }
+
+        .unit-toggle-btn:hover {
+            background: #e1ece9;
+            color: var(--text-main);
+        }
+
+        .important-name {
+            color: #bd5b31;
+        }
+
+        .important-cell {
+            background: #fff8f3 !important;
+        }
+
+        .changed {
+            background: #e9f6f1 !important;
+            border-color: var(--success) !important;
+            color: #176d62 !important;
+        }
+
+        .badge {
+            background: #fff4ee;
+            color: #b9572c;
+            border-color: #e5b29a;
+            border-radius: 7px;
+            padding: 7px 9px;
+            font-size: 11px;
+        }
+
+        .modal-overlay {
+            background: rgba(30, 48, 55, 0.42);
+            backdrop-filter: blur(7px);
+        }
+
+        .modal-box {
+            width: min(440px, calc(100vw - 32px));
+            padding: 25px;
+            background: #fff;
+            border-color: var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 24px 70px rgba(31, 48, 56, 0.2);
+        }
+
+        .modal-box h3 {
+            color: var(--text-main);
+            font-size: 19px;
+        }
+
+        .modal-actions {
+            gap: 8px;
+        }
+
+        .return-btn,
+        .batch-save-btn {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            padding: 7px;
+            border-color: #e5b29a;
+            background: #fff;
+            color: #b9572c;
+            box-shadow: none;
+        }
+
+        .diff-table th {
+            background: #e3f2ef;
+            color: #216f6e;
+        }
+
+        .footer {
+            padding: 10px 26px;
+            background: #fff;
+            border-top-color: var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .footer b {
+            color: var(--text-main);
+        }
+
+        @media (max-width: 980px) {
+            #sidebar {
+                width: 236px;
+                flex-basis: 236px;
+            }
+
+            #header {
+                padding: 14px 18px;
+            }
+
+            #header strong {
+                width: 100%;
+            }
+
+            #searchBox {
+                margin-left: 0;
+                flex: 1 1 180px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            body {
+                display: block;
+                height: auto;
+                min-height: 100vh;
+                overflow: auto;
+            }
+
+            #sidebar {
+                width: 100%;
+                max-height: none;
+                display: block;
+                box-shadow: none;
+            }
+
+            #sidebar h2 {
+                padding: 14px 16px 7px;
+            }
+
+            #fileList,
+            #sidebarItems {
+                padding: 0 10px;
+            }
+
+            .tools-section {
+                margin-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #main {
+                min-height: 70vh;
+            }
+
+            #header {
+                gap: 8px;
+            }
+
+            .header-actions {
+                flex: none;
+                width: 100%;
+            }
+
+            .header-actions>* {
+                flex: 1 1 auto;
+            }
+
+            input[type="file"],
+            #searchBox {
+                min-width: 100%;
+                max-width: none;
+            }
+
+            #content {
+                padding: 18px 12px;
+            }
+
+            .file-title-container {
+                padding: 15px;
+            }
+
+            .file-title-input {
+                font-size: 19px;
+            }
+
+            .panel-content {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 560px;
+            }
+
+            .converter-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .footer {
+                padding: 10px 14px;
+                gap: 8px;
+                flex-direction: column;
+            }
+        }
+
+        /* Dark orange workspace */
+        :root {
+            --bg-main: #171513;
+            --bg-sidebar: #211d1a;
+            --bg-panel: #24201d;
+            --bg-input: #191715;
+            --border-color: #3a312b;
+            --text-main: #f4eee8;
+            --text-muted: #a79a90;
+            --accent: #f28a3d;
+            --accent-hover: #ff9d4f;
+            --success: #67c6a7;
+            --danger: #f07878;
+            --danger-hover: #ff8b8b;
+            --teal: #64b8b0;
+            --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.24);
+        }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text-main);
+            color-scheme: dark;
+        }
+
+        #sidebar {
+            background: linear-gradient(180deg, #28211d 0%, #1c1917 100%);
+            box-shadow: 8px 0 26px rgba(0, 0, 0, 0.28);
+        }
+
+        #sidebar h2 {
+            color: #bca99c;
+        }
+
+        .sidebar-item {
+            color: #d6cbc3;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(242, 138, 61, 0.09);
+            color: #fff4ec;
+        }
+
+        .sidebar-item.active {
+            background: rgba(242, 138, 61, 0.16);
+            color: #ffb77f;
+            box-shadow: inset 3px 0 0 var(--accent);
+        }
+
+        .tools-section {
+            border-top-color: #3a312b;
+        }
+
+        #main {
+            background: var(--bg-main);
+        }
+
+        #header {
+            background: #211d1a;
+            border-bottom-color: var(--border-color);
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.18);
+        }
+
+        #header strong {
+            color: #fff7f0;
+        }
+
+        .header-actions {
+            padding: 5px;
+            border: 1px solid #3a312b;
+            border-radius: 9px;
+            background: #181513;
+        }
+
+        input[type="file"] {
+            color: var(--text-muted);
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background: #302823;
+            border-color: #514239;
+            color: #f6e9df;
+        }
+
+        input[type="file"]::-webkit-file-upload-button:hover {
+            background: #403329;
+        }
+
+        #searchBox {
+            background: #151311;
+            border-color: #4a3d34;
+            color: var(--text-main);
+        }
+
+        #searchBox::placeholder {
+            color: #84776e;
+        }
+
+        button,
+        .btn-primary {
+            min-height: 35px;
+            background: var(--accent);
+            color: #24150d;
+            border: 1px solid #ffab68;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(242, 138, 61, 0.16);
+        }
+
+        button:hover:not(:disabled),
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            border-color: #ffc18f;
+        }
+
+        button:disabled {
+            background: #302a25;
+            border-color: #40362f;
+            color: #756960;
+        }
+
+        .btn-secondary {
+            background: #28211d !important;
+            color: #f4a069 !important;
+            border-color: #805236 !important;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #3a2a22 !important;
+            border-color: var(--accent) !important;
+            color: #ffc095 !important;
+        }
+
+        #selectAllBtn,
+        #clearSelectionBtn,
+        #saveAsBtn {
+            padding-inline: 11px;
+        }
+
+        #saveBtn,
+        #batchSaveBtn {
+            background: var(--accent);
+            color: #24150d;
+        }
+
+        #content {
+            background: radial-gradient(circle at top right, rgba(242, 138, 61, 0.08), transparent 32%), var(--bg-main);
+        }
+
+        .file-title-container,
+        .panel {
+            background: var(--bg-panel);
+            border-color: var(--border-color);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .file-title-label,
+        .head-selector-label {
+            color: #a7978c;
+        }
+
+        .file-title-input {
+            color: #fff7f0;
+        }
+
+        .file-title-input:hover {
+            border-color: #57463b;
+        }
+
+        .file-title-input:focus {
+            background: #1d1916;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(242, 138, 61, 0.14);
+        }
+
+        .head-selector {
+            border-top-color: var(--border-color);
+        }
+
+        .head-option-btn {
+            background: #2a231f !important;
+            color: #d8b09a !important;
+            border-color: #684632 !important;
+        }
+
+        .head-option-btn:hover:not(:disabled) {
+            background: #3a2a22 !important;
+            border-color: var(--accent) !important;
+            color: #ffc095 !important;
+        }
+
+        .head-option-btn.selected {
+            background: rgba(242, 138, 61, 0.2) !important;
+            border-color: var(--accent) !important;
+            color: #ffb77f !important;
+            box-shadow: inset 0 0 0 1px var(--accent), 0 0 14px rgba(242, 138, 61, 0.1);
+        }
+
+        .panel-header {
+            background: #2b2521;
+            border-bottom-color: var(--border-color);
+            color: #fff3e9;
+        }
+
+        .panel-content {
+            background: var(--bg-panel);
+        }
+
+        th {
+            background: #1d1917;
+            color: #ae9d91;
+            border-bottom-color: var(--border-color);
+        }
+
+        td {
+            border-bottom-color: #332b26;
+        }
+
+        tr:hover {
+            background: rgba(242, 138, 61, 0.045);
+        }
+
+        td input,
+        .converter-field input,
+        .modal-box input[type="text"],
+        .modal-box textarea {
+            background: var(--bg-input);
+            border-color: #493c33;
+            color: #ffb77f;
+        }
+
+        td input:focus,
+        .converter-field input:focus,
+        .modal-box input[type="text"]:focus,
+        .modal-box textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(242, 138, 61, 0.14);
+        }
+
+        td input.zero {
+            color: #776c64 !important;
+        }
+
+        .unit-toggle-btn {
+            background: #2a2420;
+            color: #b8a99f;
+            border-color: #4a3d34;
+        }
+
+        .unit-toggle-btn:hover {
+            background: #3a2d25;
+            color: #fff1e7;
+        }
+
+        .important-name {
+            color: #ffae74;
+        }
+
+        .important-cell {
+            background: rgba(242, 138, 61, 0.055) !important;
+        }
+
+        .changed {
+            background: rgba(103, 198, 167, 0.1) !important;
+            border-color: var(--success) !important;
+            color: #9ce0c8 !important;
+        }
+
+        .badge {
+            background: rgba(242, 138, 61, 0.12);
+            color: #ffaf77;
+            border-color: #7c4d32;
+        }
+
+        .modal-overlay {
+            background: rgba(8, 7, 6, 0.7);
+        }
+
+        .modal-box {
+            background: #27211e;
+            border-color: #493b32;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+        }
+
+        .modal-box h3 {
+            color: #fff4eb;
+        }
+
+        .return-btn,
+        .batch-save-btn {
+            border-color: #805236;
+            background: #28211d;
+            color: #f4a069;
+        }
+
+        .return-btn:hover:not(:disabled),
+        .batch-save-btn:hover:not(:disabled) {
+            background: #3a2a22;
+            border-color: var(--accent);
+        }
+
+        .return-btn {
+            border-radius: 7px;
+        }
+
+        .batch-save-btn {
+            width: auto;
+            min-width: 96px;
+            border-radius: 7px;
+            padding-inline: 12px;
+        }
+
+        .diff-table th {
+            background: rgba(242, 138, 61, 0.13);
+            color: #ffb77f;
+        }
+
+        .footer {
+            background: #211d1a;
+            border-top-color: var(--border-color);
+            color: #9d8f85;
+        }
+
+        .footer b {
+            color: #eadbd0;
+        }
+
+        @media (max-width: 680px) {
+            .header-actions {
+                background: transparent;
+                border: 0;
+                padding: 0;
+            }
+
+            .header-actions>* {
+                flex: 1 1 45%;
+            }
+
+            .header-actions>input[type="file"],
+            .header-actions>#searchBox {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="sidebar">
+        <h2>Files</h2>
+        <div id="fileList"></div>
+
+        <h2>Sections</h2>
+        <div id="sidebarItems"></div>
+
+        <div class="tools-section">
+            <h2>Tools</h2>
+            <div class="sidebar-item" id="compareBtn">Comparison</div>
+            <div class="sidebar-item" id="converterBtn">Unit Converter</div>
+            <div class="sidebar-item" id="hiddenManagerBtn">Hidden Parameters</div>
+            <div class="sidebar-item" id="changeLogBtn">Change Log</div>
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="header">
+            <strong>Liburdi Schedule Editor</strong>
+            <div class="header-actions">
+                <button id="returnBtn" class="return-btn" type="button" disabled title="Undo last change">↩</button>
+                <button id="redoBtn" class="return-btn" type="button" disabled
+                    title="Redo last undone change">↪</button>
+                <input type="file" id="fileInput" accept=".xml" multiple />
+                <button id="selectAllBtn">Alle auswählen</button>
+                <button id="clearSelectionBtn" class="btn-secondary">Auswahl löschen</button>
+                <input id="searchBox" type="text" placeholder="Search parameter or value...">
+                <span class="badge" id="changeCounter">0 Changes</span>
+                <button id="saveBtn" disabled>Save</button>
+                <button id="saveAsBtn" class="btn-secondary" disabled>Save As...</button>
+                <button id="batchSaveBtn" class="batch-save-btn" type="button" disabled>Batch Save</button>
+            </div>
+        </div>
+
+        <div id="content">
+            <div id="noFileMessage" style="text-align: center; margin-top: 80px; color: var(--text-muted);">
+                <h3 style="color: #fff;">No file loaded</h3>
+                <p>Please select one or more Liburdi XML schedule files above to begin.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <span id="status">Ready.</span>
+            <span>Created by <b>David Blank, Bilfinger</b></span>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="saveAsModal">
+        <div class="modal-box">
+            <h3>Save File As</h3>
+            <label for="customFileName" style="font-size: 12px; color: var(--text-muted);">Enter file name:</label>
+            <input type="text" id="customFileName" placeholder="filename.xml">
+            <div class="modal-actions">
+                <button id="modalCancelBtn" class="btn-secondary"
+                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                <button id="modalConfirmBtn" class="btn-primary">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="headModal">
+        <div class="modal-box">
+            <h3>Neuen Kopf hinzufügen</h3>
+            <label for="headInput" style="font-size: 12px; color: var(--text-muted);">Wert für XML-Attribut
+                "head":</label>
+            <input type="text" id="headInput" placeholder="Neuer Kopf">
+            <div class="modal-actions">
+                <button id="headCancelBtn" class="btn-secondary"
+                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Abbrechen</button>
+                <button id="headConfirmBtn" class="btn-primary">Übernehmen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="saveInfoModal">
+        <div class="modal-box">
+            <h3>Save Schedule</h3>
+            <label for="authorInput" style="font-size: 12px; color: var(--text-muted);">Author:</label>
+            <input type="text" id="authorInput" placeholder="Author name">
+            <label for="wpsInput" style="font-size: 12px; color: var(--text-muted);">WPS Number:</label>
+            <input type="text" id="wpsInput" placeholder="WPS number">
+            <label for="noteInput" style="font-size: 12px; color: var(--text-muted);">Note (max 500 characters):</label>
+            <textarea id="noteInput" maxlength="500" rows="4"
+                style="width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; padding: 10px; font-size: 14px; margin: 8px 0 4px 0; font-family: inherit; resize: vertical;"></textarea>
+            <div id="noteCounter"
+                style="font-size: 11px; color: var(--text-muted); text-align: right; margin-bottom: 8px;">0 / 500</div>
+            <div class="modal-actions">
+                <button id="saveInfoCancelBtn" class="btn-secondary"
+                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                <button id="saveInfoConfirmBtn" class="btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* STATE */
+        let loadedFiles = [];
+        let selectedFiles = new Set();
+        let activeFile = -1;
+        let lastSelectedSection = "segments";
+        let hiddenFields = new Set(JSON.parse(localStorage.getItem("hiddenFields") || "[]"));
+        let changeLog = JSON.parse(localStorage.getItem("scheduleEditorChangeLog") || "[]");
+        let undoStack = [];
+        let redoStack = [];
+        let pendingEdit = null;
+
+        let parameterUnits = JSON.parse(localStorage.getItem("parameterUnits") || "{}");
+
+        let defaultImportant = [
+            "pri_amp", "bkg_amp",
+            "pri_travel", "bkg_travel",
+            "pulse_freq", "pulse_width",
+            "pri_wire", "bkg_wire"
+        ];
+        let importantFields = new Set(JSON.parse(localStorage.getItem("importantFields") || JSON.stringify(defaultImportant)));
+
+        const MODES_ORDER = ['none', 'in', 'mm', 'cmmin', 'ampere', 'volt', 'seconds', 'degree'];
+        const DEFAULT_HEADS = ["NGRT + H-HEAD", "H2-FV-100S"];
+        let customHeads = JSON.parse(localStorage.getItem("scheduleEditorCustomHeads") || "[]");
+
+        /* HELPERS */
+        function saveHidden() { localStorage.setItem("hiddenFields", JSON.stringify([...hiddenFields])); }
+        function saveImportant() { localStorage.setItem("importantFields", JSON.stringify([...importantFields])); }
+        function saveParameterUnits() { localStorage.setItem("parameterUnits", JSON.stringify(parameterUnits)); }
+        function saveChangeLog() { localStorage.setItem("scheduleEditorChangeLog", JSON.stringify(changeLog.slice(0, 200))); }
+        function saveCustomHeads() { localStorage.setItem("scheduleEditorCustomHeads", JSON.stringify(customHeads)); }
+        function getHeadOptions(currentHead = "") {
+            return [...new Set([...DEFAULT_HEADS, ...customHeads, currentHead].filter(Boolean))];
+        }
+
+        function createFileRecord(name, xml, originalXml = xml) {
+            return {
+                name,
+                xml,
+                originalXml,
+                sections: {
+                    description: xml.querySelector("description"),
+                    global: xml.querySelector("global"),
+                    limits: xml.querySelector("limits"),
+                    overrides: xml.querySelector("overrides"),
+                    segments: [...xml.querySelectorAll("segment")]
+                }
+            };
+        }
+
+        function createHistorySnapshot() {
+            return {
+                files: loadedFiles.map(file => ({
+                    name: file.name,
+                    xml: file.xml.cloneNode(true),
+                    originalXml: file.originalXml.cloneNode(true)
+                })),
+                selectedFiles: [...selectedFiles],
+                activeFile,
+                lastSelectedSection,
+                hiddenFields: [...hiddenFields],
+                importantFields: [...importantFields],
+                parameterUnits: { ...parameterUnits },
+                customHeads: [...customHeads],
+                changeLog: JSON.parse(JSON.stringify(changeLog))
+            };
+        }
+
+        function historySnapshotKey(snapshot) {
+            return JSON.stringify({
+                files: snapshot.files.map(file => ({ name: file.name, xml: new XMLSerializer().serializeToString(file.xml) })),
+                selectedFiles: snapshot.selectedFiles,
+                activeFile: snapshot.activeFile,
+                lastSelectedSection: snapshot.lastSelectedSection,
+                hiddenFields: snapshot.hiddenFields,
+                importantFields: snapshot.importantFields,
+                parameterUnits: snapshot.parameterUnits,
+                customHeads: snapshot.customHeads,
+                changeLog: snapshot.changeLog
+            });
+        }
+
+        function pushHistorySnapshot(label, beforeSnapshot) {
+            const afterSnapshot = createHistorySnapshot();
+            if (historySnapshotKey(beforeSnapshot) === historySnapshotKey(afterSnapshot)) return false;
+            undoStack.push({ type: "snapshot", label, before: beforeSnapshot, after: afterSnapshot });
+            if (undoStack.length > 200) undoStack.shift();
+            redoStack = [];
+            updateUndoRedoButtons();
+            return true;
+        }
+
+        function recordHistoryAction(label, callback) {
+            commitPendingEdit();
+            const beforeSnapshot = createHistorySnapshot();
+            callback();
+            pushHistorySnapshot(label, beforeSnapshot);
+        }
+
+        function restoreHistorySnapshot(snapshot) {
+            loadedFiles = snapshot.files.map(file => createFileRecord(
+                file.name,
+                file.xml.cloneNode(true),
+                file.originalXml.cloneNode(true)
+            ));
+            selectedFiles = new Set(snapshot.selectedFiles);
+            activeFile = snapshot.activeFile;
+            lastSelectedSection = snapshot.lastSelectedSection;
+            hiddenFields = new Set(snapshot.hiddenFields);
+            importantFields = new Set(snapshot.importantFields);
+            parameterUnits = { ...snapshot.parameterUnits };
+            customHeads = [...snapshot.customHeads];
+            changeLog = JSON.parse(JSON.stringify(snapshot.changeLog));
+            pendingEdit = null;
+            updateUI();
+            saveHidden();
+            saveImportant();
+            saveParameterUnits();
+            saveCustomHeads();
+            saveChangeLog();
+        }
+
+        function updateUndoRedoButtons() {
+            const undoBtn = document.getElementById("returnBtn");
+            const redoBtn = document.getElementById("redoBtn");
+            if (undoBtn) undoBtn.disabled = undoStack.length === 0;
+            if (redoBtn) redoBtn.disabled = redoStack.length === 0;
+        }
+
+        function setPendingEdit(edit) {
+            pendingEdit = edit;
+        }
+
+        function commitPendingEdit() {
+            if (!pendingEdit) return;
+            const action = pendingEdit;
+            if (!action || !action.changes || !action.changes.length) {
+                pendingEdit = null;
+                return;
+            }
+            const hasEffectiveChange = action.changes.some(change => change.oldValue !== change.newValue);
+            if (hasEffectiveChange) {
+                undoStack.push(action);
+                if (undoStack.length > 200) undoStack.shift();
+                redoStack = [];
+                updateUndoRedoButtons();
+            }
+            pendingEdit = null;
+        }
+
+        function applyChangeAction(action, reverse = false) {
+            if (action?.type === "snapshot") {
+                restoreHistorySnapshot(reverse ? action.before : action.after);
+                return;
+            }
+            if (!action || !action.changes) return;
+            action.changes.forEach(change => {
+                const file = loadedFiles[change.fileIndex];
+                if (!file) return;
+                const sectionName = change.sectionName;
+                let targetNode = null;
+                if (sectionName === "segments") {
+                    targetNode = file.sections.segments.find(seg => seg.getAttribute("index") === change.segmentIndex);
+                    if (targetNode) targetNode = targetNode.querySelector(change.key);
+                } else if (file.sections[sectionName]) {
+                    targetNode = file.sections[sectionName].querySelector(change.key);
+                }
+                if (!targetNode) return;
+                const targetValue = reverse ? change.oldValue : change.newValue;
+                targetNode.textContent = targetValue;
+                updateChangeLogEntry({
+                    fileIndex: change.fileIndex,
+                    fileName: loadedFiles[change.fileIndex]?.name || change.fileName || "unknown",
+                    sectionName,
+                    key: change.key,
+                    segmentIndex: change.segmentIndex,
+                    oldValue: change.oldValue,
+                    newValue: targetValue
+                });
+            });
+            if (activeFile >= 0 && activeFile < loadedFiles.length) {
+                const sectionName = lastSelectedSection;
+                if (sectionName === action.changes[0]?.sectionName) {
+                    showSection(sectionName);
+                }
+            }
+            saveChangeLog();
+            updateChangeCounter();
+        }
+
+        function undoLastEdit() {
+            commitPendingEdit();
+            if (!undoStack.length) return;
+            const action = undoStack.pop();
+            applyChangeAction(action, true);
+            redoStack.push(action);
+            updateUndoRedoButtons();
+        }
+
+        function redoLastEdit() {
+            if (!redoStack.length) return;
+            const action = redoStack.pop();
+            applyChangeAction(action, false);
+            undoStack.push(action);
+            updateUndoRedoButtons();
+        }
+
+        function findChangeLogIndex({ fileIndex, sectionName, key, segmentIndex }) {
+            return changeLog.findIndex(entry => {
+                const sameIndex = entry.fileIndex === fileIndex || (!isFinite(entry.fileIndex) && entry.fileName === loadedFiles[fileIndex]?.name);
+                const sameSection = entry.section === sectionName;
+                const sameKey = entry.key === key;
+                const sameSegment = (entry.segmentIndex || "") === (segmentIndex || "");
+                return sameIndex && sameSection && sameKey && sameSegment;
+            });
+        }
+
+        function updateChangeLogEntry({ fileIndex, fileName, sectionName, key, segmentIndex, oldValue, newValue }) {
+            const idx = findChangeLogIndex({ fileIndex, sectionName, key, segmentIndex });
+            const entry = {
+                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                timestamp: new Date().toISOString(),
+                fileIndex,
+                fileName,
+                section: sectionName || "unknown",
+                key,
+                segmentIndex: segmentIndex || "",
+                oldValue: String(oldValue ?? ""),
+                newValue: String(newValue ?? "")
+            };
+            if (entry.newValue === entry.oldValue) {
+                if (idx >= 0) {
+                    changeLog.splice(idx, 1);
+                }
+            } else if (idx >= 0) {
+                entry.id = changeLog[idx].id;
+                entry.timestamp = changeLog[idx].timestamp;
+                changeLog[idx] = entry;
+            } else {
+                changeLog.unshift(entry);
+            }
+            changeLog = changeLog.slice(0, 200);
+            saveChangeLog();
+            updateChangeCounter();
+        }
+
+        function renderChangeLog() {
+            const content = document.getElementById("content");
+            content.innerHTML = "<h2>Change Log</h2>";
+
+            if (!changeLog.length) {
+                const empty = document.createElement("p");
+                empty.style.color = "var(--text-muted)";
+                empty.textContent = "No changes recorded yet.";
+                content.appendChild(empty);
+                return;
+            }
+
+            const table = document.createElement("table");
+            table.className = "diff-table";
+            table.innerHTML = "<tr><th>Time</th><th>File</th><th>Section</th><th>Parameter</th><th>Old</th><th>New</th></tr>";
+
+            changeLog.forEach(entry => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${new Date(entry.timestamp).toLocaleString()}</td>
+                    <td>${entry.fileName}</td>
+                    <td>${entry.section}</td>
+                    <td>${entry.key}</td>
+                    <td>${entry.oldValue || "-"}</td>
+                    <td>${entry.newValue || "-"}</td>
+                `;
+                table.appendChild(tr);
+            });
+
+            content.appendChild(table);
+        }
+
+        function styleInput(input) {
+            const pureVal = input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
+            if (pureVal === "0") input.classList.add("zero");
+            else input.classList.remove("zero");
+        }
+
+        function getDecimalPlaces(value) {
+            const match = ('' + value).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+            if (!match) { return 0; }
+            return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
+        }
+
+        function toggleImportant(key, refreshCallback) {
+            recordHistoryAction("Wichtiges Feld ändern", () => {
+                if (importantFields.has(key)) importantFields.delete(key);
+                else importantFields.add(key);
+                saveImportant();
+                refreshCallback();
+            });
+        }
+
+        function sortParams(a, b) {
+            const aImp = importantFields.has(a); const bImp = importantFields.has(b);
+            const aHid = hiddenFields.has(a); const bHid = hiddenFields.has(b);
+            if (aImp && !bImp) return -1; if (!aImp && bImp) return 1;
+            if (!aHid && bHid) return -1; if (aHid && !bHid) return 1;
+            return a.localeCompare(b);
+        }
+
+        /* FILE LOADING */
+        document.getElementById("fileInput").addEventListener("change", e => {
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+
+            let loadedCounter = 0;
+            const targetCount = files.length;
+            const currentSelectionStart = loadedFiles.length;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    const xml = new DOMParser().parseFromString(reader.result, "application/xml");
+                    loadedFiles.push({
+                        name: file.name,
+                        xml,
+                        originalXml: xml.cloneNode(true),
+                        sections: {
+                            description: xml.querySelector("description"),
+                            global: xml.querySelector("global"),
+                            limits: xml.querySelector("limits"),
+                            overrides: xml.querySelector("overrides"),
+                            segments: [...xml.querySelectorAll("segment")]
+                        }
+                    });
+                    selectedFiles.add(currentSelectionStart + loadedCounter);
+                    loadedCounter++;
+                    if (loadedCounter === targetCount) {
+                        activeFile = currentSelectionStart;
+                        updateUI();
+                        document.getElementById("status").textContent = `${targetCount} file(s) loaded successfully.`;
+                        e.target.value = "";
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function updateUI() {
+            const batchSaveBtn = document.getElementById("batchSaveBtn");
+            const resetBtn = document.getElementById("resetChangesBtn");
+            if (loadedFiles.length > 0) {
+                if (activeFile < 0 || activeFile >= loadedFiles.length) activeFile = 0;
+                renderFileList();
+                renderSidebar();
+                showSection(lastSelectedSection);
+                document.getElementById("saveBtn").disabled = false;
+                document.getElementById("saveAsBtn").disabled = false;
+                batchSaveBtn.disabled = false;
+                if (resetBtn) resetBtn.disabled = false;
+                updateUndoRedoButtons();
+            } else {
+                activeFile = -1;
+                document.getElementById("fileList").innerHTML = "";
+                document.getElementById("sidebarItems").innerHTML = "";
+                document.getElementById("saveBtn").disabled = true;
+                document.getElementById("saveAsBtn").disabled = true;
+                batchSaveBtn.disabled = true;
+                if (resetBtn) resetBtn.disabled = true;
+                updateUndoRedoButtons();
+                resetContentToPlaceholder();
+            }
+            updateSelectionStatus();
+        }
+
+        function resetContentToPlaceholder() {
+            document.getElementById("content").innerHTML = `
+                <div style="text-align: center; margin-top: 80px; color: var(--text-muted);">
+                    <h3 style="color: #fff;">No file loaded</h3>
+                    <p>Please select one or more Liburdi XML schedule files above to begin.</p>
+                </div>
+            `;
+        }
+
+        function renderFileList() {
+            const list = document.getElementById("fileList");
+            list.innerHTML = "";
+            loadedFiles.forEach((f, i) => {
+                const div = document.createElement("div");
+                div.className = "sidebar-item" + (i === activeFile ? " active" : "");
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = selectedFiles.has(i);
+                checkbox.onclick = (e) => { e.stopPropagation(); if (checkbox.checked) selectedFiles.add(i); else selectedFiles.delete(i); updateSelectionStatus(); };
+                const textSpan = document.createElement("span");
+                textSpan.textContent = f.name; textSpan.style.flex = "1";
+                textSpan.onclick = () => { activeFile = i; renderFileList(); renderSidebar(); showSection(lastSelectedSection); };
+                const delBtn = document.createElement("button");
+                delBtn.className = "delete-file-btn"; delBtn.innerHTML = "&times;";
+                delBtn.onclick = (e) => { e.stopPropagation(); removeFile(i); };
+                div.appendChild(checkbox); div.appendChild(textSpan); div.appendChild(delBtn);
+                list.appendChild(div);
+            });
+        }
+
+        function normalizeSelectionIndexes() {
+            const nextSelection = new Set();
+            loadedFiles.forEach((_, index) => {
+                if (selectedFiles.has(index)) nextSelection.add(index);
+            });
+            selectedFiles = nextSelection;
+        }
+
+        function updateSelectionStatus() {
+            const count = selectedFiles.size;
+            const status = document.getElementById("status");
+            const label = loadedFiles.length ? `${count} Datei(en) ausgewählt` : "Ready.";
+            if (status) status.textContent = label;
+        }
+
+        function removeFile(index) {
+            recordHistoryAction("Datei entfernen", () => {
+                loadedFiles.splice(index, 1);
+                normalizeSelectionIndexes();
+                if (activeFile === index) activeFile = Math.max(0, index - 1);
+                else if (activeFile > index) activeFile--;
+                updateUI();
+                document.getElementById("status").textContent = "File removed.";
+            });
+        }
+
+        function renderSidebar() {
+            const s = document.getElementById("sidebarItems");
+            s.innerHTML = "";
+            ["description", "global", "limits", "overrides", "segments"].forEach(sec => {
+                const div = document.createElement("div");
+                div.className = "sidebar-item" + (sec === lastSelectedSection ? " active" : "");
+                div.textContent = sec.charAt(0).toUpperCase() + sec.slice(1);
+                div.onclick = () => showSection(sec);
+                s.appendChild(div);
+            });
+        }
+
+        function injectFileTitleHeader(container) {
+            if (activeFile < 0 || activeFile >= loadedFiles.length) return;
+            const file = loadedFiles[activeFile];
+
+            const titleWrap = document.createElement("div");
+            titleWrap.className = "file-title-container";
+
+            const label = document.createElement("div");
+            label.className = "file-title-label";
+            label.textContent = "Selected File Name (Editable)";
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.className = "file-title-input";
+            input.value = file.name;
+            let fileNameBeforeEdit = null;
+
+            input.onfocus = () => {
+                commitPendingEdit();
+                fileNameBeforeEdit = createHistorySnapshot();
+            };
+
+            input.oninput = () => {
+                let currentVal = input.value.trim();
+                if (currentVal !== "") {
+                    file.name = currentVal;
+                    const fileItems = document.querySelectorAll("#fileList .sidebar-item");
+                    if (fileItems[activeFile]) {
+                        fileItems[activeFile].querySelector("span").textContent = currentVal;
+                    }
+                }
+            };
+
+            input.onblur = () => {
+                if (input.value.trim() === "") {
+                    input.value = file.name;
+                } else if (!input.value.toLowerCase().endsWith(".xml")) {
+                    input.value += ".xml";
+                    file.name = input.value;
+                    renderFileList();
+                }
+                if (fileNameBeforeEdit) {
+                    pushHistorySnapshot("Dateiname ändern", fileNameBeforeEdit);
+                    fileNameBeforeEdit = null;
+                }
+            };
+
+            titleWrap.appendChild(label);
+            titleWrap.appendChild(input);
+
+            const root = file.xml.querySelector("sched") || file.xml.documentElement;
+            const currentHead = root ? root.getAttribute("head") || "" : "";
+            const headWrap = document.createElement("div");
+            headWrap.className = "head-selector";
+            const headLabel = document.createElement("div");
+            headLabel.className = "head-selector-label";
+            headLabel.textContent = "Kopf auswählen";
+            headWrap.appendChild(headLabel);
+
+            getHeadOptions(currentHead).forEach(head => {
+                const headButton = document.createElement("button");
+                headButton.type = "button";
+                headButton.className = "head-option-btn" + (head === currentHead ? " selected" : "");
+                headButton.textContent = head;
+                headButton.onclick = () => applyHeadValue(head);
+                headWrap.appendChild(headButton);
+            });
+
+            const newHeadButton = document.createElement("button");
+            newHeadButton.type = "button";
+            newHeadButton.className = "head-option-btn btn-secondary";
+            newHeadButton.textContent = "Neuen Kopf hinzufügen...";
+            newHeadButton.onclick = openNewHeadModal;
+            headWrap.appendChild(newHeadButton);
+            titleWrap.appendChild(headWrap);
+            container.appendChild(titleWrap);
+        }
+
+        function showSection(name) {
+            commitPendingEdit();
+            lastSelectedSection = name;
+            document.querySelectorAll("#sidebarItems .sidebar-item").forEach(el => el.classList.remove("active"));
+
+            const sectionItems = document.querySelectorAll("#sidebarItems .sidebar-item");
+            const secNames = ["description", "global", "limits", "overrides", "segments"];
+            const targetIdx = secNames.indexOf(name);
+            if (sectionItems[targetIdx]) sectionItems[targetIdx].classList.add("active");
+
+            if (activeFile < 0 || activeFile >= loadedFiles.length) return;
+            const file = loadedFiles[activeFile];
+            const content = document.getElementById("content");
+            content.innerHTML = "";
+
+            injectFileTitleHeader(content);
+
+            if (name === "segments") { renderSegmentList(file); return; }
+            const node = file.sections[name];
+            if (!node) {
+                const errMsg = document.createElement("p");
+                errMsg.textContent = "Section not available.";
+                content.appendChild(errMsg);
+                return;
+            }
+            renderPanel(name.charAt(0).toUpperCase() + name.slice(1), node);
+        }
+
+        /* DYNAMIC INTERACTIVE INPUT FIELD */
+        function createInputField(child, key, sectionName = lastSelectedSection, segmentIndex = "") {
+            const container = document.createElement("div");
+            container.className = "input-container";
+
+            const isTextField = key === "note" || key === "custom_search_tag";
+            const input = isTextField ? document.createElement("textarea") : document.createElement("input");
+            input.dataset.fieldName = key;
+            input.dataset.sectionName = sectionName;
+            input.dataset.fileName = loadedFiles[activeFile] ? loadedFiles[activeFile].name : "";
+            input.dataset.fileIndex = activeFile;
+            input.dataset.segmentIndex = segmentIndex;
+            const btn = document.createElement("button");
+            btn.className = "unit-toggle-btn";
+
+            let currentInchValue = parseFloat(child.textContent) || 0;
+            const originalPlaces = getDecimalPlaces(child.textContent);
+
+            // Hilfsfunktionen für die Wolfram-Breite (Tungsten Width)
+            const r = 0.2;
+            function inchToDegree(x) {
+                const ratio = x / (2 * r);
+                if (ratio > 1) return 180;
+                if (ratio < -1) return -180;
+                return 2 * Math.asin(ratio) * (180 / Math.PI);
+            }
+            function degreeToInch(alpha) {
+                return 2 * r * Math.sin((alpha * Math.PI) / 360);
+            }
+
+            // Setze den Standardmodus für tungsten_width auf 'degree' falls noch nicht definiert
+            if (key === 'tungsten_width' && !parameterUnits[key]) {
+                parameterUnits[key] = 'degree';
+                saveParameterUnits();
+            }
+
+            function updateDisplay() {
+                if (isTextField) {
+                    input.value = child.textContent || "";
+                    btn.style.display = 'none';
+                } else {
+                    let currentMode = parameterUnits[key] || 'none';
+
+                    if (key === 'tungsten_width' && currentMode === 'degree') {
+                        let degVal = inchToDegree(currentInchValue);
+                        input.value = degVal.toFixed(2) + " °";
+                        btn.textContent = "°";
+                        btn.className = "unit-toggle-btn mode-static";
+                    } else if (currentMode === 'none') {
+                        input.value = currentInchValue.toFixed(originalPlaces);
+                        btn.textContent = "—";
+                        btn.className = "unit-toggle-btn";
+                    } else if (currentMode === 'in') {
+                        input.value = currentInchValue.toFixed(originalPlaces) + " in";
+                        btn.textContent = "IN";
+                        btn.className = "unit-toggle-btn mode-in";
+                    } else if (currentMode === 'mm') {
+                        let mmVal = currentInchValue * 25.4;
+                        input.value = mmVal.toFixed(2) + " mm";
+                        btn.textContent = "MM";
+                        btn.className = "unit-toggle-btn mode-mm";
+                    } else if (currentMode === 'cmmin') {
+                        let cmVal = currentInchValue * 2.54;
+                        input.value = cmVal.toFixed(2) + " cm/min";
+                        btn.textContent = "CM/MIN";
+                        btn.className = "unit-toggle-btn mode-cmmin";
+                    } else if (currentMode === 'ampere') {
+                        input.value = currentInchValue.toFixed(originalPlaces) + " A";
+                        btn.textContent = "A";
+                        btn.className = "unit-toggle-btn mode-static";
+                    } else if (currentMode === 'volt') {
+                        input.value = currentInchValue.toFixed(originalPlaces) + " V";
+                        btn.textContent = "V";
+                        btn.className = "unit-toggle-btn mode-static";
+                    } else if (currentMode === 'seconds') {
+                        input.value = currentInchValue.toFixed(originalPlaces) + " s";
+                        btn.textContent = "S";
+                        btn.className = "unit-toggle-btn mode-static";
+                    } else if (currentMode === 'degree') {
+                        input.value = currentInchValue.toFixed(originalPlaces) + " °";
+                        btn.textContent = "°";
+                        btn.className = "unit-toggle-btn mode-static";
+                    }
+                    styleInput(input);
+                }
+            }
+
+            input.dataset.originalValue = child.textContent;
+            input.dataset.changeKey = key + "_" + Math.random();
+            input.dataset.lastLoggedValue = "";
+
+            btn.onclick = (e) => {
+                e.preventDefault();
+                if (isTextField) return;
+                recordHistoryAction("Einheit ändern", () => {
+                    let currentMode = parameterUnits[key] || 'none';
+                    let idx = MODES_ORDER.indexOf(currentMode);
+                    let nextIdx = (idx + 1) % MODES_ORDER.length;
+                    currentMode = MODES_ORDER[nextIdx];
+
+                    parameterUnits[key] = currentMode;
+                    saveParameterUnits();
+
+                    document.querySelectorAll(`[data-param-name="${key}"]`).forEach(el => {
+                        if (el.updateDisplay) el.updateDisplay();
+                    });
+                });
+            };
+
+            input.onblur = () => {
+                if (isTextField) {
+                    child.textContent = input.value;
+                    registerChange(input, input.dataset.originalValue);
+                    commitPendingEdit();
+                    return;
+                }
+
+                let currentMode = parameterUnits[key] || 'none';
+                let valStr = input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
+                let parsed = parseFloat(valStr);
+
+                if (!isNaN(parsed)) {
+                    if (key === 'tungsten_width' && currentMode === 'degree') {
+                        currentInchValue = degreeToInch(parsed);
+                    } else if (currentMode === 'mm') {
+                        currentInchValue = parsed / 25.4;
+                    } else if (currentMode === 'cmmin') {
+                        currentInchValue = parsed / 2.54;
+                    } else {
+                        currentInchValue = parsed;
+                    }
+                    child.textContent = currentInchValue.toFixed(originalPlaces);
+                    registerChange(input, input.dataset.originalValue);
+                    commitPendingEdit();
+                }
+                updateDisplay();
+            };
+
+            input.oninput = () => {
+                if (isTextField) {
+                    child.textContent = input.value;
+                    registerChange(input, input.dataset.originalValue);
+                    return;
+                }
+                let currentMode = parameterUnits[key] || 'none';
+                let valStr = input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
+                let parsed = parseFloat(valStr);
+                if (!isNaN(parsed)) {
+                    let calculatedInch = parsed;
+                    if (key === 'tungsten_width' && currentMode === 'degree') {
+                        calculatedInch = degreeToInch(parsed);
+                    } else if (currentMode === 'mm') calculatedInch = parsed / 25.4;
+                    else if (currentMode === 'cmmin') calculatedInch = parsed / 2.54;
+
+                    child.textContent = calculatedInch.toFixed(originalPlaces);
+                    if (selectedFiles.size && lastSelectedSection !== "segments") { applyValueToSelectedFiles(lastSelectedSection, key, child.textContent); }
+                    styleInput(input);
+                    registerChange(input, input.dataset.originalValue);
+                }
+            };
+
+            container.setAttribute("data-param-name", key);
+            container.updateDisplay = updateDisplay;
+
+            updateDisplay();
+
+            container.appendChild(input);
+            if (!isTextField) container.appendChild(btn);
+            return { container, input };
+        }
+
+        function renderPanel(title, xmlNode) {
+            const content = document.getElementById("content");
+            const panel = document.createElement("div"); panel.className = "panel";
+            const header = document.createElement("div"); header.className = "panel-header"; header.textContent = title;
+            const body = document.createElement("div"); body.className = "panel-content open";
+            const table = document.createElement("table"); const tbody = document.createElement("tbody");
+
+            const keys = [...xmlNode.children].map(c => c.tagName).sort(sortParams);
+
+            keys.forEach(key => {
+                if (hiddenFields.has(key)) return;
+                const child = xmlNode.querySelector(key);
+                const tr = document.createElement("tr");
+
+                const tdName = document.createElement("td");
+                tdName.textContent = key;
+                tdName.style.cursor = "pointer";
+                if (importantFields.has(key)) tdName.classList.add("important-name");
+
+                tdName.ondblclick = () => { toggleImportant(key, () => showSection(title.toLowerCase())); };
+                tdName.oncontextmenu = e => {
+                    e.preventDefault();
+                    recordHistoryAction("Feld ausblenden", () => {
+                        hiddenFields.add(key);
+                        saveHidden();
+                        showSection(title.toLowerCase());
+                    });
+                };
+
+                const tdVal = document.createElement("td");
+                const fieldObj = createInputField(child, key);
+
+                if (importantFields.has(key)) { tdVal.classList.add("important-cell"); tr.classList.add("important-cell"); }
+
+                tdVal.appendChild(fieldObj.container); tr.appendChild(tdName); tr.appendChild(tdVal); tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody); body.appendChild(table); panel.appendChild(header); panel.appendChild(body); content.appendChild(panel);
+        }
+
+        /* SEGMENTS */
+        function renderSegmentList(file) {
+            const content = document.getElementById("content");
+            const list = document.createElement("div"); list.className = "panel";
+            const header = document.createElement("div"); header.className = "panel-header"; header.textContent = "Segments";
+
+            // Add "Add Segmente" button
+            const addBtn = document.createElement("button");
+            addBtn.textContent = "Add Segmente";
+            addBtn.className = "btn-primary";
+            addBtn.style.marginLeft = "10px";
+            addBtn.style.padding = "4px 12px";
+            addBtn.style.fontSize = "12px";
+            addBtn.onclick = () => addSegment(file);
+            header.appendChild(addBtn);
+
+            list.appendChild(header);
+            const body = document.createElement("div"); body.className = "panel-content open";
+
+            file.sections.segments.forEach((seg, i) => {
+                const div = document.createElement("div"); div.className = "sidebar-item"; div.textContent = "Segment " + seg.getAttribute("index");
+                div.onclick = () => renderSegment(seg); body.appendChild(div);
+            });
+            list.appendChild(body); content.appendChild(list);
+            if (file.sections.segments.length > 0) renderSegment(file.sections.segments[0]);
+        }
+
+        function addSegment(file) {
+            const segments = file.sections.segments;
+            if (!segments.length) return;
+
+            recordHistoryAction("Segment hinzufügen", () => {
+                const lastSeg = segments[segments.length - 1];
+                const newSeg = lastSeg.cloneNode(true);
+                const newIndex = segments.length;
+                newSeg.setAttribute("index", String(newIndex));
+
+                const root = file.xml.querySelector("sched") || file.xml.documentElement;
+                if (root) root.appendChild(newSeg);
+
+                file.sections.segments = [...file.xml.querySelectorAll("segment")];
+                renderSegmentList(file);
+                document.getElementById("status").textContent = `Segment ${newIndex} added.`;
+            });
+        }
+
+        function renderSegment(seg) {
+            const content = document.getElementById("content");
+            const old = content.querySelector(".segment-panel"); if (old) old.remove();
+
+            const panel = document.createElement("div"); panel.className = "panel segment-panel";
+            const header = document.createElement("div"); header.className = "panel-header"; header.textContent = "Segment " + seg.getAttribute("index");
+            const body = document.createElement("div"); body.className = "panel-content open";
+            const table = document.createElement("table"); const tbody = document.createElement("tbody");
+
+            const keys = [...seg.children].map(c => c.tagName).sort(sortParams);
+
+            keys.forEach(key => {
+                if (hiddenFields.has(key)) return;
+                const child = seg.querySelector(key);
+                const tr = document.createElement("tr");
+
+                const tdName = document.createElement("td"); tdName.textContent = key; tdName.style.cursor = "pointer";
+                if (importantFields.has(key)) tdName.classList.add("important-name");
+
+                tdName.ondblclick = () => { toggleImportant(key, () => renderSegment(seg)); };
+                tdName.oncontextmenu = e => {
+                    e.preventDefault();
+                    recordHistoryAction("Feld ausblenden", () => {
+                        hiddenFields.add(key);
+                        saveHidden();
+                        renderSegment(seg);
+                    });
+                };
+
+                const tdVal = document.createElement("td");
+                const fieldObj = createInputField(child, key);
+
+                if (importantFields.has(key)) { tdVal.classList.add("important-cell"); tr.classList.add("important-cell"); }
+
+                tdVal.appendChild(fieldObj.container); tr.appendChild(tdName); tr.appendChild(tdVal); tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody); body.appendChild(table); panel.appendChild(header); panel.appendChild(body); content.appendChild(panel);
+        }
+
+
+        function applyValueToSelectedFiles(sectionName, key, value) { selectedFiles.forEach(index => { const file = loadedFiles[index]; if (!file) return; if (sectionName === 'segments') { file.sections.segments.forEach(seg => { const node = seg.querySelector(key); if (node) node.textContent = value; }); } else { const section = file.sections[sectionName]; if (!section) return; const node = section.querySelector(key); if (node) node.textContent = value; } }); }
+
+        /* EXPORT & SAVE */
+        function triggerDownload(filename, blob) {
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportXmlFile(fileName, fileDoc) {
+            const xml = new XMLSerializer().serializeToString(fileDoc);
+            const blob = new Blob([xml], { type: "application/xml" });
+            triggerDownload(fileName, blob);
+            document.getElementById("status").textContent = `File saved as "${fileName}" successfully.`;
+        }
+
+        function buildBatchChangeLogText(filesToSave) {
+            const savedNames = new Set(filesToSave.map(file => file.name));
+            const matchingEntries = changeLog.filter(entry => savedNames.has(entry.fileName));
+
+            if (!matchingEntries.length) {
+                return [
+                    "Batch Save Change Log",
+                    `Saved files: ${filesToSave.length}`,
+                    "No tracked file changes found for this batch.",
+                    ""
+                ].join("\n");
+            }
+
+            const lines = [
+                "Batch Save Change Log",
+                `Generated: ${new Date().toISOString()}`,
+                `Saved files: ${filesToSave.length}`,
+                ""
+            ];
+
+            matchingEntries.forEach(entry => {
+                lines.push(
+                    `[${new Date(entry.timestamp).toLocaleString()}] ${entry.fileName} | ${entry.section} | ${entry.key} | ${entry.oldValue || "-"} -> ${entry.newValue || "-"}`
+                );
+            });
+
+            return lines.join("\n");
+        }
+
+        function saveSelectedFiles() {
+            const filesToSave = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
+            const targetFiles = filesToSave.length ? filesToSave : loadedFiles;
+
+            if (!targetFiles.length) {
+                document.getElementById("status").textContent = "Please select at least one file to save.";
+                return;
+            }
+
+            if (window.JSZip && targetFiles.length > 1) {
+                const zip = new JSZip();
+                targetFiles.forEach(file => {
+                    const filename = file.name.toLowerCase().endsWith(".xml") ? file.name : `${file.name}.xml`;
+                    const xml = new XMLSerializer().serializeToString(file.xml);
+                    zip.file(filename, xml);
+                });
+
+                const logText = buildBatchChangeLogText(targetFiles);
+                zip.file("batch_change_log.txt", logText);
+
+                zip.generateAsync({ type: "blob" }).then(blob => {
+                    const zipName = `schedule_batch_export_${new Date().toISOString().replace(/[:.]/g, "-")}.zip`;
+                    triggerDownload(zipName, blob);
+                    document.getElementById("status").textContent = `${targetFiles.length} file(s) saved as batch archive with change log.`;
+                });
+                return;
+            }
+
+            targetFiles.forEach(file => {
+                const filename = file.name.toLowerCase().endsWith(".xml") ? file.name : `${file.name}.xml`;
+                exportXmlFile(filename, file.xml);
+            });
+        }
+
+        /* SAVE INFO MODAL */
+        let pendingSaveAction = null;
+
+        function updateNoteWithSaveInfo(file, author, wps, note) {
+            const desc = file.sections.description;
+            if (!desc) return;
+            let noteNode = desc.querySelector("note");
+            if (!noteNode) {
+                noteNode = desc.ownerDocument.createElement("note");
+                desc.appendChild(noteNode);
+            }
+
+            const fileChanges = changeLog.filter(entry => entry.fileName === file.name);
+
+            let noteText = "";
+            if (author) noteText += `Author: ${author}\n`;
+            if (wps) noteText += `WPS: ${wps}\n`;
+
+            if (fileChanges.length) {
+                noteText += "Changes:\n";
+                fileChanges.forEach(entry => {
+                    noteText += `- ${entry.section}${entry.segmentIndex ? " seg " + entry.segmentIndex : ""} ${entry.key}: ${entry.oldValue || "-"} -> ${entry.newValue || "-"}\n`;
+                });
+            }
+
+            if (note) noteText += `Note: ${note}\n`;
+
+            // Limit to 500 characters
+            noteText = noteText.slice(0, 500);
+            noteNode.textContent = noteText;
+        }
+
+        function showSaveInfoModal(callback) {
+            pendingSaveAction = callback;
+            document.getElementById("authorInput").value = "";
+            document.getElementById("wpsInput").value = "";
+            document.getElementById("noteInput").value = "";
+            document.getElementById("noteCounter").textContent = "0 / 500";
+            document.getElementById("saveInfoModal").classList.add("show");
+            document.getElementById("authorInput").focus();
+        }
+
+        document.getElementById("saveInfoCancelBtn").onclick = () => {
+            document.getElementById("saveInfoModal").classList.remove("show");
+            pendingSaveAction = null;
+        };
+
+        document.getElementById("saveInfoConfirmBtn").onclick = () => {
+            const author = document.getElementById("authorInput").value.trim();
+            const wps = document.getElementById("wpsInput").value.trim();
+            const note = document.getElementById("noteInput").value.trim();
+
+            document.getElementById("saveInfoModal").classList.remove("show");
+
+            if (pendingSaveAction) {
+                pendingSaveAction(author, wps, note);
+                pendingSaveAction = null;
+            }
+        };
+
+        document.getElementById("noteInput").oninput = () => {
+            const len = document.getElementById("noteInput").value.length;
+            document.getElementById("noteCounter").textContent = `${len} / 500`;
+        };
+
+        document.getElementById("saveBtn").onclick = () => {
+            if (activeFile < 0 || activeFile >= loadedFiles.length) return;
+            showSaveInfoModal((author, wps, note) => {
+                const file = loadedFiles[activeFile];
+                updateNoteWithSaveInfo(file, author, wps, note);
+                exportXmlFile(file.name, file.xml);
+            });
+        };
+
+        document.getElementById("batchSaveBtn").onclick = () => {
+            showSaveInfoModal((author, wps, note) => {
+                const filesToSave = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
+                const targetFiles = filesToSave.length ? filesToSave : loadedFiles;
+                targetFiles.forEach(file => updateNoteWithSaveInfo(file, author, wps, note));
+                saveSelectedFiles();
+            });
+        };
+
+        const headModal = document.getElementById("headModal");
+        const headInput = document.getElementById("headInput");
+
+        function applyHeadValue(value) {
+            recordHistoryAction("Kopf ändern", () => {
+                if (!DEFAULT_HEADS.includes(value) && !customHeads.includes(value)) {
+                    customHeads.push(value);
+                    saveCustomHeads();
+                }
+                const targetFiles = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
+                const filesToUpdate = targetFiles.length ? targetFiles : [loadedFiles[activeFile]].filter(Boolean);
+
+                filesToUpdate.forEach(file => {
+                    const root = file.xml.querySelector("sched") || file.xml.documentElement;
+                    if (root) root.setAttribute("head", value);
+                });
+
+                document.getElementById("status").textContent = `Kopf für ${filesToUpdate.length} Datei(en) gesetzt.`;
+                if (activeFile >= 0 && loadedFiles[activeFile]) showSection(lastSelectedSection);
+            });
+        }
+
+        function openNewHeadModal() {
+            headInput.value = "";
+            headModal.classList.add("show");
+            headInput.focus();
+        };
+
+        document.getElementById("headCancelBtn").onclick = () => {
+            headModal.classList.remove("show");
+        };
+
+        document.getElementById("headConfirmBtn").onclick = () => {
+            const value = headInput.value.trim();
+            if (!value) {
+                headInput.focus();
+                return;
+            }
+            headModal.classList.remove("show");
+            applyHeadValue(value);
+        };
+
+        const saveAsBtn = document.getElementById("saveAsBtn"); const saveAsModal = document.getElementById("saveAsModal");
+        const customFileNameInput = document.getElementById("customFileName"); const modalCancelBtn = document.getElementById("modalCancelBtn");
+        const modalConfirmBtn = document.getElementById("modalConfirmBtn");
+
+        saveAsBtn.onclick = () => {
+            const file = loadedFiles[activeFile];
+            if (!file) return;
+            customFileNameInput.value = file.name;
+            saveAsModal.classList.add("show"); customFileNameInput.focus();
+        };
+        modalCancelBtn.onclick = () => { saveAsModal.classList.remove("show"); };
+        modalConfirmBtn.onclick = () => {
+            let name = customFileNameInput.value.trim(); if (!name) return;
+            if (!name.toLowerCase().endsWith(".xml")) name += ".xml";
+            if (activeFile >= 0 && loadedFiles[activeFile]) {
+                showSaveInfoModal((author, wps, note) => {
+                    const file = loadedFiles[activeFile];
+                    updateNoteWithSaveInfo(file, author, wps, note);
+                    exportXmlFile(name, file.xml);
+                });
+            }
+            saveAsModal.classList.remove("show");
+        };
+
+        /* COMPARE & CONVERTER TOOLS */
+        function collectComparisonData(file) {
+            const data = {};
+            ["global", "limits", "overrides"].forEach(sectionName => {
+                const section = file.sections[sectionName];
+                if (!section) return;
+                [...section.children].forEach(node => {
+                    if (node && node.tagName) data[node.tagName] = node.textContent;
+                });
+            });
+            const firstSegment = file.sections.segments[0];
+            if (firstSegment) {
+                [...firstSegment.children].forEach(node => {
+                    if (node && node.tagName) data[node.tagName] = node.textContent;
+                });
+            }
+            return data;
+        }
+
+        document.getElementById("compareBtn").onclick = () => {
+            commitPendingEdit();
+            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
+            document.getElementById("compareBtn").classList.add("active");
+            const content = document.getElementById("content");
+            content.innerHTML = "<h2>Schedule Comparison</h2>";
+
+            const selectedComparisonFiles = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
+            const filesToCompare = selectedComparisonFiles.length >= 2 ? selectedComparisonFiles : loadedFiles;
+
+            if (filesToCompare.length < 2) {
+                content.innerHTML += "<p style='color: var(--text-muted);'>Please load at least two files to compare them.</p>";
+                return;
+            }
+
+            const dataMap = filesToCompare.map(file => collectComparisonData(file));
+            const keys = [...new Set(dataMap.flatMap(data => Object.keys(data)))].sort(sortParams);
+            const table = document.createElement("table");
+            table.className = "diff-table";
+            table.innerHTML = `<tr><th>Parameter</th>${filesToCompare.map(file => `<th>${file.name}</th>`).join("")}<th>Status</th></tr>`;
+
+            keys.forEach(key => {
+                if (hiddenFields.has(key)) return;
+                const row = document.createElement("tr");
+                const nameCell = document.createElement("td");
+                nameCell.textContent = key;
+                if (importantFields.has(key)) nameCell.classList.add("important-name");
+                row.appendChild(nameCell);
+
+                const values = filesToCompare.map((file, index) => String(dataMap[index][key] ?? ""));
+                const unique = [...new Set(values)];
+                const status = unique.length <= 1 ? "Same" : "Different";
+
+                values.forEach(value => {
+                    const valueCell = document.createElement("td");
+                    valueCell.textContent = value || "-";
+                    row.appendChild(valueCell);
+                });
+
+                const diffCell = document.createElement("td");
+                diffCell.textContent = status;
+                diffCell.className = `diff-status ${status === "Same" ? "same" : ""}`.trim();
+                row.appendChild(diffCell);
+                table.appendChild(row);
+            });
+
+            content.appendChild(table);
+        };
+
+        document.getElementById("converterBtn").onclick = () => {
+            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
+            document.getElementById("converterBtn").classList.add("active");
+            const content = document.getElementById("content");
+            content.innerHTML = `
+                <h2>Unit Converter</h2>
+                <div class="panel" style="max-width: 500px;">
+                    <div class="panel-header">IPM to cm/min Speed Converter</div>
+                    <div class="panel-content open">
+                        <div class="converter-group">
+                            <div class="converter-field">
+                                <label for="ipmInput">Inches Per Minute (IPM)</label>
+                                <input type="number" id="ipmInput" step="any" placeholder="0.0">
+                            </div>
+                            <div class="converter-field"><label for="cmInput">Centimeters Per Minute (cm/min)</label><input type="number" id="cmInput" step="any" placeholder="0.0"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const ipmInput = document.getElementById("ipmInput"); const cmInput = document.getElementById("cmInput");
+            ipmInput.oninput = () => { cmInput.value = ipmInput.value === "" ? "" : (parseFloat(ipmInput.value) * 2.54).toFixed(3); };
+            cmInput.oninput = () => { ipmInput.value = cmInput.value === "" ? "" : (parseFloat(cmInput.value) / 2.54).toFixed(3); };
+        };
+
+        document.getElementById("hiddenManagerBtn").onclick = () => {
+            commitPendingEdit();
+            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
+            document.getElementById("hiddenManagerBtn").classList.add("active");
+            showHiddenManager();
+        };
+
+        document.getElementById("changeLogBtn").onclick = () => {
+            commitPendingEdit();
+            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
+            document.getElementById("changeLogBtn").classList.add("active");
+            renderChangeLog();
+        };
+
+        function showHiddenManager() {
+            const content = document.getElementById("content"); content.innerHTML = "<h2>Hidden Parameters</h2>";
+            if (hiddenFields.size === 0) { content.innerHTML += "<p style='color: var(--text-muted);'>No parameters are hidden.</p>"; return; }
+            const table = document.createElement("table"); table.innerHTML = "<tr><th>Parameter</th><th>Action</th></tr>";
+            [...hiddenFields].sort().forEach(key => {
+                const tr = document.createElement("tr"); const tdName = document.createElement("td"); tdName.textContent = key;
+                const tdAction = document.createElement("td"); const btn = document.createElement("button"); btn.textContent = "Restore"; btn.className = "btn-primary"; btn.style.padding = "4px 12px"; btn.style.fontSize = "12px";
+                btn.onclick = () => {
+                    recordHistoryAction("Feld wiederherstellen", () => {
+                        hiddenFields.delete(key);
+                        saveHidden();
+                        showHiddenManager();
+                    });
+                };
+                tdAction.appendChild(btn); tr.appendChild(tdName); tr.appendChild(tdAction); table.appendChild(tr);
+            });
+            content.appendChild(table);
+        }
+
+        /* CHANGES & SEARCH */
+        let changeCount = 0; const changeMap = new Map();
+        function updateChangeCounter() { changeCount = changeLog.length; document.getElementById("changeCounter").textContent = changeCount + " Changes"; }
+
+        function registerChange(input, original) {
+            const key = input.dataset.fieldName || input.dataset.changeKey;
+            const isTextField = input.tagName === 'TEXTAREA' || key === 'note' || key === 'custom_search_tag';
+            const cleanVal = isTextField ? input.value.trim() : input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
+            const changed = cleanVal !== String(original || "").trim();
+            const fileIndex = parseInt(input.dataset.fileIndex, 10);
+            const sectionName = input.dataset.sectionName || lastSelectedSection || "unknown";
+            const segmentIndex = input.dataset.segmentIndex || "";
+            const fileName = input.dataset.fileName || (loadedFiles[fileIndex] ? loadedFiles[fileIndex].name : "unknown");
+
+            updateChangeLogEntry({
+                fileIndex,
+                fileName,
+                sectionName,
+                key,
+                segmentIndex,
+                oldValue: original || "",
+                newValue: cleanVal
+            });
+
+            if (!pendingEdit) {
+                pendingEdit = { changes: [] };
+            }
+            const existingChange = pendingEdit.changes.find(c => c.fileIndex === fileIndex && c.sectionName === sectionName && c.key === key && (c.segmentIndex || "") === (segmentIndex || ""));
+            if (existingChange) {
+                existingChange.newValue = cleanVal;
+            } else {
+                pendingEdit.changes.push({ fileIndex, fileName, sectionName, key, segmentIndex, oldValue: original || "", newValue: cleanVal });
+            }
+
+            input.classList.toggle("changed", changed);
+            updateChangeCounter();
+        }
+
+        document.getElementById("searchBox").oninput = (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll("table tr").forEach(tr => {
+                if (tr.parentElement.tagName !== "THEAD" && tr.firstElementChild.tagName !== "TH") {
+                    tr.style.display = tr.innerText.toLowerCase().includes(term) ? "" : "none";
+                }
+            });
+        };
+
+        window.addEventListener("beforeunload", e => { if (changeCount > 0) { e.preventDefault(); e.returnValue = ""; } });
+
+        /* ORIGINAL RESTORE INTEGRATION */
+        document.getElementById('selectAllBtn').onclick = () => { selectedFiles.clear(); loadedFiles.forEach((f, i) => selectedFiles.add(i)); renderFileList(); updateSelectionStatus(); };
+        document.getElementById('clearSelectionBtn').onclick = () => { selectedFiles.clear(); renderFileList(); updateSelectionStatus(); };
+        document.getElementById('returnBtn').onclick = () => undoLastEdit();
+        document.getElementById('redoBtn').onclick = () => redoLastEdit();
+
+        window.addEventListener("keydown", e => {
+            if (!(e.ctrlKey || e.metaKey)) return;
+            if (e.key.toLowerCase() === "z") {
+                e.preventDefault();
+                if (e.shiftKey) redoLastEdit();
+                else undoLastEdit();
+            } else if (e.key.toLowerCase() === "y") {
+                e.preventDefault();
+                redoLastEdit();
+            }
+        });
+
+        document.getElementById('returnBtn').title = 'Undo last change';
+        document.getElementById('redoBtn').title = 'Redo last undone change';
+        document.getElementById('batchSaveBtn').title = 'Save selected XML files as a ZIP archive with change log';
+
+        document.getElementById('batchSaveBtn').disabled = loadedFiles.length === 0;
+
+        function restoreOriginalValues() {
+            recordHistoryAction("Originalwerte wiederherstellen", () => {
+                loadedFiles = loadedFiles.map(file => {
+                    const xml = file.originalXml.cloneNode(true);
+                    return createFileRecord(file.name, xml, file.originalXml);
+                });
+                pendingEdit = null;
+                changeLog = [];
+                saveChangeLog();
+                updateChangeCounter();
+                if (loadedFiles.length && activeFile >= 0 && activeFile < loadedFiles.length) {
+                    showSection(lastSelectedSection);
+                }
+                document.getElementById('status').textContent = 'Original values restored.';
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const resetBtn = document.createElement('button');
+            resetBtn.id = 'resetChangesBtn';
+            resetBtn.textContent = 'Restore Original Values';
+            resetBtn.style.marginLeft = '8px';
+            resetBtn.disabled = true;
+            const saveAsBtnEl = document.getElementById('saveAsBtn');
+            if (saveAsBtnEl) saveAsBtnEl.parentNode.insertBefore(resetBtn, saveAsBtnEl.nextSibling);
+
+            resetBtn.addEventListener('click', () => {
+                restoreOriginalValues();
+            });
+        });
+    </script>
+</body>
+
+</html>
