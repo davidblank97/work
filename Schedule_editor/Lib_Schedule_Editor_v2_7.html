@@ -1810,6 +1810,12 @@
             <input type="text" id="authorInput" placeholder="Author name">
             <label for="wpsInput" style="font-size: 12px; color: var(--text-muted);">WPS Number:</label>
             <input type="text" id="wpsInput" placeholder="WPS number">
+            <label for="noteUseToggle" style="font-size: 12px; color: var(--text-muted);">Notes in XML:</label>
+            <div style="display: flex; align-items: center; gap: 10px; margin: 8px 0 12px 0;">
+                <input type="checkbox" id="noteUseToggle">
+                <label for="noteUseToggle" style="font-size: 12px; color: var(--text-muted); margin: 0;">Use notes on
+                    save</label>
+            </div>
             <label for="noteInput" style="font-size: 12px; color: var(--text-muted);">Note (max 500 characters):</label>
             <textarea id="noteInput" maxlength="500" rows="4"
                 style="width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; padding: 10px; font-size: 14px; margin: 8px 0 4px 0; font-family: inherit; resize: vertical;"></textarea>
@@ -2895,7 +2901,11 @@
         /* SAVE INFO MODAL */
         let pendingSaveAction = null;
 
-        function updateNoteWithSaveInfo(file, author, wps, note) {
+        function sanitizeNoteText(value) {
+            return String(value ?? "").replace(/[^\p{L}\p{N}\s]/gu, "");
+        }
+
+        function updateNoteWithSaveInfo(file, author, wps, note, useNotes = true) {
             const desc = file.sections.description;
             if (!desc) return;
             let noteNode = desc.querySelector("note");
@@ -2904,7 +2914,18 @@
                 desc.appendChild(noteNode);
             }
 
-            const fileChanges = changeLog.filter(entry => entry.fileName === file.name);
+            if (!useNotes) {
+                noteNode.textContent = "";
+                return;
+            }
+
+            const fileIndex = loadedFiles.indexOf(file);
+            const fileChanges = changeLog.filter(entry => {
+                const sameName = entry.fileName === file.name;
+                const sameIndex = Number.isInteger(fileIndex) && fileIndex >= 0 && entry.fileIndex === fileIndex;
+                const sameLegacyIndex = !Number.isFinite(entry.fileIndex) && sameName;
+                return sameName || sameIndex || sameLegacyIndex;
+            });
 
             let noteText = "";
             if (author) noteText += `Author: ${author}\n`;
@@ -2919,8 +2940,7 @@
 
             if (note) noteText += `Note: ${note}\n`;
 
-            // Limit to 500 characters
-            noteText = noteText.slice(0, 500);
+            noteText = sanitizeNoteText(noteText).slice(0, 500);
             noteNode.textContent = noteText;
         }
 
@@ -2929,6 +2949,7 @@
             document.getElementById("authorInput").value = "";
             document.getElementById("wpsInput").value = "";
             document.getElementById("noteInput").value = "";
+            document.getElementById("noteUseToggle").checked = false;
             document.getElementById("noteCounter").textContent = "0 / 500";
             document.getElementById("saveInfoModal").classList.add("show");
             document.getElementById("authorInput").focus();
@@ -2943,34 +2964,37 @@
             const author = document.getElementById("authorInput").value.trim();
             const wps = document.getElementById("wpsInput").value.trim();
             const note = document.getElementById("noteInput").value.trim();
+            const useNotes = document.getElementById("noteUseToggle").checked;
 
             document.getElementById("saveInfoModal").classList.remove("show");
 
             if (pendingSaveAction) {
-                pendingSaveAction(author, wps, note);
+                pendingSaveAction(author, wps, note, useNotes);
                 pendingSaveAction = null;
             }
         };
 
         document.getElementById("noteInput").oninput = () => {
-            const len = document.getElementById("noteInput").value.length;
+            const noteInput = document.getElementById("noteInput");
+            noteInput.value = sanitizeNoteText(noteInput.value);
+            const len = noteInput.value.length;
             document.getElementById("noteCounter").textContent = `${len} / 500`;
         };
 
         document.getElementById("saveBtn").onclick = () => {
             if (activeFile < 0 || activeFile >= loadedFiles.length) return;
-            showSaveInfoModal((author, wps, note) => {
+            showSaveInfoModal((author, wps, note, useNotes) => {
                 const file = loadedFiles[activeFile];
-                updateNoteWithSaveInfo(file, author, wps, note);
+                updateNoteWithSaveInfo(file, author, wps, note, useNotes);
                 exportXmlFile(file.name, file.xml);
             });
         };
 
         document.getElementById("batchSaveBtn").onclick = () => {
-            showSaveInfoModal((author, wps, note) => {
+            showSaveInfoModal((author, wps, note, useNotes) => {
                 const filesToSave = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
                 const targetFiles = filesToSave.length ? filesToSave : loadedFiles;
-                targetFiles.forEach(file => updateNoteWithSaveInfo(file, author, wps, note));
+                targetFiles.forEach(file => updateNoteWithSaveInfo(file, author, wps, note, useNotes));
                 saveSelectedFiles();
             });
         };
@@ -3032,9 +3056,9 @@
             let name = customFileNameInput.value.trim(); if (!name) return;
             if (!name.toLowerCase().endsWith(".xml")) name += ".xml";
             if (activeFile >= 0 && loadedFiles[activeFile]) {
-                showSaveInfoModal((author, wps, note) => {
+                showSaveInfoModal((author, wps, note, useNotes) => {
                     const file = loadedFiles[activeFile];
-                    updateNoteWithSaveInfo(file, author, wps, note);
+                    updateNoteWithSaveInfo(file, author, wps, note, useNotes);
                     exportXmlFile(name, file.xml);
                 });
             }

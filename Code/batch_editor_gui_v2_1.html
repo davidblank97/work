@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XML Batch Editor 2.1</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --panel-2: #1f2937;
+            --line: #374151;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #60a5fa;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .app {
+            max-width: 980px;
+            margin: 0 auto;
+            background: rgba(17, 24, 39, 0.95);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 22px 24px 12px 24px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(31, 41, 55, 0.7);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.7rem, 2vw, 2.2rem);
+            letter-spacing: 0.02em;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 180px minmax(0, 1fr) 170px;
+            gap: 12px 14px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: #0b1220;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 9px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: #0b1220;
+            color: var(--text);
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-weight: 700;
+            font-size: 0.96rem;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+            color: var(--text);
+            background: linear-gradient(180deg, #1d4ed8 0%, #1e40af 100%);
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .ghost {
+            background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+        }
+
+        .success {
+            background: linear-gradient(180deg, #047857 0%, #065f46 100%);
+        }
+
+        .help {
+            grid-column: 2 / span 2;
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: -2px;
+            margin-bottom: 8px;
+        }
+
+        .start-button {
+            margin-top: 10px;
+            width: 100%;
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            padding: 13px 16px;
+            font-size: 1rem;
+        }
+
+        .progress {
+            margin-top: 18px;
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .progress-bar {
+            position: relative;
+            width: 100%;
+            height: 20px;
+            background: #0b1220;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 0%;
+            background: linear-gradient(90deg, #60a5fa 0%, #34d399 100%);
+            border-radius: 999px;
+            transition: width 0.2s ease;
+        }
+
+        .log {
+            margin-top: 18px;
+            background: #020817;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            min-height: 320px;
+            max-height: 390px;
+            overflow: auto;
+            padding: 14px 16px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            color: #dbeafe;
+        }
+
+        .log .ok {
+            color: var(--success);
+        }
+
+        .log .warn {
+            color: var(--warning);
+        }
+
+        .log .err {
+            color: var(--danger);
+        }
+
+        .log .info {
+            color: #bfdbfe;
+        }
+
+        @media (max-width: 760px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .help {
+                grid-column: auto;
+            }
+
+            .header,
+            .content {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="header">
+            <h1>XML Batch Editor 2.1</h1>
+        </div>
+
+        <div class="content">
+            <div class="row">
+                <label for="folderInput">Hauptordner:</label>
+                <input id="folderInput" type="file" webkitdirectory directory multiple />
+                <button id="selectDirButton" class="ghost" type="button">Ordner wählen...</button>
+            </div>
+
+            <div class="row">
+                <label for="layerInput">Layer-Diameter (mm):</label>
+                <input id="layerInput" type="number" value="0" step="0.01" min="0" />
+                <div class="help">0 = Layer entspricht Outer</div>
+            </div>
+
+            <div class="row" style="margin-top: 8px;">
+                <div></div>
+                <button id="startButton" class="start-button" type="button">Verarbeitung starten</button>
+                <div></div>
+            </div>
+
+            <div class="progress">
+                <div class="progress-header">
+                    <span id="progressText">Bereit</span>
+                    <span id="progressStats">0 / 0</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div id="log" class="log">Bereit.</div>
+        </div>
+    </div>
+
+    <script>
+        const OUTER_DIAMETERS = {
+            G10: 330,
+            G12: 381,
+            G18: 514,
+            G20: 565,
+            G22: 615,
+            G24: 666,
+            G26: 717,
+            G28: 768,
+            G30: 819,
+            G34: 920,
+            G36: 971,
+            G38: 1022
+        };
+
+        const TEMPLATE_CANDIDATE_PATHS = [
+            '../Schedule_Org/Muster_schedules/',
+            '/Schedule_Org/Muster_schedules/',
+            '../Schedule_Org/Muster_schedules',
+            '/Schedule_Org/Muster_schedules'
+        ];
+
+        const folderInput = document.getElementById('folderInput');
+        const selectDirButton = document.getElementById('selectDirButton');
+        const startButton = document.getElementById('startButton');
+        const layerInput = document.getElementById('layerInput');
+        const logBox = document.getElementById('log');
+        const progressText = document.getElementById('progressText');
+        const progressStats = document.getElementById('progressStats');
+        const progressFill = document.getElementById('progressFill');
+
+        let currentRootFolderName = '';
+
+        function writeLog(message, type = 'info') {
+            const line = document.createElement('div');
+            line.className = type;
+            line.textContent = message;
+            logBox.appendChild(line);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function resetProgress(total = 0) {
+            progressFill.style.width = '0%';
+            progressStats.textContent = `0 / ${total}`;
+            progressText.textContent = 'Vorbereitung...';
+        }
+
+        function updateProgress(current, total) {
+            const percentage = total <= 0 ? 0 : Math.min((current / total) * 100, 100);
+            progressFill.style.width = `${percentage}%`;
+            progressStats.textContent = `${current} / ${total}`;
+        }
+
+        function readTextFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error(`Datei konnte nicht gelesen werden: ${file.name}`));
+                reader.readAsText(file, 'utf-8');
+            });
+        }
+
+        function formatInch(value) {
+            return Number(value).toFixed(6);
+        }
+
+        function versionKey(version) {
+            if (!version) return [];
+            const parts = String(version).split('.').map(part => Number(part.trim()));
+            if (parts.some(p => Number.isNaN(p))) return [];
+            return parts;
+        }
+
+        function getTagNameFromNode(node) {
+            return node && node.tagName ? node.tagName : '';
+        }
+
+        function mergeLayout(sourceElement, templateElement) {
+            const templateChildren = Array.from(templateElement.children);
+            const templateByTag = {};
+
+            for (const child of templateChildren) {
+                const tag = getTagNameFromNode(child);
+                if (!templateByTag[tag]) templateByTag[tag] = [];
+                templateByTag[tag].push(child);
+            }
+
+            const sourceChildren = Array.from(sourceElement.children);
+            const sourceOccurrences = {};
+
+            for (const child of sourceChildren) {
+                const tag = getTagNameFromNode(child);
+                const occurrence = sourceOccurrences[tag] || 0;
+                sourceOccurrences[tag] = occurrence + 1;
+                const matchingTemplates = templateByTag[tag] || [];
+                if (!matchingTemplates.length) continue;
+                const templateChild = matchingTemplates[Math.min(occurrence, matchingTemplates.length - 1)];
+                mergeLayout(child, templateChild);
+            }
+
+            const existingCounts = {};
+            for (const child of sourceChildren) {
+                const tag = getTagNameFromNode(child);
+                existingCounts[tag] = (existingCounts[tag] || 0) + 1;
+            }
+
+            for (const templateChild of templateChildren) {
+                const tag = getTagNameFromNode(templateChild);
+                const count = existingCounts[tag] || 0;
+                const templateCount = templateChildren.filter(child => getTagNameFromNode(child) === tag).length;
+                if (count < templateCount) {
+                    sourceElement.appendChild(templateChild.cloneNode(true));
+                    existingCounts[tag] = count + 1;
+                }
+            }
+        }
+
+        function pruneLayout(sourceElement, templateElement) {
+            const templateChildren = Array.from(templateElement.children);
+            const templateByTag = {};
+
+            for (const child of templateChildren) {
+                const tag = getTagNameFromNode(child);
+                if (!templateByTag[tag]) templateByTag[tag] = [];
+                templateByTag[tag].push(child);
+            }
+
+            const sourceChildren = Array.from(sourceElement.children);
+            const sourceOccurrences = {};
+            let removed = 0;
+
+            for (const child of sourceChildren) {
+                const tag = getTagNameFromNode(child);
+                const matchingTemplates = templateByTag[tag] || [];
+
+                if (!matchingTemplates.length) {
+                    sourceElement.removeChild(child);
+                    removed += 1;
+                    continue;
+                }
+
+                const occurrence = sourceOccurrences[tag] || 0;
+                sourceOccurrences[tag] = occurrence + 1;
+                const templateChild = matchingTemplates[Math.min(occurrence, matchingTemplates.length - 1)];
+                removed += pruneLayout(child, templateChild);
+            }
+
+            return removed;
+        }
+
+        function findAllByTag(root, tagName) {
+            const results = [];
+            const stack = [root];
+            while (stack.length) {
+                const current = stack.pop();
+                if (!current) continue;
+                if (current.tagName === tagName) results.push(current);
+                for (const child of Array.from(current.children)) stack.push(child);
+            }
+            return results;
+        }
+
+        function setElementValue(root, tagName, value) {
+            let count = 0;
+            for (const element of findAllByTag(root, tagName)) {
+                element.textContent = value;
+                count += 1;
+            }
+            return count;
+        }
+
+        function removeElements(root, tagName) {
+            let count = 0;
+            for (const parent of Array.from(root.querySelectorAll('*'))) {
+                const matches = Array.from(parent.children).filter(child => child.tagName === tagName);
+                for (const child of matches) {
+                    parent.removeChild(child);
+                    count += 1;
+                }
+            }
+            return count;
+        }
+
+        function prepareXmlDocument(sourceDocument, templateRoot, outerInch, layerInch) {
+            const sourceRoot = sourceDocument.documentElement;
+            mergeLayout(sourceRoot, templateRoot);
+            pruneLayout(sourceRoot, templateRoot);
+            removeElements(sourceRoot, 'ahc_retract');
+
+            const configVersion = templateRoot.querySelector('metadata config_version');
+            const sourceConfigVersion = sourceRoot.querySelector('metadata config_version');
+            if (configVersion && sourceConfigVersion) {
+                sourceConfigVersion.textContent = configVersion.textContent;
+            }
+
+            setElementValue(sourceRoot, 'jog_speed_edit_mode', '1');
+            setElementValue(sourceRoot, 'travel_jog', '19.98');
+            setElementValue(sourceRoot, 'outer_diameter', formatInch(outerInch));
+            setElementValue(sourceRoot, 'layer_diameter', formatInch(layerInch));
+
+            return sourceDocument;
+        }
+
+        function getTemplateCandidates(files) {
+            return files.filter(file => {
+                const relativePath = file.webkitRelativePath || file.name;
+                return relativePath.includes('/Muster_schedules/') || relativePath.startsWith('Muster_schedules/') || relativePath.includes('Muster_schedules');
+            });
+        }
+
+        async function loadTemplateDirectoryXmls(directoryUrl) {
+            try {
+                const response = await fetch(directoryUrl, { cache: 'no-store' });
+                if (!response.ok) return [];
+                const html = await response.text();
+                const regex = /href="([^"]+\.xml(?:\?[^\"]*)?)"/gi;
+                const urls = [];
+                let match;
+                while ((match = regex.exec(html)) !== null) {
+                    const href = match[1];
+                    if (!href) continue;
+                    urls.push(new URL(href, directoryUrl).href);
+                }
+                return urls;
+            } catch (error) {
+                return [];
+            }
+        }
+
+        async function loadDefaultTemplateRoot() {
+            const xmlUrls = [];
+            for (const candidate of TEMPLATE_CANDIDATE_PATHS) {
+                const urls = await loadTemplateDirectoryXmls(candidate);
+                for (const url of urls) xmlUrls.push(url);
+            }
+
+            const uniqueUrls = [...new Set(xmlUrls)];
+            if (!uniqueUrls.length) return null;
+
+            const latest = { versionKey: [], xml: null };
+            for (const xmlUrl of uniqueUrls) {
+                try {
+                    const response = await fetch(xmlUrl, { cache: 'no-store' });
+                    if (!response.ok) continue;
+                    const text = await response.text();
+                    const doc = new DOMParser().parseFromString(text, 'application/xml');
+                    if (doc.querySelector('parsererror')) continue;
+                    const versionNode = doc.querySelector('metadata config_version');
+                    const version = versionNode ? versionNode.textContent.trim() : '';
+                    const key = versionKey(version);
+                    if (!latest.xml || key.length > latest.versionKey.length || (key.length === latest.versionKey.length && key > latest.versionKey)) {
+                        latest.versionKey = key;
+                        latest.xml = doc;
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+
+            return latest.xml ? latest.xml.documentElement : null;
+        }
+
+        async function selectTemplate(files) {
+            const candidates = getTemplateCandidates(files);
+            if (!candidates.length) return null;
+
+            const latest = { versionKey: [], file: null, xml: null };
+            for (const file of candidates) {
+                const text = await readTextFile(file);
+                const doc = new DOMParser().parseFromString(text, 'application/xml');
+                if (doc.querySelector('parsererror')) continue;
+                const versionNode = doc.querySelector('metadata config_version');
+                const version = versionNode ? versionNode.textContent.trim() : '';
+                const key = versionKey(version);
+                if (!latest.file || key.length > latest.versionKey.length || (key.length === latest.versionKey.length && key > latest.versionKey)) {
+                    latest.versionKey = key;
+                    latest.file = file;
+                    latest.xml = doc;
+                }
+            }
+
+            return latest.xml ? latest.xml.documentElement : null;
+        }
+
+        function getSourceFolders(files) {
+            const folders = new Set();
+            for (const file of files) {
+                const relativePath = file.webkitRelativePath || file.name;
+                const segments = relativePath.split('/').filter(Boolean);
+                if (segments.length >= 2) {
+                    folders.add(segments[1]);
+                }
+            }
+            return Array.from(folders).sort();
+        }
+
+        async function processFiles() {
+            const selectedFiles = Array.from(folderInput.files || []);
+            if (!selectedFiles.length) {
+                writeLog('Bitte einen Hauptordner auswählen.', 'err');
+                return;
+            }
+
+            const xmlFiles = selectedFiles.filter(file => file.name.toLowerCase().endsWith('.xml'));
+            if (!xmlFiles.length) {
+                writeLog('Im ausgewählten Ordner wurden keine XML-Dateien gefunden.', 'err');
+                return;
+            }
+
+            const rootName = selectedFiles[0].webkitRelativePath ? selectedFiles[0].webkitRelativePath.split('/')[0] : 'Hauptordner';
+            currentRootFolderName = rootName;
+            writeLog(`Ordner ausgewählt: ${rootName}`, 'ok');
+            writeLog(`XML-Dateien gefunden: ${xmlFiles.length}`, 'info');
+
+            const layerValue = Number(layerInput.value);
+            if (Number.isNaN(layerValue)) {
+                writeLog('Layer-Diameter muss eine gültige Zahl sein.', 'err');
+                return;
+            }
+
+            const templateRoot = await loadDefaultTemplateRoot() || await selectTemplate(xmlFiles);
+            if (!templateRoot) {
+                writeLog('Keine gültige Vorlage im Muster_schedules-Ordner gefunden.', 'err');
+                return;
+            }
+
+            writeLog('Vorlage geladen: Muster_schedules', 'ok');
+
+            const sourceFolders = getSourceFolders(xmlFiles);
+            const totalJobs = sourceFolders.length * Object.keys(OUTER_DIAMETERS).length;
+            resetProgress(totalJobs);
+            progressText.textContent = 'Verarbeitung...';
+
+            const outputMap = new Map();
+            let processed = 0;
+
+            for (const gFolder of Object.keys(OUTER_DIAMETERS)) {
+                const outerMm = OUTER_DIAMETERS[gFolder];
+                const outerInch = outerMm / 25.4;
+                const layerInch = layerValue === 0 ? outerInch : layerValue / 25.4;
+
+                for (const sourceFolder of sourceFolders) {
+                    const matchingFiles = xmlFiles.filter(file => {
+                        const relativePath = file.webkitRelativePath || file.name;
+                        const parts = relativePath.split('/').filter(Boolean);
+                        return parts.length >= 2 && parts[1] === sourceFolder;
+                    });
+
+                    if (!matchingFiles.length) continue;
+
+                    for (const file of matchingFiles) {
+                        const sourceText = await readTextFile(file);
+                        const sourceDoc = new DOMParser().parseFromString(sourceText, 'application/xml');
+                        if (sourceDoc.querySelector('parsererror')) {
+                            writeLog(`XML-Fehler: ${file.name}`, 'err');
+                            continue;
+                        }
+
+                        const resultDoc = prepareXmlDocument(sourceDoc, templateRoot, outerInch, layerInch);
+                        const resultXml = new XMLSerializer().serializeToString(resultDoc);
+                        const relativeOutput = `${gFolder}/${sourceFolder}/${file.name}`;
+                        outputMap.set(relativeOutput, resultXml);
+                        processed += 1;
+                        updateProgress(processed, totalJobs);
+                    }
+                }
+            }
+
+            if (outputMap.size === 0) {
+                writeLog('Es wurden keine XML-Dateien verarbeitet.', 'warn');
+                return;
+            }
+
+            writeLog(`Verarbeitet: ${outputMap.size} XML-Dateien`, 'ok');
+            writeLog('Die Ergebnisse werden als ZIP-Datei heruntergeladen.', 'info');
+
+            try {
+                const zip = new JSZip();
+                for (const [relativePath, xmlText] of outputMap.entries()) {
+                    zip.file(relativePath, xmlText);
+                }
+                const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+                const downloadUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'xml_batch_editor_2_1.zip';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(downloadUrl);
+                progressText.textContent = 'Fertig';
+                progressFill.style.width = '100%';
+                progressStats.textContent = `${outputMap.size} / ${outputMap.size}`;
+                writeLog('Download abgeschlossen.', 'ok');
+            } catch (error) {
+                writeLog(`ZIP-Export fehlgeschlagen: ${error.message}`, 'err');
+            }
+        }
+
+        function attachEvents() {
+            selectDirButton.addEventListener('click', () => folderInput.click());
+            folderInput.addEventListener('change', () => {
+                const files = Array.from(folderInput.files || []);
+                if (files.length) {
+                    const firstPath = files[0].webkitRelativePath || files[0].name;
+                    const rootName = firstPath.split('/')[0];
+                    currentRootFolderName = rootName;
+                    writeLog(`Ordner bereit: ${rootName}`, 'ok');
+                }
+            });
+
+            startButton.addEventListener('click', async () => {
+                startButton.disabled = true;
+                logBox.innerHTML = '';
+                writeLog('Verarbeitung gestartet...', 'info');
+                try {
+                    await processFiles();
+                } catch (error) {
+                    writeLog(`Fehler: ${error.message}`, 'err');
+                } finally {
+                    startButton.disabled = false;
+                }
+            });
+        }
+
+        attachEvents();
+        writeLog('XML Batch Editor 2.1 bereit.', 'info');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.12.0/jszip.min.js"></script>
+</body>
+
+</html>
