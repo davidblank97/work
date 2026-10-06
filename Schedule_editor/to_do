@@ -1,1 +1,4 @@
 
+Templates müssen bei kopfauswahl richtig gewählt und zugeordnet werden.
+NGRT und NG programme müssen das richtige layout haben.
+Datenbank für alle Schweißprogrammme erstellen. Inder die ein einzelnen Werte wie Kopf, RingØ, Nahtart abgefragt werden und dann das richtige programm ausgegeben wird 
