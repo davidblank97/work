@@ -1953,6 +1953,37 @@
 
         const MODES_ORDER = ['none', 'in', 'mm', 'cmmin', 'ampere', 'volt', 'seconds', 'degree'];
         const DEFAULT_HEADS = ["NGRT + H-HEAD", "H2-FV-100S"];
+        const HEAD_PARAMETER_PRESETS = {
+            "NGRT + H-HEAD": {
+                travel_jog: "20",
+                wire_jog_fwd: "100",
+                wire_jog_rev: "100",
+                ahc_jog: "60",
+                osc_jog: "50",
+                wire_manipulator_in_out_jog: "243.75",
+                wire_manipulator_up_down_jog: "3.4",
+                tungsten_jog: "163.36"
+            },
+            "NGRT-Head": {
+                travel_jog: "20",
+                wire_jog_fwd: "100",
+                wire_jog_rev: "100",
+                ahc_jog: "60",
+                osc_jog: "50",
+                wire_manipulator_in_out_jog: "243.75",
+                wire_manipulator_up_down_jog: "3.4",
+                tungsten_jog: "163.36"
+            },
+            "H2-FV-100S": {
+                travel_jog: "20",
+                wire_jog_fwd: "100",
+                wire_jog_rev: "100",
+                ahc_jog: "60",
+                osc_jog: "50",
+                wire_manipulator_in_out_jog: "60",
+                wire_manipulator_up_down_jog: "60"
+            }
+        };
         let customHeads = JSON.parse(localStorage.getItem("scheduleEditorCustomHeads") || "[]");
 
         /* HELPERS */
@@ -3101,6 +3132,16 @@
         const headModal = document.getElementById("headModal");
         const headInput = document.getElementById("headInput");
 
+        function applyHeadParameterPreset(file, head) {
+            const preset = HEAD_PARAMETER_PRESETS[head];
+            if (!preset) return;
+
+            Object.entries(preset).forEach(([parameter, value]) => {
+                const node = file.xml.querySelector(`global ${parameter}`);
+                if (node) node.textContent = value;
+            });
+        }
+
         function applyHeadValue(value) {
             recordHistoryAction("Change head", () => {
                 if (!DEFAULT_HEADS.includes(value) && !customHeads.includes(value)) {
@@ -3112,7 +3153,10 @@
 
                 filesToUpdate.forEach(file => {
                     const root = file.xml.querySelector("sched") || file.xml.documentElement;
-                    if (root) root.setAttribute("head", value);
+                    if (root) {
+                        root.setAttribute("head", value);
+                        applyHeadParameterPreset(file, value);
+                    }
                 });
 
                 document.getElementById("status").textContent = `Head applied to ${filesToUpdate.length} file(s).`;
