@@ -2,3 +2,21 @@
 Templates müssen bei kopfauswahl richtig gewählt und zugeordnet werden.
 NGRT und NG programme müssen das richtige layout haben.
 Datenbank für alle Schweißprogrammme erstellen. Inder die ein einzelnen Werte wie Kopf, RingØ, Nahtart abgefragt werden und dann das richtige programm ausgegeben wird 
+NGRT-Head:
+"travel_jog"=20
+"wire_jog_fwd"=100
+"wire_jog_rev"=100
+"ahc_jog"=60
+"osc_jog"=50
+"wire_manipulator_in_out_jog"=243.75
+"wire_manipulator_up_down_jog"=3.4
+"tungsten_jog"=163.36
+
+H2-FV-100S:
+"travel_jog"=20
+"wire_jog_fwd"=100
+"wire_jog_rev"=100
+"ahc_jog"=60
+"osc_jog"=50
+"wire_manipulator_in_out_jog"=60
+"wire_manipulator_up_down_jog"=60
