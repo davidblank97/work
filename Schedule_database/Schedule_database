@@ -1,0 +1,6 @@
+database in die Schweißprogramme hochgeladen und verwaltet werden können.
+die hochgeladen prgramme sollten lokal gespeichert.
+beim abrufen der Programme müssen folgende dinge abgefragt werden:
+1.Programmname per dropdown menü
+2.Schweißkopf
+3.
