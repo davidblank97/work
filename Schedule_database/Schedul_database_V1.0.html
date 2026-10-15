@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Schweißprogramm-Datenbank</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg-main: #141416;
+            --bg-sidebar: #1b1b1f;
+            --bg-panel: #202024;
+            --bg-input: #18181c;
+            --border: #2d2d34;
+            --text: #f3f3f5;
+            --muted: #96969d;
+            --accent: #ff9800;
+            --accent-hover: #e68900;
+            --danger: #ff6464;
+            --success: #78d78b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg-main);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        button, input, select { font: inherit; }
+        button {
+            border: 0;
+            border-radius: 6px;
+            padding: 9px 14px;
+            background: var(--accent);
+            color: #171717;
+            font-weight: 650;
+            cursor: pointer;
+        }
+        button:hover:not(:disabled) { background: var(--accent-hover); }
+        button:disabled { opacity: .45; cursor: not-allowed; }
+        button.secondary {
+            border: 1px solid #6b4a20;
+            background: transparent;
+            color: var(--accent);
+        }
+        button.secondary:hover:not(:disabled) { background: #30261a; }
+        button.danger {
+            border: 1px solid #693737;
+            background: transparent;
+            color: var(--danger);
+            padding: 6px 10px;
+        }
+        button.danger:hover:not(:disabled) { background: #321e1e; }
+
+        .layout { display: flex; min-height: 100vh; }
+        aside {
+            width: 320px;
+            flex: 0 0 320px;
+            padding: 22px 18px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+        }
+        aside h2 {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+        .side-section { margin-bottom: 26px; }
+        .upload-label {
+            display: block;
+            margin: 9px 0;
+            padding: 11px 12px;
+            border: 1px dashed #55545a;
+            border-radius: 7px;
+            color: #dedee2;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .upload-label:hover { border-color: var(--accent); color: var(--accent); }
+        .upload-label input { display: none; }
+        .drop-zone {
+            margin: 10px 0;
+            padding: 13px 12px;
+            border: 1px dashed #55545a;
+            border-radius: 7px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+            transition: border-color .15s, background .15s, color .15s;
+        }
+        .drop-zone.drag-over {
+            border-color: var(--accent);
+            background: #30261a;
+            color: var(--text);
+        }
+        .item-list { display: grid; gap: 7px; }
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #202024;
+            font-size: 12px;
+        }
+        .list-item-name { overflow-wrap: anywhere; }
+        .empty { color: var(--muted); font-size: 12px; line-height: 1.5; }
+        .storage-note { color: var(--muted); font-size: 11px; line-height: 1.5; }
+
+        main { flex: 1; min-width: 0; }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 28px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 { margin: 0; font-size: 19px; }
+        #storageStatus { color: var(--muted); font-size: 12px; }
+        .content { max-width: 1000px; margin: 0 auto; padding: 28px; }
+        .panel {
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--bg-panel);
+        }
+        .panel-heading {
+            padding: 15px 19px;
+            border-bottom: 1px solid var(--border);
+            background: #26262b;
+        }
+        .panel-heading h2 { margin: 0; font-size: 15px; }
+        .panel-body { padding: 20px; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 17px;
+        }
+        .field { display: flex; flex-direction: column; gap: 7px; }
+        .field label { color: #c9c9cf; font-size: 12px; font-weight: 600; }
+        .field select, .field input {
+            width: 100%;
+            min-height: 40px;
+            padding: 8px 11px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            outline: none;
+            background: var(--bg-input);
+            color: var(--text);
+        }
+        .field select:focus, .field input:focus { border-color: var(--accent); }
+        .field-help { color: var(--muted); font-size: 11px; line-height: 1.45; }
+        .wide { grid-column: 1 / -1; }
+        .version-info {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #19191d;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+        .version-info strong { color: #d8d8dd; }
+        .notice {
+            margin-top: 17px;
+            padding: 11px 13px;
+            border: 1px solid #61502e;
+            border-radius: 6px;
+            background: #2a251b;
+            color: #e8c986;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .notice.error { border-color: #693737; background: #321e1e; color: #ffbcbc; }
+        .actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+        .details { margin: 16px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+        #message { min-height: 19px; margin: 13px 0 0; color: var(--success); font-size: 12px; }
+        #message.error { color: #ff9999; }
+        .manage-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .manage-row p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+        @media (max-width: 760px) {
+            .layout { display: block; }
+            aside { width: 100%; border-right: 0; border-bottom: 1px solid var(--border); }
+            header { align-items: flex-start; flex-direction: column; padding: 18px; }
+            .content { padding: 18px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .wide { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <section class="side-section">
+                <h2>Programme</h2>
+                <label class="upload-label">
+                    XML-Programme hinzufügen
+                    <input id="programFiles" type="file" accept=".xml,application/xml,text/xml" multiple>
+                </label>
+                <label class="upload-label">
+                    Programmordner mit allen XML-Dateien hinzufügen
+                    <input id="programFolder" type="file" accept=".xml,application/xml,text/xml" webkitdirectory directory multiple>
+                </label>
+                <div id="programDropZone" class="drop-zone" role="region" aria-label="Programme per Drag-and-drop hinzufügen">
+                    XML-Dateien oder ganze Programmordner hier ablegen
+                </div>
+                <div id="programList" class="item-list"></div>
+            </section>
+            <section class="side-section">
+                <h2>Schweißkopf-Schemas</h2>
+                <label class="upload-label">
+                    Schema aus XML hinzufügen
+                    <input id="schemaFile" type="file" accept=".xml,application/xml,text/xml">
+                </label>
+                <div id="schemaDropZone" class="drop-zone" role="region" aria-label="Schema per Drag-and-drop hinzufügen">
+                    Schema-XML hier ablegen
+                </div>
+                <div class="field">
+                    <label for="schemaName">Name für neues Schema (optional)</label>
+                    <input id="schemaName" type="text" maxlength="100" placeholder="z. B. NGRT + H-HEAD">
+                    <span class="field-help">Ohne Namen wird der Head-Wert aus der XML übernommen.</span>
+                </div>
+                <div id="schemaList" class="item-list" style="margin-top: 12px"></div>
+            </section>
+            <p class="storage-note">Programme und Schemas werden lokal in diesem Browser gespeichert (IndexedDB). Die Daten verlassen den Rechner nicht.</p>
+        </aside>
+
+        <main>
+            <header>
+                <h1>Schweißprogramm-Datenbank</h1>
+                <span id="storageStatus">Lokaler Speicher wird geöffnet …</span>
+            </header>
+            <div class="content">
+                <section class="panel">
+                    <div class="panel-heading"><h2>Programm abrufen</h2></div>
+                    <div class="panel-body">
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="programSelect">Programmname</label>
+                                <select id="programSelect"><option value="">Zuerst XML-Programme hinzufügen</option></select>
+                            </div>
+                            <div class="field">
+                                <label for="headSelect">Schweißkopf</label>
+                                <select id="headSelect"><option value="">Schema hinzufügen oder auswählen</option></select>
+                            </div>
+                            <div id="configVersionInfo" class="version-info wide" aria-live="polite">
+                                <div><strong>Programm config_version:</strong> <span id="programConfigVersion">—</span></div>
+                                <div><strong>Schema config_version:</strong> <span id="schemaConfigVersion">—</span></div>
+                            </div>
+                            <div class="field">
+                                <label for="diameterSelect">Ringdurchmesser</label>
+                                <select id="diameterSelect">
+                                    <option value="">Durchmesser auswählen</option>
+                                    <option value="330">G10 — 330 mm</option>
+                                    <option value="381">G12 — 381 mm</option>
+                                    <option value="514">G18 — 514 mm</option>
+                                    <option value="565">G20 — 565 mm</option>
+                                    <option value="615">G22 — 615 mm</option>
+                                    <option value="666">G24 — 666 mm</option>
+                                    <option value="717">G26 — 717 mm</option>
+                                    <option value="768">G28 — 768 mm</option>
+                                    <option value="819">G30 — 819 mm</option>
+                                    <option value="920">G34 — 920 mm</option>
+                                    <option value="971">G36 — 971 mm</option>
+                                    <option value="1022">G38 — 1022 mm</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="layerDiameter">Layerdurchmesser in mm</label>
+                                <input id="layerDiameter" type="number" min="0" step="any" value="0">
+                                <span class="field-help">0 oder leer verwendet den Ringdurchmesser. Umrechnung in Inch mit 25,4 mm/Inch und sechs Nachkommastellen.</span>
+                            </div>
+                        </div>
+                        <div id="schemaNotice" class="notice" hidden></div>
+                        <p class="details">Ein importierter Programmordner wird als eine Auswahl gespeichert. Beim Abrufen werden alle darin enthaltenen XML-Dateien angepasst und zusammen als ZIP heruntergeladen. Einzelne hochgeladene XML-Dateien werden ebenfalls als ZIP mit einer Datei bereitgestellt. Die gespeicherten Originale bleiben unverändert.</p>
+                        <div class="actions">
+                            <button id="downloadButton" type="button" disabled>Programm herunterladen</button>
+                        </div>
+                        <p id="message" role="status" aria-live="polite"></p>
+                    </div>
+                </section>
+                <section class="panel">
+                    <div class="panel-heading"><h2>Lokale Daten verwalten</h2></div>
+                    <div class="panel-body manage-row">
+                        <p>Entfernte Programme oder Schemas werden aus dem lokalen Browser-Speicher gelöscht. Originaldateien bleiben auf Ihrem Rechner unverändert.</p>
+                        <button id="refreshButton" class="secondary" type="button">Liste aktualisieren</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        "use strict";
+
+        const DATABASE_NAME = "ScheduleProgramDatabase";
+        const DATABASE_VERSION = 1;
+        const DIAMETERS_MM = new Map([
+            ["G10", 330], ["G12", 381], ["G18", 514], ["G20", 565],
+            ["G22", 615], ["G24", 666], ["G26", 717], ["G28", 768],
+            ["G30", 819], ["G34", 920], ["G36", 971], ["G38", 1022]
+        ]);
+        const HEAD_PRESETS = {
+            "NGRT + H-HEAD": {
+                travel_jog: "20",
+                wire_jog_fwd: "100",
+                wire_jog_rev: "100",
+                ahc_jog: "60",
+                osc_jog: "50",
+                wire_manipulator_in_out_jog: "243.75",
+                wire_manipulator_up_down_jog: "3.4",
+                tungsten_jog: "163.36"
+            },
+            "H2-FV-100S": {
+                travel_jog: "20",
+                wire_jog_fwd: "100",
+                wire_jog_rev: "100",
+                ahc_jog: "60",
+                osc_jog: "50",
+                wire_manipulator_in_out_jog: "60",
+                wire_manipulator_up_down_jog: "60"
+            }
+        };
+
+        const programSelect = document.getElementById("programSelect");
+        const headSelect = document.getElementById("headSelect");
+        const diameterSelect = document.getElementById("diameterSelect");
+        const layerDiameter = document.getElementById("layerDiameter");
+        const downloadButton = document.getElementById("downloadButton");
+        const message = document.getElementById("message");
+        const schemaNotice = document.getElementById("schemaNotice");
+        let database;
+        let programs = [];
+        let schemas = [];
+
+        function setMessage(text, isError = false) {
+            message.textContent = text;
+            message.classList.toggle("error", isError);
+        }
+
+        function setStorageStatus(text, isError = false) {
+            const status = document.getElementById("storageStatus");
+            status.textContent = text;
+            status.style.color = isError ? "#ff9999" : "";
+        }
+
+        function openDatabase() {
+            return new Promise((resolve, reject) => {
+                if (!("indexedDB" in window)) {
+                    reject(new Error("Dieser Browser unterstützt IndexedDB nicht."));
+                    return;
+                }
+                const request = indexedDB.open(DATABASE_NAME, DATABASE_VERSION);
+                request.onupgradeneeded = () => {
+                    const db = request.result;
+                    if (!db.objectStoreNames.contains("programs")) {
+                        db.createObjectStore("programs", { keyPath: "id" });
+                    }
+                    if (!db.objectStoreNames.contains("schemas")) {
+                        db.createObjectStore("schemas", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error || new Error("Datenbank konnte nicht geöffnet werden."));
+                request.onblocked = () => reject(new Error("Datenbank-Upgrade blockiert. Schließen Sie andere geöffnete Tabs dieser Anwendung."));
+            });
+        }
+
+        function storeRequest(storeName, mode, method, value) {
+            return new Promise((resolve, reject) => {
+                const transaction = database.transaction(storeName, mode);
+                const store = transaction.objectStore(storeName);
+                const request = value === undefined ? store[method]() : store[method](value);
+                let result;
+                request.onsuccess = () => { result = request.result; };
+                request.onerror = () => reject(request.error || new Error("Datenbankzugriff fehlgeschlagen."));
+                transaction.oncomplete = () => resolve(result);
+                transaction.onerror = () => reject(transaction.error || new Error("Datenbanktransaktion fehlgeschlagen."));
+                transaction.onabort = () => reject(transaction.error || new Error("Datenbanktransaktion wurde abgebrochen."));
+            });
+        }
+
+        function parseXml(xmlText, fileName) {
+            const documentXml = new DOMParser().parseFromString(xmlText, "application/xml");
+            const parseError = documentXml.querySelector("parsererror");
+            if (parseError) {
+                throw new Error(`${fileName}: ungültige XML-Datei (${parseError.textContent.trim()})`);
+            }
+            const root = documentXml.documentElement;
+            if (!root || root.tagName !== "sched") {
+                throw new Error(`${fileName}: erwartetes XML-Wurzelelement <sched> wurde nicht gefunden.`);
+            }
+            return documentXml;
+        }
+
+        function headNameFromXml(xmlText, fileName) {
+            const xml = parseXml(xmlText, fileName);
+            return xml.documentElement.getAttribute("head").trim();
+        }
+
+        function canonicalHeadName(name) {
+            if (/ngrt/i.test(name) || /h-head/i.test(name)) return "NGRT + H-HEAD";
+            return name;
+        }
+
+        function renderLists() {
+            const programList = document.getElementById("programList");
+            const schemaList = document.getElementById("schemaList");
+            programList.replaceChildren();
+            schemaList.replaceChildren();
+
+            if (!programs.length) {
+                programList.innerHTML = '<span class="empty">Noch keine Programme gespeichert.</span>';
+            } else {
+                programs.forEach(program => {
+                    const row = document.createElement("div");
+                    row.className = "list-item";
+                    const name = document.createElement("span");
+                    name.className = "list-item-name";
+                    name.textContent = `${program.name}${getProgramFiles(program).length > 1 ? ` (${getProgramFiles(program).length} XML)` : ""}`;
+                    const remove = makeDeleteButton("Programm löschen", async () => {
+                        if (!window.confirm(`Programm „${program.name}“ aus dem lokalen Speicher löschen?`)) return;
+                        await storeRequest("programs", "readwrite", "delete", program.id);
+                        await refreshData();
+                        setMessage(`Programm „${program.name}“ wurde gelöscht.`);
+                    });
+                    row.append(name, remove);
+                    programList.append(row);
+                });
+            }
+
+            if (!schemas.length) {
+                schemaList.innerHTML = '<span class="empty">Noch keine Head-Schemas gespeichert.</span>';
+            } else {
+                schemas.forEach(schema => {
+                    const row = document.createElement("div");
+                    row.className = "list-item";
+                    const name = document.createElement("span");
+                    name.className = "list-item-name";
+                    name.textContent = schema.name;
+                    const remove = makeDeleteButton("Schema löschen", async () => {
+                        if (!window.confirm(`Schema „${schema.name}“ aus dem lokalen Speicher löschen?`)) return;
+                        await storeRequest("schemas", "readwrite", "delete", schema.id);
+                        await refreshData();
+                        setMessage(`Schema „${schema.name}“ wurde gelöscht.`);
+                    });
+                    row.append(name, remove);
+                    schemaList.append(row);
+                });
+            }
+            updateSelectors();
+        }
+
+        function makeDeleteButton(label, onClick) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "danger";
+            button.textContent = "Löschen";
+            button.setAttribute("aria-label", label);
+            button.addEventListener("click", () => {
+                onClick().catch(error => setMessage(error.message, true));
+            });
+            return button;
+        }
+
+        function updateSelect(select, placeholder, entries, currentValue) {
+            select.replaceChildren();
+            const first = document.createElement("option");
+            first.value = "";
+            first.textContent = placeholder;
+            select.append(first);
+            entries.forEach(entry => {
+                const option = document.createElement("option");
+                option.value = entry.id;
+                const fileCount = getProgramFiles(entry).length;
+                option.textContent = fileCount > 1 ? `${entry.name} (${fileCount} XML)` : entry.name;
+                select.append(option);
+            });
+            if (entries.some(entry => entry.id === currentValue)) select.value = currentValue;
+        }
+
+        function updateSelectors() {
+            const previousProgram = programSelect.value;
+            const previousHead = headSelect.value;
+            updateSelect(programSelect, "Programm auswählen", programs, previousProgram);
+            updateSelect(headSelect, "Schweißkopf auswählen", schemas, previousHead);
+            updateConfigVersionInfo();
+            updateGenerationState();
+        }
+
+        async function refreshData() {
+            [programs, schemas] = await Promise.all([
+                storeRequest("programs", "readonly", "getAll"),
+                storeRequest("schemas", "readonly", "getAll")
+            ]);
+            programs.sort((a, b) => a.name.localeCompare(b.name, "de"));
+            schemas.sort((a, b) => a.name.localeCompare(b.name, "de"));
+            renderLists();
+            setStorageStatus(`${programs.length} Programme · ${schemas.length} Schemas lokal gespeichert`);
+        }
+
+        function currentProgram() {
+            return programs.find(program => program.id === programSelect.value);
+        }
+
+        function currentSchema() {
+            return schemas.find(schema => schema.id === headSelect.value);
+        }
+
+        function getProgramFiles(program) {
+            if (Array.isArray(program.files)) return program.files;
+            if (typeof program.xml === "string") {
+                return [{ name: program.name, relativePath: program.name, xml: program.xml }];
+            }
+            return [];
+        }
+
+        function readConfigVersion(xmlText, fileName) {
+            const xml = parseXml(xmlText, fileName);
+            return xml.querySelector("metadata > config_version")?.textContent.trim() || "nicht angegeben";
+        }
+
+        function updateConfigVersionInfo() {
+            const programVersionElement = document.getElementById("programConfigVersion");
+            const schemaVersionElement = document.getElementById("schemaConfigVersion");
+            const program = currentProgram();
+            const schema = currentSchema();
+
+            if (!program) {
+                programVersionElement.textContent = "—";
+            } else {
+                try {
+                    const versionsByFile = getProgramFiles(program).map(file => ({
+                        name: file.relativePath || file.name,
+                        version: readConfigVersion(file.xml, file.relativePath || file.name)
+                    }));
+                    const versions = new Set(versionsByFile.map(file => file.version));
+                    programVersionElement.textContent = versions.size <= 1
+                        ? (versionsByFile[0]?.version || "nicht angegeben")
+                        : versionsByFile.map(file => `${file.name}: ${file.version}`).join(" · ");
+                } catch (error) {
+                    programVersionElement.textContent = `Fehler: ${error.message}`;
+                }
+            }
+
+            if (!schema) {
+                schemaVersionElement.textContent = "—";
+            } else {
+                try {
+                    schemaVersionElement.textContent = readConfigVersion(schema.xml, schema.name);
+                } catch (error) {
+                    schemaVersionElement.textContent = `Fehler: ${error.message}`;
+                }
+            }
+        }
+
+        function updateGenerationState() {
+            const hasProgram = Boolean(currentProgram());
+            const hasHead = Boolean(currentSchema());
+            const hasDiameter = Boolean(diameterSelect.value);
+            const layerValue = layerDiameter.value.trim();
+            const validLayer = layerValue === "" || (Number.isFinite(Number(layerValue)) && Number(layerValue) >= 0);
+            downloadButton.disabled = !(hasProgram && hasHead && hasDiameter && validLayer);
+            schemaNotice.hidden = true;
+            schemaNotice.classList.remove("error");
+            if (headSelect.value && !hasHead) {
+                schemaNotice.textContent = "Für den gewählten Schweißkopf fehlt ein gespeichertes XML-Schema. Bitte laden Sie zuerst eine passende Vorlagen-XML hoch.";
+                schemaNotice.hidden = false;
+                schemaNotice.classList.add("error");
+            }
+        }
+
+        function allElementsByTag(root, tag) {
+            return Array.from(root.getElementsByTagName(tag));
+        }
+
+        function setExistingValues(root, tag, value) {
+            const elements = allElementsByTag(root, tag);
+            if (!elements.length) {
+                throw new Error(`Das Programm oder Schema enthält kein <${tag}>-Element.`);
+            }
+            elements.forEach(element => { element.textContent = value; });
+        }
+
+        function matchingTemplateChildren(templateElement, tag) {
+            return Array.from(templateElement.children).filter(element => element.tagName === tag);
+        }
+
+        function reconcileLayout(sourceElement, templateElement) {
+            const templateChildren = Array.from(templateElement.children);
+            const templateByTag = new Map();
+            templateChildren.forEach(child => {
+                const matching = templateByTag.get(child.tagName) || [];
+                matching.push(child);
+                templateByTag.set(child.tagName, matching);
+            });
+
+            const sourceCounts = new Map();
+            Array.from(sourceElement.children).forEach(child => {
+                sourceCounts.set(child.tagName, (sourceCounts.get(child.tagName) || 0) + 1);
+            });
+            templateChildren.forEach(templateChild => {
+                const count = sourceCounts.get(templateChild.tagName) || 0;
+                const templateCount = matchingTemplateChildren(templateElement, templateChild.tagName).length;
+                if (count < templateCount) {
+                    sourceElement.append(templateChild.cloneNode(true));
+                    sourceCounts.set(templateChild.tagName, count + 1);
+                }
+            });
+
+            const templateOccurrences = new Map();
+            Array.from(sourceElement.children).forEach(sourceChild => {
+                const templates = templateByTag.get(sourceChild.tagName);
+                if (!templates) {
+                    sourceElement.removeChild(sourceChild);
+                    return;
+                }
+                const occurrence = templateOccurrences.get(sourceChild.tagName) || 0;
+                templateOccurrences.set(sourceChild.tagName, occurrence + 1);
+                reconcileLayout(sourceChild, templates[Math.min(occurrence, templates.length - 1)]);
+            });
+        }
+
+        function applySchema(sourceXml, schema) {
+            const templateXml = parseXml(schema.xml, schema.name);
+            const sourceRoot = sourceXml.documentElement;
+            const templateRoot = templateXml.documentElement;
+            if (sourceRoot.tagName !== templateRoot.tagName) {
+                throw new Error("Das Schema hat ein anderes XML-Wurzelelement als das Programm.");
+            }
+            reconcileLayout(sourceRoot, templateRoot);
+
+            const templateVersion = templateRoot.querySelector("metadata > config_version");
+            const sourceVersion = sourceRoot.querySelector("metadata > config_version");
+            if (templateVersion && sourceVersion) sourceVersion.textContent = templateVersion.textContent;
+
+            allElementsByTag(sourceRoot, "ahc_retract").forEach(element => element.remove());
+            const headName = canonicalHeadName(templateRoot.getAttribute("head").trim() || schema.name);
+            sourceRoot.setAttribute("head", headName);
+
+            const preset = HEAD_PRESETS[headName];
+            if (preset) {
+                Object.entries(preset).forEach(([tag, value]) => setExistingValues(sourceRoot, tag, value));
+            }
+        }
+
+        function safeFileName(value) {
+            return value.replace(/[<>:"/\\|?*\u0000-\u001f]/g, "_").replace(/[. ]+$/, "") || "schedule";
+        }
+
+        function createId() {
+            return typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+                ? crypto.randomUUID()
+                : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        }
+
+        function downloadXml(fileName, xmlText) {
+            downloadBlob(fileName, new Blob([xmlText], { type: "application/xml;charset=utf-8" }));
+        }
+
+        function downloadBlob(fileName, blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            document.body.append(link);
+            link.click();
+            link.remove();
+            window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function crc32(bytes) {
+            let crc = 0xffffffff;
+            for (const byte of bytes) {
+                crc ^= byte;
+                for (let bit = 0; bit < 8; bit++) {
+                    crc = (crc >>> 1) ^ ((crc & 1) ? 0xedb88320 : 0);
+                }
+            }
+            return (crc ^ 0xffffffff) >>> 0;
+        }
+
+        function makeZip(files) {
+            const encoder = new TextEncoder();
+            const localParts = [];
+            const centralParts = [];
+            let localOffset = 0;
+
+            function header(values) {
+                const bytes = new Uint8Array(values.length * 2);
+                const view = new DataView(bytes.buffer);
+                values.forEach((value, index) => view.setUint16(index * 2, value, true));
+                return bytes;
+            }
+
+            function word(value) {
+                const bytes = new Uint8Array(4);
+                new DataView(bytes.buffer).setUint32(0, value >>> 0, true);
+                return bytes;
+            }
+
+            function join(parts) {
+                const length = parts.reduce((total, part) => total + part.length, 0);
+                const result = new Uint8Array(length);
+                let offset = 0;
+                parts.forEach(part => {
+                    result.set(part, offset);
+                    offset += part.length;
+                });
+                return result;
+            }
+
+            files.forEach(file => {
+                const nameBytes = encoder.encode(file.name);
+                const data = encoder.encode(file.content);
+                const checksum = crc32(data);
+                const local = join([
+                    word(0x04034b50),
+                    header([20, 0x0800, 0, 0, 0x0021]),
+                    word(checksum),
+                    word(data.length),
+                    word(data.length),
+                    header([nameBytes.length, 0]),
+                    nameBytes,
+                    data
+                ]);
+                const central = join([
+                    word(0x02014b50),
+                    header([20, 20, 0x0800, 0, 0, 0x0021]),
+                    word(checksum),
+                    word(data.length),
+                    word(data.length),
+                    header([nameBytes.length, 0, 0, 0, 0]),
+                    word(0),
+                    word(localOffset),
+                    nameBytes
+                ]);
+                localParts.push(local);
+                centralParts.push(central);
+                localOffset += local.length;
+            });
+
+            const centralDirectory = join(centralParts);
+            const end = join([
+                word(0x06054b50),
+                header([0, 0, files.length, files.length]),
+                word(centralDirectory.length),
+                word(localOffset),
+                header([0])
+            ]);
+            return new Blob([...localParts, centralDirectory, end], { type: "application/zip" });
+        }
+
+        async function importPrograms(files) {
+            let saved = 0;
+            const errors = [];
+            for (const file of files) {
+                try {
+                    const xml = await file.text();
+                    parseXml(xml, file.name);
+                    const existing = programs.find(program => program.name.toLocaleLowerCase("de") === file.name.toLocaleLowerCase("de"));
+                    if (existing && !window.confirm(`„${file.name}“ ist bereits gespeichert. Soll das Programm ersetzt werden?`)) continue;
+                    await storeRequest("programs", "readwrite", "put", {
+                        id: existing?.id || createId(),
+                        name: file.name,
+                        xml,
+                        updatedAt: new Date().toISOString()
+                    });
+                    saved++;
+                } catch (error) {
+                    errors.push(error.message);
+                }
+            }
+            await refreshData();
+            setMessage(errors.length ? `${saved} Programm(e) gespeichert. Fehler: ${errors.join(" · ")}` : `${saved} Programm(e) lokal gespeichert.`);
+            if (errors.length) message.classList.add("error");
+        }
+
+        async function importProgramFolder(files) {
+            const xmlFiles = files.filter(file => /\.xml$/i.test(file.name));
+            if (!xmlFiles.length) {
+                throw new Error("Der ausgewählte Ordner enthält keine XML-Dateien.");
+            }
+
+            const relativePaths = new Set();
+            const importedFiles = [];
+            for (const file of xmlFiles) {
+                const parts = (file.relativePath || file.webkitRelativePath || file.name).split("/").filter(Boolean);
+                const relativePath = (parts.length > 1 ? parts.slice(1) : parts).join("/");
+                const pathKey = relativePath.toLocaleLowerCase("de");
+                if (relativePaths.has(pathKey)) {
+                    throw new Error(`Der Ordner enthält doppelte XML-Pfade: ${relativePath}`);
+                }
+                relativePaths.add(pathKey);
+                const xml = await file.text();
+                parseXml(xml, relativePath);
+                importedFiles.push({ name: file.name, relativePath, xml });
+            }
+
+            const firstPath = (xmlFiles[0].relativePath || xmlFiles[0].webkitRelativePath || xmlFiles[0].name).split("/").filter(Boolean);
+            const folderName = firstPath.length > 1 ? firstPath[0] : "Programm";
+            const existing = programs.find(program => program.name.toLocaleLowerCase("de") === folderName.toLocaleLowerCase("de"));
+            if (existing && !window.confirm(`„${folderName}“ ist bereits gespeichert. Soll der gesamte Programmordner ersetzt werden?`)) return;
+
+            await storeRequest("programs", "readwrite", "put", {
+                id: existing?.id || createId(),
+                name: folderName,
+                files: importedFiles,
+                updatedAt: new Date().toISOString()
+            });
+            await refreshData();
+            setMessage(`Programmordner „${folderName}“ mit ${importedFiles.length} XML-Dateien lokal gespeichert.`);
+        }
+
+        async function importSchema(file) {
+            if (!file) return;
+            const xml = await file.text();
+            const xmlHead = headNameFromXml(xml, file.name);
+            const enteredName = document.getElementById("schemaName").value.trim();
+            const schemaName = enteredName || canonicalHeadName(xmlHead) || file.name.replace(/\.xml$/i, "");
+            if (!schemaName) throw new Error("Für das Schema konnte kein Head-Name ermittelt werden.");
+            const existing = schemas.find(schema => schema.id.toLocaleLowerCase("de") === schemaName.toLocaleLowerCase("de"));
+            if (existing && !window.confirm(`Für „${schemaName}“ ist bereits ein Schema gespeichert. Soll es ersetzt werden?`)) return;
+            await storeRequest("schemas", "readwrite", "put", {
+                id: existing?.id || schemaName,
+                name: schemaName,
+                xml,
+                sourceFile: file.name,
+                updatedAt: new Date().toISOString()
+            });
+            document.getElementById("schemaName").value = "";
+            await refreshData();
+            headSelect.value = existing?.id || schemaName;
+            updateConfigVersionInfo();
+            updateGenerationState();
+            setMessage(`Schema „${schemaName}“ lokal gespeichert.`);
+        }
+
+        function retrieveProgram() {
+            try {
+                const program = currentProgram();
+                const schema = currentSchema();
+                const diameter = Number(diameterSelect.value);
+                const layerRaw = layerDiameter.value.trim();
+                const layerMm = layerRaw === "" || Number(layerRaw) === 0 ? diameter : Number(layerRaw);
+                if (!program || !schema || !diameter || !Number.isFinite(layerMm) || layerMm < 0) {
+                    throw new Error("Bitte Programm, Schweißkopf und Ringdurchmesser auswählen und einen gültigen Layerdurchmesser eingeben.");
+                }
+
+                const templateXml = parseXml(schema.xml, schema.name);
+                const selectedHead = canonicalHeadName(templateXml.documentElement.getAttribute("head").trim() || schema.name);
+                const outerInch = (diameter / 25.4).toFixed(6);
+                const layerInch = (layerMm / 25.4).toFixed(6);
+                const outputFiles = getProgramFiles(program).map(file => {
+                    const xml = parseXml(file.xml, file.relativePath || file.name);
+                    applySchema(xml, schema);
+                    setExistingValues(xml.documentElement, "outer_diameter", outerInch);
+                    setExistingValues(xml.documentElement, "layer_diameter", layerInch);
+                    return {
+                        name: safeZipPath(file.relativePath || file.name),
+                        content: new XMLSerializer().serializeToString(xml.documentElement)
+                    };
+                });
+                if (!outputFiles.length) throw new Error("Das ausgewählte Programm enthält keine XML-Dateien.");
+
+                const diameterLabel = Array.from(diameterSelect.selectedOptions)[0].textContent.split(" — ")[0];
+                const archiveName = `${safeFileName(program.name)}_${safeFileName(selectedHead)}_${diameterLabel}.zip`;
+                downloadBlob(archiveName, makeZip(outputFiles));
+                setMessage(`${outputFiles.length} XML-Datei(en) angepasst und als ZIP heruntergeladen. Ø ${diameter} mm = ${outerInch} in; Layer Ø ${layerMm} mm = ${layerInch} in.`);
+            } catch (error) {
+                setMessage(error.message, true);
+            }
+        }
+
+        function safeZipPath(path) {
+            return path.split("/").filter(Boolean).map(segment => safeFileName(segment)).join("/");
+        }
+
+        function readDirectoryEntries(directoryEntry) {
+            return new Promise((resolve, reject) => {
+                const reader = directoryEntry.createReader();
+                const entries = [];
+                function readBatch() {
+                    reader.readEntries(batch => {
+                        if (!batch.length) {
+                            resolve(entries);
+                            return;
+                        }
+                        entries.push(...batch);
+                        readBatch();
+                    }, reject);
+                }
+                readBatch();
+            });
+        }
+
+        function readEntryFile(fileEntry, relativePath) {
+            return new Promise((resolve, reject) => {
+                fileEntry.file(file => resolve({
+                    name: file.name,
+                    relativePath,
+                    text: () => file.text()
+                }), reject);
+            });
+        }
+
+        async function collectDroppedEntry(entry, relativePath = entry.name) {
+            if (entry.isFile) {
+                return [await readEntryFile(entry, relativePath)];
+            }
+            if (!entry.isDirectory) return [];
+
+            const entries = await readDirectoryEntries(entry);
+            const files = [];
+            for (const child of entries) {
+                files.push(...await collectDroppedEntry(child, `${relativePath}/${child.name}`));
+            }
+            return files;
+        }
+
+        async function handleProgramDrop(dataTransfer) {
+            const entries = [];
+            const looseFiles = [];
+            for (const item of Array.from(dataTransfer.items || [])) {
+                if (item.kind !== "file") continue;
+                const entry = typeof item.webkitGetAsEntry === "function" ? item.webkitGetAsEntry() : null;
+                if (entry) {
+                    entries.push(entry);
+                } else {
+                    const file = item.getAsFile();
+                    if (file) looseFiles.push(file);
+                }
+            }
+
+            const folders = [];
+            const files = [...looseFiles];
+            for (const entry of entries) {
+                if (entry.isDirectory) {
+                    folders.push(await collectDroppedEntry(entry));
+                } else if (entry.isFile) {
+                    files.push(...await collectDroppedEntry(entry));
+                }
+            }
+
+            if (!entries.length && !looseFiles.length) files.push(...Array.from(dataTransfer.files || []));
+            if (!folders.length && !files.length) {
+                throw new Error("Bitte XML-Dateien oder einen Programmordner ablegen.");
+            }
+            if (files.length) await importPrograms(files);
+            for (const folderFiles of folders) {
+                await importProgramFolder(folderFiles);
+            }
+        }
+
+        function enableDropZone(zone, onDrop) {
+            zone.addEventListener("dragenter", event => {
+                event.preventDefault();
+                zone.classList.add("drag-over");
+            });
+            zone.addEventListener("dragover", event => event.preventDefault());
+            zone.addEventListener("dragleave", event => {
+                if (!(event.relatedTarget instanceof Node) || !zone.contains(event.relatedTarget)) {
+                    zone.classList.remove("drag-over");
+                }
+            });
+            zone.addEventListener("drop", async event => {
+                event.preventDefault();
+                zone.classList.remove("drag-over");
+                try {
+                    await onDrop(event.dataTransfer);
+                } catch (error) {
+                    setMessage(error.message, true);
+                }
+            });
+        }
+
+        enableDropZone(document.getElementById("programDropZone"), handleProgramDrop);
+        enableDropZone(document.getElementById("schemaDropZone"), async dataTransfer => {
+            const files = Array.from(dataTransfer.files || []).filter(file => /\.xml$/i.test(file.name));
+            if (!files.length) throw new Error("Bitte eine Schema-XML-Datei ablegen.");
+            for (const file of files) await importSchema(file);
+        });
+
+        document.getElementById("programFiles").addEventListener("change", async event => {
+            const files = Array.from(event.target.files || []);
+            event.target.value = "";
+            if (files.length) await importPrograms(files);
+        });
+
+        document.getElementById("programFolder").addEventListener("change", async event => {
+            const files = Array.from(event.target.files || []);
+            event.target.value = "";
+            if (!files.length) return;
+            try {
+                await importProgramFolder(files);
+            } catch (error) {
+                setMessage(error.message, true);
+            }
+        });
+
+        document.getElementById("schemaFile").addEventListener("change", async event => {
+            const file = event.target.files?.[0];
+            event.target.value = "";
+            if (!file) return;
+            try {
+                await importSchema(file);
+            } catch (error) {
+                setMessage(error.message, true);
+            }
+        });
+
+        [programSelect, headSelect, diameterSelect].forEach(element => {
+            element.addEventListener("change", () => {
+                updateConfigVersionInfo();
+                updateGenerationState();
+            });
+        });
+        layerDiameter.addEventListener("input", updateGenerationState);
+        downloadButton.addEventListener("click", retrieveProgram);
+        document.getElementById("refreshButton").addEventListener("click", () => {
+            refreshData().then(() => setMessage("Lokale Datenbank wurde aktualisiert."))
+                .catch(error => setMessage(error.message, true));
+        });
+
+        (async function initialize() {
+            try {
+                database = await openDatabase();
+                database.onversionchange = () => {
+                    database.close();
+                    setStorageStatus("Datenbank geändert — bitte Seite neu laden.", true);
+                };
+                await refreshData();
+            } catch (error) {
+                setStorageStatus(error.message, true);
+                setMessage(`Lokaler Speicher nicht verfügbar: ${error.message}`, true);
+                document.querySelectorAll("input, select, button").forEach(element => { element.disabled = true; });
+            }
+        })();
+    </script>
+</body>
+</html>

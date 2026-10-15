@@ -1,13 +1,13 @@
-<sched id="" head="NGRT + H-HEAD">
+<sched id="" head="H2-FV-100S">
 	<metadata>
 		<schema_version/>
-		<config_version>1.8.3.5</config_version>
-		<author>UPGRADE</author>
-		<date>2026/08/02 21:49:45</date>
-		<signature>wpFhM+2fioDDvkCiCSv20J0LyXbtVVRaKxWH54RgOhXLhFZ6IrAtz2ZWpRS7JI0VFSMLxcno7obZB806AeGdGE/a+RWsMpzRSu5C38RahyrT9sA1AHbVfT3VSkP07XgJ8O3NM5wawEOPgtEoyP5hqxxzbzghO5lZP26tyhGMjkE=|BgIAAAAkAABSU0ExAAQAAAEAAQBF7SUYGkH1X+jDn3lotQyJ3FSAfL+ruP9aWTFKUbgqKgPf93YZwpJglrG2fPPVFGUAGc6vVXT7KwI8Kf3cvDepTkQjy4WqnOtzL2/6nSbLCoasvgMxnsXHFxujLy97hcbKJ+zJWuN79cxaPsy93G3pcEnFitULE60kW/dNaGDasw==</signature>
+		<config_version>1.8.3.7</config_version>
+		<author>ADMIN</author>
+		<date>2026/10/05 02:51:46</date>
+		<signature>GeUViRr4nBE3DxyqbEKB/zTw4Uc64r+jPXC3HZjM964cwogTwnNE7e88ORjAN07cZEnJPTUn6t3U2pA6Ak1QdC2ldwMR/eJHdTTHH3YvUm+OMmE5iHXXaROKvHyUZJQgaEOelo6bHdQA3vN+kNiZB590JCwMFRejQT6rJH30Ki0=|BgIAAAAkAABSU0ExAAQAAAEAAQDr8pgOBhajmAbb9aGoEcPQS3RmK7szjpzL8g523WQVo+xLPgO/iPvL5AyOdRema41m4De48JllV6/uVbMlmb6mc9jO6/BzYlwQX3Da3welXelpA/Bg1JZZpWQ9A5dG0COVwI+Yj8ShxkUS5ICX1QlAF/dLhz7OCCLK25P8FViYvg==</signature>
 	</metadata>
 	<description>
-		<outer_diameter>36.220492</outer_diameter>
+		<outer_diameter>12.992126</outer_diameter>
 		<groove_depth>0.000000</groove_depth>
 		<custom_search_tag/>
 		<note/>
@@ -30,20 +30,20 @@
 		<downslope>7.000000</downslope>
 		<downslope_mode>0</downslope_mode>
 		<theta_torch_height>6.500000</theta_torch_height>
-		<travel_direction>0</travel_direction>
-		<ahc_gap>0.100000</ahc_gap>
+		<travel_direction>1</travel_direction>
+		<ahc_gap>0.120000</ahc_gap>
 		<hotwire>0.000000</hotwire>
 		<hotwire2>0.000000</hotwire2>
 		<hotwire_mode>0</hotwire_mode>
 		<hotwire2_mode>0</hotwire2_mode>
-		<wire_retract>0.200000</wire_retract>
+		<wire_retract>0.590552</wire_retract>
 		<wire2_retract>0.200000</wire2_retract>
-		<travel_delay>0.000000</travel_delay>
+		<travel_delay>2.000000</travel_delay>
 		<ahc_delay>2.000000</ahc_delay>
 		<ahc_stop_delay>1.000000</ahc_stop_delay>
-		<wire_delay>0.000000</wire_delay>
+		<wire_delay>4.000000</wire_delay>
 		<wire2_delay>0.000000</wire2_delay>
-		<travel_jog>14.960638</travel_jog>
+		<travel_jog>20.000000</travel_jog>
 		<wire_jog_fwd>100.000000</wire_jog_fwd>
 		<wire_jog_rev>100</wire_jog_rev>
 		<wire2_jog_fwd>100.000000</wire2_jog_fwd>
@@ -66,7 +66,7 @@
 		<wire2_step>0.000000</wire2_step>
 		<ahc_step>0.000000</ahc_step>
 		<theta_step>0.000000</theta_step>
-		<osc_step>0.009843</osc_step>
+		<osc_step>0.005906</osc_step>
 		<aux0_step>0.000000</aux0_step>
 		<aux1_step>0.000000</aux1_step>
 		<aux2_step>0.000000</aux2_step>
@@ -82,7 +82,7 @@
 		<theta_auto_postposition>0.000000</theta_auto_postposition>
 		<travel_auto_postposition>0.000000</travel_auto_postposition>
 		<travel_auto_preposition>9999.000000</travel_auto_preposition>
-		<travel_auto_zero>1</travel_auto_zero>
+		<travel_auto_zero>0</travel_auto_zero>
 		<travel_auto_home>0</travel_auto_home>
 		<cut_angle>0</cut_angle>
 		<electrode_diameter>0</electrode_diameter>
@@ -124,13 +124,13 @@
 		<theta_auto_preposition>9999.000000</theta_auto_preposition>
 		<ahc_auto_preposition>9999.000000</ahc_auto_preposition>
 		<travel_speed_compensated_by_width>0</travel_speed_compensated_by_width>
-		<ahc_auto_postposition>0.250000</ahc_auto_postposition>
+		<ahc_auto_postposition>0.600000</ahc_auto_postposition>
 		<initial_travel_speed>1.000000</initial_travel_speed>
 		<initial_volts>0.000000</initial_volts>
-		<wire_manipulator_up_down_jog>3.400002</wire_manipulator_up_down_jog>
+		<wire_manipulator_up_down_jog>48.000000</wire_manipulator_up_down_jog>
 		<wire_manipulator_up_down_step>0.000000</wire_manipulator_up_down_step>
-		<wire_manipulator_in_out_jog>10.000000</wire_manipulator_in_out_jog>
-		<wire_manipulator_in_out_step>0.009843</wire_manipulator_in_out_step>
+		<wire_manipulator_in_out_jog>48.000000</wire_manipulator_in_out_jog>
+		<wire_manipulator_in_out_step>0.000000</wire_manipulator_in_out_step>
 		<tungsten_jog>5.000000</tungsten_jog>
 		<tungsten_step>0.003491</tungsten_step>
 		<wire_manipulator_in_out_auto_preposition>9999.000000</wire_manipulator_in_out_auto_preposition>
@@ -151,9 +151,6 @@
 		<aux_1_pre_position>9999.000000</aux_1_pre_position>
 		<tilt_pre_position>9999.000000</tilt_pre_position>
 		<tilt_post_position>0.000000</tilt_post_position>
-		<mig_pulse_use_voltage_for_initial_pulse_width>1</mig_pulse_use_voltage_for_initial_pulse_width>
-		<mig_pulse_voltage_slope>19.600000</mig_pulse_voltage_slope>
-		<mig_pulse_voltage_offset>-295.000000</mig_pulse_voltage_offset>
 		<is_weld_closed>0</is_weld_closed>
 		<groovetrack_real_time_id>0</groovetrack_real_time_id>
 		<is_residue_chipper_enabled>0</is_residue_chipper_enabled>
@@ -163,6 +160,7 @@
 		<is_layer_diameter_pipe_touch_enabled>1</is_layer_diameter_pipe_touch_enabled>
 		<residue_chipper_wire_speed>0.000000</residue_chipper_wire_speed>
 		<residue_chipper_wire_retract>0.000000</residue_chipper_wire_retract>
+		<jog_speed_edit_mode>1</jog_speed_edit_mode>
 	</global>
 	<limits>
 		<pri_amp_error>300.000000</pri_amp_error>
@@ -173,8 +171,8 @@
 		<wire_fault>10.000000</wire_fault>
 		<wire2_error>10.000000</wire2_error>
 		<wire2_fault>10.000000</wire2_fault>
-		<travel_error>10.000000</travel_error>
-		<travel_fault>10.000000</travel_fault>
+		<travel_error>5.914393</travel_error>
+		<travel_fault>5.914393</travel_fault>
 		<voltage_low>6.000000</voltage_low>
 		<voltage_high>50.000000</voltage_high>
 		<avg_amp_fault_low>0.000000</avg_amp_fault_low>
@@ -188,9 +186,9 @@
 		<bkg_amp_max>10.000000</bkg_amp_max>
 		<bkg_amp_rate>5.000000</bkg_amp_rate>
 		<travel_max>10.000000</travel_max>
-		<travel_rate>0.100000</travel_rate>
+		<travel_rate>0.039370</travel_rate>
 		<wire_max>10.000000</wire_max>
-		<wire_rate>5.000000</wire_rate>
+		<wire_rate>3.937008</wire_rate>
 		<wire_retract_distance_max>10.000000</wire_retract_distance_max>
 		<wire_retract_distance_rate>0.100000</wire_retract_distance_rate>
 		<avg_wire_speed_max>10.000000</avg_wire_speed_max>
@@ -209,11 +207,11 @@
 		<volt_rate>0.100000</volt_rate>
 		<theta_width_max>90.000000</theta_width_max>
 		<theta_width_rate>0.020000</theta_width_rate>
-		<osc_width_max>10.000000</osc_width_max>
-		<osc_width_rate>0.020000</osc_width_rate>
-		<dwell_max>10.000000</dwell_max>
+		<osc_width_max>50.000000</osc_width_max>
+		<osc_width_rate>0.003937</osc_width_rate>
+		<dwell_max>50.000000</dwell_max>
 		<dwell_rate>0.050000</dwell_rate>
-		<excursion_max>10.000000</excursion_max>
+		<excursion_max>50.000000</excursion_max>
 		<excursion_rate>0.050000</excursion_rate>
 		<acc_override_max>10.000000</acc_override_max>
 		<acc_override_rate>1.000000</acc_override_rate>
@@ -249,9 +247,9 @@
 		<motion_pulse_freq_override_rate>0.100000</motion_pulse_freq_override_rate>
 		<compound_steering_angle_offset_max>10.000000</compound_steering_angle_offset_max>
 		<compound_steering_angle_offset_rate>1.000000</compound_steering_angle_offset_rate>
-		<wire_manipulator_in_out_width_max>10.000000</wire_manipulator_in_out_width_max>
+		<wire_manipulator_in_out_width_max>50.000000</wire_manipulator_in_out_width_max>
 		<wire_manipulator_in_out_width_rate>0.020000</wire_manipulator_in_out_width_rate>
-		<tungsten_width_max>10.000000</tungsten_width_max>
+		<tungsten_width_max>50.000000</tungsten_width_max>
 		<tungsten_width_rate>0.020000</tungsten_width_rate>
 		<pulse_time_max>10.000000</pulse_time_max>
 		<pulse_time_rate>0.001000</pulse_time_rate>
@@ -261,31 +259,31 @@
 	<segment index="0">
 		<enable>1</enable>
 		<mode>2</mode>
-		<segment_time>1748.610187</segment_time>
+		<segment_time>684.238756</segment_time>
 		<slope>2.000000</slope>
 		<travel_angle>0.000000</travel_angle>
 		<sync_mode>3</sync_mode>
-		<pri_ahc>10.200000</pri_ahc>
-		<bkg_ahc>9.700000</bkg_ahc>
+		<pri_ahc>9.400000</pri_ahc>
+		<bkg_ahc>8.700000</bkg_ahc>
 		<volts>10.000000</volts>
-		<pri_amp>210.000000</pri_amp>
-		<bkg_amp>170.000000</bkg_amp>
+		<pri_amp>120.000000</pri_amp>
+		<bkg_amp>70.000000</bkg_amp>
 		<pulse_freq>4.000000</pulse_freq>
 		<pulse_width>60.000000</pulse_width>
 		<motion_pulse_freq>2.000000</motion_pulse_freq>
 		<motion_pulse_width>50.000000</motion_pulse_width>
-		<pri_travel>2.952758</pri_travel>
-		<bkg_travel>2.952758</bkg_travel>
-		<pri_wire>70.866180</pri_wire>
-		<bkg_wire>55.118140</bkg_wire>
+		<pri_travel>2.755906</pri_travel>
+		<bkg_travel>2.755906</bkg_travel>
+		<pri_wire>31.496063</pri_wire>
+		<bkg_wire>31.496063</bkg_wire>
 		<pri_wire2>20.000000</pri_wire2>
 		<bkg_wire2>20.000000</bkg_wire2>
 		<avc_mode>0</avc_mode>
 		<theta_width>0.000000</theta_width>
-		<osc_width>0.000000</osc_width>
-		<indwell>0.600000</indwell>
-		<outdwell>0.600000</outdwell>
-		<excursion>0.200000</excursion>
+		<osc_width>0.090551</osc_width>
+		<indwell>0.550000</indwell>
+		<outdwell>0.550000</outdwell>
+		<excursion>0.250000</excursion>
 		<hotwire_amps>0.000000</hotwire_amps>
 		<hotwire2_amps>0.000000</hotwire2_amps>
 		<mig_mode>1</mig_mode>
@@ -321,7 +319,7 @@
 		<dip_dynamics_enable_voltage>10.000000</dip_dynamics_enable_voltage>
 		<dip_blast_current_ramp_rate>300.000000</dip_blast_current_ramp_rate>
 		<dip_burnback_current_ramp_rate>300.000000</dip_burnback_current_ramp_rate>
-		<layer_diameter>27.165369</layer_diameter>
+		<layer_diameter>12.992126</layer_diameter>
 		<dip_pre_detachment_ramp_rate>200.000000</dip_pre_detachment_ramp_rate>
 		<dip_energy>0.000000</dip_energy>
 		<shield_flow>0.000000</shield_flow>
@@ -334,8 +332,8 @@
 		<mig_pulse_slowband>2.000000</mig_pulse_slowband>
 		<mig_pulse_low_sensitivity>0.100000</mig_pulse_low_sensitivity>
 		<mig_pulse_high_sensitivity>0.250000</mig_pulse_high_sensitivity>
-		<wire_manipulator_in_out_width>0.058740</wire_manipulator_in_out_width>
-		<tungsten_width>0.184720</tungsten_width>
+		<wire_manipulator_in_out_width>0.000000</wire_manipulator_in_out_width>
+		<tungsten_width>0.000000</tungsten_width>
 		<reverse_travel>0</reverse_travel>
 		<tilt_position>9999.000000</tilt_position>
 	</segment>

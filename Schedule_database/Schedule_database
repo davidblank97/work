@@ -7,7 +7,7 @@ beim abrufen der Programme müssen folgende dinge abgefragt werden:
 2.Schweißkopf per dropdown menü
 3.Ringdurchmesser
 
-wenn schweißkopf ausgewählt wird, muss dass Schema der XML angepasst werden siehe vorlage:
+wenn schweißkopf ausgewählt wird, muss dass Schema der XML angepasst werden wenn dieses anders ist siehe vorlage: /workspaces/work/Schedule_database/0403-Hotpass2.xml, /workspaces/work/Schedule_database/0703-hot pass 2-Rev9.xml
 es muss auch möglich sein neue Schema hinzuzufügen
 
 hier sind werte die immer beim kopfwechsel geändert werden müssen:
