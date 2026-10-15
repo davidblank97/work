@@ -1,6 +1,35 @@
-database in die Schweißprogramme hochgeladen und verwaltet werden können.
-die hochgeladen prgramme sollten lokal gespeichert.
+ziel ist die erstellung einer database, in die Schweißprogramme hochgeladen und verwaltet werden können.
+am bessten in Html mit einem GUI Theme wie in /workspaces/work/Schedule_editor/Lib_Schedule_Editor_v2_8.html
+die hochgeladen prgramme sollten im Programm lokal gespeichert werden
+
 beim abrufen der Programme müssen folgende dinge abgefragt werden:
 1.Programmname per dropdown menü
-2.Schweißkopf
-3.
+2.Schweißkopf per dropdown menü
+3.Ringdurchmesser
+
+wenn schweißkopf ausgewählt wird, muss dass Schema der XML angepasst werden siehe vorlage:
+es muss auch möglich sein neue Schema hinzuzufügen
+
+hier sind werte die immer beim kopfwechsel geändert werden müssen:
+NGRT-Head:
+"travel_jog"=20
+"wire_jog_fwd"=100
+"wire_jog_rev"=100
+"ahc_jog"=60
+"osc_jog"=50
+"wire_manipulator_in_out_jog"=243.75
+"wire_manipulator_up_down_jog"=3.4
+"tungsten_jog"=163.36
+
+H2-FV-100S:
+"travel_jog"=20
+"wire_jog_fwd"=100
+"wire_jog_rev"=100
+"ahc_jog"=60
+"osc_jog"=50
+"wire_manipulator_in_out_jog"=60
+"wire_manipulator_up_down_jog"=60
+
+
+wenn Ringdurchmesser ausgewählt wird, muss "outer_diameter" und "layer_diameter" wie in /workspaces/work/Schedule_Org/batch_editor1.6.py geändert werden.
+die umrechnung in inch auf gleich wie in /workspaces/work/Schedule_Org/batch_editor1.6.py
