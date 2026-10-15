@@ -2,29 +2,27 @@
 
 ## Start
 
-Öffnen Sie [Programmdatenbank.html](./Programmdatenbank.html) in einem aktuellen Browser. Ein lokaler Server und eine Internetverbindung sind nicht erforderlich.
+Öffnen Sie [Schedul_database_V1.1.html](./Schedul_database_V1.1.html) in einem aktuellen Browser. Ein lokaler Server und eine Internetverbindung sind nicht erforderlich.
 
 ## Erste Verwendung
 
-1. Unter **Schweißkopf-Schemas** eine XML-Vorlage pro Schweißkopf hinzufügen. Die Anwendung liest den Head-Namen aus dem `head`-Attribut des XML-Wurzelelements. Bei Bedarf kann dafür ein abweichender Name eingetragen werden.
-2. Unter **Programme** für ein mehrteiliges Schedule den kompletten Ordner **Programmordner mit allen XML-Dateien hinzufügen** auswählen. Die XML-Dateien werden gemeinsam als ein Programm gespeichert; Unterordner und Dateinamen bleiben erhalten. Einzelne XML-Dateien können weiterhin über **XML-Programme hinzufügen** gespeichert werden.
-3. Im Formular Programmname, Schweißkopf und Ringdurchmesser auswählen und **XML herunterladen** anklicken.
+1. Unter **XML Schema (XDR)** die Datei `WELDSCHEDULE.XDR` laden. Das XDR-Schema beschreibt und prüft die Struktur der Schedule-XML-Dateien; es ist keine XML-Vorlage für einen Schweißkopf.
+2. Unter **Programs** für ein mehrteiliges Schedule den kompletten Ordner **Add a program folder with all XML files** auswählen. Die XML-Dateien werden gemeinsam als ein Programm gespeichert; Unterordner und Dateinamen bleiben erhalten. Einzelne XML-Dateien können in den Programm-Drag-and-drop-Bereich gezogen werden.
+3. Im Formular Programm, XDR-Schema und Ringdurchmesser auswählen. Optional einen Schweißkopf wählen und separat **Apply Welding Head** anklicken; dadurch werden dessen `head`-Attribut und die hinterlegten Jog-Werte für den Download vorgemerkt. Danach **Download Program** anklicken.
 
-XML-Dateien oder ganze Programmordner können alternativ in den jeweiligen Drag-and-drop-Bereich unter **Programme** gezogen werden. Schema-XML-Dateien lassen sich im Drag-and-drop-Bereich unter **Schweißkopf-Schemas** ablegen.
-
-Die beiden mitgelieferten Dateien `0403-Hotpass2.xml` und `0703-hot pass 2-Rev9.xml` können als Vorlagen für die jeweiligen Schemas hinzugefügt werden. Der NGRT-Kopf heißt `NGRT + H-HEAD`.
+Ganze Programmordner können alternativ in den Drag-and-drop-Bereich unter **Programs** gezogen werden. Einzelne XML-Dateien lassen sich dort ebenfalls ablegen. XDR-Dateien können in den Bereich **XML Schema (XDR)** abgelegt werden. Frühere XML-Kopfvorlagen werden in v1.1 nicht mehr als Schema verwendet; zuvor gespeicherte Programme bleiben im selben Browserprofil erhalten.
 
 ## Verhalten
 
 - Programme und Schemas werden in IndexedDB des aktuellen Browsers gespeichert. Sie sind nur in diesem Browserprofil auf diesem Gerät verfügbar; Browserdaten löschen entfernt auch diese Daten.
 - Die hochgeladenen XML-Dateien bleiben als Originale in der lokalen Datenbank erhalten. Beim Abrufen werden alle XML-Dateien des Programms separat angepasst und gemeinsam in einer ZIP-Datei heruntergeladen. Einzelne Programme bestehen ebenfalls aus einem ZIP mit einer XML-Datei.
-- Eine gewählte Schema-Vorlage ergänzt fehlende XML-Elemente, entfernt Elemente, die nicht zur Vorlage gehören, und übernimmt die `config_version` der Vorlage, sofern beide Dateien sie enthalten.
-- Das `head`-Attribut jeder erzeugten XML-Datei wird aus dem `head`-Attribut des ausgewählten Schema-Templates übernommen. NGRT-Varianten werden als `NGRT + H-HEAD` ausgegeben. Die XML-Ausgabe beginnt direkt mit `<sched>` ohne XML-Deklaration. Die Jog-Parameter erhalten die hinterlegten Werte für `NGRT + H-HEAD` und `H2-FV-100S`.
-- Im Abrufformular werden die `config_version` des ausgewählten Programms und des gewählten Schema-Templates angezeigt. Wenn XML-Dateien eines Ordnerprogramms verschiedene Versionen haben, werden diese einzeln aufgeführt.
+- Das geladene XDR-Schema wird beim Abruf verwendet, um die Struktur, Reihenfolge, Vorkommen, Attribute und Datentypen jeder Programm-XML zu prüfen. Es ergänzt oder entfernt keine Elemente und überschreibt nicht die `config_version` des Programms.
+- Die separate Schweißkopfauswahl kann `NGRT + H-HEAD` oder `H2-FV-100S` auf den Download anwenden. **Apply Welding Head** prüft zuerst, ob alle XML-Dateien die benötigten Jog-Elemente enthalten. Beim Download werden das `head`-Attribut und die hinterlegten Jog-Werte gesetzt. Ohne manuelle Auswahl bleibt das bisherige `head`-Attribut bestehen; erkannte NGRT-Varianten werden als `NGRT + H-HEAD` ausgegeben. Die Originale bleiben unverändert. Die XML-Ausgabe beginnt direkt mit `<sched>` ohne XML-Deklaration.
+- Im Abrufformular werden die `config_version` des Programms und die Version des ausgewählten XDR-Schemas angezeigt. Der Schema-Name ist im Schema-Auswahlfeld sichtbar. Wenn XML-Dateien eines Ordnerprogramms verschiedene Versionen haben, werden diese einzeln aufgeführt.
 - Die Ringdurchmesser entsprechen der Zuordnung G10–G38 aus `Schedule_Org/batch_editor1.6.py`. Die Umrechnung verwendet mm / 25,4 und sechs Nachkommastellen.
 - Der Layerdurchmesser ist optional. `0` oder ein leeres Feld verwendet den gewählten Ringdurchmesser; ein anderer Wert wird als mm interpretiert.
 - Schemas und Programme können einzeln aus der lokalen Datenbank gelöscht werden. Gleichnamige Imports fragen vor dem Ersetzen nach.
 
 ## Hinweise
 
-Die Anwendung kontrolliert beim Abruf, ob die erforderlichen XML-Elemente für die ausgewählten Jog-Werte und Durchmesser vorhanden sind. Fehlende Elemente oder ungültige XML-Dateien werden als Fehler angezeigt und nicht als erfolgreich herunterladbare Datei ausgegeben.
+Die Anwendung kontrolliert beim Abruf, ob jede Programmdatei dem geladenen XDR-Schema entspricht und die erforderlichen Elemente für Durchmesser und Jog-Werte vorhanden sind. Abweichende Strukturen, fehlende Elemente oder ungültige XML-Dateien werden als Fehler angezeigt und nicht als erfolgreich herunterladbare Datei ausgegeben.

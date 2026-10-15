@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welding Program Database v1.1</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg-main: #141416;
+            --bg-sidebar: #1b1b1f;
+            --bg-panel: #202024;
+            --bg-input: #18181c;
+            --border: #2d2d34;
+            --text: #f3f3f5;
+            --muted: #96969d;
+            --accent: #ff9800;
+            --accent-hover: #e68900;
+            --danger: #ff6464;
+            --success: #78d78b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg-main);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        button, input, select { font: inherit; }
+        button {
+            border: 0;
+            border-radius: 6px;
+            padding: 9px 14px;
+            background: var(--accent);
+            color: #171717;
+            font-weight: 650;
+            cursor: pointer;
+        }
+        button:hover:not(:disabled) { background: var(--accent-hover); }
+        button:disabled { opacity: .45; cursor: not-allowed; }
+        button.secondary {
+            border: 1px solid #6b4a20;
+            background: transparent;
+            color: var(--accent);
+        }
+        button.secondary:hover:not(:disabled) { background: #30261a; }
+        button.danger {
+            border: 1px solid #693737;
+            background: transparent;
+            color: var(--danger);
+            padding: 6px 10px;
+        }
+        button.danger:hover:not(:disabled) { background: #321e1e; }
+
+        .layout { display: flex; min-height: 100vh; }
+        aside {
+            width: 320px;
+            flex: 0 0 320px;
+            padding: 22px 18px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+        }
+        .side-section > summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            list-style: none;
+        }
+        .side-section > summary::-webkit-details-marker { display: none; }
+        .side-section > summary::after {
+            content: "+";
+            color: var(--accent);
+            font-size: 16px;
+            line-height: 1;
+        }
+        .side-section[open] > summary::after { content: "−"; }
+        .side-section:not([open]) { margin-bottom: 16px; }
+        .side-section:not([open]) > summary { margin-bottom: 0; }
+        .side-section { margin-bottom: 26px; }
+        .upload-label {
+            display: block;
+            margin: 9px 0;
+            padding: 11px 12px;
+            border: 1px dashed #55545a;
+            border-radius: 7px;
+            color: #dedee2;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .upload-label:hover { border-color: var(--accent); color: var(--accent); }
+        .upload-label input { display: none; }
+        .drop-zone {
+            margin: 10px 0;
+            padding: 13px 12px;
+            border: 1px dashed #55545a;
+            border-radius: 7px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+            transition: border-color .15s, background .15s, color .15s;
+        }
+        .drop-zone.drag-over {
+            border-color: var(--accent);
+            background: #30261a;
+            color: var(--text);
+        }
+        .item-list { display: grid; gap: 7px; }
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #202024;
+            font-size: 12px;
+        }
+        .list-item-name { overflow-wrap: anywhere; }
+        .empty { color: var(--muted); font-size: 12px; line-height: 1.5; }
+        .storage-note { color: var(--muted); font-size: 11px; line-height: 1.5; }
+
+        main { flex: 1; min-width: 0; }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 28px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 { margin: 0; font-size: 19px; }
+        #storageStatus { color: var(--muted); font-size: 12px; }
+        .content { max-width: 1000px; margin: 0 auto; padding: 28px; }
+        .panel {
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--bg-panel);
+        }
+        .panel-heading {
+            padding: 15px 19px;
+            border-bottom: 1px solid var(--border);
+            background: #26262b;
+        }
+        .panel-heading h2 { margin: 0; font-size: 15px; }
+        .panel-body { padding: 20px; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 17px;
+        }
+        .field { display: flex; flex-direction: column; gap: 7px; }
+        .field label { color: #c9c9cf; font-size: 12px; font-weight: 600; }
+        .field select, .field input {
+            width: 100%;
+            min-height: 40px;
+            padding: 8px 11px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            outline: none;
+            background: var(--bg-input);
+            color: var(--text);
+        }
+        .field select:focus, .field input:focus { border-color: var(--accent); }
+        .field-help { color: var(--muted); font-size: 11px; line-height: 1.45; }
+        .wide { grid-column: 1 / -1; }
+        .version-info {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #19191d;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+        .version-info strong { color: #d8d8dd; }
+        .notice {
+            margin-top: 17px;
+            padding: 11px 13px;
+            border: 1px solid #61502e;
+            border-radius: 6px;
+            background: #2a251b;
+            color: #e8c986;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .notice.error { border-color: #693737; background: #321e1e; color: #ffbcbc; }
+        .actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+        .details { margin: 16px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+        #message { min-height: 19px; margin: 13px 0 0; color: var(--success); font-size: 12px; }
+        #message.error { color: #ff9999; }
+
+        @media (max-width: 760px) {
+            .layout { display: block; }
+            aside { width: 100%; border-right: 0; border-bottom: 1px solid var(--border); }
+            header { align-items: flex-start; flex-direction: column; padding: 18px; }
+            .content { padding: 18px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .wide { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <details class="side-section" open>
+                <summary>Programs</summary>
+                <label class="upload-label">
+                    Add a program folder with all XML files
+                    <input id="programFolder" type="file" accept=".xml,application/xml,text/xml" webkitdirectory directory multiple>
+                </label>
+                <div id="programDropZone" class="drop-zone" role="region" aria-label="Add programs by drag and drop">
+                    Drop XML files or complete program folders here
+                </div>
+                <div id="programList" class="item-list"></div>
+            </details>
+            <details class="side-section" open>
+                <summary>XML Schema (XDR)</summary>
+                <label class="upload-label">
+                    Add schema from XDR
+                    <input id="schemaFile" type="file" accept=".xdr,.xml,application/xml,text/xml">
+                </label>
+                <div id="schemaDropZone" class="drop-zone" role="region" aria-label="Add schema by drag and drop">
+                    Drop an XDR schema file here
+                </div>
+                <div id="schemaList" class="item-list" style="margin-top: 12px"></div>
+            </details>
+            <p class="storage-note">Programs and schemas are stored locally in this browser (IndexedDB). Your data stays on this computer.</p>
+        </aside>
+
+        <main>
+            <header>
+                <h1>Welding Program Database v1.1</h1>
+                <span id="storageStatus">Opening local storage …</span>
+            </header>
+            <div class="content">
+                <section class="panel">
+                    <div class="panel-heading"><h2>Retrieve Program</h2></div>
+                    <div class="panel-body">
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="programSelect">Program Name</label>
+                                <select id="programSelect"><option value="">Add a program folder first</option></select>
+                            </div>
+                            <div class="field">
+                                <label for="schemaSelect">XML Schema</label>
+                                <select id="schemaSelect"><option value="">Add or select an XDR schema</option></select>
+                            </div>
+                            <div class="field">
+                                <label for="weldingHeadSelect">Welding Head</label>
+                                <select id="weldingHeadSelect">
+                                    <option value="">Keep program welding head</option>
+                                    <option value="NGRT + H-HEAD">NGRT + H-HEAD</option>
+                                    <option value="H2-FV-100S">H2-FV-100S</option>
+                                </select>
+                                <span class="field-help">Apply the selected head and its configured jog values separately before downloading.</span>
+                                <button id="applyHeadButton" class="secondary" type="button" disabled>Apply Welding Head</button>
+                            </div>
+                            <div id="configVersionInfo" class="version-info wide" aria-live="polite">
+                                <div><strong>Program config_version:</strong> <span id="programConfigVersion">—</span></div>
+                                <div><strong>XDR schema version:</strong> <span id="xdrSchemaVersion">—</span></div>
+                            </div>
+                            <div class="field">
+                                <label for="diameterSelect">Ring Diameter</label>
+                                <select id="diameterSelect">
+                                    <option value="">Select diameter</option>
+                                    <option value="330">G10 — 330 mm</option>
+                                    <option value="381">G12 — 381 mm</option>
+                                    <option value="514">G18 — 514 mm</option>
+                                    <option value="565">G20 — 565 mm</option>
+                                    <option value="615">G22 — 615 mm</option>
+                                    <option value="666">G24 — 666 mm</option>
+                                    <option value="717">G26 — 717 mm</option>
+                                    <option value="768">G28 — 768 mm</option>
+                                    <option value="819">G30 — 819 mm</option>
+                                    <option value="920">G34 — 920 mm</option>
+                                    <option value="971">G36 — 971 mm</option>
+                                    <option value="1022">G38 — 1022 mm</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="layerDiameter">Layer Diameter in mm</label>
+                                <input id="layerDiameter" type="number" min="0" step="any" value="0">
+                                <span class="field-help">0 or blank uses the ring diameter. Conversion to inches uses 25.4 mm/inch and six decimal places.</span>
+                            </div>
+                        </div>
+                        <div id="schemaNotice" class="notice" hidden></div>
+                        <p class="details">An imported program folder is stored as one selection. When retrieved, all XML files in it are updated and downloaded together as a ZIP. Individual XML files added by drag and drop are provided as a ZIP containing one file. Stored originals remain unchanged.</p>
+                        <div class="actions">
+                            <button id="downloadButton" type="button" disabled>Download Program</button>
+                        </div>
+                        <p id="message" role="status" aria-live="polite"></p>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        "use strict";
+
+        const DATABASE_NAME = "ScheduleProgramDatabase";
+        const DATABASE_VERSION = 1;
+        const DIAMETERS_MM = new Map([
+            ["G10", 330], ["G12", 381], ["G18", 514], ["G20", 565],
+            ["G22", 615], ["G24", 666], ["G26", 717], ["G28", 768],
+            ["G30", 819], ["G34", 920], ["G36", 971], ["G38", 1022]
+        ]);
+        const HEAD_PRESETS = {
+            "NGRT + H-HEAD": {
+                travel_jog: "20",
+                wire_jog_fwd: "100",
+                wire_jog_rev: "100",
+                ahc_jog: "60",
+                osc_jog: "50",
+                wire_manipulator_in_out_jog: "243.75",
+                wire_manipulator_up_down_jog: "3.4",
+                tungsten_jog: "163.36"
+            },
+            "H2-FV-100S": {
+                travel_jog: "20",
+                wire_jog_fwd: "100",
+                wire_jog_rev: "100",
+                ahc_jog: "60",
+                osc_jog: "50",
+                wire_manipulator_in_out_jog: "60",
+                wire_manipulator_up_down_jog: "60"
+            }
+        };
+
+        const programSelect = document.getElementById("programSelect");
+        const schemaSelect = document.getElementById("schemaSelect");
+        const weldingHeadSelect = document.getElementById("weldingHeadSelect");
+        const diameterSelect = document.getElementById("diameterSelect");
+        const layerDiameter = document.getElementById("layerDiameter");
+        const downloadButton = document.getElementById("downloadButton");
+        const applyHeadButton = document.getElementById("applyHeadButton");
+        const message = document.getElementById("message");
+        const schemaNotice = document.getElementById("schemaNotice");
+        let database;
+        let programs = [];
+        let schemas = [];
+        let appliedHead = null;
+
+        function setMessage(text, isError = false) {
+            message.textContent = text;
+            message.classList.toggle("error", isError);
+        }
+
+        function setStorageStatus(text, isError = false) {
+            const status = document.getElementById("storageStatus");
+            status.textContent = text;
+            status.style.color = isError ? "#ff9999" : "";
+        }
+
+        function openDatabase() {
+            return new Promise((resolve, reject) => {
+                if (!("indexedDB" in window)) {
+                    reject(new Error("This browser does not support IndexedDB."));
+                    return;
+                }
+                const request = indexedDB.open(DATABASE_NAME, DATABASE_VERSION);
+                request.onupgradeneeded = () => {
+                    const db = request.result;
+                    if (!db.objectStoreNames.contains("programs")) {
+                        db.createObjectStore("programs", { keyPath: "id" });
+                    }
+                    if (!db.objectStoreNames.contains("schemas")) {
+                        db.createObjectStore("schemas", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error || new Error("Could not open the database."));
+                request.onblocked = () => reject(new Error("Database upgrade blocked. Close other open tabs of this application."));
+            });
+        }
+
+        function storeRequest(storeName, mode, method, value) {
+            return new Promise((resolve, reject) => {
+                const transaction = database.transaction(storeName, mode);
+                const store = transaction.objectStore(storeName);
+                const request = value === undefined ? store[method]() : store[method](value);
+                let result;
+                request.onsuccess = () => { result = request.result; };
+                request.onerror = () => reject(request.error || new Error("Database access failed."));
+                transaction.oncomplete = () => resolve(result);
+                transaction.onerror = () => reject(transaction.error || new Error("Database transaction failed."));
+                transaction.onabort = () => reject(transaction.error || new Error("Database transaction was aborted."));
+            });
+        }
+
+        function parseXml(xmlText, fileName) {
+            const documentXml = new DOMParser().parseFromString(xmlText, "application/xml");
+            const parseError = documentXml.querySelector("parsererror");
+            if (parseError) {
+                throw new Error(`${fileName}: invalid XML file (${parseError.textContent.trim()})`);
+            }
+            const root = documentXml.documentElement;
+            if (!root || root.tagName !== "sched") {
+                throw new Error(`${fileName}: expected XML root element <sched> was not found.`);
+            }
+            return documentXml;
+        }
+
+        function elementChildren(parent, name) {
+            return Array.from(parent.children).filter(element => element.localName === name);
+        }
+
+        function parseXdrSchema(xmlText, fileName) {
+            const documentXml = new DOMParser().parseFromString(xmlText, "application/xml");
+            const parseError = documentXml.querySelector("parsererror");
+            if (parseError) {
+                throw new Error(`${fileName}: invalid XDR XML (${parseError.textContent.trim()})`);
+            }
+
+            const root = documentXml.documentElement;
+            if (!root || root.localName !== "Schema") {
+                throw new Error(`${fileName}: expected an XDR <Schema> root element.`);
+            }
+            const definitions = new Map();
+            Array.from(root.getElementsByTagName("*"))
+                .filter(element => element.localName === "ElementType")
+                .forEach(definition => {
+                    const name = definition.getAttribute("name");
+                    if (!name || definitions.has(name)) {
+                        throw new Error(`${fileName}: XDR element definitions must have unique names.`);
+                    }
+                    definitions.set(name, definition);
+                });
+
+            if (!definitions.has("sched")) {
+                throw new Error(`${fileName}: XDR schema does not define the <sched> root element.`);
+            }
+            definitions.forEach((definition, name) => {
+                elementChildren(definition, "element").forEach(rule => {
+                    if (!definitions.has(rule.getAttribute("type"))) {
+                        throw new Error(`${fileName}: <${name}> references an undefined element type "${rule.getAttribute("type")}".`);
+                    }
+                });
+                elementChildren(definition, "attribute").forEach(rule => {
+                    const attributeName = rule.getAttribute("type");
+                    if (!elementChildren(definition, "AttributeType").some(attribute => attribute.getAttribute("name") === attributeName)) {
+                        throw new Error(`${fileName}: <${name}> references an undefined attribute type "${attributeName}".`);
+                    }
+                });
+            });
+
+            return {
+                document: documentXml,
+                root,
+                definitions,
+                version: root.lookupNamespaceURI("version") || root.getAttribute("version") || ""
+            };
+        }
+
+        function validateDataType(value, dataType, location) {
+            const text = value.trim();
+            const invalid = () => { throw new Error(`${location} is not a valid ${dataType}.`); };
+            if (dataType === "string") return;
+            if (dataType === "boolean") {
+                if (!["true", "false", "1", "0"].includes(text)) invalid();
+                return;
+            }
+            if (["float", "number", "decimal"].includes(dataType)) {
+                const numericPattern = dataType === "decimal"
+                    ? /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/
+                    : /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
+                if (!numericPattern.test(text) || !Number.isFinite(Number(text))) invalid();
+                return;
+            }
+            if (["int", "i1", "i2", "i4", "i8", "ui1", "ui2", "ui4", "ui8"].includes(dataType)) {
+                if (!/^[+-]?\d+$/.test(text)) invalid();
+                const number = BigInt(text);
+                const unsignedBits = /^ui([1248])$/.exec(dataType);
+                if (unsignedBits) {
+                    const max = (1n << BigInt(Number(unsignedBits[1]) * 8)) - 1n;
+                    if (number < 0n || number > max) invalid();
+                    return;
+                }
+                const signedBits = dataType === "int" ? 32 : Number(/^i([1248])$/.exec(dataType)?.[1]) * 8;
+                const min = -(1n << BigInt(signedBits - 1));
+                const max = (1n << BigInt(signedBits - 1)) - 1n;
+                if (number < min || number > max) invalid();
+                return;
+            }
+            throw new Error(`${location} uses unsupported XDR data type "${dataType}".`);
+        }
+
+        function validateAgainstXdr(xmlRoot, xdrSchema, fileName) {
+            function validateElement(element, expectedName, location) {
+                const definition = xdrSchema.definitions.get(expectedName);
+                if (!definition) throw new Error(`${fileName}: no XDR definition for <${expectedName}>.`);
+                const elementName = element.localName;
+                if (elementName !== expectedName) {
+                    throw new Error(`${location}: expected <${expectedName}>, found <${elementName}>.`);
+                }
+
+                const declaredAttributes = new Map();
+                elementChildren(definition, "AttributeType").forEach(attribute => {
+                    declaredAttributes.set(attribute.getAttribute("name"), attribute);
+                });
+                const allowedAttributes = new Set(elementChildren(definition, "attribute").map(attribute => attribute.getAttribute("type")));
+                for (const attributeName of allowedAttributes) {
+                    const attributeDefinition = declaredAttributes.get(attributeName);
+                    if (!attributeDefinition) {
+                        throw new Error(`${fileName}: <${expectedName}> has no definition for attribute "${attributeName}".`);
+                    }
+                    const value = Array.from(element.attributes).find(attribute => attribute.localName === attributeName);
+                    if (!value && attributeDefinition.getAttribute("required") === "yes") {
+                        throw new Error(`${location}: required attribute "${attributeName}" is missing.`);
+                    }
+                    if (value) {
+                        validateDataType(value.value, attributeDefinition.getAttribute("dt:type"), `${location} attribute "${attributeName}"`);
+                    }
+                }
+                for (const attribute of Array.from(element.attributes)) {
+                    if (attribute.namespaceURI === "http://www.w3.org/2000/xmlns/" || allowedAttributes.has(attribute.localName)) continue;
+                    throw new Error(`${location}: attribute "${attribute.name}" is not allowed by the XDR schema.`);
+                }
+
+                const contentType = definition.getAttribute("content");
+                const childElements = Array.from(element.children);
+                if (contentType === "textOnly") {
+                    if (childElements.length) throw new Error(`${location}: child elements are not allowed.`);
+                    validateDataType(element.textContent, definition.getAttribute("dt:type"), location);
+                    return;
+                }
+                if (contentType !== "eltOnly") {
+                    throw new Error(`${fileName}: unsupported content model "${contentType}" on <${expectedName}>.`);
+                }
+                if (Array.from(element.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim())) {
+                    throw new Error(`${location}: text content is not allowed between child elements.`);
+                }
+
+                const rules = elementChildren(definition, "element");
+                let childIndex = 0;
+                for (const rule of rules) {
+                    const childName = rule.getAttribute("type");
+                    const minOccurs = Number(rule.getAttribute("minOccurs") || 1);
+                    const maxText = rule.getAttribute("maxOccurs") || "1";
+                    const maxOccurs = maxText === "*" ? Infinity : Number(maxText);
+                    let count = 0;
+                    while (childIndex < childElements.length && childElements[childIndex].localName === childName && count < maxOccurs) {
+                        validateElement(childElements[childIndex], childName, `${location} > ${childName}[${count + 1}]`);
+                        childIndex++;
+                        count++;
+                    }
+                    if (count < minOccurs) {
+                        throw new Error(`${location}: expected at least ${minOccurs} <${childName}> element(s), found ${count}.`);
+                    }
+                }
+                if (childIndex < childElements.length) {
+                    throw new Error(`${location}: <${childElements[childIndex].localName}> is not allowed here or is out of order.`);
+                }
+            }
+
+            validateElement(xmlRoot, "sched", fileName);
+        }
+
+        function canonicalHeadName(name) {
+            if (/ngrt/i.test(name) || /h-head/i.test(name)) return "NGRT + H-HEAD";
+            return name;
+        }
+
+        function renderLists() {
+            const programList = document.getElementById("programList");
+            const schemaList = document.getElementById("schemaList");
+            programList.replaceChildren();
+            schemaList.replaceChildren();
+
+            if (!programs.length) {
+                programList.innerHTML = '<span class="empty">No programs saved yet.</span>';
+            } else {
+                programs.forEach(program => {
+                    const row = document.createElement("div");
+                    row.className = "list-item";
+                    const name = document.createElement("span");
+                    name.className = "list-item-name";
+                    name.textContent = `${program.name}${getProgramFiles(program).length > 1 ? ` (${getProgramFiles(program).length} XML)` : ""}`;
+                    const remove = makeDeleteButton("Delete program", async () => {
+                        if (!window.confirm(`Delete program "${program.name}" from local storage?`)) return;
+                        await storeRequest("programs", "readwrite", "delete", program.id);
+                        await refreshData();
+                        setMessage(`Program "${program.name}" deleted.`);
+                    });
+                    row.append(name, remove);
+                    programList.append(row);
+                });
+            }
+
+            if (!schemas.length) {
+                schemaList.innerHTML = '<span class="empty">No XDR schemas saved yet.</span>';
+            } else {
+                schemas.forEach(schema => {
+                    const row = document.createElement("div");
+                    row.className = "list-item";
+                    const name = document.createElement("span");
+                    name.className = "list-item-name";
+                    name.textContent = schema.format === "xdr"
+                        ? schema.name
+                        : `${schema.name} (legacy XML template — re-import an XDR file)`;
+                    const remove = makeDeleteButton("Delete schema", async () => {
+                        if (!window.confirm(`Delete schema "${schema.name}" from local storage?`)) return;
+                        await storeRequest("schemas", "readwrite", "delete", schema.id);
+                        await refreshData();
+                        setMessage(`Schema "${schema.name}" deleted.`);
+                    });
+                    row.append(name, remove);
+                    schemaList.append(row);
+                });
+            }
+            updateSelectors();
+        }
+
+        function makeDeleteButton(label, onClick) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "danger";
+            button.textContent = "Delete";
+            button.setAttribute("aria-label", label);
+            button.addEventListener("click", () => {
+                onClick().catch(error => setMessage(error.message, true));
+            });
+            return button;
+        }
+
+        function updateSelect(select, placeholder, entries, currentValue) {
+            select.replaceChildren();
+            const first = document.createElement("option");
+            first.value = "";
+            first.textContent = placeholder;
+            select.append(first);
+            entries.forEach(entry => {
+                const option = document.createElement("option");
+                option.value = entry.id;
+                const fileCount = getProgramFiles(entry).length;
+                option.textContent = fileCount > 1 ? `${entry.name} (${fileCount} XML)` : entry.name;
+                select.append(option);
+            });
+            if (entries.some(entry => entry.id === currentValue)) select.value = currentValue;
+        }
+
+        function updateSelectors() {
+            const previousProgram = programSelect.value;
+            const previousSchema = schemaSelect.value;
+            updateSelect(programSelect, "Select a program", programs, previousProgram);
+            updateSelect(schemaSelect, "Select an XDR schema", schemas.filter(schema => schema.format === "xdr"), previousSchema);
+            updateConfigVersionInfo();
+            updateGenerationState();
+        }
+
+        async function refreshData() {
+            [programs, schemas] = await Promise.all([
+                storeRequest("programs", "readonly", "getAll"),
+                storeRequest("schemas", "readonly", "getAll")
+            ]);
+            programs.sort((a, b) => a.name.localeCompare(b.name, "de"));
+            schemas.sort((a, b) => a.name.localeCompare(b.name, "de"));
+            renderLists();
+            setStorageStatus(`${programs.length} programs · ${schemas.length} schemas stored locally`);
+        }
+
+        function currentProgram() {
+            return programs.find(program => program.id === programSelect.value);
+        }
+
+        function currentSchema() {
+            return schemas.find(schema => schema.id === schemaSelect.value && schema.format === "xdr");
+        }
+
+        function getProgramFiles(program) {
+            if (Array.isArray(program.files)) return program.files;
+            if (typeof program.xml === "string") {
+                return [{ name: program.name, relativePath: program.name, xml: program.xml }];
+            }
+            return [];
+        }
+
+        function readConfigVersion(xmlText, fileName) {
+            const xml = parseXml(xmlText, fileName);
+            return xml.querySelector("metadata > config_version")?.textContent.trim() || "not specified";
+        }
+
+        function updateConfigVersionInfo() {
+            const programVersionElement = document.getElementById("programConfigVersion");
+            const xdrVersionElement = document.getElementById("xdrSchemaVersion");
+            const program = currentProgram();
+            const schema = currentSchema();
+
+            if (!program) {
+                programVersionElement.textContent = "—";
+            } else {
+                try {
+                    const versionsByFile = getProgramFiles(program).map(file => ({
+                        name: file.relativePath || file.name,
+                        version: readConfigVersion(file.xml, file.relativePath || file.name)
+                    }));
+                    const versions = new Set(versionsByFile.map(file => file.version));
+                    programVersionElement.textContent = versions.size <= 1
+                        ? (versionsByFile[0]?.version || "not specified")
+                        : versionsByFile.map(file => `${file.name}: ${file.version}`).join(" · ");
+                } catch (error) {
+                    programVersionElement.textContent = `Error: ${error.message}`;
+                }
+            }
+
+            if (!schema) {
+                xdrVersionElement.textContent = "—";
+            } else {
+                try {
+                    const parsedSchema = parseXdrSchema(schema.xml, schema.sourceFile || schema.name);
+                    xdrVersionElement.textContent = schema.schemaVersion || parsedSchema.version || "not specified";
+                } catch (error) {
+                    xdrVersionElement.textContent = `Error: ${error.message}`;
+                }
+            }
+        }
+
+        function updateGenerationState() {
+            const hasProgram = Boolean(currentProgram());
+            const hasSchema = Boolean(currentSchema());
+            const selectedHead = weldingHeadSelect.value;
+            const hasDiameter = Boolean(diameterSelect.value);
+            const layerValue = layerDiameter.value.trim();
+            const validLayer = layerValue === "" || (Number.isFinite(Number(layerValue)) && Number(layerValue) >= 0);
+            const headSettingsApplied = !selectedHead || (
+                appliedHead?.programId === programSelect.value &&
+                appliedHead?.schemaId === schemaSelect.value &&
+                appliedHead?.name === selectedHead
+            );
+            applyHeadButton.disabled = !(hasProgram && hasSchema && selectedHead);
+            downloadButton.disabled = !(hasProgram && hasSchema && hasDiameter && validLayer && headSettingsApplied);
+            schemaNotice.hidden = true;
+            schemaNotice.classList.remove("error");
+            if (!hasSchema && !schemas.some(schema => schema.format === "xdr")) {
+                schemaNotice.textContent = "Load the WeldSchedule .XDR schema before retrieving a program. Old XML templates are not used in v1.1.";
+                schemaNotice.hidden = false;
+            } else if (selectedHead && !headSettingsApplied) {
+                schemaNotice.textContent = "Apply the selected welding head before downloading the program.";
+                schemaNotice.hidden = false;
+            }
+        }
+
+        function allElementsByTag(root, tag) {
+            return Array.from(root.getElementsByTagName(tag));
+        }
+
+        function setExistingValues(root, tag, value) {
+            const elements = allElementsByTag(root, tag);
+            if (!elements.length) {
+                throw new Error(`The program or schema does not contain a <${tag}> element.`);
+            }
+            elements.forEach(element => { element.textContent = value; });
+        }
+
+        function applySchema(sourceXml, schema, xdrSchema, selectedHeadName = "") {
+            const sourceRoot = sourceXml.documentElement;
+            allElementsByTag(sourceRoot, "ahc_retract").forEach(element => element.remove());
+            validateAgainstXdr(sourceRoot, xdrSchema, schema.name);
+
+            const headName = selectedHeadName || canonicalHeadName(sourceRoot.getAttribute("head").trim());
+            if (headName) sourceRoot.setAttribute("head", headName);
+            const preset = HEAD_PRESETS[headName];
+            if (preset) {
+                Object.entries(preset).forEach(([tag, value]) => setExistingValues(sourceRoot, tag, value));
+            }
+            validateAgainstXdr(sourceRoot, xdrSchema, schema.name);
+        }
+
+        function safeFileName(value) {
+            return value.replace(/[<>:"/\\|?*\u0000-\u001f]/g, "_").replace(/[. ]+$/, "") || "schedule";
+        }
+
+        function createId() {
+            return typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+                ? crypto.randomUUID()
+                : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        }
+
+        function downloadXml(fileName, xmlText) {
+            downloadBlob(fileName, new Blob([xmlText], { type: "application/xml;charset=utf-8" }));
+        }
+
+        function downloadBlob(fileName, blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            document.body.append(link);
+            link.click();
+            link.remove();
+            window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function crc32(bytes) {
+            let crc = 0xffffffff;
+            for (const byte of bytes) {
+                crc ^= byte;
+                for (let bit = 0; bit < 8; bit++) {
+                    crc = (crc >>> 1) ^ ((crc & 1) ? 0xedb88320 : 0);
+                }
+            }
+            return (crc ^ 0xffffffff) >>> 0;
+        }
+
+        function makeZip(files) {
+            const encoder = new TextEncoder();
+            const localParts = [];
+            const centralParts = [];
+            let localOffset = 0;
+
+            function header(values) {
+                const bytes = new Uint8Array(values.length * 2);
+                const view = new DataView(bytes.buffer);
+                values.forEach((value, index) => view.setUint16(index * 2, value, true));
+                return bytes;
+            }
+
+            function word(value) {
+                const bytes = new Uint8Array(4);
+                new DataView(bytes.buffer).setUint32(0, value >>> 0, true);
+                return bytes;
+            }
+
+            function join(parts) {
+                const length = parts.reduce((total, part) => total + part.length, 0);
+                const result = new Uint8Array(length);
+                let offset = 0;
+                parts.forEach(part => {
+                    result.set(part, offset);
+                    offset += part.length;
+                });
+                return result;
+            }
+
+            files.forEach(file => {
+                const nameBytes = encoder.encode(file.name);
+                const data = encoder.encode(file.content);
+                const checksum = crc32(data);
+                const local = join([
+                    word(0x04034b50),
+                    header([20, 0x0800, 0, 0, 0x0021]),
+                    word(checksum),
+                    word(data.length),
+                    word(data.length),
+                    header([nameBytes.length, 0]),
+                    nameBytes,
+                    data
+                ]);
+                const central = join([
+                    word(0x02014b50),
+                    header([20, 20, 0x0800, 0, 0, 0x0021]),
+                    word(checksum),
+                    word(data.length),
+                    word(data.length),
+                    header([nameBytes.length, 0, 0, 0, 0]),
+                    word(0),
+                    word(localOffset),
+                    nameBytes
+                ]);
+                localParts.push(local);
+                centralParts.push(central);
+                localOffset += local.length;
+            });
+
+            const centralDirectory = join(centralParts);
+            const end = join([
+                word(0x06054b50),
+                header([0, 0, files.length, files.length]),
+                word(centralDirectory.length),
+                word(localOffset),
+                header([0])
+            ]);
+            return new Blob([...localParts, centralDirectory, end], { type: "application/zip" });
+        }
+
+        async function importPrograms(files) {
+            let saved = 0;
+            const errors = [];
+            for (const file of files) {
+                try {
+                    const xml = await file.text();
+                    parseXml(xml, file.name);
+                    const existing = programs.find(program => program.name.toLocaleLowerCase("de") === file.name.toLocaleLowerCase("de"));
+                    if (existing && !window.confirm(`"${file.name}" is already saved. Replace the program?`)) continue;
+                    await storeRequest("programs", "readwrite", "put", {
+                        id: existing?.id || createId(),
+                        name: file.name,
+                        xml,
+                        updatedAt: new Date().toISOString()
+                    });
+                    saved++;
+                } catch (error) {
+                    errors.push(error.message);
+                }
+            }
+            await refreshData();
+            setMessage(errors.length ? `${saved} program(s) saved. Errors: ${errors.join(" · ")}` : `${saved} program(s) saved locally.`);
+            if (errors.length) message.classList.add("error");
+        }
+
+        async function importProgramFolder(files) {
+            const xmlFiles = files.filter(file => /\.xml$/i.test(file.name));
+            if (!xmlFiles.length) {
+                throw new Error("The selected folder contains no XML files.");
+            }
+
+            const relativePaths = new Set();
+            const importedFiles = [];
+            for (const file of xmlFiles) {
+                const parts = (file.relativePath || file.webkitRelativePath || file.name).split("/").filter(Boolean);
+                const relativePath = (parts.length > 1 ? parts.slice(1) : parts).join("/");
+                const pathKey = relativePath.toLocaleLowerCase("de");
+                if (relativePaths.has(pathKey)) {
+                    throw new Error(`The folder contains duplicate XML paths: ${relativePath}`);
+                }
+                relativePaths.add(pathKey);
+                const xml = await file.text();
+                parseXml(xml, relativePath);
+                importedFiles.push({ name: file.name, relativePath, xml });
+            }
+
+            const firstPath = (xmlFiles[0].relativePath || xmlFiles[0].webkitRelativePath || xmlFiles[0].name).split("/").filter(Boolean);
+            const folderName = firstPath.length > 1 ? firstPath[0] : "Program";
+            const existing = programs.find(program => program.name.toLocaleLowerCase("de") === folderName.toLocaleLowerCase("de"));
+            if (existing && !window.confirm(`"${folderName}" is already saved. Replace the entire program folder?`)) return;
+
+            await storeRequest("programs", "readwrite", "put", {
+                id: existing?.id || createId(),
+                name: folderName,
+                files: importedFiles,
+                updatedAt: new Date().toISOString()
+            });
+            await refreshData();
+            setMessage(`Program folder "${folderName}" with ${importedFiles.length} XML file(s) saved locally.`);
+        }
+
+        async function importSchema(file) {
+            if (!file) return;
+            const xml = await file.text();
+            const xdrSchema = parseXdrSchema(xml, file.name);
+            const schemaTitle = xdrSchema.root.getAttribute("name").trim();
+            const schemaName = schemaTitle || file.name.replace(/\.(xdr|xml)$/i, "");
+            if (!schemaName) throw new Error("Could not determine a name for the XDR schema.");
+            const existing = schemas.find(schema => schema.id.toLocaleLowerCase("de") === schemaName.toLocaleLowerCase("de"));
+            if (existing && !window.confirm(`A schema named "${schemaName}" is already saved. Replace it?`)) return;
+            await storeRequest("schemas", "readwrite", "put", {
+                id: existing?.id || schemaName,
+                name: schemaName,
+                schemaTitle,
+                schemaVersion: xdrSchema.version,
+                format: "xdr",
+                xml,
+                sourceFile: file.name,
+                updatedAt: new Date().toISOString()
+            });
+            appliedHead = null;
+            await refreshData();
+            schemaSelect.value = existing?.id || schemaName;
+            updateConfigVersionInfo();
+            updateGenerationState();
+            setMessage(`XDR schema "${schemaName}" saved locally.`);
+        }
+
+        function applySelectedHead() {
+            try {
+                const program = currentProgram();
+                const schema = currentSchema();
+                const headName = weldingHeadSelect.value;
+                if (!program || !schema || !headName) {
+                    throw new Error("Select a program, XDR schema, and welding head first.");
+                }
+
+                const xdrSchema = parseXdrSchema(schema.xml, schema.sourceFile || schema.name);
+                const files = getProgramFiles(program);
+                if (!files.length) throw new Error("The selected program contains no XML files.");
+                files.forEach(file => {
+                    const xml = parseXml(file.xml, file.relativePath || file.name);
+                    applySchema(xml, schema, xdrSchema, headName);
+                });
+
+                appliedHead = { programId: program.id, schemaId: schema.id, name: headName };
+                updateGenerationState();
+                setMessage(`Welding head "${headName}" and its configured values will be applied when the program is downloaded. Stored originals remain unchanged.`);
+            } catch (error) {
+                appliedHead = null;
+                updateGenerationState();
+                setMessage(error.message, true);
+            }
+        }
+
+        function retrieveProgram() {
+            try {
+                const program = currentProgram();
+                const schema = currentSchema();
+                const selectedHead = weldingHeadSelect.value;
+                const diameter = Number(diameterSelect.value);
+                const layerRaw = layerDiameter.value.trim();
+                const layerMm = layerRaw === "" || Number(layerRaw) === 0 ? diameter : Number(layerRaw);
+                if (!program || !schema || !diameter || !Number.isFinite(layerMm) || layerMm < 0) {
+                    throw new Error("Select a program, XDR schema, and ring diameter, and enter a valid layer diameter.");
+                }
+                if (selectedHead && (
+                    appliedHead?.programId !== program.id ||
+                    appliedHead?.schemaId !== schema.id ||
+                    appliedHead?.name !== selectedHead
+                )) {
+                    throw new Error("Apply the selected welding head before downloading the program.");
+                }
+
+                const xdrSchema = parseXdrSchema(schema.xml, schema.sourceFile || schema.name);
+                const outerInch = (diameter / 25.4).toFixed(6);
+                const layerInch = (layerMm / 25.4).toFixed(6);
+                const programFiles = getProgramFiles(program);
+                if (!programFiles.length) throw new Error("The selected program contains no XML files.");
+                const firstProgramXml = parseXml(programFiles[0].xml, programFiles[0].relativePath || programFiles[0].name);
+                const downloadHead = selectedHead ||
+                    canonicalHeadName(firstProgramXml.documentElement.getAttribute("head").trim()) || "Schedule";
+                const outputFiles = programFiles.map(file => {
+                    const xml = parseXml(file.xml, file.relativePath || file.name);
+                    applySchema(xml, schema, xdrSchema, selectedHead);
+                    setExistingValues(xml.documentElement, "outer_diameter", outerInch);
+                    setExistingValues(xml.documentElement, "layer_diameter", layerInch);
+                    validateAgainstXdr(xml.documentElement, xdrSchema, file.relativePath || file.name);
+                    return {
+                        name: safeZipPath(file.relativePath || file.name),
+                        content: new XMLSerializer().serializeToString(xml.documentElement)
+                    };
+                });
+
+                const diameterLabel = Array.from(diameterSelect.selectedOptions)[0].textContent.split(" — ")[0];
+                const archiveName = `${safeFileName(program.name)}_${safeFileName(downloadHead)}_${diameterLabel}.zip`;
+                downloadBlob(archiveName, makeZip(outputFiles));
+                setMessage(`${outputFiles.length} XML file(s) updated and downloaded as a ZIP. Ring diameter: ${diameter} mm = ${outerInch} in; layer diameter: ${layerMm} mm = ${layerInch} in.`);
+            } catch (error) {
+                setMessage(error.message, true);
+            }
+        }
+
+        function safeZipPath(path) {
+            return path.split("/").filter(Boolean).map(segment => safeFileName(segment)).join("/");
+        }
+
+        function readDirectoryEntries(directoryEntry) {
+            return new Promise((resolve, reject) => {
+                const reader = directoryEntry.createReader();
+                const entries = [];
+                function readBatch() {
+                    reader.readEntries(batch => {
+                        if (!batch.length) {
+                            resolve(entries);
+                            return;
+                        }
+                        entries.push(...batch);
+                        readBatch();
+                    }, reject);
+                }
+                readBatch();
+            });
+        }
+
+        function readEntryFile(fileEntry, relativePath) {
+            return new Promise((resolve, reject) => {
+                fileEntry.file(file => resolve({
+                    name: file.name,
+                    relativePath,
+                    text: () => file.text()
+                }), reject);
+            });
+        }
+
+        async function collectDroppedEntry(entry, relativePath = entry.name) {
+            if (entry.isFile) {
+                return [await readEntryFile(entry, relativePath)];
+            }
+            if (!entry.isDirectory) return [];
+
+            const entries = await readDirectoryEntries(entry);
+            const files = [];
+            for (const child of entries) {
+                files.push(...await collectDroppedEntry(child, `${relativePath}/${child.name}`));
+            }
+            return files;
+        }
+
+        async function handleProgramDrop(dataTransfer) {
+            const entries = [];
+            const looseFiles = [];
+            for (const item of Array.from(dataTransfer.items || [])) {
+                if (item.kind !== "file") continue;
+                const entry = typeof item.webkitGetAsEntry === "function" ? item.webkitGetAsEntry() : null;
+                if (entry) {
+                    entries.push(entry);
+                } else {
+                    const file = item.getAsFile();
+                    if (file) looseFiles.push(file);
+                }
+            }
+
+            const folders = [];
+            const files = [...looseFiles];
+            for (const entry of entries) {
+                if (entry.isDirectory) {
+                    folders.push(await collectDroppedEntry(entry));
+                } else if (entry.isFile) {
+                    files.push(...await collectDroppedEntry(entry));
+                }
+            }
+
+            if (!entries.length && !looseFiles.length) files.push(...Array.from(dataTransfer.files || []));
+            if (!folders.length && !files.length) {
+                throw new Error("Drop XML files or a program folder.");
+            }
+            if (files.length) await importPrograms(files);
+            for (const folderFiles of folders) {
+                await importProgramFolder(folderFiles);
+            }
+        }
+
+        function enableDropZone(zone, onDrop) {
+            zone.addEventListener("dragenter", event => {
+                event.preventDefault();
+                zone.classList.add("drag-over");
+            });
+            zone.addEventListener("dragover", event => event.preventDefault());
+            zone.addEventListener("dragleave", event => {
+                if (!(event.relatedTarget instanceof Node) || !zone.contains(event.relatedTarget)) {
+                    zone.classList.remove("drag-over");
+                }
+            });
+            zone.addEventListener("drop", async event => {
+                event.preventDefault();
+                zone.classList.remove("drag-over");
+                try {
+                    await onDrop(event.dataTransfer);
+                } catch (error) {
+                    setMessage(error.message, true);
+                }
+            });
+        }
+
+        enableDropZone(document.getElementById("programDropZone"), handleProgramDrop);
+        enableDropZone(document.getElementById("schemaDropZone"), async dataTransfer => {
+            const files = Array.from(dataTransfer.files || []).filter(file => /\.(xdr|xml)$/i.test(file.name));
+            if (!files.length) throw new Error("Drop an XDR schema file.");
+            for (const file of files) await importSchema(file);
+        });
+
+        document.getElementById("programFolder").addEventListener("change", async event => {
+            const files = Array.from(event.target.files || []);
+            event.target.value = "";
+            if (!files.length) return;
+            try {
+                await importProgramFolder(files);
+            } catch (error) {
+                setMessage(error.message, true);
+            }
+        });
+
+        document.getElementById("schemaFile").addEventListener("change", async event => {
+            const file = event.target.files?.[0];
+            event.target.value = "";
+            if (!file) return;
+            try {
+                await importSchema(file);
+            } catch (error) {
+                setMessage(error.message, true);
+            }
+        });
+
+        [programSelect, schemaSelect].forEach(element => {
+            element.addEventListener("change", () => {
+                appliedHead = null;
+                updateConfigVersionInfo();
+                updateGenerationState();
+            });
+        });
+        [diameterSelect, weldingHeadSelect].forEach(element => {
+            element.addEventListener("change", () => {
+                if (element === weldingHeadSelect) appliedHead = null;
+                updateGenerationState();
+            });
+        });
+        layerDiameter.addEventListener("input", updateGenerationState);
+        applyHeadButton.addEventListener("click", applySelectedHead);
+        downloadButton.addEventListener("click", retrieveProgram);
+
+        (async function initialize() {
+            try {
+                database = await openDatabase();
+                database.onversionchange = () => {
+                    database.close();
+                    setStorageStatus("Database changed — please reload the page.", true);
+                };
+                await refreshData();
+            } catch (error) {
+                setStorageStatus(error.message, true);
+                setMessage(`Local storage unavailable: ${error.message}`, true);
+                document.querySelectorAll("input, select, button").forEach(element => { element.disabled = true; });
+            }
+        })();
+    </script>
+</body>
+</html>
