@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Welding Program Database v1.1</title>
-    <style>
+<style>
         :root {
             color-scheme: dark;
             --bg-main: #141416;
@@ -143,6 +143,13 @@
         }
         header h1 { margin: 0; font-size: 19px; }
         #storageStatus { color: var(--muted); font-size: 12px; }
+        .home-link {
+            margin-left: auto;
+            color: var(--accent);
+            font-size: 12px;
+            text-decoration: none;
+        }
+        .home-link:hover { color: var(--accent-hover); }
         .content { max-width: 1000px; margin: 0 auto; padding: 28px; }
         .panel {
             margin-bottom: 20px;
@@ -212,10 +219,12 @@
             .layout { display: block; }
             aside { width: 100%; border-right: 0; border-bottom: 1px solid var(--border); }
             header { align-items: flex-start; flex-direction: column; padding: 18px; }
+            header .home-link { margin-left: 0; }
             .content { padding: 18px; }
             .form-grid { grid-template-columns: 1fr; }
             .wide { grid-column: auto; }
         }
+
     </style>
 </head>
 <body>
@@ -250,6 +259,7 @@
             <header>
                 <h1>Welding Program Database v1.1</h1>
                 <span id="storageStatus">Opening local storage …</span>
+                <a class="home-link" href="../index.html">Startseite</a>
             </header>
             <div class="content">
                 <section class="panel">
@@ -771,8 +781,77 @@
             elements.forEach(element => { element.textContent = value; });
         }
 
+        function compareVersions(left, right) {
+            const parse = version => {
+                if (!/^\d+(?:\.\d+)*$/.test(version)) return null;
+                return version.split(".").map(BigInt);
+            };
+            const leftParts = parse(left);
+            const rightParts = parse(right);
+            if (!leftParts || !rightParts) return null;
+            const length = Math.max(leftParts.length, rightParts.length);
+            for (let index = 0; index < length; index++) {
+                const leftPart = leftParts[index] || 0n;
+                const rightPart = rightParts[index] || 0n;
+                if (leftPart !== rightPart) return leftPart < rightPart ? -1 : 1;
+            }
+            return 0;
+        }
+
+        function reconcileChildrenToXdr(element, definition, xdrSchema, fileName) {
+            const sourceChildren = Array.from(element.children);
+            const unusedChildren = new Set(sourceChildren);
+            const orderedChildren = [];
+
+            elementChildren(definition, "element").forEach(rule => {
+                const childName = rule.getAttribute("type");
+                const minOccurs = Number(rule.getAttribute("minOccurs") || 1);
+                const maxText = rule.getAttribute("maxOccurs") || "1";
+                const maxOccurs = maxText === "*" ? Infinity : Number(maxText);
+                const matching = sourceChildren.filter(child => child.localName === childName && unusedChildren.has(child));
+                const retained = matching.slice(0, maxOccurs);
+                retained.forEach(child => unusedChildren.delete(child));
+
+                const childDefinition = xdrSchema.definitions.get(childName);
+                if (!childDefinition) {
+                    throw new Error(`${fileName}: no XDR definition for <${childName}>.`);
+                }
+                retained.forEach(child => {
+                    if (childDefinition.getAttribute("content") === "eltOnly") {
+                        reconcileChildrenToXdr(child, childDefinition, xdrSchema, fileName);
+                    } else {
+                        Array.from(child.children).forEach(nestedChild => child.removeChild(nestedChild));
+                    }
+                    orderedChildren.push(child);
+                });
+                for (let count = retained.length; count < minOccurs; count++) {
+                    const child = element.ownerDocument.createElementNS(element.namespaceURI, childName);
+                    if (childDefinition.getAttribute("content") === "eltOnly") {
+                        reconcileChildrenToXdr(child, childDefinition, xdrSchema, fileName);
+                    }
+                    orderedChildren.push(child);
+                }
+            });
+
+            orderedChildren.forEach(child => element.appendChild(child));
+            sourceChildren.forEach(child => {
+                if (unusedChildren.has(child)) element.removeChild(child);
+            });
+        }
+
         function applySchema(sourceXml, schema, xdrSchema, selectedHeadName = "") {
             const sourceRoot = sourceXml.documentElement;
+            const sourceVersion = sourceRoot.querySelector("metadata > config_version")?.textContent.trim() || "";
+            const versionOrder = compareVersions(sourceVersion, xdrSchema.version);
+            if (versionOrder === -1) {
+                const rootDefinition = xdrSchema.definitions.get("sched");
+                if (!rootDefinition) {
+                    throw new Error(`${schema.name}: XDR schema does not define the <sched> root element.`);
+                }
+                reconcileChildrenToXdr(sourceRoot, rootDefinition, xdrSchema, schema.name);
+                const configVersionElement = sourceRoot.querySelector("metadata > config_version");
+                if (configVersionElement) configVersionElement.textContent = xdrSchema.version;
+            }
             allElementsByTag(sourceRoot, "ahc_retract").forEach(element => element.remove());
             validateAgainstXdr(sourceRoot, xdrSchema, schema.name);
 
@@ -783,6 +862,7 @@
                 Object.entries(preset).forEach(([tag, value]) => setExistingValues(sourceRoot, tag, value));
             }
             validateAgainstXdr(sourceRoot, xdrSchema, schema.name);
+            return versionOrder === -1;
         }
 
         function safeFileName(value) {
@@ -1036,20 +1116,25 @@
                     canonicalHeadName(firstProgramXml.documentElement.getAttribute("head").trim()) || "Schedule";
                 const outputFiles = programFiles.map(file => {
                     const xml = parseXml(file.xml, file.relativePath || file.name);
-                    applySchema(xml, schema, xdrSchema, selectedHead);
+                    const migrated = applySchema(xml, schema, xdrSchema, selectedHead);
                     setExistingValues(xml.documentElement, "outer_diameter", outerInch);
                     setExistingValues(xml.documentElement, "layer_diameter", layerInch);
                     validateAgainstXdr(xml.documentElement, xdrSchema, file.relativePath || file.name);
                     return {
                         name: safeZipPath(file.relativePath || file.name),
-                        content: new XMLSerializer().serializeToString(xml.documentElement)
+                        content: new XMLSerializer().serializeToString(xml.documentElement),
+                        migrated
                     };
                 });
 
                 const diameterLabel = Array.from(diameterSelect.selectedOptions)[0].textContent.split(" — ")[0];
                 const archiveName = `${safeFileName(program.name)}_${safeFileName(downloadHead)}_${diameterLabel}.zip`;
                 downloadBlob(archiveName, makeZip(outputFiles));
-                setMessage(`${outputFiles.length} XML file(s) updated and downloaded as a ZIP. Ring diameter: ${diameter} mm = ${outerInch} in; layer diameter: ${layerMm} mm = ${layerInch} in.`);
+                const migratedCount = outputFiles.filter(file => file.migrated).length;
+                const migrationMessage = migratedCount
+                    ? ` ${migratedCount} older XML file(s) migrated to XDR version ${xdrSchema.version}.`
+                    : "";
+                setMessage(`${outputFiles.length} XML file(s) updated and downloaded as a ZIP.${migrationMessage} Ring diameter: ${diameter} mm = ${outerInch} in; layer diameter: ${layerMm} mm = ${layerInch} in.`);
             } catch (error) {
                 setMessage(error.message, true);
             }
@@ -1217,6 +1302,7 @@
                 document.querySelectorAll("input, select, button").forEach(element => { element.disabled = true; });
             }
         })();
+
     </script>
 </body>
 </html>

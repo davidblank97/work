@@ -1,0 +1,26 @@
+Heatimput vorhersage anhand der overrides
+
+im tool "heat Imput" sollen der heatimput anhand der werte in segments stehen.
+zudem ein "min" und "max" anhand der "overrides".
+Es soll immer der schlechteste erreichbare wert berechnet werden.
+in "min" der niedrigst mögliche wert
+in "max" der höchst mögliche wert 
+die overrides sind ein maximal zulässiger bereich indem die werte wärend des schweißens geändert werden können.
+wenn bei allen overrides 10% angegeben wird, können sich die werte um 10% nach unten oder oben bewegen.
+
+
+"overrides" in %
+
+avc_override_max	=   für "bkg_ahc" und "pri_ahc"
+
+bkg_amp_max         =   für "bkg_amp"
+
+dwell_max	        =   für "indwell" und "outdwell"
+
+excursion_max	    =   für "excursion"
+
+pri_amp_max	        =   für "pri_amp"
+
+travel_max	        =    für "pri_travel" und "bkg_travel"
+
+

@@ -4,7 +4,7 @@ Browserbasierter Editor fuer Liburdi-Schedule-XML-Dateien.
 
 ## Start
 
-Die Datei `Lib_Schedule_Editor_v2_8.html` direkt in einem aktuellen Browser oeffnen. Es ist kein lokaler Server und keine Installation erforderlich.
+Die gemeinsame Startseite [`../index.html`](../index.html) oeffnen und **Schedule Editor** waehlen, oder `Lib_Schedule_Editor_v2_8.html` direkt in einem aktuellen Browser oeffnen. CSS und JavaScript liegen separat in `styles.css` und `app.js`. Ein lokaler oder gehosteter Webserver wird fuer den regulaeren Betrieb empfohlen.
 
 Fuer die ZIP-Funktion beim Batch-Speichern wird die Bibliothek JSZip von einem CDN geladen. Dafuer ist beim Start eine Internetverbindung erforderlich.
 
@@ -41,7 +41,10 @@ Der Viewer zeigt:
 
 - den aktuellen XML-Stand inklusive noch nicht gespeicherter Aenderungen;
 - den Dateinamen der aktiven Datei;
-- den XML-Inhalt als schreibgeschuetzten Text.
+- den XML-Inhalt schreibgeschuetzt;
+- nach Auswahl eines in der Schedule Database gespeicherten XDR-Schemas fehlende erforderliche Elemente, Werte und Attribute als rote, rein visuelle Platzhalter an der passenden XML-Position.
+
+Die Schemas werden aus derselben IndexedDB-Datenbank wie die Schedule Database gelesen. Beide Seiten muessen dazu im selben Browserprofil und unter demselben Ursprung (zum Beispiel demselben lokalen Webserver und Port) geoeffnet sein. Wenn kein Schema gespeichert ist, laden Sie es zuerst in der Schedule Database und oeffnen den Viewer erneut. Die Platzhalter aendern weder das XML im Editor noch gespeicherte Dateien.
 
 Wenn kein separates Fenster erscheint, muss der Popup-Blocker des Browsers fuer die HTML-Datei deaktiviert bzw. eine Ausnahme hinzugefuegt werden. Der Viewer aendert die XML-Datei nicht.
 
@@ -72,6 +75,7 @@ Speichert die markierten Dateien. Wenn keine Datei markiert ist, werden alle gel
 
 - `Comparison`: Vergleicht die geladenen Dateien und kann Werte auf andere Dateien uebertragen.
 - `Unit Converter`: Rechnet IPM und cm/min um.
+- `Heat Input`: Zeigt nominalen Heat Input, Min und Max je aktivem Segment mit TIG-Wirkungsgrad η = 0,6 in kJ/mm. Grundwerte gelten waehrend `excursion`, Hauptwerte waehrend `indwell + outdwell`; Zeiten in Sekunden und IPM wird fuer die Wegberechnung in mm/s umgerechnet. Min/Max beruecksichtigen die in `<overrides>` angegebenen Grenzen als symmetrische ±%-Abweichungen: `avc_override_max` fuer beide Spannungen, `bkg_amp_max`/`pri_amp_max` fuer die Stroeme, `travel_max` fuer beide Vorschuebe, `dwell_max` fuer `indwell`/`outdwell` und `excursion_max` fuer `excursion`. Alle Grenzen werden gleichzeitig kombiniert; fehlende Werte gelten als 0%. `pulse_freq`, `pulse_width` und `*_rate` werden nicht zusaetzlich gewichtet.
 - `Hidden Parameters`: Verwaltet ausgeblendete Parameter.
 - `Change Log`: Zeigt protokollierte Aenderungen.
 - `XML Viewer`: Oeffnet den schreibgeschuetzten XML-Inhalt der aktiven Datei.
@@ -95,4 +99,6 @@ Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Ni
 ## Dateien
 
 - `Lib_Schedule_Editor_v2_8.html`: Editor-Anwendung
+- `styles.css`: Styles der Editor-Anwendung
+- `app.js`: JavaScript der Editor-Anwendung
 - `README_v2_8.md`: Diese Anleitung

@@ -1,0 +1,27 @@
+die berechung muss folgende werte berücksichtigen:
+
+"bkg_ahc"   =   Grundspannung (V)
+
+"bkg_amp"   =   GrundStrom (A)
+
+"bkg_travel"    =   Grund Schweißgeschwindigkeit (IPM)
+
+"excursion" =   Grund Haltezeit mitte (s)
+
+"indwell"   =   Haupt Haltezeit innen (s)	
+
+"outdwell"  =   Haupt Haltezeit außen (s)
+
+"pri_ahc"	=   Hauptspannung (V)
+
+"pri_amp"	=   Hauptstrom (A)
+
+"pri_travel"	=   Haupt Schweißgeschwindigkeit (IPM)
+
+heatimput in Kj/mm
+wirkungsgrad = 0,6
+
+zur erklärung: wir haben eine oscilierende elektroden die mit dem puls synchron läuft. 
+Indewell und outdewell sind die Haltezeiten nachdem sich die elektroden gedreht hat.
+die excursion ist die zit die die elektrode braucht um von in nach out zu kommen, inder zeit sind alle grundparameter aktiv
+

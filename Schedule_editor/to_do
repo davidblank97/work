@@ -22,3 +22,9 @@ H2-FV-100S:
 "wire_manipulator_up_down_jog"=60
 
 Schema kontrolle einfügen
+
+ Für den empfohlenen Start im Projektordner python3 -m http.server 8000 ausführen und http://localhost:8000 öffnen.
+
+ Im Lib_Schedule_Editor muss das Schema überprüft werden. Das Schedule muss den vorgaben des Schema entsprechen. wenn nicht Fehlermeldung
+ IM Lib_Schedule_Editor zwei Checkboxen einfügen um Changelog zu aktivieren und um die SaveNote zu aktivieren.
+  
