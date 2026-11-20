@@ -1,0 +1,7 @@
+ziel ist die grafische darstellung der segmente.
+das rohr soll einfach als kreis unter "Segements" dargestellt werden.
+"layer_diameter" ist unser rohr durchmesser (inch)
+"segment_time" ist die lange (inch) auf dem umfang solange das segment aktiv ist.
+oben ist der 0 punkt im uhrzeigerssinn beginnen.
+werden segmente hinzugefügt, wird deren "segment_time" dazu addiert und in einer anderen farbe dargestellt.
+darstellung in mm
