@@ -29,6 +29,8 @@ Die XML-Daten sind in folgende Bereiche gegliedert:
 
 Werte koennen direkt in den Eingabefeldern geaendert werden. Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten.
 
+Die Reihenfolge der hervorgehobenen Segmentfelder wird ueber `segments_sorting.json` gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Zum Laden dieser Datei den Editor ueber einen lokalen Webserver oeffnen. Beim direkten Oeffnen der HTML-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
+
 Aenderungen werden direkt im geladenen XML-DOM gespeichert. Die urspruengliche Datei auf der Festplatte bleibt bis zum Download unveraendert.
 
 Beim Wechsel des Heads werden die Jog-Parameter fuer `NGRT + H-HEAD` (auch `NGRT-Head`) oder `H2-FV-100S` automatisch auf die jeweiligen Standardwerte gesetzt. Andere Head-Namen veraendern diese Parameter nicht.

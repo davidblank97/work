@@ -2138,6 +2138,11 @@
         let selectedFiles = new Set();
         let activeFile = -1;
         let lastSelectedSection = "segments";
+        const DEFAULT_SEGMENT_PRIORITY_ORDER = [
+            "layer_diameter", "segment_time", "pri_amp", "bkg_amp", "pri_ahc", "bkg_ahc", "pri_wire", "bkg_wire",
+            "pri_travel", "bkg_travel", "tungsten_width", "indwell", "excursion", "outdwell"
+        ];
+        let segmentPriorityOrder = [...DEFAULT_SEGMENT_PRIORITY_ORDER];
         let hiddenFields = new Set(JSON.parse(localStorage.getItem("hiddenFields") || "[]"));
         let changeLog = JSON.parse(localStorage.getItem("scheduleEditorChangeLog") || "[]");
         let undoStack = [];
@@ -2639,6 +2644,30 @@
             if (aImp && !bImp) return -1; if (!aImp && bImp) return 1;
             if (!aHid && bHid) return -1; if (aHid && !bHid) return 1;
             return a.localeCompare(b);
+        }
+
+        async function loadSegmentPriorityConfig() {
+            try {
+                const response = await fetch(new URL("segments_sorting.json", window.location.href), { cache: "no-cache" });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const config = await response.json();
+                const order = config && config.version === 1 ? config.segmentPriorityOrder : null;
+                if (!Array.isArray(order) || !order.every(field => typeof field === "string" && field.trim())) {
+                    throw new Error("Invalid segment sorting configuration");
+                }
+                segmentPriorityOrder = [...new Set(order.map(field => field.trim()))];
+
+                if (activeFile < 0 || lastSelectedSection !== "segments") return;
+                const file = loadedFiles[activeFile];
+                const panelHeader = document.querySelector(".segment-panel .panel-header");
+                const selectedIndex = panelHeader ? Number(panelHeader.textContent.replace("Segment ", "")) : 0;
+                const selectedSegment = file?.sections.segments.find((segment, index) =>
+                    Number(segment.getAttribute("index") || index) === selectedIndex
+                );
+                if (selectedSegment) renderSegment(selectedSegment);
+            } catch (error) {
+                console.warn("Using default segment field order:", error.message);
+            }
         }
 
         /* FILE LOADING */
@@ -3217,8 +3246,7 @@
                 const lengthNode = segment.querySelector("segment_time");
                 const rawLength = lengthNode && lengthNode.textContent.trim() !== "" ? Number(lengthNode.textContent) : null;
                 const lengthIn = rawLength !== null && Number.isFinite(rawLength) && rawLength >= 0 ? rawLength : 0;
-                const segmentDiameter = readPositiveNumber(segment.querySelector("layer_diameter")) || diameter;
-                const angle = segmentDiameter ? lengthIn / (segmentDiameter * Math.PI) * 360 : 0;
+                const angle = diameter ? lengthIn / (diameter * Math.PI) * 360 : 0;
                 const enabled = segment.querySelector("enable")?.textContent.trim() !== "0";
                 const readNonNegativeNumber = key => {
                     const node = segment.querySelector(key);
@@ -3239,8 +3267,8 @@
                     ? (backgroundTravel * excursion + primaryTravel * primaryTime) / cycleTime * 25.4
                     : 0;
                 const hasLength = rawLength !== null && Number.isFinite(rawLength) && rawLength >= 0;
-                const singleSegmentTravel = segments.length === 1 && segmentDiameter !== null && primaryTravel !== null
-                    ? segmentDiameter * Math.PI / primaryTravel * 60
+                const singleSegmentTravel = segments.length === 1 && diameter !== null && primaryTravel !== null
+                    ? diameter * Math.PI / primaryTravel * 60
                     : null;
                 const weldTimeSeconds = !enabled
                     ? null
@@ -3435,11 +3463,6 @@
             const body = document.createElement("div"); body.className = "panel-content open";
             const table = document.createElement("table"); const tbody = document.createElement("tbody");
 
-            const segmentPriorityOrder = [
-                "layer_diameter", "pri_amp", "bkg_amp", "pri_ahc", "bkg_ahc", "pri_wire", "bkg_wire",
-                "pri_travel", "bkg_travel", "tungsten_width",
-                "indwell", "excursion", "outdwell"
-            ];
             const segmentPriorityIndex = new Map(segmentPriorityOrder.map((key, index) => [key, index]));
             const keys = [...seg.children].map(child => child.tagName).sort((a, b) => {
                 const aPriority = segmentPriorityIndex.get(a) ?? Infinity;
@@ -4518,6 +4541,7 @@
 
         document.getElementById('batchSaveBtn').disabled = loadedFiles.length === 0;
         setupSidebarToggles();
+        loadSegmentPriorityConfig();
 
         function restoreOriginalValues() {
             recordHistoryAction("Restore original values", () => {
