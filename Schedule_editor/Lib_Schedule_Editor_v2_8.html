@@ -488,6 +488,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         }
 
         .heat-input-formula {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
             margin: 0 0 16px;
             padding: 14px 18px;
             border: 1px solid var(--border-color);
@@ -503,6 +508,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         .heat-input-formula-fraction {
             display: inline-grid;
             grid-template-columns: minmax(0, 1fr);
+            min-width: 0;
             max-width: 100%;
             vertical-align: middle;
             text-align: center;
@@ -518,7 +524,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         }
 
         .heat-input-formula-term {
-            display: block;
+            display: inline;
             overflow-wrap: anywhere;
         }
 
@@ -1674,12 +1680,16 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             overflow: visible;
         }
 
-        .comparison-scrollbar,
-        .comparison-table-viewport {
+        .comparison-scrollbar {
             width: 100%;
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-color: var(--accent) #211d1a;
+        }
+
+        .comparison-table-viewport {
+            width: 100%;
+            overflow: clip;
         }
 
         .comparison-scrollbar {
@@ -1698,6 +1708,17 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         .comparison-table-viewport .diff-table {
             min-width: max-content;
             margin-top: 0;
+        }
+
+        .comparison-table-viewport .diff-table th {
+            position: sticky;
+            top: 17px;
+            z-index: 2;
+            background: var(--bg-panel);
+        }
+
+        .heat-input-range {
+            color: var(--danger);
         }
 
         #fileDropZone.dragover {
@@ -3174,7 +3195,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             panel.className = "panel";
             const header = document.createElement("div");
             header.className = "panel-header";
-            header.textContent = `${file.name} - TIG/GTAW (η = 0,6)`;
+            header.textContent = file.name;
             panel.appendChild(header);
 
             const body = document.createElement("div");
@@ -3187,6 +3208,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             const table = document.createElement("table");
             const thead = document.createElement("thead");
             thead.innerHTML = "<tr><th>Segment</th><th>Mittelstrom (A)</th><th>Vorschub (mm/min)</th><th>Heat Input (kJ/mm)</th><th>Min (kJ/mm)</th><th>Max (kJ/mm)</th></tr>";
+            thead.querySelectorAll("th:nth-child(5), th:nth-child(6)").forEach(cell => cell.classList.add("heat-input-range"));
             table.appendChild(thead);
             const tbody = document.createElement("tbody");
 
@@ -3216,9 +3238,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                         result.minHeatInput.toFixed(3),
                         result.maxHeatInput.toFixed(3)
                     ]
-                        .forEach(value => {
+                        .forEach((value, valueIndex) => {
                             const cell = document.createElement("td");
                             cell.textContent = value;
+                            if (valueIndex >= 3) cell.classList.add("heat-input-range");
                             row.appendChild(cell);
                         });
                 }
@@ -3625,8 +3648,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
             requestAnimationFrame(() => {
                 comparisonScrollbarInner.style.width = `${comparisonTableViewport.scrollWidth}px`;
-                comparisonScrollbar.onscroll = () => { comparisonTableViewport.scrollLeft = comparisonScrollbar.scrollLeft; };
-                comparisonTableViewport.onscroll = () => { comparisonScrollbar.scrollLeft = comparisonTableViewport.scrollLeft; };
+                comparisonScrollbar.onscroll = () => {
+                    table.style.transform = `translateX(-${comparisonScrollbar.scrollLeft}px)`;
+                };
             });
             content.appendChild(comparisonTableWrap);
         }
