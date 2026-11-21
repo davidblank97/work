@@ -45,6 +45,8 @@ Steht der Cursor in einem Eingabefeld, gilt fuer Strg+Z/Strg+Y das normale Rueck
 3. Eine Datei in der linken Dateiliste anklicken (oder per Tab + Enter waehlen), um sie als aktive Datei auszuwaehlen. Der Status zeigt `Saved` oder `Unsaved`.
 4. Mehrere Dateien koennen ueber die Kontrollkaestchen fuer Batch-Aktionen markiert werden.
 
+Geladene Dateien werden nach den ersten vier Zeichen ihres Namens sortiert: Dateien mit vierstelliger Nummer (z. B. `0303-…`) stehen zuerst und aufsteigend, alle anderen danach in Ladereihenfolge. Aktiv wird die erste neu geladene Datei in dieser Reihenfolge. Per Ziehen in der Dateiliste kann weiterhin von Hand umsortiert werden.
+
 Die Dateien werden im Browser geladen und dort bearbeitet. Es wird keine Datei automatisch auf einen Server hochgeladen.
 
 Angenommen werden nur gueltige XML-Dateien mit dem Wurzelelement `<sched>` und mindestens einem `<segment>`. Abgewiesene Dateien werden in der Statusleiste mit Grund aufgefuehrt. Nach dem Laden sind alle neuen Dateien markiert. Das Laden ist ein eigener Schritt im Zurueck-Verlauf.
@@ -65,7 +67,9 @@ Ist die aktive Datei markiert, werden Aenderungen in `Description`, `Global`, `L
 
 Werte, die vom zuletzt gespeicherten (bzw. geladenen) Stand abweichen, bleiben gruen markiert, auch nach einem Bereichswechsel. Beim Ueberfahren mit der Maus zeigt ein Tooltip den gespeicherten Wert (`Last saved: …`).
 
-Beim Ueberfahren einer Parameterzeile erscheinen zwei Knoepfe: ★ markiert den Parameter als wichtig (wichtige Parameter stehen oben), ⊘ blendet ihn aus. Doppelklick bzw. Rechtsklick auf den Namen funktionieren weiterhin. Ausgeblendete Parameter werden unter `Tools > Hidden Parameters` wiederhergestellt.
+Beim Ueberfahren einer Parameterzeile erscheinen drei Knoepfe: ★ markiert den Parameter als wichtig (wichtige Parameter stehen oben), 🔒 sperrt ihn gegen Aenderungen, ⊘ blendet ihn aus.
+
+**Sperren:** Ein gesperrter Parameter (🔒 bleibt sichtbar, Feld gestrichelt und schreibgeschuetzt) kann nicht versehentlich geaendert werden. Die Sperre gilt je Parametername fuer alle Dateien und bleibt im Browser gespeichert (auch im Local Storage Backup). Sie schuetzt auch vor indirekten Aenderungen: Uebertragung auf markierte Dateien, Comparison (Bearbeiten und `Apply to all`), Kopf-Presets beim Wechsel des Heads sowie – bei gesperrtem `segment_time` – Nahtlaenge, editierbare Segment-Tabelle und die Neuverteilung beim Hinzufuegen/Duplizieren/Loeschen. Zurueck (Undo) und `Revert` bleiben moeglich. Ein erneuter Klick auf 🔒 entsperrt. Doppelklick bzw. Rechtsklick auf den Namen funktionieren weiterhin. Ausgeblendete Parameter werden unter `Tools > Hidden Parameters` wiederhergestellt.
 
 Die Suche filtert die Tabellen nach Parametername und angezeigtem Wert und zeigt die Trefferzahl. Mit × oder Esc wird sie geleert.
 

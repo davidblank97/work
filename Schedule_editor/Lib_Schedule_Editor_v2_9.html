@@ -2099,6 +2099,22 @@
             color: var(--accent);
         }
 
+        .param-lock-btn {
+            filter: grayscale(1);
+        }
+
+        .param-lock-btn.is-locked {
+            opacity: 1;
+            filter: none;
+        }
+
+        input.is-locked,
+        textarea.is-locked {
+            border-style: dashed !important;
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+
         @media (hover: none) {
             .param-action-btn {
                 opacity: 1;
@@ -3386,6 +3402,8 @@
         }
 
         let hiddenFields = new Set(readStoredJson("hiddenFields", []));
+        // Gesperrte Parameter (je Name, fuer alle Dateien): schreibgeschuetzt gegen versehentliche Aenderung.
+        let lockedFields = new Set(readStoredJson("lockedFields", []));
         let changeLog = readStoredJson("scheduleEditorChangeLog", []);
         let undoStack = [];
         let redoStack = [];
@@ -3443,6 +3461,8 @@
 
         /* HELPERS */
         function saveHidden() { localStorage.setItem("hiddenFields", JSON.stringify([...hiddenFields])); }
+        function saveLocked() { localStorage.setItem("lockedFields", JSON.stringify([...lockedFields])); }
+        const isLocked = key => lockedFields.has(key);
         function saveImportant() { localStorage.setItem("importantFields", JSON.stringify([...importantFields])); }
         function saveParameterUnits() { localStorage.setItem("parameterUnits", JSON.stringify(parameterUnits)); }
         function saveChangeLog() { localStorage.setItem("scheduleEditorChangeLog", JSON.stringify(changeLog.slice(0, 200))); }
@@ -3663,6 +3683,7 @@
                 activeFile,
                 lastSelectedSection,
                 hiddenFields: [...hiddenFields],
+                lockedFields: [...lockedFields],
                 importantFields: [...importantFields],
                 parameterUnits: { ...parameterUnits },
                 customHeads: [...customHeads],
@@ -3677,6 +3698,7 @@
                 activeFile: snapshot.activeFile,
                 lastSelectedSection: snapshot.lastSelectedSection,
                 hiddenFields: snapshot.hiddenFields,
+                lockedFields: snapshot.lockedFields,
                 importantFields: snapshot.importantFields,
                 parameterUnits: snapshot.parameterUnits,
                 customHeads: snapshot.customHeads,
@@ -3719,6 +3741,8 @@
             activeFile = snapshot.activeFile;
             lastSelectedSection = snapshot.lastSelectedSection;
             hiddenFields = new Set(snapshot.hiddenFields);
+            lockedFields = new Set(snapshot.lockedFields || []);
+            saveLocked();
             importantFields = new Set(snapshot.importantFields);
             parameterUnits = { ...snapshot.parameterUnits };
             customHeads = [...snapshot.customHeads];
@@ -3960,6 +3984,25 @@
             if (selectedSegment) renderSegment(selectedSegment);
         }
 
+        // Sortiert die geladenen Dateien nach den ersten 4 Zeichen des Namens (z. B. 0303, 0304, ...).
+        // Auswahl und aktive Datei werden auf die neuen Positionen umgerechnet.
+        function sortLoadedFilesByPrefix() {
+            const activeRecord = loadedFiles[activeFile];
+            const selectedRecords = new Set([...selectedFiles].map(index => loadedFiles[index]).filter(Boolean));
+            // Dateien mit 4-stelliger Nummer zuerst (numerisch), alle anderen danach in Ladereihenfolge.
+            const prefix = name => (String(name).match(/^\d{4}/) || [null])[0];
+            loadedFiles = loadedFiles
+                .map((file, index) => ({ file, index, key: prefix(file.name) }))
+                .sort((a, b) => {
+                    if (a.key && b.key) return a.key.localeCompare(b.key, undefined, { numeric: true }) || a.index - b.index;
+                    if (a.key || b.key) return a.key ? -1 : 1;
+                    return a.index - b.index;
+                })
+                .map(({ file }) => file);
+            selectedFiles = new Set(loadedFiles.map((file, index) => selectedRecords.has(file) ? index : -1).filter(index => index >= 0));
+            activeFile = activeRecord ? loadedFiles.indexOf(activeRecord) : activeFile;
+        }
+
         /* FILE LOADING */
         document.getElementById("fileInput").addEventListener("change", e => {
             const files = e.target.files;
@@ -3978,7 +4021,10 @@
                 loadedCounter++;
                 if (loadedCounter !== targetCount) return;
                 const successCount = targetCount - failedFiles.length;
-                if (successCount > 0) activeFile = currentSelectionStart;
+                const newRecords = new Set(loadedFiles.slice(currentSelectionStart));
+                sortLoadedFilesByPrefix();
+                // Aktiv wird die erste neu geladene Datei in sortierter Reihenfolge.
+                if (successCount > 0) activeFile = loadedFiles.findIndex(file => newRecords.has(file));
                 updateUI();
                 pushHistorySnapshot("Load files", beforeSnapshot);
                 document.getElementById("status").textContent = failedFiles.length
@@ -4348,7 +4394,25 @@
             hideButton.title = "Hide parameter (restore via Tools › Hidden Parameters)";
             hideButton.setAttribute("aria-label", `Hide ${key}`);
             hideButton.onclick = event => { event.stopPropagation(); hideField(); };
-            actions.append(starButton, hideButton);
+            const locked = isLocked(key);
+            const lockButton = document.createElement("button");
+            lockButton.type = "button";
+            lockButton.className = "param-action-btn param-lock-btn" + (locked ? " is-locked" : "");
+            lockButton.textContent = locked ? "🔒" : "🔓";
+            lockButton.title = locked ? "Unlock parameter (allow editing)" : "Lock parameter (protect against changes)";
+            lockButton.setAttribute("aria-label", `${locked ? "Unlock" : "Lock"} ${key}`);
+            lockButton.setAttribute("aria-pressed", String(locked));
+            lockButton.onclick = event => {
+                event.stopPropagation();
+                recordHistoryAction(locked ? "Unlock field" : "Lock field", () => {
+                    if (locked) lockedFields.delete(key);
+                    else lockedFields.add(key);
+                    saveLocked();
+                    refresh();
+                });
+                document.getElementById("status").textContent = locked ? `${key} unlocked.` : `${key} locked against changes.`;
+            };
+            actions.append(starButton, lockButton, hideButton);
             td.appendChild(actions);
             return td;
         }
@@ -4440,6 +4504,10 @@
                 }
             }
 
+            if (isLocked(key)) {
+                input.readOnly = true;
+                input.classList.add("is-locked");
+            }
             input.dataset.originalValue = child.textContent;
             input.dataset.valueAtFocus = child.textContent;
             input.addEventListener("focus", () => { input.dataset.valueAtFocus = child.textContent; });
@@ -4465,6 +4533,7 @@
             };
 
             input.onblur = () => {
+                if (isLocked(key)) { updateDisplay(); return; }
                 if (isTextField) {
                     child.textContent = input.value;
                     registerChange(input, input.dataset.originalValue);
@@ -4512,6 +4581,7 @@
             };
 
             input.oninput = () => {
+                if (isLocked(key)) { updateDisplay(); return; }
                 if (isTextField) {
                     child.textContent = input.value;
                     registerChange(input, input.dataset.originalValue);
@@ -4544,6 +4614,7 @@
 
             updateDisplay();
             updateChangedMarker(input, child.textContent);
+            if (isLocked(key)) input.title = `Locked – unlock with 🔒 to edit${input.title ? ` (${input.title})` : ""}`;
 
             container.appendChild(input);
             if (!isTextField) container.appendChild(btn);
@@ -4761,6 +4832,12 @@
             seamInput.value = currentSeamMm > 0 ? String(Number(currentSeamMm.toFixed(2))) : "";
             seamInput.placeholder = "e.g. 2400";
             seamInput.title = "Enter the total weld seam length; it is split evenly into segment_time of all segments.";
+            const segmentTimeLocked = isLocked("segment_time");
+            if (segmentTimeLocked) {
+                seamInput.readOnly = true;
+                seamInput.classList.add("is-locked");
+                seamInput.title = "segment_time is locked – unlock it to change the weld seam length";
+            }
             const seamHint = document.createElement("div");
             seamHint.className = "segment-seam-hint";
             const segmentsTotalMm = totalLengthIn * 25.4;
@@ -4779,7 +4856,7 @@
             splitEvenlyBtn.className = "btn-secondary seam-split-btn";
             splitEvenlyBtn.textContent = "Split evenly";
             splitEvenlyBtn.title = "Distribute the weld seam length evenly over all segments again";
-            splitEvenlyBtn.hidden = !(mismatch || customSplit);
+            splitEvenlyBtn.hidden = !(mismatch || customSplit) || segmentTimeLocked;
             splitEvenlyBtn.onclick = () => {
                 recordHistoryAction("Split weld seam evenly", () => {
                     distributeSeamLength(file, getSeamLength(file));
@@ -4888,7 +4965,10 @@
                 ].forEach(column => {
                     const cell = document.createElement("td");
                     cell.className = "num";
-                    if (column.parse) {
+                    if (column.parse && isLocked("segment_time")) {
+                        cell.textContent = column.value;
+                        cell.title = "segment_time is locked";
+                    } else if (column.parse) {
                         const field = document.createElement("input");
                         field.type = "text";
                         field.className = "overview-input" + (column.wide ? " is-wide" : "");
@@ -4947,7 +5027,9 @@
                 .forEach((text, index) => {
                     const cell = document.createElement("td");
                     if (index > 0 && index < 5) cell.className = "num";
-                    if (index === 1) {
+                    if (index === 1 && isLocked("segment_time")) {
+                        cell.textContent = plainNumber(totalLengthIn * 25.4, 1);
+                    } else if (index === 1) {
                         // Gesamtlaenge = Schweissnahtlaenge: Eingabe verteilt gleichmaessig (wie das Feld).
                         const field = document.createElement("input");
                         field.type = "text";
@@ -5064,6 +5146,10 @@
         function applyManualSegmentLength(file, position, lengthIn) {
             const segment = file.sections.segments[position];
             if (!segment || !(lengthIn > 0)) return;
+            if (isLocked("segment_time")) {
+                document.getElementById("status").textContent = "segment_time is locked.";
+                return;
+            }
             commitPendingEdit();
             let message = "";
             recordHistoryAction("Edit segment length", () => {
@@ -5082,6 +5168,7 @@
         // Nach manueller Aenderung von segment_time: Nahtlaenge bleibt fest, die nicht manuell
         // gesetzten Segmente teilen sich den Rest gleichmaessig. Rueckgabe: Statusmeldung.
         function rebalanceAfterManualEdit(file, position) {
+            if (isLocked("segment_time")) return "";
             const segments = file.sections.segments;
             if (segments.length < 2 || position < 0) return "";
             const seam = getSeamLength(file);
@@ -5105,6 +5192,7 @@
 
         // Verteilt die Nahtlaenge (Zoll) gleichmaessig auf alle Segmente und protokolliert die Aenderungen.
         function distributeSeamLength(file, totalInches) {
+            if (isLocked("segment_time")) return; // gesperrt: segment_time bleibt unveraendert
             const segments = file.sections.segments;
             if (!segments.length || !(totalInches > 0)) return;
             file.seamLengthIn = totalInches;
@@ -5798,6 +5886,7 @@
         // Uebertraegt einen Wert (ausser Segmente) auf alle weiteren markierten Dateien, sofern die
         // aktive Datei selbst markiert ist. Jede Aenderung landet im Change Log und im Undo-Schritt.
         function propagateValueToSelectedFiles(sectionName, key, value) {
+            if (isLocked(key)) return;
             if (sectionName === "segments" || !selectedFiles.has(activeFile)) return;
             let changedFiles = 0;
             selectedFiles.forEach(index => {
@@ -6051,6 +6140,7 @@
             if (!preset) return;
 
             Object.entries(preset).forEach(([parameter, value]) => {
+                if (isLocked(parameter)) return; // gesperrte Werte bleiben unveraendert
                 const node = file.xml.querySelector(`global ${parameter}`);
                 if (node) node.textContent = value;
             });
@@ -6153,7 +6243,7 @@
 
         function applyComparisonValueToAll(sourceFile, targetFiles, entry) {
             const sourceNode = findComparisonNode(sourceFile, entry);
-            if (!sourceNode) return;
+            if (!sourceNode || isLocked(entry.parameter)) return;
             recordHistoryAction("Apply comparison value", () => {
                 targetFiles.forEach(targetFile => {
                     const targetNode = findComparisonNode(targetFile, entry);
@@ -6215,6 +6305,11 @@
         function updateComparisonValue(file, entry, input) {
             const node = findComparisonNode(file, entry);
             if (!node) return;
+            if (isLocked(entry.parameter)) {
+                input.value = formatComparisonValue(entry.parameter, node.textContent);
+                document.getElementById("status").textContent = `${entry.parameter} is locked.`;
+                return;
+            }
             const parsedValue = parseComparisonValue(entry.parameter, input.value);
             if (parsedValue === null) {
                 input.value = formatComparisonValue(entry.parameter, node.textContent);
@@ -6372,6 +6467,11 @@
                         input.type = "text";
                         input.className = "comparison-edit-input";
                         input.value = formatComparisonValue(baseEntry.parameter, valueEntry.value);
+                        if (isLocked(baseEntry.parameter)) {
+                            input.readOnly = true;
+                            input.classList.add("is-locked");
+                            input.title = "Locked parameter";
+                        }
                         input.onchange = () => updateComparisonValue(file, valueEntry, input);
                         input.onkeydown = event => {
                             if (event.key === "Enter") input.blur();
@@ -6382,7 +6482,7 @@
                         };
                         valueWrap.appendChild(input);
 
-                        if (status === "Different") {
+                        if (status === "Different" && !isLocked(baseEntry.parameter)) {
                             const transferButton = document.createElement("button");
                             transferButton.type = "button";
                             transferButton.className = "comparison-apply-btn";
@@ -6910,6 +7010,7 @@
 
         const LOCAL_STORAGE_BACKUP_KEYS = [
             "hiddenFields",
+            "lockedFields",
             "scheduleEditorChangeLog",
             "parameterUnits",
             "importantFields",
@@ -6942,6 +7043,7 @@
                 );
                 const validValue = {
                     hiddenFields: isStringArray,
+                    lockedFields: isStringArray,
                     scheduleEditorChangeLog: isChangeLog,
                     parameterUnits: isStringMap,
                     importantFields: isStringArray,
