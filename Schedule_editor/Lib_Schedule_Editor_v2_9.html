@@ -2473,11 +2473,54 @@
         }
 
         .segment-visualization {
-            grid-template-columns: 200px minmax(0, 1fr);
+            grid-template-columns: 200px 190px minmax(0, 1fr);
             align-items: center;
             gap: 20px;
             padding: 14px 16px;
             border-bottom: 0;
+        }
+
+        .segment-seam-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--bg-panel-2);
+        }
+
+        .segment-seam-box label {
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+        }
+
+        .seam-length-input {
+            width: 100%;
+            box-sizing: border-box;
+            height: 34px;
+            padding: 4px 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            color: #ffb77f;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 15px;
+            text-align: right;
+        }
+
+        .seam-length-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(242, 138, 61, 0.14);
+        }
+
+        .segment-seam-hint {
+            color: var(--text-muted);
+            font-size: 12px;
         }
 
         .segment-ring-wrap svg {
@@ -4258,7 +4301,7 @@
                     arc.setAttribute("stroke-dashoffset", String(-start));
                 }
                 const tooltip = document.createElementNS(namespace, "title");
-                tooltip.textContent = `Segment ${segments[index].getAttribute("index") ?? index}`;
+                tooltip.textContent = `Segment ${segmentDisplayNumber(segments[index], index)}`;
                 arc.appendChild(tooltip);
                 arc.addEventListener("click", () => renderSegment(segments[index]));
                 ring.appendChild(arc);
@@ -4281,6 +4324,55 @@
             const ringWrap = document.createElement("div");
             ringWrap.className = "segment-ring-wrap";
             ringWrap.appendChild(svg);
+
+            // --- Feld: Schweissnahtlaenge, wird gleichmaessig auf segment_time verteilt ---
+            const seamBox = document.createElement("div");
+            seamBox.className = "segment-seam-box";
+            const seamLabel = document.createElement("label");
+            seamLabel.htmlFor = "seamLengthInput";
+            seamLabel.textContent = "Weld seam length (mm)";
+            const seamInput = document.createElement("input");
+            seamInput.type = "text";
+            seamInput.id = "seamLengthInput";
+            seamInput.className = "seam-length-input";
+            seamInput.inputMode = "decimal";
+            const currentSeamMm = totalLengthIn * 25.4;
+            seamInput.value = currentSeamMm > 0 ? String(Number(currentSeamMm.toFixed(2))) : "";
+            seamInput.placeholder = "e.g. 2400";
+            seamInput.title = "Enter the total weld seam length; it is split evenly into segment_time of all segments.";
+            const seamHint = document.createElement("div");
+            seamHint.className = "segment-seam-hint";
+            seamHint.textContent = `${segments.length} segment${segments.length === 1 ? "" : "s"} × ${formatNumber(currentSeamMm / segments.length, 1)} mm`;
+            seamInput.oninput = () => {
+                const mm = parseNumberInput(seamInput.value);
+                seamHint.textContent = mm > 0
+                    ? `${segments.length} segment${segments.length === 1 ? "" : "s"} × ${formatNumber(mm / segments.length, 1)} mm`
+                    : "Enter a length > 0";
+            };
+            seamInput.onkeydown = event => {
+                if (event.key === "Enter") { event.preventDefault(); seamInput.blur(); }
+                if (event.key === "Escape") {
+                    event.stopPropagation();
+                    seamInput.value = currentSeamMm > 0 ? String(Number(currentSeamMm.toFixed(2))) : "";
+                    seamInput.blur();
+                }
+            };
+            seamInput.onchange = () => {
+                const mm = parseNumberInput(seamInput.value);
+                if (!(mm > 0)) {
+                    document.getElementById("status").textContent = "Please enter a weld seam length greater than 0.";
+                    seamInput.value = currentSeamMm > 0 ? String(Number(currentSeamMm.toFixed(2))) : "";
+                    return;
+                }
+                if (Math.abs(mm - currentSeamMm) < 1e-9) return;
+                recordHistoryAction("Set weld seam length", () => {
+                    distributeSeamLength(file, mm / 25.4);
+                    renderSegmentList(file);
+                });
+                document.getElementById("status").textContent =
+                    `Weld seam length ${formatNumber(mm, 2)} mm split into ${segments.length} segment(s) of ${formatNumber(mm / segments.length, 2)} mm.`;
+            };
+            seamBox.append(seamLabel, seamInput, seamHint);
 
             // --- Wertetabelle / Segmentliste ---
             const table = document.createElement("table");
@@ -4317,7 +4409,7 @@
                 swatch.className = "segment-visualization-swatch";
                 swatch.style.backgroundColor = colors[index % colors.length];
                 const name = document.createElement("span");
-                name.textContent = `Segment ${segment.getAttribute("index") ?? index}`;
+                name.textContent = `Segment ${segmentDisplayNumber(segment, index)}`;
                 nameCell.append(swatch, name);
                 if (!info.enabled) {
                     const badge = document.createElement("span");
@@ -4350,7 +4442,7 @@
                     button.className = "segment-action-btn";
                     button.textContent = text;
                     button.title = title;
-                    button.setAttribute("aria-label", `${title} ${segment.getAttribute("index") ?? index}`);
+                    button.setAttribute("aria-label", `${title} ${segmentDisplayNumber(segment, index)}`);
                     button.onclick = event => { event.stopPropagation(); action(); };
                     button.onkeydown = event => event.stopPropagation();
                     actions.appendChild(button);
@@ -4375,7 +4467,7 @@
             tableWrap.className = "segment-overview-table-wrap";
             tableWrap.appendChild(table);
 
-            container.replaceChildren(ringWrap, tableWrap);
+            container.replaceChildren(ringWrap, seamBox, tableWrap);
             highlightSelectedSegment(container);
         }
 
@@ -4389,11 +4481,51 @@
             });
         }
 
+        // Anzeige-Nummer eines Segments (ab 1); im XML bleibt index 0-basiert.
+        function segmentDisplayNumber(segment, fallbackIndex = 0) {
+            const index = Number(segment?.getAttribute("index"));
+            return (Number.isFinite(index) ? index : fallbackIndex) + 1;
+        }
+
+        // Summe aller segment_time-Werte (Schweissnahtlaenge in Zoll).
+        function sumSegmentTime(file) {
+            return file.sections.segments.reduce((sum, segment) => {
+                const node = [...segment.children].find(child => child.tagName === "segment_time");
+                const value = Number(node?.textContent);
+                return sum + (Number.isFinite(value) && value > 0 ? value : 0);
+            }, 0);
+        }
+
+        // Verteilt die Nahtlaenge (Zoll) gleichmaessig auf alle Segmente und protokolliert die Aenderungen.
+        function distributeSeamLength(file, totalInches) {
+            const segments = file.sections.segments;
+            if (!segments.length || !(totalInches > 0)) return;
+            const fileIndex = loadedFiles.indexOf(file);
+            const perSegment = totalInches / segments.length;
+            segments.forEach(segment => {
+                const node = [...segment.children].find(child => child.tagName === "segment_time");
+                if (!node) return;
+                const places = getDecimalPlaces(node.textContent.trim()) || 6;
+                const oldValue = node.textContent;
+                node.textContent = perSegment.toFixed(places);
+                updateChangeLogEntry({
+                    fileIndex,
+                    fileName: file.name,
+                    sectionName: "segments",
+                    key: "segment_time",
+                    segmentIndex: segment.getAttribute("index") || "",
+                    oldValue,
+                    newValue: node.textContent
+                });
+            });
+        }
+
         function addSegment(file) {
             const segments = file.sections.segments;
             if (!segments.length) return;
 
             recordHistoryAction("Add segment", () => {
+                const seamLength = sumSegmentTime(file);
                 const lastSeg = segments[segments.length - 1];
                 const newSeg = lastSeg.cloneNode(true);
                 const newIndex = segments.length;
@@ -4403,9 +4535,11 @@
                 if (root) root.appendChild(newSeg);
 
                 file.sections.segments = [...file.xml.querySelectorAll("segment")];
+                distributeSeamLength(file, seamLength);
                 selectedSegmentPosition = file.sections.segments.indexOf(newSeg);
                 renderSegmentList(file);
-                document.getElementById("status").textContent = `Segment ${newIndex} added.`;
+                document.getElementById("status").textContent =
+                    `Segment ${newIndex + 1} added; weld seam length split into ${file.sections.segments.length} segments.`;
             });
         }
 
@@ -4416,9 +4550,11 @@
 
         function duplicateSegment(file, segment) {
             recordHistoryAction("Duplicate segment", () => {
+                const seamLength = sumSegmentTime(file);
                 const copy = segment.cloneNode(true);
                 segment.parentNode.insertBefore(copy, segment.nextSibling);
                 renumberSegments(file);
+                distributeSeamLength(file, seamLength);
                 selectedSegmentPosition = file.sections.segments.indexOf(copy);
                 renderSegmentList(file);
                 document.getElementById("status").textContent = "Segment duplicated.";
@@ -4430,12 +4566,14 @@
                 document.getElementById("status").textContent = "The last segment cannot be deleted.";
                 return;
             }
-            if (!window.confirm(`Delete segment ${segment.getAttribute("index") ?? ""}?`)) return;
+            if (!window.confirm(`Delete segment ${segmentDisplayNumber(segment)}? The weld seam length is split across the remaining segments.`)) return;
             recordHistoryAction("Delete segment", () => {
+                const seamLength = sumSegmentTime(file);
                 const deletedPosition = file.sections.segments.indexOf(segment);
                 if (deletedPosition < selectedSegmentPosition) selectedSegmentPosition--;
                 segment.remove();
                 renumberSegments(file);
+                distributeSeamLength(file, seamLength);
                 renderSegmentList(file);
                 document.getElementById("status").textContent = "Segment deleted.";
             });
@@ -4465,7 +4603,7 @@
             highlightSelectedSegment(content);
 
             const panel = document.createElement("div"); panel.className = "panel segment-panel";
-            const header = document.createElement("div"); header.className = "panel-header"; header.textContent = "Segment " + seg.getAttribute("index");
+            const header = document.createElement("div"); header.className = "panel-header"; header.textContent = `Segment ${segmentDisplayNumber(seg)}`;
             const body = document.createElement("div"); body.className = "panel-content open";
             const table = document.createElement("table"); table.className = "param-table"; const tbody = document.createElement("tbody");
 
@@ -4532,7 +4670,7 @@
                 const result = calculateSegmentHeatInput(segment, file.sections.overrides);
                 const row = document.createElement("tr");
                 const segmentCell = document.createElement("td");
-                segmentCell.textContent = segment.getAttribute("index") || String(index);
+                segmentCell.textContent = String(segmentDisplayNumber(segment, index));
                 row.appendChild(segmentCell);
 
                 if (result.disabled) {
@@ -5127,7 +5265,8 @@
                 row.appendChild(diffCell);
 
                 const nameCell = document.createElement("td");
-                nameCell.textContent = key;
+                // Anzeige ab 1: "segments[0].x" -> "segment 1.x"
+                nameCell.textContent = key.replace(/^segments\[(\d+)\]/, (match, index) => `segment ${Number(index) + 1}`);
                 if (importantFields.has(baseEntry.parameter)) nameCell.classList.add("important-name");
                 row.appendChild(nameCell);
 

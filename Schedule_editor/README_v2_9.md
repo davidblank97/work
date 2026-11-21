@@ -75,6 +75,10 @@ Die Parameter werden platzsparend in mehreren Spalten angezeigt (je nach Fenster
 
 Im Bereich `Segments` zeigt die Uebersicht links einen Ring (ein Umlauf = gesamte Schweisslaenge, jedes Segment als anteiliger Bogen; in der Mitte Durchmesser, Umdrehungen und Gesamtwinkel) und rechts eine Tabelle mit Laenge, Winkel, Umdrehungen und Schweisszeit je Segment sowie einer Summenzeile. Ein Klick auf eine Tabellenzeile oder einen Bogen oeffnet das Segment; die Knoepfe ⧉ ↑ ↓ × in der Zeile duplizieren, verschieben bzw. loeschen es. Die geschaetzte Gesamt-Schweisszeit steht in der Kopfzeile der Uebersicht.
 
+Neben dem Ring steht das Feld **Weld seam length (mm)**. Die eingegebene Schweissnahtlaenge wird gleichmaessig auf alle Segmente verteilt und (in Zoll umgerechnet) in `segment_time` eingetragen, z. B. 2400 mm bei 3 Segmenten → je 800 mm. Enter oder Verlassen des Feldes uebernimmt den Wert, Esc verwirft ihn; Dezimal-Komma ist erlaubt. Beim Hinzufuegen, Duplizieren und Loeschen eines Segments bleibt die Nahtlaenge gleich und wird automatisch neu auf alle Segmente verteilt. Alle Aenderungen erscheinen im Change Log und lassen sich rueckgaengig machen.
+
+Segmente werden im Editor ab 1 nummeriert (Segment 1, 2, …). Im XML bleibt das Attribut `index` wie von der Maschine erwartet bei 0 beginnend.
+
 Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten. Das geoeffnete Segment ist in der Liste hervorgehoben und bleibt nach Duplizieren, Verschieben, Undo/Redo und Bereichswechsel ausgewaehlt; nach dem Duplizieren ist die Kopie gewaehlt.
 
 Die Reihenfolge der hervorgehobenen Segmentfelder wird ueber `segments_sorting.json` (im selben Ordner) gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Die Datei wird nur geladen, wenn der Editor ueber einen Webserver laeuft. Beim direkten Oeffnen der HTML-Datei oder bei einer fehlerhaften JSON-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
