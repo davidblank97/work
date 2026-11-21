@@ -2585,12 +2585,10 @@
         }
 
         .heat-range {
-            fill: #d9702c;
             opacity: 0.45;
         }
 
         .heat-nominal {
-            fill: #d9702c;
             stroke: var(--bg-panel);
             stroke-width: 2;
         }
@@ -2599,9 +2597,30 @@
             opacity: 0.7;
         }
 
-        .heat-column.is-outside .heat-range,
+        .heat-column.is-outside .heat-range {
+            opacity: 0.6;
+            stroke: var(--danger);
+            stroke-width: 2;
+        }
+
         .heat-column.is-outside .heat-nominal {
-            fill: var(--danger);
+            stroke: var(--danger);
+        }
+
+        .heat-table-swatch {
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .heat-file-active {
+            margin-left: 8px;
+            padding: 1px 7px;
+            border: 1px solid #805236;
+            border-radius: 10px;
+            color: #f4a069;
+            font-size: 10.5px;
+            font-weight: 600;
         }
 
         .heat-warning {
@@ -4395,7 +4414,7 @@
         // Ring (ein Umlauf, Boegen anteilig je Segment) + Wertetabelle, die zugleich die Segmentliste ist.
         function renderSegmentVisualization(file, container, weldTimeSummary) {
             const namespace = "http://www.w3.org/2000/svg";
-            const colors = ["#e87532", "#16a085", "#477bd1", "#c84d83", "#a3a82b", "#7955b5", "#d2a027", "#54747d"];
+            const colors = SEGMENT_COLORS;
             const segments = file.sections.segments;
             const readPositiveNumber = node => {
                 if (!node || node.textContent.trim() === "") return null;
@@ -5026,6 +5045,10 @@
             applyTableSearch();
         }
 
+        // Segmentfarben (Ring, Segment-Tabelle, Heat-Input-Diagramm); fuer den dunklen Hintergrund
+        // mit dem dataviz-Validator geprueft (Helligkeit, Saettigung, Farbsehschwaechen, Kontrast).
+        const SEGMENT_COLORS = ["#d9702c", "#16a085", "#477bd1", "#c84d83", "#8e9420", "#7955b5", "#b98a1c", "#1f86a8"];
+
         // Liest einen Grenzwert aus <limits>; nur plausible Werte (> 0 und < 9999) gelten als gesetzt.
         function readHeatInputLimit(file, name) {
             const node = file.sections.limits ? [...file.sections.limits.children].find(child => child.tagName === name) : null;
@@ -5034,7 +5057,7 @@
         }
 
         // Bandbreiten-Diagramm: je Segment Balken Min->Max (Override-Grenzen) und Punkt fuer den Nominalwert.
-        function renderHeatInputChart(file, results, container) {
+        function renderHeatInputChart(file, results, container, { sharedMax = null, fileIndex = activeFile } = {}) {
             const svgNs = "http://www.w3.org/2000/svg";
             const segments = file.sections.segments;
             const limitLow = readHeatInputLimit(file, "heat_input_fault_low");
@@ -5057,7 +5080,8 @@
             }
 
             // Skala: 0 bis Maximum (inkl. Grenzwerte), auf "schoene" Schritte gerundet.
-            const rawMax = Math.max(...valid.map(r => r.maxHeatInput), limitHigh ?? 0, limitLow ?? 0) * 1.1;
+            // Gemeinsame Skala ueber alle Dateien, damit die Diagramme vergleichbar sind.
+            const rawMax = Math.max(sharedMax ?? 0, ...valid.map(r => r.maxHeatInput), limitHigh ?? 0, limitLow ?? 0) * 1.1;
             const rough = rawMax / 5;
             const magnitude = 10 ** Math.floor(Math.log10(rough));
             const step = [1, 2, 2.5, 5, 10].map(f => f * magnitude).find(s => s >= rough);
@@ -5121,11 +5145,12 @@
                         || (limitHigh !== null && result.maxHeatInput > limitHigh);
                     if (outside) group.classList.add("is-outside");
                     const barWidth = Math.min(14, band * 0.35);
+                    const color = SEGMENT_COLORS[index % SEGMENT_COLORS.length];
                     make("rect", {
                         x: cx - barWidth / 2, y: y(result.maxHeatInput), width: barWidth,
-                        height: Math.max(2, y(result.minHeatInput) - y(result.maxHeatInput)), rx: 4, class: "heat-range"
+                        height: Math.max(2, y(result.minHeatInput) - y(result.maxHeatInput)), rx: 4, class: "heat-range", fill: color
                     }, group);
-                    make("circle", { cx, cy: y(result.heatInput), r: 6, class: "heat-nominal" }, group);
+                    make("circle", { cx, cy: y(result.heatInput), r: 6, class: "heat-nominal", fill: color }, group);
                     if (outside) {
                         const warn = make("text", { x: cx, y: y(result.maxHeatInput) - 8, class: "heat-warning", "text-anchor": "middle" }, group);
                         warn.textContent = "! outside limit";
@@ -5162,7 +5187,10 @@
                 });
                 hit.addEventListener("mouseleave", () => { group.classList.remove("is-hover"); tooltip.hidden = true; });
                 hit.addEventListener("click", () => {
+                    activeFile = fileIndex;
                     selectedSegmentPosition = index;
+                    renderFileList();
+                    renderSidebar();
                     showSection("segments");
                 });
             });
@@ -5205,65 +5233,81 @@
                 return;
             }
 
-            const file = loadedFiles[activeFile];
-            const panel = document.createElement("div");
-            panel.className = "panel";
-            const header = document.createElement("div");
-            header.className = "panel-header";
-            header.textContent = file.name;
-            panel.appendChild(header);
+            // Alle geladenen Dateien untereinander, mit gemeinsamer y-Skala.
+            const allResults = loadedFiles.map(file =>
+                file.sections.segments.map(segment => calculateSegmentHeatInput(segment, file.sections.overrides)));
+            const sharedMax = Math.max(0, ...allResults.flat()
+                .filter(result => !result.disabled && !result.error)
+                .map(result => result.maxHeatInput));
 
-            const body = document.createElement("div");
-            body.className = "panel-content open";
-            const heatResults = file.sections.segments.map(segment => calculateSegmentHeatInput(segment, file.sections.overrides));
-            renderHeatInputChart(file, heatResults, body);
-            const table = document.createElement("table");
-            const thead = document.createElement("thead");
-            thead.innerHTML = "<tr><th>Segment</th><th>Average current (A)</th><th>Travel speed (mm/min)</th><th>Heat Input (kJ/mm)</th><th>Min (kJ/mm)</th><th>Max (kJ/mm)</th></tr>";
-            thead.querySelectorAll("th:nth-child(5), th:nth-child(6)").forEach(cell => cell.classList.add("heat-input-range"));
-            table.appendChild(thead);
-            const tbody = document.createElement("tbody");
-
-            file.sections.segments.forEach((segment, index) => {
-                const result = heatResults[index];
-                const row = document.createElement("tr");
-                const segmentCell = document.createElement("td");
-                segmentCell.textContent = String(segmentDisplayNumber(segment, index));
-                row.appendChild(segmentCell);
-
-                if (result.disabled) {
-                    const status = document.createElement("td");
-                    status.colSpan = 5;
-                    status.textContent = "Segment disabled";
-                    row.appendChild(status);
-                } else if (result.error) {
-                    const status = document.createElement("td");
-                    status.colSpan = 5;
-                    status.textContent = result.error;
-                    status.style.color = "#c0392b";
-                    row.appendChild(status);
-                } else {
-                    [
-                        result.averageAmps.toFixed(2),
-                        result.averageTravelMmPerMinute.toFixed(2),
-                        result.heatInput.toFixed(3),
-                        result.minHeatInput.toFixed(3),
-                        result.maxHeatInput.toFixed(3)
-                    ]
-                        .forEach((value, valueIndex) => {
-                            const cell = document.createElement("td");
-                            cell.textContent = value;
-                            if (valueIndex >= 3) cell.classList.add("heat-input-range");
-                            row.appendChild(cell);
-                        });
+            loadedFiles.forEach((file, fileIndex) => {
+                const panel = document.createElement("div");
+                panel.className = "panel";
+                const header = document.createElement("div");
+                header.className = "panel-header";
+                header.textContent = file.name;
+                if (fileIndex === activeFile && loadedFiles.length > 1) {
+                    const activeBadge = document.createElement("span");
+                    activeBadge.className = "heat-file-active";
+                    activeBadge.textContent = "active";
+                    header.appendChild(activeBadge);
                 }
-                tbody.appendChild(row);
-            });
+                panel.appendChild(header);
 
-            table.appendChild(tbody);
-            body.appendChild(table);
-            panel.appendChild(body);
-            content.appendChild(panel);
+                const body = document.createElement("div");
+                body.className = "panel-content open";
+                const heatResults = allResults[fileIndex];
+                renderHeatInputChart(file, heatResults, body, { sharedMax, fileIndex });
+                const table = document.createElement("table");
+                const thead = document.createElement("thead");
+                thead.innerHTML = "<tr><th>Segment</th><th>Average current (A)</th><th>Travel speed (mm/min)</th><th>Heat Input (kJ/mm)</th><th>Min (kJ/mm)</th><th>Max (kJ/mm)</th></tr>";
+                thead.querySelectorAll("th:nth-child(5), th:nth-child(6)").forEach(cell => cell.classList.add("heat-input-range"));
+                table.appendChild(thead);
+                const tbody = document.createElement("tbody");
+
+                file.sections.segments.forEach((segment, index) => {
+                    const result = heatResults[index];
+                    const row = document.createElement("tr");
+                    const segmentCell = document.createElement("td");
+                    const segmentSwatch = document.createElement("span");
+                    segmentSwatch.className = "segment-visualization-swatch heat-table-swatch";
+                    segmentSwatch.style.backgroundColor = SEGMENT_COLORS[index % SEGMENT_COLORS.length];
+                    segmentCell.append(segmentSwatch, document.createTextNode(String(segmentDisplayNumber(segment, index))));
+                    row.appendChild(segmentCell);
+
+                    if (result.disabled) {
+                        const status = document.createElement("td");
+                        status.colSpan = 5;
+                        status.textContent = "Segment disabled";
+                        row.appendChild(status);
+                    } else if (result.error) {
+                        const status = document.createElement("td");
+                        status.colSpan = 5;
+                        status.textContent = result.error;
+                        status.style.color = "#c0392b";
+                        row.appendChild(status);
+                    } else {
+                        [
+                            result.averageAmps.toFixed(2),
+                            result.averageTravelMmPerMinute.toFixed(2),
+                            result.heatInput.toFixed(3),
+                            result.minHeatInput.toFixed(3),
+                            result.maxHeatInput.toFixed(3)
+                        ]
+                            .forEach((value, valueIndex) => {
+                                const cell = document.createElement("td");
+                                cell.textContent = value;
+                                if (valueIndex >= 3) cell.classList.add("heat-input-range");
+                                row.appendChild(cell);
+                            });
+                    }
+                    tbody.appendChild(row);
+                });
+                table.appendChild(tbody);
+                body.appendChild(table);
+                panel.appendChild(body);
+                content.appendChild(panel);
+            });
         }
 
 
