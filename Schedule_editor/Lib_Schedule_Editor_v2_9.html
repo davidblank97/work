@@ -5257,6 +5257,16 @@
             return Number.isFinite(value) && value > 0 && value < 9999 ? value : null;
         }
 
+        // Kurzbezeichnung einer Datei: die 4 Ziffern am Anfang des Namens (z. B. "0303").
+        // Fehlen sie oder sind sie nicht eindeutig, wird der volle Name verwendet.
+        function fileShortLabel(file) {
+            const prefixOf = name => (String(name).match(/^\d{4}/) || [null])[0];
+            const prefix = prefixOf(file.name);
+            if (!prefix) return file.name;
+            const sameCount = loadedFiles.filter(other => prefixOf(other.name) === prefix).length;
+            return sameCount > 1 ? file.name : prefix;
+        }
+
         // Ziel-Bereich fuer den Heat Input (Benutzereingabe Min/Max, im Browser gespeichert).
         const HEAT_TARGET_KEY = "scheduleEditorHeatInputTarget";
 
@@ -5393,9 +5403,11 @@
             const contentWidth = document.getElementById("content")?.clientWidth || 760;
             const width = Math.max(320, Math.min(1400, contentWidth - 74));
             const rowHeight = 28;
-            const groupHeaderHeight = entriesByFile.length > 1 ? 24 : 0;
+            // Kurze Dateibezeichnungen (z. B. "0303") stehen direkt in der Zeile, ohne eigene Kopfzeile.
+            const compactLabels = entriesByFile.length > 1 && entriesByFile.every(group => fileShortLabel(group.file).length <= 8);
+            const groupHeaderHeight = entriesByFile.length > 1 && !compactLabels ? 24 : 0;
             const groupGap = entriesByFile.length > 1 ? 10 : 0;
-            const margin = { top: targetValues.length ? 24 : 12, right: 24, bottom: 30, left: 100 };
+            const margin = { top: targetValues.length ? 24 : 12, right: 24, bottom: 30, left: compactLabels ? 140 : 100 };
             const plotH = entriesByFile.reduce((sum, group) => sum + groupHeaderHeight + group.entries.length * rowHeight, 0)
                 + groupGap * (entriesByFile.length - 1);
             const height = margin.top + plotH + margin.bottom;
@@ -5454,7 +5466,11 @@
                 if (groupHeaderHeight) {
                     const groupLabel = make("text", { x: 8, y: cursor + 16, class: "heat-group-label" });
                     const maxChars = Math.max(10, Math.floor((width - 16) / 7));
-                    groupLabel.textContent = group.file.name.length > maxChars ? `${group.file.name.slice(0, maxChars - 1)}…` : group.file.name;
+                    const groupName = fileShortLabel(group.file);
+                    groupLabel.textContent = groupName.length > maxChars ? `${groupName.slice(0, maxChars - 1)}…` : groupName;
+                    const fullName = document.createElementNS(svgNs, "title");
+                    fullName.textContent = group.file.name;
+                    groupLabel.appendChild(fullName);
                     cursor += groupHeaderHeight;
                 }
                 const groupTop = cursor;
@@ -5481,7 +5497,12 @@
                     // Zeilenbeschriftung mit Farbpunkt
                     make("circle", { cx: 14, cy, r: 4.5, fill: color }, rowGroup);
                     const yLabel = make("text", { x: 24, y: cy + 4, class: "heat-tick heat-row-label" }, rowGroup);
-                    yLabel.textContent = `Segment ${segmentNumber}`;
+                    yLabel.textContent = compactLabels ? `${fileShortLabel(group.file)} · Segment ${segmentNumber}` : `Segment ${segmentNumber}`;
+                    if (compactLabels) {
+                        const fullName = document.createElementNS(svgNs, "title");
+                        fullName.textContent = group.file.name;
+                        yLabel.appendChild(fullName);
+                    }
 
                     if (result.disabled || result.error) {
                         const note = make("text", { x: margin.left + 8, y: cy + 4, class: "heat-column-note" }, rowGroup);
@@ -5637,7 +5658,8 @@
                         else heatInputHiddenFileIds.add(file.id);
                         renderHeatInput();
                     };
-                    label.append(checkbox, document.createTextNode(file.name));
+                    label.title = file.name;
+                    label.append(checkbox, document.createTextNode(fileShortLabel(file)));
                     fileControls.appendChild(label);
                 });
                 if (heatInputHiddenFileIds.size) {
@@ -5693,7 +5715,8 @@
                 fileCell.colSpan = 6;
                 const fileName = document.createElement("span");
                 fileName.className = "heat-file-name";
-                fileName.textContent = group.file.name;
+                fileName.textContent = fileShortLabel(group.file);
+                fileName.title = group.file.name;
                 fileCell.appendChild(fileName);
                 if (group.fileIndex === activeFile && loadedFiles.length > 1) {
                     const activeBadge = document.createElement("span");
@@ -6247,7 +6270,8 @@
                     renderComparison();
                 };
                 label.appendChild(checkbox);
-                label.appendChild(document.createTextNode(file.name));
+                label.title = file.name;
+                label.appendChild(document.createTextNode(fileShortLabel(file)));
                 fileControls.appendChild(label);
             });
 
@@ -6301,9 +6325,10 @@
             table.className = "diff-table";
 
             const headerRow = document.createElement("tr");
-            ["Status", "Parameter", ...filesToCompare.map(file => file.name)].forEach(text => {
+            [["Status", ""], ["Parameter", ""], ...filesToCompare.map(file => [fileShortLabel(file), file.name])].forEach(([text, fullName]) => {
                 const th = document.createElement("th");
                 th.textContent = text;
+                if (fullName) th.title = fullName;
                 headerRow.appendChild(th);
             });
             table.appendChild(headerRow);
@@ -6366,7 +6391,7 @@
                             transferButton.type = "button";
                             transferButton.className = "comparison-apply-btn";
                             transferButton.textContent = "Apply to all";
-                            transferButton.title = `Apply ${file.name}'s value to all visible files`;
+                            transferButton.title = `Apply the value of ${fileShortLabel(file)} to all visible files`;
                             transferButton.onclick = () => applyComparisonValueToAll(
                                 file,
                                 filesToCompare.filter(targetFile => targetFile !== file),
