@@ -15,11 +15,34 @@ python3 -m http.server 8000
 
 Danach `http://localhost:8000/Lib_Schedule_Editor_v2_9.html` oeffnen.
 
+Die Oberflaeche des Editors ist englisch; diese Anleitung ist deutsch.
+
+## Aufbau der Oberflaeche
+
+- **Kopfzeile links:** `Open XML…`, Zurueck (↩), Wiederholen (↪), Hilfe (?)
+- **Kopfzeile Mitte:** Suche mit Trefferzahl
+- **Kopfzeile rechts:** Anzeige ungespeicherter Dateien, `Revert`, `Save`, `Save As…`, `Batch Save`
+- **Sidebar:** Dateiliste mit `Select all` / `Clear` / `Invert`, Bereiche (`Description` … `Segments`) und Tools
+
+## Tastenkuerzel
+
+| Kuerzel | Funktion |
+|---|---|
+| Strg+S | Aktive Datei speichern |
+| Strg+Umschalt+S | Save As |
+| Strg+Z | Zurueck |
+| Strg+Y / Strg+Umschalt+Z | Wiederholen |
+| Strg+F oder `/` | Suche fokussieren |
+| Esc | Dialog schliessen bzw. Suche leeren |
+| Enter | Im Dialog bestaetigen; in der Sidebar Eintrag oeffnen |
+
+Steht der Cursor in einem Eingabefeld, gilt fuer Strg+Z/Strg+Y das normale Rueckgaengig des Browsers. Alle Sidebar-Eintraege sind per Tab-Taste erreichbar.
+
 ## XML-Dateien laden
 
-1. Eine oder mehrere `.xml`-Dateien ueber die Dateiauswahl laden.
+1. Eine oder mehrere `.xml`-Dateien ueber `Open XML…` laden.
 2. Alternativ XML-Dateien in den Bereich `Drop XML files here` ziehen.
-3. Eine Datei in der linken Dateiliste anklicken, um sie als aktive Datei auszuwaehlen.
+3. Eine Datei in der linken Dateiliste anklicken (oder per Tab + Enter waehlen), um sie als aktive Datei auszuwaehlen. Der Status zeigt `Saved` oder `Unsaved`.
 4. Mehrere Dateien koennen ueber die Kontrollkaestchen fuer Batch-Aktionen markiert werden.
 
 Die Dateien werden im Browser geladen und dort bearbeitet. Es wird keine Datei automatisch auf einen Server hochgeladen.
@@ -38,11 +61,17 @@ Die XML-Daten sind in folgende Bereiche gegliedert:
 
 Werte koennen direkt in den Eingabefeldern geaendert werden. Dezimalzahlen duerfen mit Punkt oder Komma eingegeben werden (`12,5` = `12.5`); Eingaben wie `12abc` werden nicht uebernommen. Gespeichert wird immer mit der Anzahl Nachkommastellen, die der Wert in der Datei hat. Wird dabei gerundet, erscheint ein Hinweis in der Statusleiste.
 
-Ist die aktive Datei markiert, werden Aenderungen in `Description`, `Global`, `Limits` und `Overrides` auch in alle anderen markierten Dateien uebernommen. Diese Aenderungen erscheinen im Change Log, in der Save-Notiz und lassen sich gemeinsam rueckgaengig machen. Segmentwerte gelten immer nur fuer die aktive Datei.
+Ist die aktive Datei markiert, werden Aenderungen in `Description`, `Global`, `Limits` und `Overrides` auch in alle anderen markierten Dateien uebernommen. Diese Aenderungen erscheinen im Change Log und lassen sich gemeinsam rueckgaengig machen. Segmentwerte gelten immer nur fuer die aktive Datei.
+
+Werte, die vom zuletzt gespeicherten (bzw. geladenen) Stand abweichen, bleiben gruen markiert, auch nach einem Bereichswechsel. Beim Ueberfahren mit der Maus zeigt ein Tooltip den gespeicherten Wert (`Last saved: …`).
+
+Beim Ueberfahren einer Parameterzeile erscheinen zwei Knoepfe: ★ markiert den Parameter als wichtig (wichtige Parameter stehen oben), ⊘ blendet ihn aus. Doppelklick bzw. Rechtsklick auf den Namen funktionieren weiterhin. Ausgeblendete Parameter werden unter `Tools > Hidden Parameters` wiederhergestellt.
+
+Die Suche filtert die Tabellen nach Parametername und angezeigtem Wert und zeigt die Trefferzahl. Mit × oder Esc wird sie geleert.
 
 Ueber die Einheiten-Taste neben einem Feld wird die Anzeige umgeschaltet (z. B. `in`/`mm` fuer Durchmesser, `cm/min` fuer Vorschub und Draht, Grad fuer `tungsten_width`). In der Datei bleibt der Wert immer in der XML-Einheit gespeichert.
 
-Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten.
+Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten. Das geoeffnete Segment ist in der Liste hervorgehoben und bleibt nach Duplizieren, Verschieben, Undo/Redo und Bereichswechsel ausgewaehlt; nach dem Duplizieren ist die Kopie gewaehlt.
 
 Die Reihenfolge der hervorgehobenen Segmentfelder wird ueber `segments_sorting.json` (im selben Ordner) gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Die Datei wird nur geladen, wenn der Editor ueber einen Webserver laeuft. Beim direkten Oeffnen der HTML-Datei oder bei einer fehlerhaften JSON-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
 
@@ -69,18 +98,13 @@ Wenn kein separates Fenster erscheint, muss der Popup-Blocker des Browsers fuer 
 
 ### Save
 
-Speichert die aktive Datei als XML-Datei mit ihrem aktuellen Namen. Vor dem Speichern koennen optionale Informationen fuer die XML-Notiz eingegeben werden:
+Speichert die aktive Datei sofort als XML-Datei mit ihrem aktuellen Namen (Strg+S). Es erscheint kein Dialog; die `<note>` in `<description>` bleibt unveraendert und kann bei Bedarf direkt im Bereich `Description` bearbeitet werden.
 
-- Author
-- WPS Number
-- Note
-- Use notes on save
+Nach dem Speichern gilt der gespeicherte Stand als neue Vergleichsbasis: Die Datei steht auf `Saved`, die gruenen Markierungen verschwinden, und `Revert` springt auf diesen Stand zurueck.
 
-Nur wenn `Use notes on save` aktiviert ist, wird `<note>` in `<description>` ersetzt: durch Author, WPS, die in dieser Sitzung protokollierten Aenderungen der Datei und die Notiz. Ist die Option aus, bleibt eine vorhandene Notiz unveraendert. In der Notiz bleiben nur Buchstaben, Ziffern und Leerzeichen erhalten (maximal 500 Zeichen); Punkte, Unterstriche und andere Sonderzeichen werden entfernt.
+### Save As…
 
-### Save As...
-
-Speichert die aktive Datei unter einem neuen Dateinamen.
+Fragt nur den neuen Dateinamen ab (Enter bestaetigt, Esc bricht ab) und speichert. Die Datei wird im Editor umbenannt, sodass ein spaeteres `Save` den neuen Namen verwendet.
 
 ### Batch Save
 
@@ -92,8 +116,7 @@ Speichert die markierten Dateien. Wenn keine Datei markiert ist, werden alle gel
 
 ## Tools
 
-- `Comparison`: Vergleicht die geladenen Dateien und kann Werte auf andere Dateien uebertragen.
-- `Unit Converter`: Rechnet IPM und cm/min um.
+- `Comparison`: Vergleicht die geladenen Dateien und kann Werte auf andere Dateien uebertragen. `Show differences only` blendet gleiche Parameter aus; Zellen, die vom haeufigsten Wert der Zeile abweichen, sind rot markiert. Eine Zusammenfassung zeigt, wie viele Parameter sich unterscheiden.
 - `Heat Input`: Zeigt nominalen Heat Input, Min und Max je aktivem Segment mit TIG-Wirkungsgrad η = 0,6 in kJ/mm. Grundwerte gelten waehrend `excursion`, Hauptwerte waehrend `indwell + outdwell`; Zeiten in Sekunden und IPM wird fuer die Wegberechnung in mm/s umgerechnet. Min/Max beruecksichtigen die in `<overrides>` angegebenen Grenzen als symmetrische ±%-Abweichungen: `avc_override_max` fuer beide Spannungen, `bkg_amp_max`/`pri_amp_max` fuer die Stroeme, `travel_max` fuer beide Vorschuebe, `dwell_max` fuer `indwell`/`outdwell` und `excursion_max` fuer `excursion`. Alle Grenzen werden gleichzeitig kombiniert; fehlende Werte gelten als 0%. `pulse_freq`, `pulse_width` und `*_rate` werden nicht zusaetzlich gewichtet.
 - `Hidden Parameters`: Verwaltet ausgeblendete Parameter.
 - `Change Log`: Zeigt protokollierte Aenderungen.
@@ -102,17 +125,17 @@ Speichert die markierten Dateien. Wenn keine Datei markiert ist, werden alle gel
 
 ## Auswahl und Verlauf
 
-- `Select all` markiert alle geladenen Dateien.
-- `Clear selection` hebt die Auswahl auf.
-- `Invert selection` kehrt die Auswahl um.
-- Der Zurueck- und Wiederholen-Verlauf steht fuer Bearbeitungen zur Verfuegung (Strg+Z, Strg+Y bzw. Strg+Umschalt+Z). Steht der Cursor in einem Eingabefeld, gilt dort das normale Rueckgaengig des Browsers.
-- `Restore Original Values` stellt die zuletzt geladene Originalversion der Dateien wieder her.
+- `Select all` (Sidebar) markiert alle geladenen Dateien.
+- `Clear` hebt die Auswahl auf.
+- `Invert` kehrt die Auswahl um.
+- Der Zurueck- und Wiederholen-Verlauf steht fuer Bearbeitungen zur Verfuegung (siehe Tastenkuerzel).
+- `Revert` setzt alle geladenen Dateien auf den zuletzt gespeicherten (bzw. geladenen) Stand zurueck. Auch das laesst sich rueckgaengig machen.
 
-Beim Schliessen des Browsers warnt der Editor, wenn eine geladene Datei vom zuletzt geladenen Stand abweicht.
+Die Anzeige in der Kopfzeile nennt die Zahl ungespeicherter Dateien. Beim Schliessen des Browsers warnt der Editor, solange eine Datei ungespeichert ist.
 
 ## Lokale Einstellungen
 
-Ausgeblendete Parameter, wichtige Parameter, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll bleibt ueber Sitzungen erhalten; in Save-Notiz und Batch-Log fliessen aber nur Aenderungen der aktuell geladenen Dateien ein. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
+Ausgeblendete Parameter, wichtige Parameter, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll bleibt ueber Sitzungen erhalten; in das Batch-Log fliessen aber nur Aenderungen der aktuell geladenen Dateien ein. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
 
 Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Nicht passende oder fehlerhafte XML-Dateien werden beim Laden abgewiesen.
 

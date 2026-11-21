@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
@@ -1950,6 +1950,201 @@
                 gap: 8px;
             }
         }
+
+        /* ===== UI IMPROVEMENTS (header groups, search, row actions, comparison) ===== */
+        #fileInput[hidden] {
+            display: none !important;
+        }
+
+        .header-actions {
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .header-actions .toolbar-group {
+            flex-wrap: nowrap;
+            gap: 6px;
+        }
+
+        .header-search-group {
+            flex: 1 1 260px;
+            min-width: 200px;
+        }
+
+        .header-save-group {
+            margin-left: auto;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .search-wrap #searchBox {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding-right: 30px;
+            box-sizing: border-box;
+        }
+
+        .search-clear-btn,
+        .search-clear-btn:hover:not(:disabled) {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            min-height: 0;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border: 0;
+            border-radius: 5px;
+            background: transparent;
+            box-shadow: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        .search-clear-btn:hover:not(:disabled) {
+            background: rgba(242, 138, 61, 0.14);
+            color: var(--text-main);
+        }
+
+        .search-count {
+            color: var(--text-muted);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .badge {
+            white-space: nowrap;
+            color: var(--text-muted);
+        }
+
+        .badge.has-changes {
+            color: #ffaf77;
+            border-color: #7c4d32;
+        }
+
+        .file-selection-actions {
+            display: flex;
+            gap: 6px;
+            padding: 6px 12px 4px;
+        }
+
+        .file-selection-actions button {
+            flex: 1 1 0;
+            min-height: 26px;
+            padding: 3px 6px;
+            font-size: 11px;
+            border-radius: 6px;
+        }
+
+        .sidebar-item:focus-visible,
+        .param-action-btn:focus-visible,
+        .search-clear-btn:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        .sidebar-item .file-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .param-name-cell {
+            cursor: default;
+            white-space: nowrap;
+        }
+
+        .param-actions {
+            display: inline-flex;
+            gap: 2px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .param-action-btn,
+        .param-action-btn:hover:not(:disabled) {
+            min-height: 0;
+            height: 22px;
+            padding: 0 5px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            background: transparent;
+            box-shadow: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 20px;
+            opacity: 0;
+            transition: opacity 0.12s ease;
+        }
+
+        .param-action-btn:hover:not(:disabled) {
+            border-color: #805236;
+            color: #ffc095;
+        }
+
+        tr:hover .param-action-btn,
+        .param-name-cell:focus-within .param-action-btn,
+        .param-action-btn.is-important {
+            opacity: 1;
+        }
+
+        .param-action-btn.is-important {
+            color: var(--accent);
+        }
+
+        @media (hover: none) {
+            .param-action-btn {
+                opacity: 1;
+            }
+        }
+
+        .comparison-diff-toggle {
+            margin-left: 8px;
+        }
+
+        .comparison-summary {
+            margin: 4px 0 10px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .comparison-diff-cell {
+            background: rgba(240, 120, 120, 0.12);
+            box-shadow: inset 3px 0 0 var(--danger);
+        }
+
+        @media (max-width: 980px) {
+            .header-actions .toolbar-group {
+                flex-wrap: wrap;
+            }
+
+            .header-save-group {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .header-actions .toolbar-group,
+            .header-search-group {
+                flex: 1 1 100%;
+                width: 100%;
+            }
+
+            .header-actions .toolbar-group>* {
+                flex: 1 1 auto;
+            }
+
+            .search-wrap {
+                flex: 1 1 100%;
+            }
+        }
     </style>
 </head>
 
@@ -1961,6 +2156,11 @@
             <span>Files</span><span class="sidebar-section-chevron">⌄</span>
         </div>
         <div id="filesSection" class="sidebar-section-content">
+            <div class="file-selection-actions" role="group" aria-label="File selection">
+                <button id="selectAllBtn" class="btn-secondary" type="button" title="Select all loaded files">Select all</button>
+                <button id="clearSelectionBtn" class="btn-secondary" type="button" title="Clear the file selection">Clear</button>
+                <button id="invertSelectionBtn" class="btn-secondary" type="button" title="Invert the file selection">Invert</button>
+            </div>
             <div id="fileList"></div>
             <div id="fileDropZone">Drop XML files here</div>
         </div>
@@ -1979,12 +2179,12 @@
                 <span>Tools</span><span class="sidebar-section-chevron">⌄</span>
             </div>
             <div id="toolsSection" class="sidebar-section-content">
-                <div class="sidebar-item" id="compareBtn">Comparison</div>
-                <div class="sidebar-item" id="heatInputBtn">Heat Input</div>
-                <div class="sidebar-item" id="hiddenManagerBtn">Hidden Parameters</div>
-                <div class="sidebar-item" id="changeLogBtn">Change Log</div>
-                <div class="sidebar-item" id="xmlViewerBtn">XML Viewer</div>
-                <div class="sidebar-item" id="localStorageBackupBtn">Local Storage Backup</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="compareBtn">Comparison</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="heatInputBtn">Heat Input</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="hiddenManagerBtn">Hidden Parameters</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="changeLogBtn">Change Log</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="xmlViewerBtn">XML Viewer</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="localStorageBackupBtn">Local Storage Backup</div>
             </div>
         </div>
     </div>
@@ -1993,21 +2193,34 @@
         <div id="header">
             <strong>Liburdi Schedule Editor</strong>
             <div class="header-actions">
-                <a class="home-link" href="../index.html">Startseite</a>
-                <button id="returnBtn" class="return-btn" type="button" disabled title="Undo last change">↩</button>
-                <button id="redoBtn" class="return-btn" type="button" disabled
-                    title="Redo last undone change">↪</button>
-                <button id="helpBtn" class="return-btn" type="button" title="Open README"
-                    aria-label="Open README">?</button>
-                <input type="file" id="fileInput" accept=".xml" multiple />
-                <button id="selectAllBtn">Select all</button>
-                <button id="clearSelectionBtn" class="btn-secondary">Clear selection</button>
-                <button id="invertSelectionBtn" class="btn-secondary">Invert selection</button>
-                <input id="searchBox" type="text" placeholder="Search parameter or value...">
-                <span class="badge" id="changeCounter">0 Changes</span>
-                <button id="saveBtn" disabled>Save</button>
-                <button id="saveAsBtn" class="btn-secondary" disabled>Save As...</button>
-                <button id="batchSaveBtn" class="batch-save-btn" type="button" disabled>Batch Save</button>
+                <div class="toolbar-group header-file-group">
+                    <button id="openFilesBtn" type="button" title="Open XML files">Open XML…</button>
+                    <input type="file" id="fileInput" accept=".xml" multiple hidden />
+                    <button id="returnBtn" class="return-btn" type="button" disabled title="Undo (Ctrl+Z)"
+                        aria-label="Undo">↩</button>
+                    <button id="redoBtn" class="return-btn" type="button" disabled title="Redo (Ctrl+Y)"
+                        aria-label="Redo">↪</button>
+                    <button id="helpBtn" class="return-btn" type="button" title="Help" aria-label="Help">?</button>
+                </div>
+                <div class="toolbar-group header-search-group">
+                    <div class="search-wrap">
+                        <input id="searchBox" type="text" placeholder="Search parameter or value… (Ctrl+F)"
+                            aria-label="Search parameter or value">
+                        <button id="searchClearBtn" class="search-clear-btn" type="button" title="Clear search (Esc)"
+                            aria-label="Clear search" hidden>×</button>
+                    </div>
+                    <span id="searchCount" class="search-count" aria-live="polite"></span>
+                </div>
+                <div class="toolbar-group header-save-group">
+                    <span class="badge" id="changeCounter">No changes</span>
+                    <button id="resetChangesBtn" class="btn-secondary" type="button" disabled
+                        title="Revert all loaded files to the last saved state">Revert</button>
+                    <button id="saveBtn" type="button" disabled title="Save the active file (Ctrl+S)">Save</button>
+                    <button id="saveAsBtn" class="btn-secondary" type="button" disabled
+                        title="Save the active file under a new name (Ctrl+Shift+S)">Save As…</button>
+                    <button id="batchSaveBtn" class="batch-save-btn" type="button" disabled
+                        title="Save selected files (ZIP with change log for several files)">Batch Save</button>
+                </div>
             </div>
         </div>
 
@@ -2027,12 +2240,12 @@
     <div class="modal-overlay" id="saveAsModal">
         <div class="modal-box">
             <h3>Save File As</h3>
-            <label for="customFileName" style="font-size: 12px; color: var(--text-muted);">Enter file name:</label>
+            <label for="customFileName" style="font-size: 12px; color: var(--text-muted);">File name:</label>
             <input type="text" id="customFileName" placeholder="filename.xml">
             <div class="modal-actions">
                 <button id="modalCancelBtn" class="btn-secondary"
                     style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
-                <button id="modalConfirmBtn" class="btn-primary">Download</button>
+                <button id="modalConfirmBtn" class="btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -2040,9 +2253,9 @@
     <div class="modal-overlay" id="headModal">
         <div class="modal-box">
             <h3>Add new head</h3>
-            <label for="headInput" style="font-size: 12px; color: var(--text-muted);">Wert für XML-Attribut
+            <label for="headInput" style="font-size: 12px; color: var(--text-muted);">Value for the XML attribute
                 "head":</label>
-            <input type="text" id="headInput" placeholder="Neuer Kopf">
+            <input type="text" id="headInput" placeholder="New head">
             <div class="modal-actions">
                 <button id="headCancelBtn" class="btn-secondary"
                     style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
@@ -2051,93 +2264,70 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="saveInfoModal">
-        <div class="modal-box">
-            <h3>Save Schedule</h3>
-            <label for="authorInput" style="font-size: 12px; color: var(--text-muted);">Author:</label>
-            <input type="text" id="authorInput" placeholder="Author name">
-            <label for="wpsInput" style="font-size: 12px; color: var(--text-muted);">WPS Number:</label>
-            <input type="text" id="wpsInput" placeholder="WPS number">
-            <label for="noteUseToggle" style="font-size: 12px; color: var(--text-muted);">Notes in XML:</label>
-            <div style="display: flex; align-items: center; gap: 10px; margin: 8px 0 12px 0;">
-                <input type="checkbox" id="noteUseToggle">
-                <label for="noteUseToggle" style="font-size: 12px; color: var(--text-muted); margin: 0;">Use notes on
-                    save</label>
-            </div>
-            <label for="noteInput" style="font-size: 12px; color: var(--text-muted);">Note (max 500 characters):</label>
-            <textarea id="noteInput" maxlength="500" rows="4"
-                style="width: 100%; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; padding: 10px; font-size: 14px; margin: 8px 0 4px 0; font-family: inherit; resize: vertical;"></textarea>
-            <div id="noteCounter"
-                style="font-size: 11px; color: var(--text-muted); text-align: right; margin-bottom: 8px;">0 / 500</div>
-            <div class="modal-actions">
-                <button id="saveInfoCancelBtn" class="btn-secondary"
-                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
-                <button id="saveInfoConfirmBtn" class="btn-primary">Save</button>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="helpModal">
         <div class="modal-box help-modal-box" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-            <h3 id="helpTitle">Liburdi Schedule Editor v2.9 - Hilfe</h3>
+            <h3 id="helpTitle">Liburdi Schedule Editor v2.9 - Help</h3>
             <div class="help-content">
                 <h4>Start</h4>
-                <p>Diese HTML-Datei direkt in einem aktuellen Browser oeffnen. Eine Installation oder ein lokaler Server
-                    ist nicht erforderlich.</p>
+                <p>Open this HTML file in a current browser. For the full feature set (segment field order, XDR
+                    schemas from the Schedule Database) serve the project folder with
+                    <code>python3 -m http.server 8000</code>.</p>
 
-                <h4>XML-Dateien laden</h4>
+                <h4>Loading XML files</h4>
                 <ol>
-                    <li>Eine oder mehrere XML-Dateien ueber die Dateiauswahl laden.</li>
-                    <li>Alternativ XML-Dateien in den Bereich <strong>Drop XML files here</strong> ziehen.</li>
-                    <li>Eine Datei in der linken Liste anklicken, um sie als aktive Datei auszuwaehlen.</li>
-                    <li>Kontrollkaestchen fuer Batch-Aktionen verwenden.</li>
+                    <li>Click <strong>Open XML…</strong> or drop XML files on <strong>Drop XML files here</strong>.</li>
+                    <li>Only valid schedules (<code>&lt;sched&gt;</code> with at least one segment) are accepted.</li>
+                    <li>Click a file in the list to make it the active file.</li>
+                    <li>Use the checkboxes (or <strong>Select all / Clear / Invert</strong>) for batch actions.</li>
                 </ol>
-                <p>Die Dateien werden nur im Browser verarbeitet. Die Originaldateien bleiben bis zum Download
-                    unveraendert.</p>
+                <p>Files are processed in the browser only. Files on disk stay unchanged until you save.</p>
 
-                <h4>Bearbeiten</h4>
-                <p>Die XML-Bereiche <strong>Description</strong>, <strong>Global</strong>, <strong>Limits</strong>,
-                    <strong>Overrides</strong> und <strong>Segments</strong> koennen direkt bearbeitet werden.
-                </p>
-                <p>Im Bereich Segments koennen Segmente bearbeitet, dupliziert, verschoben und geloescht werden. Undo
-                    und Redo stehen fuer Bearbeitungen zur Verfuegung.</p>
+                <h4>Editing</h4>
+                <p>The sections <strong>Description</strong>, <strong>Global</strong>, <strong>Limits</strong>,
+                    <strong>Overrides</strong> and <strong>Segments</strong> can be edited directly. Decimal comma
+                    and point are both accepted. Changed values are highlighted; hover a value to see the last
+                    saved value.</p>
+                <p>If the active file is selected, edits outside of Segments are also applied to all other selected
+                    files.</p>
+                <p>Hover a parameter row to mark it as important (★) or hide it (⊘). Double-click and right-click
+                    on the name do the same.</p>
+                <p>In Segments, segments can be duplicated, moved and deleted. The selected segment stays open.</p>
 
-                <h4>XML Viewer</h4>
-                <p>Unter <strong>Tools &gt; XML Viewer</strong> wird die aktive Datei inklusive ungespeicherter
-                    Aenderungen schreibgeschuetzt angezeigt. Ein gespeichertes XDR-Schema kann ausgewaehlt werden;
-                    fehlende erforderliche Werte werden dann rot markiert, ohne das XML zu aendern.</p>
-
-                <h4>Speichern</h4>
+                <h4>Keyboard shortcuts</h4>
                 <ul>
-                    <li><strong>Save:</strong> aktive Datei mit aktuellem Namen herunterladen.</li>
-                    <li><strong>Save As...:</strong> aktive Datei unter einem neuen Namen herunterladen.</li>
-                    <li><strong>Batch Save:</strong> markierte Dateien speichern; ohne Auswahl werden alle geladenen
-                        Dateien verwendet.</li>
+                    <li><strong>Ctrl+S</strong> save, <strong>Ctrl+Shift+S</strong> save as</li>
+                    <li><strong>Ctrl+Z</strong> undo, <strong>Ctrl+Y</strong> / <strong>Ctrl+Shift+Z</strong> redo
+                        (inside an input field the browser's own undo applies)</li>
+                    <li><strong>Ctrl+F</strong> or <strong>/</strong> search, <strong>Esc</strong> clear search or
+                        close dialog</li>
                 </ul>
-                <p>Bei mehreren Dateien wird ein ZIP-Archiv mit einem Aenderungsprotokoll erstellt.</p>
+
+                <h4>Saving</h4>
+                <ul>
+                    <li><strong>Save:</strong> download the active file with its current name.</li>
+                    <li><strong>Save As…:</strong> download the active file under a new name; the file is renamed.</li>
+                    <li><strong>Batch Save:</strong> save the selected files (all files if none are selected).
+                        Several files are saved as a ZIP archive with a change log.</li>
+                    <li><strong>Revert:</strong> reset all loaded files to the last saved state.</li>
+                </ul>
 
                 <h4>Tools</h4>
                 <ul>
-                    <li><strong>Comparison:</strong> geladene Dateien vergleichen und Werte uebertragen.</li>
-                    <li><strong>Heat Input:</strong> Heat Input je Segment mit Wirkungsgrad η = 0,6 aus Grundwerten
-                        waehrend der Excursion und Hauptwerten waehrend Indwell/Outdwell berechnen; Min/Max aus den
-                        prozentualen Overrides anzeigen.</li>
-                    <li><strong>Hidden Parameters:</strong> ausgeblendete Parameter verwalten.</li>
-                    <li><strong>Change Log:</strong> protokollierte Aenderungen anzeigen.</li>
-                    <li><strong>XML Viewer:</strong> aktuellen XML-Inhalt und schemaabhaengige fehlende Werte
-                        schreibgeschuetzt anzeigen.</li>
-                    <li><strong>Local Storage Backup:</strong> lokale Editor-Einstellungen als JSON exportieren oder aus
-                        einer JSON-Datei wiederherstellen.</li>
+                    <li><strong>Comparison:</strong> compare loaded files, edit values, transfer values to all files,
+                        optionally show differences only.</li>
+                    <li><strong>Heat Input:</strong> heat input per segment with efficiency η = 0.6 (background values
+                        during excursion, primary values during indwell/outdwell); min/max from the percentage
+                        overrides.</li>
+                    <li><strong>Hidden Parameters:</strong> restore hidden parameters.</li>
+                    <li><strong>Change Log:</strong> show recorded changes.</li>
+                    <li><strong>XML Viewer:</strong> read-only XML of the active file; with a saved XDR schema, missing
+                        required values are marked in red.</li>
+                    <li><strong>Local Storage Backup:</strong> export or import the editor settings as JSON.</li>
                 </ul>
 
-                <h4>Auswahl und Wiederherstellung</h4>
-                <p><strong>Select all</strong>, <strong>Clear selection</strong> und <strong>Invert selection</strong>
-                    steuern die Dateiauswahl. <strong>Restore Original Values</strong> stellt den zuletzt geladenen
-                    Originalstand wieder her.</p>
-
-                <h4>Lokale Einstellungen</h4>
-                <p>Ausgeblendete und wichtige Parameter, eigene Head-Werte, Einheiten sowie Sidebar-Zustaende werden im
-                    localStorage des Browsers gespeichert.</p>
+                <h4>Local settings</h4>
+                <p>Hidden and important parameters, custom heads, units, the change log and the sidebar state are
+                    stored in the browser's localStorage.</p>
             </div>
             <div class="modal-actions">
                 <button id="helpCloseBtn" class="btn-primary" type="button">Close</button>
@@ -2149,8 +2339,8 @@
         <div class="modal-box storage-modal-box" role="dialog" aria-modal="true"
             aria-labelledby="localStorageBackupTitle">
             <h3 id="localStorageBackupTitle">Local Storage Backup</h3>
-            <p>Exportiert oder importiert die lokalen Editor-Einstellungen als JSON-Datei. Beim Import werden die
-                gespeicherten Editor-Einstellungen ersetzt; die Seite wird danach neu geladen.</p>
+            <p>Export or import the local editor settings as a JSON file. Importing replaces the stored editor
+                settings and reloads the page.</p>
             <input id="localStorageBackupFile" type="file" accept=".json,application/json" hidden>
             <p id="localStorageBackupStatus" class="storage-backup-status" role="status" aria-live="polite"></p>
             <div class="modal-actions storage-modal-actions">
@@ -2167,6 +2357,8 @@
         let selectedFiles = new Set();
         let activeFile = -1;
         let lastSelectedSection = "segments";
+        let selectedSegmentPosition = 0; // Position des geoeffneten Segments in file.sections.segments
+        let comparisonDifferencesOnly = false;
         const SEGMENT_SORTING_CONFIG = {
             "version": 1,
             "segmentPriorityOrder": [
@@ -2198,7 +2390,7 @@
                 if (value === null || typeof value !== "object") return fallback;
                 return value;
             } catch (error) {
-                console.warn(`Ungueltiger localStorage-Eintrag "${key}" wird ignoriert.`, error);
+                console.warn(`Ignoring invalid localStorage entry "${key}".`, error);
                 return fallback;
             }
         }
@@ -2292,20 +2484,20 @@
             const missing = Object.entries(values)
                 .filter(([, value]) => value === null)
                 .map(([name]) => name);
-            if (missing.length) return { error: `Fehlende/ungueltige Werte: ${missing.join(", ")}` };
+            if (missing.length) return { error: `Missing/invalid values: ${missing.join(", ")}` };
             if (values.backgroundVoltage <= 0 || values.primaryVoltage <= 0
                 || values.backgroundAmps < 0 || values.primaryAmps < 0) {
-                return { error: "Spannung muss > 0 und Strom >= 0 sein." };
+                return { error: "Voltage must be > 0 and current >= 0." };
             }
             if (values.backgroundTravel <= 0 || values.primaryTravel <= 0) {
-                return { error: "Vorschub muss > 0 sein." };
+                return { error: "Travel speed must be > 0." };
             }
             if (values.excursion < 0 || values.indwell < 0 || values.outdwell < 0) {
-                return { error: "Halte- und Excursion-Zeiten muessen >= 0 sein." };
+                return { error: "Dwell and excursion times must be >= 0." };
             }
 
             const cycleTime = values.excursion + values.indwell + values.outdwell;
-            if (cycleTime <= 0) return { error: "Die Gesamtzeit des Zyklus muss > 0 sein." };
+            if (cycleTime <= 0) return { error: "Total cycle time must be > 0." };
 
             const readOverride = name => {
                 const element = overrides && [...overrides.children].find(child => child.tagName === name);
@@ -2322,7 +2514,7 @@
                 excursion: readOverride("excursion_max")
             };
             const invalidOverride = Object.entries(percentages).find(([, value]) => value === null);
-            if (invalidOverride) return { error: `Ungueltiger Override-Wert: ${invalidOverride[0]}` };
+            if (invalidOverride) return { error: `Invalid override value: ${invalidOverride[0]}` };
 
             const getRange = (value, percentage) => {
                 const delta = value * percentage / 100;
@@ -2340,10 +2532,10 @@
                 outdwell: getRange(values.outdwell, percentages.dwell)
             };
             if (!Object.values(ranges).every(range => Number.isFinite(range.min) && Number.isFinite(range.max))) {
-                return { error: "Berechnung nicht moeglich; Override-Werte bitte pruefen." };
+                return { error: "Calculation not possible; please check the override values." };
             }
             if (ranges.backgroundTravel.min <= 0 || ranges.primaryTravel.min <= 0) {
-                return { error: "Vorschub-Override darf keinen Vorschub von 0 oder weniger erlauben." };
+                return { error: "Travel override must not allow a travel speed of 0 or less." };
             }
 
             const primaryTime = values.indwell + values.outdwell;
@@ -2372,7 +2564,7 @@
                 values.excursion, values.indwell, values.outdwell
             );
             if (![averageAmps, averageTravelMmPerMinute, heatInput].every(Number.isFinite)) {
-                return { error: "Berechnung nicht moeglich; Werte bitte pruefen." };
+                return { error: "Calculation not possible; please check the values." };
             }
 
             let minHeatInput = Infinity;
@@ -2392,7 +2584,7 @@
                             excursion, indwell, outdwell
                         );
                         if (minimum === null || maximum === null) {
-                            return { error: "Berechnung nicht moeglich; Override-Werte bitte pruefen." };
+                            return { error: "Calculation not possible; please check the override values." };
                         }
                         minHeatInput = Math.min(minHeatInput, minimum);
                         maxHeatInput = Math.max(maxHeatInput, maximum);
@@ -2400,7 +2592,7 @@
                 }
             }
             if (![minHeatInput, maxHeatInput].every(Number.isFinite)) {
-                return { error: "Berechnung nicht moeglich; Override-Werte bitte pruefen." };
+                return { error: "Calculation not possible; please check the override values." };
             }
             return { averageAmps, averageTravelMmPerMinute, heatInput, minHeatInput, maxHeatInput };
         }
@@ -2751,7 +2943,7 @@
                     const response = await window.fetch("segments_sorting.json", { cache: "no-store" });
                     if (response.ok) config = await response.json();
                 } catch (error) {
-                    console.warn("segments_sorting.json konnte nicht geladen werden; Standardreihenfolge wird verwendet.", error);
+                    console.warn("Could not load segments_sorting.json; using the default order.", error);
                 }
             }
             const order = config && config.version === 1
@@ -2763,13 +2955,8 @@
             }
             segmentPriorityOrder = [...new Set(order.map(field => field.trim()))];
 
-            if (activeFile < 0 || lastSelectedSection !== "segments") return;
-            const file = loadedFiles[activeFile];
-            const panelHeader = document.querySelector(".segment-panel .panel-header");
-            const selectedIndex = panelHeader ? Number(panelHeader.textContent.replace("Segment ", "")) : 0;
-            const selectedSegment = file?.sections.segments.find((segment, index) =>
-                Number(segment.getAttribute("index") || index) === selectedIndex
-            );
+            if (activeFile < 0 || lastSelectedSection !== "segments" || !document.querySelector(".segment-panel")) return;
+            const selectedSegment = loadedFiles[activeFile]?.sections.segments[selectedSegmentPosition];
             if (selectedSegment) renderSegment(selectedSegment);
         }
 
@@ -2795,7 +2982,7 @@
                 updateUI();
                 pushHistorySnapshot("Load files", beforeSnapshot);
                 document.getElementById("status").textContent = failedFiles.length
-                    ? `${successCount} von ${targetCount} Datei(en) geladen. Abgewiesen: ${failedFiles.join("; ")}`
+                    ? `${successCount} of ${targetCount} file(s) loaded. Rejected: ${failedFiles.join("; ")}`
                     : `${successCount} file(s) loaded successfully.`;
                 e.target.value = "";
             };
@@ -2807,9 +2994,9 @@
                 reader.onload = () => {
                     const xml = new DOMParser().parseFromString(reader.result, "application/xml");
                     if (xml.querySelector("parsererror")) {
-                        failedFiles.push(`${file.name} (kein gueltiges XML)`);
+                        failedFiles.push(`${file.name} (not valid XML)`);
                     } else if (xml.documentElement.tagName !== "sched" || !xml.querySelector("segment")) {
-                        failedFiles.push(`${file.name} (keine Liburdi-Schedule-Datei)`);
+                        failedFiles.push(`${file.name} (not a Liburdi schedule)`);
                     } else {
                         loadedFiles.push(createFileRecord(file.name, xml, xml.cloneNode(true)));
                         selectedFiles.add(loadedFiles.length - 1);
@@ -2817,7 +3004,7 @@
                     finishLoading();
                 };
                 reader.onerror = () => {
-                    failedFiles.push(`${file.name} (Lesefehler)`);
+                    failedFiles.push(`${file.name} (read error)`);
                     finishLoading();
                 };
                 reader.readAsText(file);
@@ -2886,6 +3073,9 @@
             loadedFiles.forEach((f, i) => {
                 const div = document.createElement("div");
                 div.className = "sidebar-item" + (i === activeFile ? " active" : "");
+                div.setAttribute("role", "button");
+                div.tabIndex = 0;
+                div.title = f.name;
                 div.draggable = true;
                 div.ondragstart = event => {
                     draggedFileIndex = i;
@@ -2908,10 +3098,15 @@
                 const checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.checked = selectedFiles.has(i);
+                checkbox.title = "Include in batch actions";
+                checkbox.setAttribute("aria-label", `Select ${f.name}`);
                 checkbox.onclick = (e) => { e.stopPropagation(); if (checkbox.checked) selectedFiles.add(i); else selectedFiles.delete(i); updateSelectionStatus(); };
+                checkbox.onkeydown = e => e.stopPropagation();
                 const textSpan = document.createElement("span");
+                textSpan.className = "file-name";
                 textSpan.textContent = f.name; textSpan.style.flex = "1";
-                textSpan.onclick = () => {
+                div.onclick = () => {
+                    commitPendingEdit();
                     activeFile = i;
                     renderFileList();
                     renderSidebar();
@@ -2920,14 +3115,19 @@
                 };
                 const statusSpan = document.createElement("span");
                 const dirty = isFileDirty(f);
+                f.unsaved = dirty;
                 statusSpan.className = "file-status" + (dirty ? " changed" : "");
-                statusSpan.textContent = dirty ? "Changed" : "Ready";
+                statusSpan.textContent = dirty ? "Unsaved" : "Saved";
                 const delBtn = document.createElement("button");
                 delBtn.className = "delete-file-btn"; delBtn.innerHTML = "&times;";
+                delBtn.title = "Remove file from the editor";
+                delBtn.setAttribute("aria-label", `Remove ${f.name}`);
+                delBtn.onkeydown = e => e.stopPropagation();
                 delBtn.onclick = (e) => { e.stopPropagation(); removeFile(i); };
                 div.appendChild(checkbox); div.appendChild(textSpan); div.appendChild(statusSpan); div.appendChild(delBtn);
                 list.appendChild(div);
             });
+            updateChangeCounter();
         }
 
         function normalizeSelectionIndexes() {
@@ -2948,7 +3148,7 @@
         function removeFile(index) {
             const file = loadedFiles[index];
             const dirty = isFileDirty(file);
-            if (dirty && !window.confirm(`Die Datei "${file.name}" enthält ungespeicherte Änderungen. Entfernen?`)) return;
+            if (dirty && !window.confirm(`"${file.name}" has unsaved changes. Remove it anyway?`)) return;
             recordHistoryAction("Remove file", () => {
                 loadedFiles.splice(index, 1);
                 normalizeSelectionIndexes();
@@ -2965,6 +3165,8 @@
             ["description", "global", "limits", "overrides", "segments"].forEach(sec => {
                 const div = document.createElement("div");
                 div.className = "sidebar-item" + (sec === lastSelectedSection ? " active" : "");
+                div.setAttribute("role", "button");
+                div.tabIndex = 0;
                 div.textContent = sec.charAt(0).toUpperCase() + sec.slice(1);
                 div.onclick = () => showSection(sec);
                 s.appendChild(div);
@@ -2999,7 +3201,7 @@
                     file.name = currentVal;
                     const fileItems = document.querySelectorAll("#fileList .sidebar-item");
                     if (fileItems[activeFile]) {
-                        fileItems[activeFile].querySelector("span").textContent = currentVal;
+                        fileItems[activeFile].querySelector(".file-name").textContent = currentVal;
                     }
                 }
             };
@@ -3013,7 +3215,7 @@
                     renderFileList();
                 }
                 if (fileNameBeforeEdit) {
-                    pushHistorySnapshot("Dateiname ändern", fileNameBeforeEdit);
+                    pushHistorySnapshot("Rename file", fileNameBeforeEdit);
                     fileNameBeforeEdit = null;
                 }
             };
@@ -3076,6 +3278,77 @@
                 return;
             }
             renderPanel(name.charAt(0).toUpperCase() + name.slice(1), node);
+        }
+
+        // Wert desselben Parameters im zuletzt gespeicherten (bzw. geladenen) Stand der aktiven Datei.
+        function getSavedValue(sectionName, segmentIndex, key) {
+            const file = loadedFiles[activeFile];
+            if (!file) return null;
+            const parent = sectionName === "segments"
+                ? [...file.originalXml.querySelectorAll("segment")].find(segment => segment.getAttribute("index") === segmentIndex)
+                : file.originalXml.querySelector(sectionName);
+            const node = parent ? [...parent.children].find(child => child.tagName === key) : null;
+            return node ? node.textContent : null;
+        }
+
+        // Markiert ein Feld als geaendert, wenn es vom gespeicherten Stand abweicht; Tooltip zeigt den alten Wert.
+        function updateChangedMarker(input, currentValue) {
+            const hasSavedValue = input.dataset.hasSavedValue === "1";
+            const savedValue = input.dataset.savedValue || "";
+            const changed = !hasSavedValue || String(currentValue ?? "").trim() !== savedValue.trim();
+            input.classList.toggle("changed", changed);
+            if (!changed) {
+                input.removeAttribute("title");
+            } else if (!hasSavedValue) {
+                input.title = "New value (not in the last saved file)";
+            } else {
+                const key = input.dataset.fieldName;
+                const shown = input.tagName === "TEXTAREA"
+                    ? (savedValue.length > 200 ? `${savedValue.slice(0, 200)}…` : savedValue || "(empty)")
+                    : formatComparisonValue(key, savedValue);
+                input.title = `Last saved: ${shown}`;
+            }
+        }
+
+        function buildParamNameCell(key, refresh) {
+            const td = document.createElement("td");
+            td.className = "param-name-cell";
+            const isImportant = importantFields.has(key);
+            if (isImportant) td.classList.add("important-name");
+
+            const name = document.createElement("span");
+            name.className = "param-name";
+            name.textContent = key;
+            name.title = "Double-click: mark as important · Right-click: hide";
+            td.appendChild(name);
+
+            const hideField = () => recordHistoryAction("Hide field", () => {
+                hiddenFields.add(key);
+                saveHidden();
+                refresh();
+            });
+            td.ondblclick = () => toggleImportant(key, refresh);
+            td.oncontextmenu = event => { event.preventDefault(); hideField(); };
+
+            const actions = document.createElement("span");
+            actions.className = "param-actions";
+            const starButton = document.createElement("button");
+            starButton.type = "button";
+            starButton.className = "param-action-btn" + (isImportant ? " is-important" : "");
+            starButton.textContent = isImportant ? "★" : "☆";
+            starButton.title = isImportant ? "Unmark as important" : "Mark as important";
+            starButton.setAttribute("aria-label", `${starButton.title}: ${key}`);
+            starButton.onclick = event => { event.stopPropagation(); toggleImportant(key, refresh); };
+            const hideButton = document.createElement("button");
+            hideButton.type = "button";
+            hideButton.className = "param-action-btn";
+            hideButton.textContent = "⊘";
+            hideButton.title = "Hide parameter (restore via Tools › Hidden Parameters)";
+            hideButton.setAttribute("aria-label", `Hide ${key}`);
+            hideButton.onclick = event => { event.stopPropagation(); hideField(); };
+            actions.append(starButton, hideButton);
+            td.appendChild(actions);
+            return td;
         }
 
         /* DYNAMIC INTERACTIVE INPUT FIELD */
@@ -3166,6 +3439,9 @@
             }
 
             input.dataset.originalValue = child.textContent;
+            const savedValue = getSavedValue(sectionName, segmentIndex, key);
+            input.dataset.hasSavedValue = savedValue === null ? "0" : "1";
+            input.dataset.savedValue = savedValue ?? "";
 
             btn.onclick = (e) => {
                 e.preventDefault();
@@ -3214,7 +3490,7 @@
                     // Hinweis, wenn die Eingabe auf das Format der Datei gerundet wurde.
                     if (!isConvertedUnit && Number(child.textContent) !== parsed) {
                         document.getElementById("status").textContent =
-                            `Hinweis: ${key} wurde auf ${child.textContent} gerundet (${originalPlaces} Nachkommastellen).`;
+                            `Note: ${key} was rounded to ${child.textContent} (${originalPlaces} decimal places).`;
                     }
                 }
                 updateDisplay();
@@ -3252,6 +3528,7 @@
             container.updateDisplay = updateDisplay;
 
             updateDisplay();
+            updateChangedMarker(input, child.textContent);
 
             container.appendChild(input);
             if (!isTextField) container.appendChild(btn);
@@ -3272,20 +3549,7 @@
                 const child = xmlNode.querySelector(key);
                 const tr = document.createElement("tr");
 
-                const tdName = document.createElement("td");
-                tdName.textContent = key;
-                tdName.style.cursor = "pointer";
-                if (importantFields.has(key)) tdName.classList.add("important-name");
-
-                tdName.ondblclick = () => { toggleImportant(key, () => showSection(title.toLowerCase())); };
-                tdName.oncontextmenu = e => {
-                    e.preventDefault();
-                    recordHistoryAction("Hide field", () => {
-                        hiddenFields.add(key);
-                        saveHidden();
-                        showSection(title.toLowerCase());
-                    });
-                };
+                const tdName = buildParamNameCell(key, () => showSection(title.toLowerCase()));
 
                 const tdVal = document.createElement("td");
                 const fieldObj = createInputField(child, key);
@@ -3329,7 +3593,16 @@
 
             file.sections.segments.forEach((seg, i) => {
                 const div = document.createElement("div");
-                div.className = "sidebar-item";
+                div.className = "sidebar-item segment-list-item";
+                div.dataset.segmentPosition = String(i);
+                div.setAttribute("role", "button");
+                div.tabIndex = 0;
+                div.onkeydown = event => {
+                    if (event.target === div && (event.key === "Enter" || event.key === " ")) {
+                        event.preventDefault();
+                        div.click();
+                    }
+                };
                 const segmentLabel = document.createElement("span");
                 segmentLabel.textContent = "Segment " + seg.getAttribute("index");
                 const actions = document.createElement("span");
@@ -3348,7 +3621,11 @@
                 div.onclick = () => renderSegment(seg); body.appendChild(div);
             });
             list.appendChild(body); content.appendChild(list);
-            if (file.sections.segments.length > 0) renderSegment(file.sections.segments[0]);
+            const segments = file.sections.segments;
+            if (segments.length > 0) {
+                selectedSegmentPosition = Math.min(Math.max(selectedSegmentPosition, 0), segments.length - 1);
+                renderSegment(segments[selectedSegmentPosition]);
+            }
             applyTableSearch();
         }
 
@@ -3430,7 +3707,7 @@
             const svg = document.createElementNS(namespace, "svg");
             svg.setAttribute("viewBox", "0 0 260 260");
             svg.setAttribute("role", "img");
-            svg.setAttribute("aria-label", `Segmentumfang; Durchmesser ${diameterMm === null ? "nicht angegeben" : `${formatNumber(diameterMm)} mm`}; Gesamtwinkel ${formatNumber(totalDegrees)} Grad`);
+            svg.setAttribute("aria-label", `Segment layout; diameter ${diameterMm === null ? "not specified" : `${formatNumber(diameterMm)} mm`}; total angle ${formatNumber(totalDegrees)} degrees`);
 
             const addCircle = (className, radius, color) => {
                 const circle = document.createElementNS(namespace, "circle");
@@ -3526,6 +3803,7 @@
                 if (root) root.appendChild(newSeg);
 
                 file.sections.segments = [...file.xml.querySelectorAll("segment")];
+                selectedSegmentPosition = file.sections.segments.indexOf(newSeg);
                 renderSegmentList(file);
                 document.getElementById("status").textContent = `Segment ${newIndex} added.`;
             });
@@ -3541,6 +3819,7 @@
                 const copy = segment.cloneNode(true);
                 segment.parentNode.insertBefore(copy, segment.nextSibling);
                 renumberSegments(file);
+                selectedSegmentPosition = file.sections.segments.indexOf(copy);
                 renderSegmentList(file);
                 document.getElementById("status").textContent = "Segment duplicated.";
             });
@@ -3551,8 +3830,10 @@
                 document.getElementById("status").textContent = "The last segment cannot be deleted.";
                 return;
             }
-            if (!window.confirm("Delete this segment?")) return;
+            if (!window.confirm(`Delete segment ${segment.getAttribute("index") ?? ""}?`)) return;
             recordHistoryAction("Delete segment", () => {
+                const deletedPosition = file.sections.segments.indexOf(segment);
+                if (deletedPosition < selectedSegmentPosition) selectedSegmentPosition--;
                 segment.remove();
                 renumberSegments(file);
                 renderSegmentList(file);
@@ -3570,6 +3851,7 @@
                 if (direction < 0) target.parentNode.insertBefore(segment, target);
                 else target.parentNode.insertBefore(segment, target.nextSibling);
                 renumberSegments(file);
+                selectedSegmentPosition = file.sections.segments.indexOf(segment);
                 renderSegmentList(file);
                 document.getElementById("status").textContent = "Segment moved.";
             });
@@ -3578,6 +3860,11 @@
         function renderSegment(seg) {
             const content = document.getElementById("content");
             const old = content.querySelector(".segment-panel"); if (old) old.remove();
+            const position = loadedFiles[activeFile]?.sections.segments.indexOf(seg) ?? -1;
+            if (position >= 0) selectedSegmentPosition = position;
+            content.querySelectorAll(".segment-list-item").forEach(item => {
+                item.classList.toggle("active", Number(item.dataset.segmentPosition) === selectedSegmentPosition);
+            });
 
             const panel = document.createElement("div"); panel.className = "panel segment-panel";
             const header = document.createElement("div"); header.className = "panel-header"; header.textContent = "Segment " + seg.getAttribute("index");
@@ -3596,18 +3883,7 @@
                 const child = seg.querySelector(key);
                 const tr = document.createElement("tr");
 
-                const tdName = document.createElement("td"); tdName.textContent = key; tdName.style.cursor = "pointer";
-                if (importantFields.has(key)) tdName.classList.add("important-name");
-
-                tdName.ondblclick = () => { toggleImportant(key, () => renderSegment(seg)); };
-                tdName.oncontextmenu = e => {
-                    e.preventDefault();
-                    recordHistoryAction("Hide field", () => {
-                        hiddenFields.add(key);
-                        saveHidden();
-                        renderSegment(seg);
-                    });
-                };
+                const tdName = buildParamNameCell(key, () => renderSegment(seg));
 
                 const tdVal = document.createElement("td");
                 const fieldObj = createInputField(child, key, "segments", seg.getAttribute("index") || "");
@@ -3632,7 +3908,7 @@
 
             if (activeFile < 0 || activeFile >= loadedFiles.length) {
                 const message = document.createElement("p");
-                message.textContent = "Bitte zuerst eine XML-Datei laden.";
+                message.textContent = "Please load an XML file first.";
                 content.appendChild(message);
                 return;
             }
@@ -3649,7 +3925,7 @@
             body.className = "panel-content open";
             const table = document.createElement("table");
             const thead = document.createElement("thead");
-            thead.innerHTML = "<tr><th>Segment</th><th>Mittelstrom (A)</th><th>Vorschub (mm/min)</th><th>Heat Input (kJ/mm)</th><th>Min (kJ/mm)</th><th>Max (kJ/mm)</th></tr>";
+            thead.innerHTML = "<tr><th>Segment</th><th>Average current (A)</th><th>Travel speed (mm/min)</th><th>Heat Input (kJ/mm)</th><th>Min (kJ/mm)</th><th>Max (kJ/mm)</th></tr>";
             thead.querySelectorAll("th:nth-child(5), th:nth-child(6)").forEach(cell => cell.classList.add("heat-input-range"));
             table.appendChild(thead);
             const tbody = document.createElement("tbody");
@@ -3664,7 +3940,7 @@
                 if (result.disabled) {
                     const status = document.createElement("td");
                     status.colSpan = 5;
-                    status.textContent = "Segment deaktiviert";
+                    status.textContent = "Segment disabled";
                     row.appendChild(status);
                 } else if (result.error) {
                     const status = document.createElement("td");
@@ -3723,7 +3999,7 @@
                 changedFiles++;
             });
             if (changedFiles) {
-                document.getElementById("status").textContent = `${key} auch in ${changedFiles} weiteren markierten Datei(en) gesetzt.`;
+                document.getElementById("status").textContent = `${key} also set in ${changedFiles} other selected file(s).`;
             }
         }
 
@@ -3736,14 +4012,32 @@
             document.body.appendChild(a);
             a.click();
             a.remove();
-            URL.revokeObjectURL(url);
+            window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function ensureXmlExtension(name) {
+            return name.toLowerCase().endsWith(".xml") ? name : `${name}.xml`;
         }
 
         function exportXmlFile(fileName, fileDoc) {
-            const xml = new XMLSerializer().serializeToString(fileDoc);
-            const blob = new Blob([xml], { type: "application/xml" });
+            const blob = new Blob([serializeXml(fileDoc)], { type: "application/xml" });
             triggerDownload(fileName, blob);
-            document.getElementById("status").textContent = `File saved as "${fileName}" successfully.`;
+        }
+
+        // Der gespeicherte Stand wird zur neuen Vergleichsbasis ("Changed", Markierungen, Revert).
+        function markFilesSaved(files) {
+            files.forEach(file => {
+                file.originalXml = file.xml.cloneNode(true);
+                file.originalXmlString = serializeXml(file.xml);
+            });
+            renderFileList();
+            refreshCurrentView();
+        }
+
+        // Rendert die aktuelle Abschnittsansicht neu (nur wenn gerade ein Abschnitt angezeigt wird).
+        function refreshCurrentView() {
+            if (activeFile < 0 || !loadedFiles[activeFile]) return;
+            if (document.querySelector("#content .file-title-container")) showSection(lastSelectedSection);
         }
 
         function buildBatchChangeLogText(filesToSave) {
@@ -3775,131 +4069,85 @@
             return lines.join("\n");
         }
 
+        function saveActiveFile() {
+            commitPendingEdit();
+            const file = loadedFiles[activeFile];
+            if (!file) return;
+            const fileName = ensureXmlExtension(file.name);
+            exportXmlFile(fileName, file.xml);
+            markFilesSaved([file]);
+            document.getElementById("status").textContent = `Saved "${fileName}".`;
+        }
+
         function saveSelectedFiles() {
+            commitPendingEdit();
             const filesToSave = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
             const targetFiles = filesToSave.length ? filesToSave : loadedFiles;
 
             if (!targetFiles.length) {
-                document.getElementById("status").textContent = "Please select at least one file to save.";
+                document.getElementById("status").textContent = "Please load at least one file to save.";
                 return;
             }
 
             if (window.JSZip && targetFiles.length > 1) {
                 const zip = new JSZip();
-                targetFiles.forEach(file => {
-                    const filename = file.name.toLowerCase().endsWith(".xml") ? file.name : `${file.name}.xml`;
-                    const xml = new XMLSerializer().serializeToString(file.xml);
-                    zip.file(filename, xml);
-                });
-
-                const logText = buildBatchChangeLogText(targetFiles);
-                zip.file("batch_change_log.txt", logText);
+                targetFiles.forEach(file => zip.file(ensureXmlExtension(file.name), serializeXml(file.xml)));
+                zip.file("batch_change_log.txt", buildBatchChangeLogText(targetFiles));
 
                 zip.generateAsync({ type: "blob" }).then(blob => {
                     const zipName = `schedule_batch_export_${new Date().toISOString().replace(/[:.]/g, "-")}.zip`;
                     triggerDownload(zipName, blob);
-                    document.getElementById("status").textContent = `${targetFiles.length} file(s) saved as batch archive with change log.`;
+                    markFilesSaved(targetFiles);
+                    document.getElementById("status").textContent = `${targetFiles.length} file(s) saved as ZIP archive with change log.`;
+                }).catch(error => {
+                    document.getElementById("status").textContent = `Batch save failed: ${error.message}`;
                 });
                 return;
             }
 
-            targetFiles.forEach(file => {
-                const filename = file.name.toLowerCase().endsWith(".xml") ? file.name : `${file.name}.xml`;
-                exportXmlFile(filename, file.xml);
+            targetFiles.forEach(file => exportXmlFile(ensureXmlExtension(file.name), file.xml));
+            markFilesSaved(targetFiles);
+            document.getElementById("status").textContent = `${targetFiles.length} file(s) saved.`;
+        }
+
+        /* MODALS */
+        function openModal(modal, focusElement) {
+            modal.classList.add("show");
+            if (focusElement) {
+                focusElement.focus();
+                if (typeof focusElement.select === "function") focusElement.select();
+            }
+        }
+
+        function closeModal(modal) {
+            modal.classList.remove("show");
+        }
+
+        // Schliesst den zuletzt geoeffneten Dialog; gibt true zurueck, wenn einer offen war.
+        function closeTopModal() {
+            const openModals = [...document.querySelectorAll(".modal-overlay.show")];
+            if (!openModals.length) return false;
+            closeModal(openModals[openModals.length - 1]);
+            return true;
+        }
+
+        document.querySelectorAll(".modal-overlay").forEach(overlay => {
+            overlay.addEventListener("click", event => {
+                if (event.target === overlay) closeModal(overlay);
+            });
+        });
+
+        function bindEnterToConfirm(input, confirmButton) {
+            input.addEventListener("keydown", event => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    confirmButton.click();
+                }
             });
         }
 
-        /* SAVE INFO MODAL */
-        let pendingSaveAction = null;
-
-        function sanitizeNoteText(value) {
-            return String(value ?? "").replace(/[^\p{L}\p{N}\s]/gu, "");
-        }
-
-        function updateNoteWithSaveInfo(file, author, wps, note, useNotes = true) {
-            // Ohne "Use notes on save" bleibt die vorhandene Notiz unveraendert.
-            if (!useNotes) return;
-            const desc = file.sections.description;
-            if (!desc) return;
-            let noteNode = desc.querySelector("note");
-            if (!noteNode) {
-                noteNode = desc.ownerDocument.createElement("note");
-                desc.appendChild(noteNode);
-            }
-
-            const fileChanges = changeLog.filter(entry => entry.fileId === file.id);
-
-            let noteText = "";
-            if (author) noteText += `Author: ${author}\n`;
-            if (wps) noteText += `WPS: ${wps}\n`;
-
-            if (fileChanges.length) {
-                noteText += "Changes:\n";
-                fileChanges.forEach(entry => {
-                    noteText += `- ${entry.section}${entry.segmentIndex ? " seg " + entry.segmentIndex : ""} ${entry.key}: ${entry.oldValue || "-"} -> ${entry.newValue || "-"}\n`;
-                });
-            }
-
-            if (note) noteText += `Note: ${note}\n`;
-
-            noteText = sanitizeNoteText(noteText).slice(0, 500);
-            noteNode.textContent = noteText;
-        }
-
-        function showSaveInfoModal(callback) {
-            pendingSaveAction = callback;
-            document.getElementById("authorInput").value = "";
-            document.getElementById("wpsInput").value = "";
-            document.getElementById("noteInput").value = "";
-            document.getElementById("noteUseToggle").checked = false;
-            document.getElementById("noteCounter").textContent = "0 / 500";
-            document.getElementById("saveInfoModal").classList.add("show");
-            document.getElementById("authorInput").focus();
-        }
-
-        document.getElementById("saveInfoCancelBtn").onclick = () => {
-            document.getElementById("saveInfoModal").classList.remove("show");
-            pendingSaveAction = null;
-        };
-
-        document.getElementById("saveInfoConfirmBtn").onclick = () => {
-            const author = document.getElementById("authorInput").value.trim();
-            const wps = document.getElementById("wpsInput").value.trim();
-            const note = document.getElementById("noteInput").value.trim();
-            const useNotes = document.getElementById("noteUseToggle").checked;
-
-            document.getElementById("saveInfoModal").classList.remove("show");
-
-            if (pendingSaveAction) {
-                pendingSaveAction(author, wps, note, useNotes);
-                pendingSaveAction = null;
-            }
-        };
-
-        document.getElementById("noteInput").oninput = () => {
-            const noteInput = document.getElementById("noteInput");
-            noteInput.value = sanitizeNoteText(noteInput.value);
-            const len = noteInput.value.length;
-            document.getElementById("noteCounter").textContent = `${len} / 500`;
-        };
-
-        document.getElementById("saveBtn").onclick = () => {
-            if (activeFile < 0 || activeFile >= loadedFiles.length) return;
-            showSaveInfoModal((author, wps, note, useNotes) => {
-                const file = loadedFiles[activeFile];
-                updateNoteWithSaveInfo(file, author, wps, note, useNotes);
-                exportXmlFile(file.name, file.xml);
-            });
-        };
-
-        document.getElementById("batchSaveBtn").onclick = () => {
-            showSaveInfoModal((author, wps, note, useNotes) => {
-                const filesToSave = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
-                const targetFiles = filesToSave.length ? filesToSave : loadedFiles;
-                targetFiles.forEach(file => updateNoteWithSaveInfo(file, author, wps, note, useNotes));
-                saveSelectedFiles();
-            });
-        };
+        document.getElementById("saveBtn").onclick = saveActiveFile;
+        document.getElementById("batchSaveBtn").onclick = saveSelectedFiles;
 
         const headModal = document.getElementById("headModal");
         const headInput = document.getElementById("headInput");
@@ -3938,47 +4186,52 @@
 
         function openNewHeadModal() {
             headInput.value = "";
-            headModal.classList.add("show");
-            headInput.focus();
-        };
+            openModal(headModal, headInput);
+        }
 
-        document.getElementById("headCancelBtn").onclick = () => {
-            headModal.classList.remove("show");
-        };
-
+        document.getElementById("headCancelBtn").onclick = () => closeModal(headModal);
         document.getElementById("headConfirmBtn").onclick = () => {
             const value = headInput.value.trim();
             if (!value) {
                 headInput.focus();
                 return;
             }
-            headModal.classList.remove("show");
+            closeModal(headModal);
             applyHeadValue(value);
         };
+        bindEnterToConfirm(headInput, document.getElementById("headConfirmBtn"));
 
-        const saveAsBtn = document.getElementById("saveAsBtn"); const saveAsModal = document.getElementById("saveAsModal");
-        const customFileNameInput = document.getElementById("customFileName"); const modalCancelBtn = document.getElementById("modalCancelBtn");
+        const saveAsBtn = document.getElementById("saveAsBtn");
+        const saveAsModal = document.getElementById("saveAsModal");
+        const customFileNameInput = document.getElementById("customFileName");
         const modalConfirmBtn = document.getElementById("modalConfirmBtn");
 
-        saveAsBtn.onclick = () => {
+        function openSaveAsModal() {
+            commitPendingEdit();
             const file = loadedFiles[activeFile];
             if (!file) return;
             customFileNameInput.value = file.name;
-            saveAsModal.classList.add("show"); customFileNameInput.focus();
-        };
-        modalCancelBtn.onclick = () => { saveAsModal.classList.remove("show"); };
+            openModal(saveAsModal, customFileNameInput);
+        }
+
+        saveAsBtn.onclick = openSaveAsModal;
+        document.getElementById("modalCancelBtn").onclick = () => closeModal(saveAsModal);
         modalConfirmBtn.onclick = () => {
-            let name = customFileNameInput.value.trim(); if (!name) return;
-            if (!name.toLowerCase().endsWith(".xml")) name += ".xml";
-            if (activeFile >= 0 && loadedFiles[activeFile]) {
-                showSaveInfoModal((author, wps, note, useNotes) => {
-                    const file = loadedFiles[activeFile];
-                    updateNoteWithSaveInfo(file, author, wps, note, useNotes);
-                    exportXmlFile(name, file.xml);
-                });
+            const file = loadedFiles[activeFile];
+            const rawName = customFileNameInput.value.trim();
+            if (!file || !rawName) {
+                customFileNameInput.focus();
+                return;
             }
-            saveAsModal.classList.remove("show");
+            const name = ensureXmlExtension(rawName);
+            closeModal(saveAsModal);
+            // Save As benennt die Datei im Editor um, damit spaeteres "Save" den neuen Namen nutzt.
+            file.name = name;
+            exportXmlFile(name, file.xml);
+            markFilesSaved([file]);
+            document.getElementById("status").textContent = `Saved as "${name}".`;
         };
+        bindEnterToConfirm(customFileNameInput, modalConfirmBtn);
 
         /* COMPARE & CONVERTER TOOLS */
         function collectComparisonEntries(file) {
@@ -4140,6 +4393,18 @@
                     renderComparison();
                 };
                 fileControls.appendChild(hideAll);
+
+                const differencesLabel = document.createElement("label");
+                differencesLabel.className = "comparison-file-control comparison-diff-toggle";
+                const differencesCheckbox = document.createElement("input");
+                differencesCheckbox.type = "checkbox";
+                differencesCheckbox.checked = comparisonDifferencesOnly;
+                differencesCheckbox.onchange = () => {
+                    comparisonDifferencesOnly = differencesCheckbox.checked;
+                    renderComparison();
+                };
+                differencesLabel.append(differencesCheckbox, document.createTextNode("Show differences only"));
+                fileControls.appendChild(differencesLabel);
             }
             content.appendChild(fileControls);
 
@@ -4168,13 +4433,23 @@
             });
             table.appendChild(headerRow);
 
+            let visibleParameterCount = 0;
+            let differentParameterCount = 0;
             keys.forEach(key => {
                 const baseEntry = entryMaps.find(map => map.has(key))?.get(key);
                 if (!baseEntry || hiddenFields.has(baseEntry.parameter)) return;
                 const row = document.createElement("tr");
                 const rawValues = filesToCompare.map((file, index) => entryMaps[index].get(key)?.value ?? "");
-                const unique = [...new Set(rawValues.map(value => formatComparisonValue(baseEntry.parameter, value)))];
+                const formattedValues = rawValues.map(value => formatComparisonValue(baseEntry.parameter, value));
+                const unique = [...new Set(formattedValues)];
                 const status = unique.length <= 1 ? "Same" : "Different";
+                visibleParameterCount++;
+                if (status === "Different") differentParameterCount++;
+                if (comparisonDifferencesOnly && status === "Same") return;
+                // Haeufigster Wert der Zeile; abweichende Zellen werden hervorgehoben.
+                const valueCounts = new Map();
+                formattedValues.forEach(value => valueCounts.set(value, (valueCounts.get(value) || 0) + 1));
+                const mostCommonValue = [...valueCounts.entries()].sort((a, b) => b[1] - a[1])[0][0];
 
                 const diffCell = document.createElement("td");
                 diffCell.textContent = status;
@@ -4189,6 +4464,9 @@
                 filesToCompare.forEach((file, valueIndex) => {
                     const valueEntry = entryMaps[valueIndex].get(key);
                     const valueCell = document.createElement("td");
+                    if (status === "Different" && formattedValues[valueIndex] !== mostCommonValue) {
+                        valueCell.classList.add("comparison-diff-cell");
+                    }
                     const valueWrap = document.createElement("div");
                     valueWrap.className = "comparison-value";
 
@@ -4230,6 +4508,11 @@
 
                 table.appendChild(row);
             });
+
+            const comparisonSummary = document.createElement("p");
+            comparisonSummary.className = "comparison-summary";
+            comparisonSummary.textContent = `${differentParameterCount} of ${visibleParameterCount} parameters differ.`;
+            content.appendChild(comparisonSummary);
 
             const comparisonTableWrap = document.createElement("div");
             comparisonTableWrap.className = "comparison-table-wrap";
@@ -4490,14 +4773,14 @@
 
         function openXmlViewer() {
             if (activeFile < 0 || activeFile >= loadedFiles.length) {
-                document.getElementById("status").textContent = "Bitte zuerst eine XML-Datei laden.";
+                document.getElementById("status").textContent = "Please load an XML file first.";
                 return;
             }
 
             const file = loadedFiles[activeFile];
             const viewerWindow = window.open("", "xmlViewerWindow", "width=1100,height=800,resizable=yes,scrollbars=yes");
             if (!viewerWindow) {
-                document.getElementById("status").textContent = "Der XML Viewer konnte nicht geöffnet werden. Bitte Popups erlauben.";
+                document.getElementById("status").textContent = "Could not open the XML Viewer. Please allow pop-ups for this page.";
                 return;
             }
 
@@ -4622,8 +4905,13 @@
         }
 
         /* CHANGES */
-        let changeCount = 0;
-        function updateChangeCounter() { changeCount = changeLog.length; document.getElementById("changeCounter").textContent = changeCount + " Changes"; }
+        // Badge zeigt die Anzahl ungespeicherter Dateien (Wert wird in renderFileList berechnet).
+        function updateChangeCounter() {
+            const unsaved = loadedFiles.filter(file => file.unsaved).length;
+            const badge = document.getElementById("changeCounter");
+            badge.textContent = unsaved ? `${unsaved} unsaved file${unsaved === 1 ? "" : "s"}` : "No changes";
+            badge.classList.toggle("has-changes", unsaved > 0);
+        }
 
         // storedValue: der tatsaechlich ins XML geschriebene Wert (bei Zahlenfeldern immer in XML-Einheit).
         function registerChange(input, original, storedValue) {
@@ -4658,20 +4946,45 @@
                 pendingEdit.changes.push({ fileIndex, fileName, sectionName, key, segmentIndex, oldValue: original || "", newValue: cleanVal });
             }
 
-            input.classList.toggle("changed", changed);
-            updateChangeCounter();
+            if (input.dataset.hasSavedValue !== undefined) updateChangedMarker(input, cleanVal);
+            else input.classList.toggle("changed", changed);
+        }
+
+        const searchBox = document.getElementById("searchBox");
+        const searchClearBtn = document.getElementById("searchClearBtn");
+        const searchCount = document.getElementById("searchCount");
+
+        // Durchsucht Parametername und angezeigten Wert jeder Tabellenzeile.
+        function rowSearchText(tr) {
+            const values = [...tr.querySelectorAll("input, textarea")].map(field => field.value).join(" ");
+            return `${tr.innerText} ${values}`.toLowerCase();
         }
 
         function applyTableSearch() {
-            const term = document.getElementById("searchBox").value.toLowerCase();
-            document.querySelectorAll("table tr").forEach(tr => {
-                if (tr.parentElement.tagName !== "THEAD" && tr.firstElementChild.tagName !== "TH") {
-                    tr.style.display = tr.innerText.toLowerCase().includes(term) ? "" : "none";
-                }
+            const term = searchBox.value.trim().toLowerCase();
+            let matches = 0;
+            document.querySelectorAll("#content table tr").forEach(tr => {
+                if (tr.parentElement.tagName === "THEAD" || tr.firstElementChild?.tagName === "TH") return;
+                const visible = !term || rowSearchText(tr).includes(term);
+                tr.style.display = visible ? "" : "none";
+                if (visible) matches++;
             });
+            searchClearBtn.hidden = !term;
+            searchCount.textContent = term ? `${matches} match${matches === 1 ? "" : "es"}` : "";
         }
 
-        document.getElementById("searchBox").oninput = applyTableSearch;
+        function clearSearch() {
+            searchBox.value = "";
+            applyTableSearch();
+        }
+
+        function focusSearch() {
+            searchBox.focus();
+            searchBox.select();
+        }
+
+        searchBox.oninput = applyTableSearch;
+        searchClearBtn.onclick = () => { clearSearch(); searchBox.focus(); };
 
         window.addEventListener("beforeunload", e => {
             commitPendingEdit();
@@ -4692,12 +5005,10 @@
         };
         document.getElementById('returnBtn').onclick = () => undoLastEdit();
         document.getElementById('redoBtn').onclick = () => redoLastEdit();
+        document.getElementById('openFilesBtn').onclick = () => document.getElementById('fileInput').click();
         const helpModal = document.getElementById('helpModal');
-        document.getElementById('helpBtn').onclick = () => helpModal.classList.add('show');
-        document.getElementById('helpCloseBtn').onclick = () => helpModal.classList.remove('show');
-        helpModal.addEventListener('click', event => {
-            if (event.target === helpModal) helpModal.classList.remove('show');
-        });
+        document.getElementById('helpBtn').onclick = () => openModal(helpModal, document.getElementById('helpCloseBtn'));
+        document.getElementById('helpCloseBtn').onclick = () => closeModal(helpModal);
 
         const LOCAL_STORAGE_BACKUP_KEYS = [
             "hiddenFields",
@@ -4715,12 +5026,12 @@
             if (!backup || typeof backup !== "object" || Array.isArray(backup) ||
                 backup.format !== "liburdi-schedule-editor-local-storage" || backup.version !== 1 ||
                 !backup.data || typeof backup.data !== "object" || Array.isArray(backup.data)) {
-                throw new Error("Die Datei ist kein gueltiges Schedule-Editor-Backup.");
+                throw new Error("The file is not a valid Schedule Editor backup.");
             }
 
             for (const [key, value] of Object.entries(backup.data)) {
                 if (!LOCAL_STORAGE_BACKUP_KEYS.includes(key)) {
-                    throw new Error(`Unbekannter Backup-Eintrag: ${key}`);
+                    throw new Error(`Unknown backup entry: ${key}`);
                 }
                 const isStringArray = Array.isArray(value) && value.every(item => typeof item === "string");
                 const isObject = value !== null && typeof value === "object" && !Array.isArray(value);
@@ -4737,19 +5048,16 @@
                     scheduleEditorCustomHeads: isStringArray,
                     scheduleEditorSidebarState: isBooleanMap
                 }[key];
-                if (!validValue) throw new Error(`Ungueltige Daten fuer Backup-Eintrag: ${key}`);
+                if (!validValue) throw new Error(`Invalid data for backup entry: ${key}`);
             }
             return backup.data;
         }
 
         document.getElementById("localStorageBackupBtn").onclick = () => {
             localStorageBackupStatus.textContent = "";
-            localStorageBackupModal.classList.add("show");
+            openModal(localStorageBackupModal, document.getElementById("localStorageBackupExportBtn"));
         };
-        document.getElementById("localStorageBackupCloseBtn").onclick = () => localStorageBackupModal.classList.remove("show");
-        localStorageBackupModal.addEventListener("click", event => {
-            if (event.target === localStorageBackupModal) localStorageBackupModal.classList.remove("show");
-        });
+        document.getElementById("localStorageBackupCloseBtn").onclick = () => closeModal(localStorageBackupModal);
         document.getElementById("localStorageBackupExportBtn").onclick = () => {
             try {
                 const data = {};
@@ -4770,9 +5078,9 @@
                 link.download = `schedule-editor-local-storage-${new Date().toISOString().slice(0, 10)}.json`;
                 link.click();
                 window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-                localStorageBackupStatus.textContent = "JSON-Backup wurde heruntergeladen.";
+                localStorageBackupStatus.textContent = "JSON backup downloaded.";
             } catch (error) {
-                localStorageBackupStatus.textContent = `Export fehlgeschlagen: ${error.message}`;
+                localStorageBackupStatus.textContent = `Export failed: ${error.message}`;
             }
         };
         document.getElementById("localStorageBackupImportBtn").onclick = () => localStorageBackupFile.click();
@@ -4782,7 +5090,7 @@
             try {
                 const backup = JSON.parse(await file.text());
                 const data = validateLocalStorageBackup(backup);
-                if (!window.confirm("Die lokalen Editor-Einstellungen werden durch das Backup ersetzt. Fortfahren?")) return;
+                if (!window.confirm("The local editor settings will be replaced by the backup. Continue?")) return;
 
                 const previousValues = LOCAL_STORAGE_BACKUP_KEYS.map(key => [key, localStorage.getItem(key)]);
                 try {
@@ -4802,18 +5110,46 @@
                 }
                 window.location.reload();
             } catch (error) {
-                localStorageBackupStatus.textContent = `Import fehlgeschlagen: ${error.message}`;
+                localStorageBackupStatus.textContent = `Import failed: ${error.message}`;
             } finally {
                 localStorageBackupFile.value = "";
             }
         };
 
         window.addEventListener("keydown", e => {
-            if (!(e.ctrlKey || e.metaKey)) return;
-            // In Text-/Zahlenfeldern bleibt das native Undo des Browsers aktiv.
             const target = e.target;
             const isTextEntry = target instanceof HTMLTextAreaElement
                 || (target instanceof HTMLInputElement && !["checkbox", "radio", "button", "file"].includes(target.type));
+            const modalOpen = Boolean(document.querySelector(".modal-overlay.show"));
+
+            if (e.key === "Escape") {
+                if (closeTopModal()) { e.preventDefault(); return; }
+                if (target === searchBox || (!isTextEntry && searchBox.value)) { e.preventDefault(); clearSearch(); }
+                return;
+            }
+            if (modalOpen) return;
+            if (e.key === "/" && !isTextEntry && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                e.preventDefault();
+                focusSearch();
+                return;
+            }
+            if (!(e.ctrlKey || e.metaKey)) return;
+
+            const key = e.key.toLowerCase();
+            if (key === "s") {
+                e.preventDefault();
+                // Laufende Eingabe abschliessen (onblur schreibt und protokolliert den Wert).
+                if (isTextEntry && target !== searchBox) target.blur();
+                if (e.shiftKey) openSaveAsModal();
+                else saveActiveFile();
+                return;
+            }
+            if (key === "f") {
+                e.preventDefault();
+                focusSearch();
+                return;
+            }
+            // In Text-/Zahlenfeldern bleibt das native Undo des Browsers aktiv.
             if (isTextEntry) return;
             if (e.key.toLowerCase() === "z") {
                 e.preventDefault();
@@ -4825,44 +5161,41 @@
             }
         });
 
-        document.getElementById('returnBtn').title = 'Undo last change';
-        document.getElementById('redoBtn').title = 'Redo last undone change';
-        document.getElementById('batchSaveBtn').title = 'Save selected XML files as a ZIP archive with change log';
+        // Sidebar-Eintraege mit role="button" per Enter/Leertaste bedienbar machen.
+        document.getElementById("sidebar").addEventListener("keydown", event => {
+            const item = event.target.closest?.('.sidebar-item[role="button"]');
+            if (!item || event.target !== item) return;
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                item.click();
+            }
+        });
 
-        document.getElementById('batchSaveBtn').disabled = loadedFiles.length === 0;
         setupSidebarToggles();
         loadSegmentPriorityConfig();
 
-        function restoreOriginalValues() {
-            recordHistoryAction("Restore original values", () => {
+        // Setzt alle geladenen Dateien auf den zuletzt gespeicherten (bzw. geladenen) Stand zurueck.
+        function revertToLastSaved() {
+            commitPendingEdit();
+            if (!loadedFiles.some(isFileDirty)) {
+                document.getElementById('status').textContent = 'Nothing to revert.';
+                return;
+            }
+            recordHistoryAction("Revert to last saved", () => {
+                const loadedIds = new Set(loadedFiles.map(file => file.id));
                 loadedFiles = loadedFiles.map(file => {
                     const xml = file.originalXml.cloneNode(true);
                     return createFileRecord(file.name, xml, file.originalXml, file.id, file.originalXmlString);
                 });
                 pendingEdit = null;
-                changeLog = [];
+                changeLog = changeLog.filter(entry => !loadedIds.has(entry.fileId));
                 saveChangeLog();
-                updateChangeCounter();
-                if (loadedFiles.length && activeFile >= 0 && activeFile < loadedFiles.length) {
-                    showSection(lastSelectedSection);
-                }
-                document.getElementById('status').textContent = 'Original values restored.';
+                updateUI();
+                document.getElementById('status').textContent = 'All files reverted to the last saved state.';
             });
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const resetBtn = document.createElement('button');
-            resetBtn.id = 'resetChangesBtn';
-            resetBtn.textContent = 'Restore Original Values';
-            resetBtn.style.marginLeft = '8px';
-            resetBtn.disabled = true;
-            const saveAsBtnEl = document.getElementById('saveAsBtn');
-            if (saveAsBtnEl) saveAsBtnEl.parentNode.insertBefore(resetBtn, saveAsBtnEl.nextSibling);
-
-            resetBtn.addEventListener('click', () => {
-                restoreOriginalValues();
-            });
-        });
+        document.getElementById('resetChangesBtn').onclick = revertToLastSaved;
 
     </script>
 </body>

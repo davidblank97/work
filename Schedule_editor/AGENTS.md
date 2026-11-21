@@ -31,6 +31,6 @@
 
 - Prefer minimal, targeted edits; avoid broad refactors unless asked.
 - Preserve XML serialization behavior (`XMLSerializer`) and the number formatting of existing values.
-- Keep the save note restricted to letters, digits and whitespace (`sanitizeNoteText`): the welding machine requires this.
-- Most user-facing text is German; preserve localized labels and messages.
+- Saving has no dialog and never rewrites `<note>`; `markFilesSaved` makes the saved state the new baseline.
+- The editor UI (labels, status and error messages, help dialog) is English. README_v2_9.md is German.
 - New versions: prefer Git history over copying the HTML file to a new version number.
