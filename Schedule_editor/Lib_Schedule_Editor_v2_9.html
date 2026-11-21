@@ -2535,6 +2535,123 @@
             font-size: 12px !important;
         }
 
+        /* Heat-Input-Diagramm */
+        .heat-chart {
+            padding: 14px 16px 6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .heat-chart-title {
+            color: var(--text-main);
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .heat-chart-plot {
+            position: relative;
+        }
+
+        .heat-chart-plot svg {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .heat-grid {
+            stroke: var(--border-color);
+            stroke-width: 1;
+        }
+
+        .heat-axis {
+            stroke: var(--border-strong);
+            stroke-width: 1;
+        }
+
+        .heat-tick {
+            fill: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .heat-limit {
+            stroke: var(--text-muted);
+            stroke-width: 1.5;
+            stroke-dasharray: 5 4;
+        }
+
+        .heat-limit-label {
+            fill: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .heat-range {
+            fill: #d9702c;
+            opacity: 0.45;
+        }
+
+        .heat-nominal {
+            fill: #d9702c;
+            stroke: var(--bg-panel);
+            stroke-width: 2;
+        }
+
+        .heat-column.is-hover .heat-range {
+            opacity: 0.7;
+        }
+
+        .heat-column.is-outside .heat-range,
+        .heat-column.is-outside .heat-nominal {
+            fill: var(--danger);
+        }
+
+        .heat-warning {
+            fill: var(--text-main);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .heat-column-note {
+            fill: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .heat-hit {
+            fill: transparent;
+            cursor: pointer;
+        }
+
+        .heat-column.is-hover .heat-hit {
+            fill: rgba(255, 255, 255, 0.03);
+        }
+
+        .heat-tooltip {
+            position: absolute;
+            top: 6px;
+            z-index: 2;
+            min-width: 170px;
+            padding: 8px 10px;
+            background: #2b2521;
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+            color: var(--text-main);
+            font-size: 12px;
+            line-height: 1.5;
+            pointer-events: none;
+        }
+
+        .heat-tooltip-warning {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .heat-chart-note,
+        .heat-chart-empty {
+            color: var(--text-muted);
+            font-size: 11.5px;
+            margin: 2px 0 6px;
+        }
+
         .overview-input {
             width: 66px;
             height: 26px;
@@ -2968,7 +3085,8 @@
                         optionally show differences only.</li>
                     <li><strong>Heat Input:</strong> heat input per segment with efficiency η = 0.6 (background values
                         during excursion, primary values during indwell/outdwell); min/max from the percentage
-                        overrides.</li>
+                        overrides. A chart shows the min–max range and nominal value per segment, with the heat input limits
+                        from &lt;limits&gt; as dashed lines.</li>
                     <li><strong>Hidden Parameters:</strong> restore hidden parameters.</li>
                     <li><strong>Change Log:</strong> show recorded changes.</li>
                     <li><strong>XML Viewer:</strong> read-only XML of the active file; with a saved XDR schema, missing
@@ -4908,6 +5026,169 @@
             applyTableSearch();
         }
 
+        // Liest einen Grenzwert aus <limits>; nur plausible Werte (> 0 und < 9999) gelten als gesetzt.
+        function readHeatInputLimit(file, name) {
+            const node = file.sections.limits ? [...file.sections.limits.children].find(child => child.tagName === name) : null;
+            const value = Number(node?.textContent);
+            return Number.isFinite(value) && value > 0 && value < 9999 ? value : null;
+        }
+
+        // Bandbreiten-Diagramm: je Segment Balken Min->Max (Override-Grenzen) und Punkt fuer den Nominalwert.
+        function renderHeatInputChart(file, results, container) {
+            const svgNs = "http://www.w3.org/2000/svg";
+            const segments = file.sections.segments;
+            const limitLow = readHeatInputLimit(file, "heat_input_fault_low");
+            const limitHigh = readHeatInputLimit(file, "heat_input_fault_high");
+            const valid = results.filter(result => !result.disabled && !result.error);
+
+            const wrap = document.createElement("div");
+            wrap.className = "heat-chart";
+            const title = document.createElement("div");
+            title.className = "heat-chart-title";
+            title.textContent = "Heat input per segment (kJ/mm) — bar: min–max from overrides, dot: nominal";
+            wrap.appendChild(title);
+            if (!valid.length) {
+                const empty = document.createElement("p");
+                empty.className = "heat-chart-empty";
+                empty.textContent = "No segment with a valid heat input to chart.";
+                wrap.appendChild(empty);
+                container.appendChild(wrap);
+                return;
+            }
+
+            // Skala: 0 bis Maximum (inkl. Grenzwerte), auf "schoene" Schritte gerundet.
+            const rawMax = Math.max(...valid.map(r => r.maxHeatInput), limitHigh ?? 0, limitLow ?? 0) * 1.1;
+            const rough = rawMax / 5;
+            const magnitude = 10 ** Math.floor(Math.log10(rough));
+            const step = [1, 2, 2.5, 5, 10].map(f => f * magnitude).find(s => s >= rough);
+            const yMax = Math.ceil(rawMax / step) * step;
+
+            // Zeichnen in tatsaechlicher Pixelbreite, damit die Schrift nicht mitskaliert.
+            const contentWidth = document.getElementById("content")?.clientWidth || 760;
+            const width = Math.max(320, Math.min(1400, contentWidth - 74)), height = 250;
+            const margin = { top: 16, right: 16, bottom: 34, left: 48 };
+            const plotW = width - margin.left - margin.right;
+            const plotH = height - margin.top - margin.bottom;
+            const y = value => margin.top + plotH - value / yMax * plotH;
+            const band = plotW / segments.length;
+            const x = index => margin.left + band * (index + 0.5);
+
+            const svg = document.createElementNS(svgNs, "svg");
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            svg.setAttribute("width", String(width));
+            svg.setAttribute("height", String(height));
+            svg.setAttribute("role", "img");
+            svg.setAttribute("aria-label", "Heat input per segment with min-max range; values are listed in the table below.");
+            const make = (tag, attributes, parent = svg) => {
+                const element = document.createElementNS(svgNs, tag);
+                Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
+                parent.appendChild(element);
+                return element;
+            };
+
+            // Gitter + y-Achse (zurueckhaltend)
+            for (let value = 0; value <= yMax + 1e-9; value += step) {
+                make("line", { x1: margin.left, x2: width - margin.right, y1: y(value), y2: y(value), class: value === 0 ? "heat-axis" : "heat-grid" });
+                const label = make("text", { x: margin.left - 8, y: y(value) + 4, class: "heat-tick", "text-anchor": "end" });
+                label.textContent = Number(value.toFixed(3)).toString();
+            }
+
+            // Grenzwerte aus <limits>
+            [[limitLow, "Fault low"], [limitHigh, "Fault high"]].forEach(([value, name]) => {
+                if (value === null) return;
+                make("line", { x1: margin.left, x2: width - margin.right, y1: y(value), y2: y(value), class: "heat-limit" });
+                const label = make("text", { x: width - margin.right - 4, y: y(value) - 5, class: "heat-limit-label", "text-anchor": "end" });
+                label.textContent = `${name} ${value}`;
+            });
+
+            const tooltip = document.createElement("div");
+            tooltip.className = "heat-tooltip";
+            tooltip.hidden = true;
+
+            results.forEach((result, index) => {
+                const segmentNumber = segmentDisplayNumber(segments[index], index);
+                const cx = x(index);
+                const xLabel = make("text", { x: cx, y: height - 12, class: "heat-tick", "text-anchor": "middle" });
+                xLabel.textContent = `Segment ${segmentNumber}`;
+                const group = make("g", { class: "heat-column" });
+                group.dataset.segmentPosition = String(index);
+
+                if (result.disabled || result.error) {
+                    const note = make("text", { x: cx, y: margin.top + plotH / 2, class: "heat-column-note", "text-anchor": "middle" }, group);
+                    note.textContent = result.disabled ? "disabled" : "n/a";
+                } else {
+                    const outside = (limitLow !== null && result.minHeatInput < limitLow)
+                        || (limitHigh !== null && result.maxHeatInput > limitHigh);
+                    if (outside) group.classList.add("is-outside");
+                    const barWidth = Math.min(14, band * 0.35);
+                    make("rect", {
+                        x: cx - barWidth / 2, y: y(result.maxHeatInput), width: barWidth,
+                        height: Math.max(2, y(result.minHeatInput) - y(result.maxHeatInput)), rx: 4, class: "heat-range"
+                    }, group);
+                    make("circle", { cx, cy: y(result.heatInput), r: 6, class: "heat-nominal" }, group);
+                    if (outside) {
+                        const warn = make("text", { x: cx, y: y(result.maxHeatInput) - 8, class: "heat-warning", "text-anchor": "middle" }, group);
+                        warn.textContent = "! outside limit";
+                    }
+                }
+                // Trefferflaeche: ganze Spalte
+                const hit = make("rect", { x: cx - band / 2, y: margin.top, width: band, height: plotH, class: "heat-hit" }, group);
+                const lines = result.disabled ? ["Segment disabled"]
+                    : result.error ? [result.error]
+                        : [`Nominal: ${result.heatInput.toFixed(3)} kJ/mm`, `Min: ${result.minHeatInput.toFixed(3)} kJ/mm`,
+                            `Max: ${result.maxHeatInput.toFixed(3)} kJ/mm`, `Avg. current: ${result.averageAmps.toFixed(1)} A`];
+                hit.addEventListener("mouseenter", () => {
+                    group.classList.add("is-hover");
+                    tooltip.replaceChildren();
+                    const head = document.createElement("strong");
+                    head.textContent = `Segment ${segmentNumber}`;
+                    tooltip.appendChild(head);
+                    lines.forEach(line => {
+                        const row = document.createElement("div");
+                        row.textContent = line;
+                        tooltip.appendChild(row);
+                    });
+                    if (group.classList.contains("is-outside")) {
+                        const row = document.createElement("div");
+                        row.className = "heat-tooltip-warning";
+                        row.textContent = "! Range outside the heat input limits";
+                        tooltip.appendChild(row);
+                    }
+                    tooltip.hidden = false;
+                    // Seitlich neben die Spalte, damit Balken und Punkt sichtbar bleiben.
+                    const onRight = cx < width * 0.6;
+                    tooltip.style.left = `${onRight ? cx + 18 : cx - 18}px`;
+                    tooltip.style.transform = onRight ? "none" : "translateX(-100%)";
+                });
+                hit.addEventListener("mouseleave", () => { group.classList.remove("is-hover"); tooltip.hidden = true; });
+                hit.addEventListener("click", () => {
+                    selectedSegmentPosition = index;
+                    showSection("segments");
+                });
+            });
+
+            const plot = document.createElement("div");
+            plot.className = "heat-chart-plot";
+            plot.append(svg, tooltip);
+            wrap.appendChild(plot);
+            if (limitLow === null && limitHigh === null) {
+                const note = document.createElement("div");
+                note.className = "heat-chart-note";
+                note.textContent = "No heat input limits set in <limits> (heat_input_fault_low/high).";
+                wrap.appendChild(note);
+            }
+            container.appendChild(wrap);
+        }
+
+        // Heat-Input-Diagramm bei Groessenaenderung des Fensters neu zeichnen.
+        let heatInputResizeTimer = null;
+        window.addEventListener("resize", () => {
+            window.clearTimeout(heatInputResizeTimer);
+            heatInputResizeTimer = window.setTimeout(() => {
+                if (document.getElementById("heatInputBtn")?.classList.contains("active")) renderHeatInput();
+            }, 150);
+        });
+
         function renderHeatInput() {
             commitPendingEdit();
             const content = document.getElementById("content");
@@ -4934,6 +5215,8 @@
 
             const body = document.createElement("div");
             body.className = "panel-content open";
+            const heatResults = file.sections.segments.map(segment => calculateSegmentHeatInput(segment, file.sections.overrides));
+            renderHeatInputChart(file, heatResults, body);
             const table = document.createElement("table");
             const thead = document.createElement("thead");
             thead.innerHTML = "<tr><th>Segment</th><th>Average current (A)</th><th>Travel speed (mm/min)</th><th>Heat Input (kJ/mm)</th><th>Min (kJ/mm)</th><th>Max (kJ/mm)</th></tr>";
@@ -4942,7 +5225,7 @@
             const tbody = document.createElement("tbody");
 
             file.sections.segments.forEach((segment, index) => {
-                const result = calculateSegmentHeatInput(segment, file.sections.overrides);
+                const result = heatResults[index];
                 const row = document.createElement("tr");
                 const segmentCell = document.createElement("td");
                 segmentCell.textContent = String(segmentDisplayNumber(segment, index));
