@@ -119,6 +119,7 @@ Vor dem Speichern oeffnet sich ein Dialog fuer einen optionalen **Revisions-Tag*
 - Die Dateien werden auch im Editor umbenannt; Zurueck (Strg+Z) stellt die alten Namen wieder her
 - Der Dialog zeigt eine Vorschau der neuen Namen und schlaegt den zuletzt verwendeten Tag vor
 - Ergeben zwei Dateien denselben Namen, wird das Speichern mit einer Meldung abgebrochen
+- Checkbox `Download files` (standardmaessig an): Ist sie aus, werden die Dateien nur mit dem Tag umbenannt und nicht heruntergeladen; sie bleiben dann `Unsaved`
 
 - Bei mehreren Dateien wird ein ZIP-Archiv erstellt.
 - Das Archiv enthaelt zusaetzlich `batch_change_log.txt` mit dem Revisions-Tag und den in dieser Sitzung protokollierten Aenderungen der gespeicherten Dateien.

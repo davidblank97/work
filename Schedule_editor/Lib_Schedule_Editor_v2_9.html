@@ -2109,6 +2109,16 @@
             margin-left: 8px;
         }
 
+        .batch-download-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            color: var(--text-main);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
         .batch-save-preview {
             margin: 10px 0 4px;
             color: var(--text-muted);
@@ -2270,6 +2280,10 @@
             <label for="revisionTagInput" style="font-size: 12px; color: var(--text-muted);">Revision tag
                 (optional, appended to every file name):</label>
             <input type="text" id="revisionTagInput" placeholder="Rev1" autocomplete="off">
+            <label class="batch-download-toggle">
+                <input type="checkbox" id="batchDownloadToggle" checked>
+                Download files (ZIP for several files)
+            </label>
             <div id="batchSavePreview" class="batch-save-preview" aria-live="polite"></div>
             <div class="modal-actions">
                 <button id="batchSaveCancelBtn" class="btn-secondary" type="button"
@@ -4130,7 +4144,8 @@
             return filesToSave.length ? filesToSave : loadedFiles;
         }
 
-        function saveSelectedFiles(revisionTag = "") {
+        // download = false: nur umbenennen (Revisions-Tag), nichts herunterladen; Dateien bleiben "Unsaved".
+        function saveSelectedFiles(revisionTag = "", download = true) {
             commitPendingEdit();
             let targetFiles = getBatchSaveTargets();
 
@@ -4158,6 +4173,13 @@
                     // Nach dem Snapshot sind die Datei-Objekte dieselben; sicherheitshalber neu aufloesen.
                     targetFiles = targetIds.map(id => loadedFiles.find(file => file.id === id)).filter(Boolean);
                 }
+            }
+
+            if (!download) {
+                document.getElementById("status").textContent = cleanTag
+                    ? `${targetFiles.length} file(s) renamed with tag "${cleanTag}" (not downloaded).`
+                    : "Nothing to do: no revision tag and download disabled.";
+                return;
             }
 
             if (window.JSZip && targetFiles.length > 1) {
@@ -4223,13 +4245,18 @@
         const batchSaveModal = document.getElementById("batchSaveModal");
         const revisionTagInput = document.getElementById("revisionTagInput");
         const batchSavePreview = document.getElementById("batchSavePreview");
+        const batchDownloadToggle = document.getElementById("batchDownloadToggle");
 
         function updateBatchSavePreview() {
             const targets = getBatchSaveTargets();
             const tag = sanitizeRevisionTag(revisionTagInput.value);
+            const download = batchDownloadToggle.checked;
+            document.getElementById("batchSaveConfirmBtn").textContent = download ? "Save" : "Rename only";
             batchSavePreview.replaceChildren();
             const summary = document.createElement("div");
-            summary.textContent = `${targets.length} file(s)${targets.length > 1 ? " as ZIP archive" : ""}${tag ? ` with tag "${tag}"` : ""}:`;
+            summary.textContent = download
+                ? `${targets.length} file(s)${targets.length > 1 ? " as ZIP archive" : ""}${tag ? ` with tag "${tag}"` : ""}:`
+                : `${targets.length} file(s) renamed only, no download${tag ? ` (tag "${tag}")` : " — enter a tag"}:`;
             batchSavePreview.appendChild(summary);
             targets.slice(0, 3).forEach(file => {
                 const line = document.createElement("div");
@@ -4250,11 +4277,13 @@
             commitPendingEdit();
             if (!loadedFiles.length) return;
             revisionTagInput.value = readStoredJson("scheduleEditorBatchSave", {}).revisionTag || "";
+            batchDownloadToggle.checked = true;
             updateBatchSavePreview();
             openModal(batchSaveModal, revisionTagInput);
         }
 
         revisionTagInput.oninput = updateBatchSavePreview;
+        batchDownloadToggle.onchange = updateBatchSavePreview;
         document.getElementById("batchSaveBtn").onclick = openBatchSaveModal;
         document.getElementById("batchSaveCancelBtn").onclick = () => closeModal(batchSaveModal);
         document.getElementById("batchSaveConfirmBtn").onclick = () => {
@@ -4265,7 +4294,7 @@
                 console.warn("Could not store the revision tag.", error);
             }
             closeModal(batchSaveModal);
-            saveSelectedFiles(tag);
+            saveSelectedFiles(tag, batchDownloadToggle.checked);
         };
         bindEnterToConfirm(revisionTagInput, document.getElementById("batchSaveConfirmBtn"));
 
