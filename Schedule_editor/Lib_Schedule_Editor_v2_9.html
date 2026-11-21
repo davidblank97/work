@@ -1752,6 +1752,26 @@
             overflow-wrap: anywhere;
         }
 
+        .comparison-file-controls {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            margin-bottom: 10px;
+        }
+
+        .comparison-file-control {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .comparison-edit-input {
+            width: 110px;
+            min-width: 110px;
+        }
+
         .comparison-value .comparison-apply-btn {
             min-height: 24px;
             padding: 3px 7px;
@@ -1773,9 +1793,17 @@
 
         .comparison-table-wrap {
             width: 100%;
+            max-height: calc(100vh - 220px);
+            min-height: 240px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            overflow: visible;
+            overflow-x: auto;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .comparison-table-wrap::-webkit-scrollbar {
+            display: none;
         }
 
         .comparison-scrollbar {
@@ -1787,14 +1815,14 @@
 
         .comparison-table-viewport {
             width: 100%;
-            overflow: clip;
+            overflow: visible;
         }
 
         .comparison-scrollbar {
             position: sticky;
             top: 0;
             z-index: 3;
-            height: 17px;
+            height: 12px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border-color);
         }
@@ -1810,9 +1838,10 @@
 
         .comparison-table-viewport .diff-table th {
             position: sticky;
-            top: 17px;
-            z-index: 2;
+            top: 12px;
+            z-index: 4;
             background: var(--bg-panel);
+            box-shadow: 0 1px 0 var(--border-color);
         }
 
         .heat-input-range {
@@ -2138,17 +2167,33 @@
         let selectedFiles = new Set();
         let activeFile = -1;
         let lastSelectedSection = "segments";
-        const DEFAULT_SEGMENT_PRIORITY_ORDER = [
-            "layer_diameter", "segment_time", "pri_amp", "bkg_amp", "pri_ahc", "bkg_ahc", "pri_wire", "bkg_wire",
-            "pri_travel", "bkg_travel", "tungsten_width", "indwell", "excursion", "outdwell"
-        ];
-        let segmentPriorityOrder = [...DEFAULT_SEGMENT_PRIORITY_ORDER];
+        const SEGMENT_SORTING_CONFIG = {
+            "version": 1,
+            "segmentPriorityOrder": [
+                "layer_diameter",
+                "segment_time",
+                "pri_amp",
+                "bkg_amp",
+                "pri_ahc",
+                "bkg_ahc",
+                "pri_wire",
+                "bkg_wire",
+                "pri_travel",
+                "bkg_travel",
+                "tungsten_width",
+                "indwell",
+                "excursion",
+                "outdwell"
+            ]
+        };
+        let segmentPriorityOrder = [...SEGMENT_SORTING_CONFIG.segmentPriorityOrder];
         let hiddenFields = new Set(JSON.parse(localStorage.getItem("hiddenFields") || "[]"));
         let changeLog = JSON.parse(localStorage.getItem("scheduleEditorChangeLog") || "[]");
         let undoStack = [];
         let redoStack = [];
         let pendingEdit = null;
         let draggedFileIndex = -1;
+        let comparisonHiddenFileNames = new Set();
 
         let parameterUnits = JSON.parse(localStorage.getItem("parameterUnits") || "{}");
 
@@ -2646,28 +2691,24 @@
             return a.localeCompare(b);
         }
 
-        async function loadSegmentPriorityConfig() {
-            try {
-                const response = await fetch(new URL("segments_sorting.json", window.location.href), { cache: "no-cache" });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const config = await response.json();
-                const order = config && config.version === 1 ? config.segmentPriorityOrder : null;
-                if (!Array.isArray(order) || !order.every(field => typeof field === "string" && field.trim())) {
-                    throw new Error("Invalid segment sorting configuration");
-                }
-                segmentPriorityOrder = [...new Set(order.map(field => field.trim()))];
-
-                if (activeFile < 0 || lastSelectedSection !== "segments") return;
-                const file = loadedFiles[activeFile];
-                const panelHeader = document.querySelector(".segment-panel .panel-header");
-                const selectedIndex = panelHeader ? Number(panelHeader.textContent.replace("Segment ", "")) : 0;
-                const selectedSegment = file?.sections.segments.find((segment, index) =>
-                    Number(segment.getAttribute("index") || index) === selectedIndex
-                );
-                if (selectedSegment) renderSegment(selectedSegment);
-            } catch (error) {
-                console.warn("Using default segment field order:", error.message);
+        function loadSegmentPriorityConfig() {
+            const order = SEGMENT_SORTING_CONFIG && SEGMENT_SORTING_CONFIG.version === 1
+                ? SEGMENT_SORTING_CONFIG.segmentPriorityOrder
+                : null;
+            if (!Array.isArray(order) || !order.every(field => typeof field === "string" && field.trim())) {
+                console.warn("Using default segment field order: Invalid segment sorting configuration");
+                return;
             }
+            segmentPriorityOrder = [...new Set(order.map(field => field.trim()))];
+
+            if (activeFile < 0 || lastSelectedSection !== "segments") return;
+            const file = loadedFiles[activeFile];
+            const panelHeader = document.querySelector(".segment-panel .panel-header");
+            const selectedIndex = panelHeader ? Number(panelHeader.textContent.replace("Segment ", "")) : 0;
+            const selectedSegment = file?.sections.segments.find((segment, index) =>
+                Number(segment.getAttribute("index") || index) === selectedIndex
+            );
+            if (selectedSegment) renderSegment(selectedSegment);
         }
 
         /* FILE LOADING */
@@ -3177,6 +3218,7 @@
             });
 
             table.appendChild(tbody); body.appendChild(table); panel.appendChild(header); panel.appendChild(body); content.appendChild(panel);
+            applyTableSearch();
         }
 
         /* SEGMENTS */
@@ -3229,6 +3271,7 @@
             });
             list.appendChild(body); content.appendChild(list);
             if (file.sections.segments.length > 0) renderSegment(file.sections.segments[0]);
+            applyTableSearch();
         }
 
         function renderSegmentVisualization(file, container, weldTimeSummary) {
@@ -3497,6 +3540,7 @@
             });
 
             table.appendChild(tbody); body.appendChild(table); panel.appendChild(header); panel.appendChild(body); content.appendChild(panel);
+            applyTableSearch();
         }
 
         function renderHeatInput() {
@@ -3525,11 +3569,6 @@
 
             const body = document.createElement("div");
             body.className = "panel-content open";
-            const formula = document.createElement("div");
-            formula.className = "heat-input-formula";
-            formula.innerHTML = 'Q = <span class="heat-input-formula-fraction"><span class="heat-input-formula-numerator">0,6 × (<span class="heat-input-formula-term">U<sub>bkg</sub> × I<sub>bkg</sub> × excursion</span><span class="heat-input-formula-term">+ U<sub>pri</sub> × I<sub>pri</sub> × (indwell + outdwell)</span>)</span><span class="heat-input-formula-denominator">1000 × (<span class="heat-input-formula-term">v<sub>bkg</sub> × excursion</span><span class="heat-input-formula-term">+ v<sub>pri</sub> × (indwell + outdwell)</span>)</span></span>';
-            body.appendChild(formula);
-
             const table = document.createElement("table");
             const thead = document.createElement("thead");
             thead.innerHTML = "<tr><th>Segment</th><th>Mittelstrom (A)</th><th>Vorschub (mm/min)</th><th>Heat Input (kJ/mm)</th><th>Min (kJ/mm)</th><th>Max (kJ/mm)</th></tr>";
@@ -3893,17 +3932,136 @@
             });
         }
 
+        function formatComparisonValue(parameter, value) {
+            const number = parseFloat(value);
+            if (!Number.isFinite(number)) return value || "-";
+            const places = getDecimalPlaces(value);
+            const mode = parameterUnits[parameter] || "none";
+
+            if (parameter === "tungsten_width" && mode === "degree") {
+                const r = 0.2;
+                const ratio = number / (2 * r);
+                const degrees = ratio > 1 ? 180 : ratio < -1 ? -180 : 2 * Math.asin(ratio) * (180 / Math.PI);
+                return `${degrees.toFixed(2)} °`;
+            }
+            if (mode === "mm") return `${(number * 25.4).toFixed(2)} mm`;
+            if (mode === "cmmin") return `${(number * 2.54).toFixed(2)} cm/min`;
+            if (mode === "in") return `${number.toFixed(places)} in`;
+            if (mode === "ampere") return `${number.toFixed(places)} A`;
+            if (mode === "volt") return `${number.toFixed(places)} V`;
+            if (mode === "seconds") return `${number.toFixed(places)} s`;
+            if (mode === "degree") return `${number.toFixed(places)} °`;
+            return number.toFixed(places);
+        }
+
+        function parseComparisonValue(parameter, inputValue) {
+            const mode = parameterUnits[parameter] || "none";
+            const numericText = inputValue.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
+            const number = parseFloat(numericText);
+            if (!Number.isFinite(number)) return null;
+
+            if (parameter === "tungsten_width" && mode === "degree") {
+                const r = 0.2;
+                return 2 * r * Math.sin((number * Math.PI) / 360);
+            }
+            if (mode === "mm") return number / 25.4;
+            if (mode === "cmmin") return number / 2.54;
+            return number;
+        }
+
+        function updateComparisonValue(file, entry, input) {
+            const node = findComparisonNode(file, entry);
+            if (!node) return;
+            const parsedValue = parseComparisonValue(entry.parameter, input.value);
+            if (parsedValue === null) {
+                input.value = formatComparisonValue(entry.parameter, node.textContent);
+                return;
+            }
+            const places = getDecimalPlaces(node.textContent);
+            const oldValue = node.textContent;
+            const newValue = parsedValue.toFixed(places);
+            if (oldValue === newValue) return;
+
+            recordHistoryAction("Edit comparison value", () => {
+                node.textContent = newValue;
+                updateChangeLogEntry({
+                    fileIndex: loadedFiles.indexOf(file),
+                    fileName: file.name,
+                    sectionName: entry.sectionName,
+                    key: entry.parameter,
+                    segmentIndex: entry.segmentIndex,
+                    oldValue,
+                    newValue
+                });
+                updateChangeCounter();
+                renderComparison();
+            });
+        }
+
         function renderComparison() {
             commitPendingEdit();
             document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
             document.getElementById("compareBtn").classList.add("active");
             const content = document.getElementById("content");
-            content.innerHTML = "<h2>Schedule Comparison</h2>";
+            content.innerHTML = "";
 
-            const filesToCompare = loadedFiles;
+            const heading = document.createElement("h2");
+            heading.textContent = "Schedule Comparison";
+            content.appendChild(heading);
+
+            loadedFiles.forEach(file => {
+                if (!comparisonHiddenFileNames.has(file.name) && !comparisonHiddenFileNames.has(String(loadedFiles.indexOf(file)))) {
+                    return;
+                }
+            });
+
+            const fileControls = document.createElement("div");
+            fileControls.className = "comparison-file-controls";
+            loadedFiles.forEach(file => {
+                const label = document.createElement("label");
+                label.className = "comparison-file-control";
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = !comparisonHiddenFileNames.has(file.name);
+                checkbox.onchange = () => {
+                    if (checkbox.checked) comparisonHiddenFileNames.delete(file.name);
+                    else comparisonHiddenFileNames.add(file.name);
+                    renderComparison();
+                };
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(file.name));
+                fileControls.appendChild(label);
+            });
+
+            if (loadedFiles.length > 0) {
+                const showAll = document.createElement("button");
+                showAll.type = "button";
+                showAll.className = "btn-secondary";
+                showAll.textContent = "Show all";
+                showAll.onclick = () => { comparisonHiddenFileNames.clear(); renderComparison(); };
+                fileControls.appendChild(showAll);
+
+                const hideAll = document.createElement("button");
+                hideAll.type = "button";
+                hideAll.className = "btn-secondary";
+                hideAll.textContent = "Hide all";
+                hideAll.onclick = () => {
+                    comparisonHiddenFileNames = new Set(loadedFiles.map(file => file.name));
+                    renderComparison();
+                };
+                fileControls.appendChild(hideAll);
+            }
+            content.appendChild(fileControls);
+
+            const filesToCompare = loadedFiles.filter(file => !comparisonHiddenFileNames.has(file.name));
 
             if (filesToCompare.length < 2) {
-                content.innerHTML += "<p style='color: var(--text-muted);'>Please load at least two files to compare them.</p>";
+                const message = document.createElement("p");
+                message.style.color = "var(--text-muted)";
+                message.textContent = filesToCompare.length === 0
+                    ? "Please show at least two files to compare them."
+                    : "Please show at least one more file to compare them.";
+                content.appendChild(message);
                 return;
             }
 
@@ -3911,49 +4069,75 @@
             const keys = [...new Set(entryMaps.flatMap(map => [...map.keys()]))].sort();
             const table = document.createElement("table");
             table.className = "diff-table";
-            table.innerHTML = `<tr><th>Parameter</th>${filesToCompare.map(file => `<th>${file.name}</th>`).join("")}<th>Status</th></tr>`;
+
+            const headerRow = document.createElement("tr");
+            ["Status", "Parameter", ...filesToCompare.map(file => file.name)].forEach(text => {
+                const th = document.createElement("th");
+                th.textContent = text;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
 
             keys.forEach(key => {
                 const baseEntry = entryMaps.find(map => map.has(key))?.get(key);
                 if (!baseEntry || hiddenFields.has(baseEntry.parameter)) return;
                 const row = document.createElement("tr");
-                const nameCell = document.createElement("td");
-                nameCell.textContent = key;
-                if (importantFields.has(baseEntry.parameter)) nameCell.classList.add("important-name");
-                row.appendChild(nameCell);
-
-                const values = filesToCompare.map((file, index) => String(entryMaps[index].get(key)?.value ?? ""));
-                const unique = [...new Set(values)];
+                const rawValues = filesToCompare.map((file, index) => entryMaps[index].get(key)?.value ?? "");
+                const unique = [...new Set(rawValues.map(value => formatComparisonValue(baseEntry.parameter, value)))];
                 const status = unique.length <= 1 ? "Same" : "Different";
-
-                values.forEach((value, valueIndex) => {
-                    const valueCell = document.createElement("td");
-                    const valueWrap = document.createElement("div");
-                    valueWrap.className = "comparison-value";
-                    const valueText = document.createElement("span");
-                    valueText.textContent = value || "-";
-                    valueWrap.appendChild(valueText);
-                    if (status === "Different" && entryMaps[valueIndex].has(key) && filesToCompare.length > 1) {
-                        const transferButton = document.createElement("button");
-                        transferButton.type = "button";
-                        transferButton.className = "comparison-apply-btn";
-                        transferButton.textContent = "Apply to all";
-                        transferButton.title = `Apply ${filesToCompare[valueIndex].name}'s value to all loaded files`;
-                        transferButton.onclick = () => applyComparisonValueToAll(
-                            filesToCompare[valueIndex],
-                            loadedFiles.filter(file => file !== filesToCompare[valueIndex]),
-                            entryMaps[valueIndex].get(key)
-                        );
-                        valueWrap.appendChild(transferButton);
-                    }
-                    valueCell.appendChild(valueWrap);
-                    row.appendChild(valueCell);
-                });
 
                 const diffCell = document.createElement("td");
                 diffCell.textContent = status;
                 diffCell.className = `diff-status ${status === "Same" ? "same" : ""}`.trim();
                 row.appendChild(diffCell);
+
+                const nameCell = document.createElement("td");
+                nameCell.textContent = key;
+                if (importantFields.has(baseEntry.parameter)) nameCell.classList.add("important-name");
+                row.appendChild(nameCell);
+
+                filesToCompare.forEach((file, valueIndex) => {
+                    const valueEntry = entryMaps[valueIndex].get(key);
+                    const valueCell = document.createElement("td");
+                    const valueWrap = document.createElement("div");
+                    valueWrap.className = "comparison-value";
+
+                    if (valueEntry) {
+                        const input = document.createElement("input");
+                        input.type = "text";
+                        input.className = "comparison-edit-input";
+                        input.value = formatComparisonValue(baseEntry.parameter, valueEntry.value);
+                        input.onchange = () => updateComparisonValue(file, valueEntry, input);
+                        input.onkeydown = event => {
+                            if (event.key === "Enter") input.blur();
+                            if (event.key === "Escape") {
+                                input.value = formatComparisonValue(baseEntry.parameter, valueEntry.value);
+                                input.blur();
+                            }
+                        };
+                        valueWrap.appendChild(input);
+
+                        if (status === "Different") {
+                            const transferButton = document.createElement("button");
+                            transferButton.type = "button";
+                            transferButton.className = "comparison-apply-btn";
+                            transferButton.textContent = "Apply to all";
+                            transferButton.title = `Apply ${file.name}'s value to all visible files`;
+                            transferButton.onclick = () => applyComparisonValueToAll(
+                                file,
+                                filesToCompare.filter(targetFile => targetFile !== file),
+                                valueEntry
+                            );
+                            valueWrap.appendChild(transferButton);
+                        }
+                    } else {
+                        valueWrap.textContent = "-";
+                    }
+
+                    valueCell.appendChild(valueWrap);
+                    row.appendChild(valueCell);
+                });
+
                 table.appendChild(row);
             });
 
@@ -3972,9 +4156,12 @@
             comparisonTableWrap.appendChild(comparisonTableViewport);
 
             requestAnimationFrame(() => {
-                comparisonScrollbarInner.style.width = `${comparisonTableViewport.scrollWidth}px`;
+                comparisonScrollbarInner.style.width = `${table.scrollWidth}px`;
                 comparisonScrollbar.onscroll = () => {
-                    table.style.transform = `translateX(-${comparisonScrollbar.scrollLeft}px)`;
+                    comparisonTableWrap.scrollLeft = comparisonScrollbar.scrollLeft;
+                };
+                comparisonTableWrap.onscroll = () => {
+                    comparisonScrollbar.scrollLeft = comparisonTableWrap.scrollLeft;
                 };
             });
             content.appendChild(comparisonTableWrap);
@@ -4382,14 +4569,16 @@
             updateChangeCounter();
         }
 
-        document.getElementById("searchBox").oninput = (e) => {
-            const term = e.target.value.toLowerCase();
+        function applyTableSearch() {
+            const term = document.getElementById("searchBox").value.toLowerCase();
             document.querySelectorAll("table tr").forEach(tr => {
                 if (tr.parentElement.tagName !== "THEAD" && tr.firstElementChild.tagName !== "TH") {
                     tr.style.display = tr.innerText.toLowerCase().includes(term) ? "" : "none";
                 }
             });
-        };
+        }
+
+        document.getElementById("searchBox").oninput = applyTableSearch;
 
         window.addEventListener("beforeunload", e => { if (changeCount > 0) { e.preventDefault(); e.returnValue = ""; } });
 

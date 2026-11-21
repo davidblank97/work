@@ -1,19 +1,19 @@
 {
-  "version": 1,
-  "segmentPriorityOrder": [
-    "layer_diameter",
-    "segment_time",
-    "pri_amp",
-    "bkg_amp",
-    "pri_ahc",
-    "bkg_ahc",
-    "pri_wire",
-    "bkg_wire",
-    "pri_travel",
-    "bkg_travel",
-    "tungsten_width",
-    "indwell",
-    "excursion",
-    "outdwell"
-  ]
+    "version": 1,
+    "segmentPriorityOrder": [
+        "layer_diameter",
+        "segment_time",
+        "pri_amp",
+        "bkg_amp",
+        "pri_ahc",
+        "bkg_ahc",
+        "pri_wire",
+        "bkg_wire",
+        "pri_travel",
+        "bkg_travel",
+        "tungsten_width",
+        "indwell",
+        "excursion",
+        "outdwell"
+    ]
 }
