@@ -5568,12 +5568,6 @@
             plot.className = "heat-chart-plot";
             plot.append(svg, tooltip);
             wrap.appendChild(plot);
-            if (entriesByFile.every(group => group.limitLow === null && group.limitHigh === null)) {
-                const note = document.createElement("div");
-                note.className = "heat-chart-note";
-                note.textContent = "No heat input limits set in <limits> (heat_input_fault_low/high).";
-                wrap.appendChild(note);
-            }
             container.appendChild(wrap);
         }
 
@@ -5634,12 +5628,6 @@
 
             const panel = document.createElement("div");
             panel.className = "panel";
-            const header = document.createElement("div");
-            header.className = "panel-header";
-            header.textContent = loadedFiles.length > 1
-                ? `${visibleFiles.length} of ${loadedFiles.length} files shown`
-                : loadedFiles[0].name;
-            panel.appendChild(header);
             const body = document.createElement("div");
             body.className = "panel-content open";
 
@@ -5724,12 +5712,12 @@
                     activeBadge.textContent = "active";
                     fileCell.appendChild(activeBadge);
                 }
-                const limitInfo = document.createElement("span");
-                limitInfo.className = "heat-file-limits";
-                limitInfo.textContent = group.limitLow === null && group.limitHigh === null
-                    ? "no limits set"
-                    : `limits ${group.limitLow ?? "–"} – ${group.limitHigh ?? "–"} kJ/mm`;
-                fileCell.appendChild(limitInfo);
+                if (group.limitLow !== null || group.limitHigh !== null) {
+                    const limitInfo = document.createElement("span");
+                    limitInfo.className = "heat-file-limits";
+                    limitInfo.textContent = `limits ${group.limitLow ?? "–"} – ${group.limitHigh ?? "–"} kJ/mm`;
+                    fileCell.appendChild(limitInfo);
+                }
                 fileRow.appendChild(fileCell);
                 tbody.appendChild(fileRow);
 
