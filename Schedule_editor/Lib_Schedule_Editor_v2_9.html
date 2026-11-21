@@ -2523,6 +2523,23 @@
             font-size: 12px;
         }
 
+        .segment-seam-hint.is-warning {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .seam-split-btn {
+            min-height: 26px !important;
+            height: 26px;
+            padding: 0 10px !important;
+            font-size: 12px !important;
+        }
+
+        .segment-manual-badge {
+            border-color: #805236;
+            color: #f4a069;
+        }
+
         .segment-ring-wrap svg {
             display: block;
             width: 200px;
@@ -3237,7 +3254,10 @@
                     limits: xml.querySelector("limits"),
                     overrides: xml.querySelector("overrides"),
                     segments: [...xml.querySelectorAll("segment")]
-                }
+                },
+                // Feste Schweissnahtlaenge (Zoll) und von Hand gesetzte Segmente (Positionen).
+                seamLengthIn: sumSegmentTimeOf([...xml.querySelectorAll("segment")]),
+                manualSegments: new Set()
             };
         }
 
@@ -3254,7 +3274,9 @@
                     name: file.name,
                     xmlString: serializeXml(file.xml),
                     originalXml: file.originalXml,
-                    originalXmlString: file.originalXmlString
+                    originalXmlString: file.originalXmlString,
+                    seamLengthIn: file.seamLengthIn,
+                    manualSegments: [...file.manualSegments]
                 })),
                 selectedFiles: [...selectedFiles],
                 activeFile,
@@ -3300,13 +3322,18 @@
         }
 
         function restoreHistorySnapshot(snapshot) {
-            loadedFiles = snapshot.files.map(file => createFileRecord(
-                file.name,
-                parseXml(file.xmlString),
-                file.originalXml,
-                file.id,
-                file.originalXmlString
-            ));
+            loadedFiles = snapshot.files.map(file => {
+                const record = createFileRecord(
+                    file.name,
+                    parseXml(file.xmlString),
+                    file.originalXml,
+                    file.id,
+                    file.originalXmlString
+                );
+                if (Number.isFinite(file.seamLengthIn)) record.seamLengthIn = file.seamLengthIn;
+                record.manualSegments = new Set(file.manualSegments || []);
+                return record;
+            });
             selectedFiles = new Set(snapshot.selectedFiles);
             activeFile = snapshot.activeFile;
             lastSelectedSection = snapshot.lastSelectedSection;
@@ -4033,6 +4060,8 @@
             }
 
             input.dataset.originalValue = child.textContent;
+            input.dataset.valueAtFocus = child.textContent;
+            input.addEventListener("focus", () => { input.dataset.valueAtFocus = child.textContent; });
             const savedValue = getSavedValue(sectionName, segmentIndex, key);
             input.dataset.hasSavedValue = savedValue === null ? "0" : "1";
             input.dataset.savedValue = savedValue ?? "";
@@ -4080,7 +4109,18 @@
                     child.textContent = currentInchValue.toFixed(originalPlaces);
                     registerChange(input, input.dataset.originalValue, child.textContent);
                     propagateValueToSelectedFiles(sectionName, key, child.textContent);
+                    let rebalanceMessage = "";
+                    if (key === "segment_time" && sectionName === "segments" && child.textContent !== input.dataset.valueAtFocus) {
+                        const file = loadedFiles[activeFile];
+                        const position = file ? file.sections.segments.findIndex(segment => segment.getAttribute("index") === segmentIndex) : -1;
+                        if (file) rebalanceMessage = rebalanceAfterManualEdit(file, position);
+                        input.dataset.valueAtFocus = child.textContent;
+                        const visualization = document.querySelector(".segment-visualization");
+                        const weldTimeSummary = document.querySelector(".segment-weld-time-summary");
+                        if (file && visualization && weldTimeSummary) renderSegmentVisualization(file, visualization, weldTimeSummary);
+                    }
                     commitPendingEdit();
+                    if (rebalanceMessage) document.getElementById("status").textContent = rebalanceMessage;
                     // Hinweis, wenn die Eingabe auf das Format der Datei gerundet wurde.
                     if (!isConvertedUnit && Number(child.textContent) !== parsed) {
                         document.getElementById("status").textContent =
@@ -4336,13 +4376,36 @@
             seamInput.id = "seamLengthInput";
             seamInput.className = "seam-length-input";
             seamInput.inputMode = "decimal";
-            const currentSeamMm = totalLengthIn * 25.4;
+            const currentSeamMm = getSeamLength(file) * 25.4;
             seamInput.value = currentSeamMm > 0 ? String(Number(currentSeamMm.toFixed(2))) : "";
             seamInput.placeholder = "e.g. 2400";
             seamInput.title = "Enter the total weld seam length; it is split evenly into segment_time of all segments.";
             const seamHint = document.createElement("div");
             seamHint.className = "segment-seam-hint";
-            seamHint.textContent = `${segments.length} segment${segments.length === 1 ? "" : "s"} × ${formatNumber(currentSeamMm / segments.length, 1)} mm`;
+            const segmentsTotalMm = totalLengthIn * 25.4;
+            const mismatch = Math.abs(segmentsTotalMm - currentSeamMm) > 0.05;
+            const customSplit = file.manualSegments.size > 0;
+            if (mismatch) {
+                seamHint.classList.add("is-warning");
+                seamHint.textContent = `Segments total ${formatNumber(segmentsTotalMm, 1)} mm ≠ seam length`;
+            } else if (customSplit) {
+                seamHint.textContent = `Custom split · ${segments.length} segments`;
+            } else {
+                seamHint.textContent = `${segments.length} segment${segments.length === 1 ? "" : "s"} × ${formatNumber(currentSeamMm / segments.length, 1)} mm`;
+            }
+            const splitEvenlyBtn = document.createElement("button");
+            splitEvenlyBtn.type = "button";
+            splitEvenlyBtn.className = "btn-secondary seam-split-btn";
+            splitEvenlyBtn.textContent = "Split evenly";
+            splitEvenlyBtn.title = "Distribute the weld seam length evenly over all segments again";
+            splitEvenlyBtn.hidden = !(mismatch || customSplit);
+            splitEvenlyBtn.onclick = () => {
+                recordHistoryAction("Split weld seam evenly", () => {
+                    distributeSeamLength(file, getSeamLength(file));
+                    renderSegmentList(file);
+                });
+                document.getElementById("status").textContent = `Weld seam length split evenly into ${segments.length} segment(s).`;
+            };
             seamInput.oninput = () => {
                 const mm = parseNumberInput(seamInput.value);
                 seamHint.textContent = mm > 0
@@ -4372,7 +4435,7 @@
                 document.getElementById("status").textContent =
                     `Weld seam length ${formatNumber(mm, 2)} mm split into ${segments.length} segment(s) of ${formatNumber(mm / segments.length, 2)} mm.`;
             };
-            seamBox.append(seamLabel, seamInput, seamHint);
+            seamBox.append(seamLabel, seamInput, seamHint, splitEvenlyBtn);
 
             // --- Wertetabelle / Segmentliste ---
             const table = document.createElement("table");
@@ -4415,6 +4478,13 @@
                     const badge = document.createElement("span");
                     badge.className = "segment-disabled-badge";
                     badge.textContent = "disabled";
+                    nameCell.appendChild(badge);
+                }
+                if (file.manualSegments.has(index)) {
+                    const badge = document.createElement("span");
+                    badge.className = "segment-disabled-badge segment-manual-badge";
+                    badge.textContent = "manual";
+                    badge.title = "segment_time set manually; other segments adjust to keep the weld seam length";
                     nameCell.appendChild(badge);
                 }
                 row.appendChild(nameCell);
@@ -4487,19 +4557,70 @@
             return (Number.isFinite(index) ? index : fallbackIndex) + 1;
         }
 
+        function readSegmentTime(segment) {
+            const node = [...segment.children].find(child => child.tagName === "segment_time");
+            const value = Number(node?.textContent);
+            return Number.isFinite(value) && value > 0 ? value : 0;
+        }
+
         // Summe aller segment_time-Werte (Schweissnahtlaenge in Zoll).
+        function sumSegmentTimeOf(segments) {
+            return segments.reduce((sum, segment) => sum + readSegmentTime(segment), 0);
+        }
+
         function sumSegmentTime(file) {
-            return file.sections.segments.reduce((sum, segment) => {
-                const node = [...segment.children].find(child => child.tagName === "segment_time");
-                const value = Number(node?.textContent);
-                return sum + (Number.isFinite(value) && value > 0 ? value : 0);
-            }, 0);
+            return sumSegmentTimeOf(file.sections.segments);
+        }
+
+        // Feste Nahtlaenge der Datei (Zoll); Fallback: aktuelle Summe.
+        function getSeamLength(file) {
+            return file.seamLengthIn > 0 ? file.seamLengthIn : sumSegmentTime(file);
+        }
+
+        function setSegmentTime(file, segment, value, changes) {
+            const node = [...segment.children].find(child => child.tagName === "segment_time");
+            if (!node) return;
+            const places = getDecimalPlaces(node.textContent.trim()) || 6;
+            const oldValue = node.textContent;
+            const newValue = value.toFixed(places);
+            if (oldValue === newValue) return;
+            node.textContent = newValue;
+            const fileIndex = loadedFiles.indexOf(file);
+            const segmentIndex = segment.getAttribute("index") || "";
+            updateChangeLogEntry({ fileIndex, fileName: file.name, sectionName: "segments", key: "segment_time", segmentIndex, oldValue, newValue });
+            if (changes) changes.push({ fileIndex, fileName: file.name, sectionName: "segments", key: "segment_time", segmentIndex, oldValue, newValue });
+        }
+
+        // Nach manueller Aenderung von segment_time: Nahtlaenge bleibt fest, die nicht manuell
+        // gesetzten Segmente teilen sich den Rest gleichmaessig. Rueckgabe: Statusmeldung.
+        function rebalanceAfterManualEdit(file, position) {
+            const segments = file.sections.segments;
+            if (segments.length < 2 || position < 0) return "";
+            const seam = getSeamLength(file);
+            file.manualSegments.add(position);
+            let free = segments.map((_, index) => index).filter(index => !file.manualSegments.has(index));
+            if (!free.length) {
+                // Alle anderen waren manuell: nur das gerade bearbeitete Segment bleibt fest.
+                file.manualSegments = new Set([position]);
+                free = segments.map((_, index) => index).filter(index => index !== position);
+            }
+            const fixedSum = [...file.manualSegments].reduce((sum, index) => sum + (segments[index] ? readSegmentTime(segments[index]) : 0), 0);
+            const remainder = seam - fixedSum;
+            if (remainder <= 0) {
+                return `Warning: fixed segments (${(fixedSum * 25.4).toFixed(1)} mm) reach the weld seam length (${(seam * 25.4).toFixed(1)} mm); other segments were not adjusted.`;
+            }
+            if (!pendingEdit) pendingEdit = { changes: [] };
+            const perSegment = remainder / free.length;
+            free.forEach(index => setSegmentTime(file, segments[index], perSegment, pendingEdit.changes));
+            return `Weld seam length kept at ${(seam * 25.4).toFixed(1)} mm; ${free.length} other segment(s) set to ${(perSegment * 25.4).toFixed(1)} mm.`;
         }
 
         // Verteilt die Nahtlaenge (Zoll) gleichmaessig auf alle Segmente und protokolliert die Aenderungen.
         function distributeSeamLength(file, totalInches) {
             const segments = file.sections.segments;
             if (!segments.length || !(totalInches > 0)) return;
+            file.seamLengthIn = totalInches;
+            file.manualSegments = new Set();
             const fileIndex = loadedFiles.indexOf(file);
             const perSegment = totalInches / segments.length;
             segments.forEach(segment => {
@@ -4525,7 +4646,7 @@
             if (!segments.length) return;
 
             recordHistoryAction("Add segment", () => {
-                const seamLength = sumSegmentTime(file);
+                const seamLength = getSeamLength(file);
                 const lastSeg = segments[segments.length - 1];
                 const newSeg = lastSeg.cloneNode(true);
                 const newIndex = segments.length;
@@ -4550,7 +4671,7 @@
 
         function duplicateSegment(file, segment) {
             recordHistoryAction("Duplicate segment", () => {
-                const seamLength = sumSegmentTime(file);
+                const seamLength = getSeamLength(file);
                 const copy = segment.cloneNode(true);
                 segment.parentNode.insertBefore(copy, segment.nextSibling);
                 renumberSegments(file);
@@ -4568,7 +4689,7 @@
             }
             if (!window.confirm(`Delete segment ${segmentDisplayNumber(segment)}? The weld seam length is split across the remaining segments.`)) return;
             recordHistoryAction("Delete segment", () => {
-                const seamLength = sumSegmentTime(file);
+                const seamLength = getSeamLength(file);
                 const deletedPosition = file.sections.segments.indexOf(segment);
                 if (deletedPosition < selectedSegmentPosition) selectedSegmentPosition--;
                 segment.remove();
@@ -4585,6 +4706,11 @@
             const targetIndex = currentIndex + direction;
             if (currentIndex < 0 || targetIndex < 0 || targetIndex >= segments.length) return;
             recordHistoryAction("Move segment", () => {
+                const currentManual = file.manualSegments.has(currentIndex);
+                const targetManual = file.manualSegments.has(targetIndex);
+                file.manualSegments.delete(currentIndex); file.manualSegments.delete(targetIndex);
+                if (currentManual) file.manualSegments.add(targetIndex);
+                if (targetManual) file.manualSegments.add(currentIndex);
                 const target = segments[targetIndex];
                 if (direction < 0) target.parentNode.insertBefore(segment, target);
                 else target.parentNode.insertBefore(segment, target.nextSibling);

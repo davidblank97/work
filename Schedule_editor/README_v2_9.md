@@ -77,6 +77,15 @@ Im Bereich `Segments` zeigt die Uebersicht links einen Ring (ein Umlauf = gesamt
 
 Neben dem Ring steht das Feld **Weld seam length (mm)**. Die eingegebene Schweissnahtlaenge wird gleichmaessig auf alle Segmente verteilt und (in Zoll umgerechnet) in `segment_time` eingetragen, z. B. 2400 mm bei 3 Segmenten → je 800 mm. Enter oder Verlassen des Feldes uebernimmt den Wert, Esc verwirft ihn; Dezimal-Komma ist erlaubt. Beim Hinzufuegen, Duplizieren und Loeschen eines Segments bleibt die Nahtlaenge gleich und wird automatisch neu auf alle Segmente verteilt. Alle Aenderungen erscheinen im Change Log und lassen sich rueckgaengig machen.
 
+Die eingegebene Nahtlaenge bleibt fest, auch wenn `segment_time` eines Segments von Hand geaendert wird. In diesem Fall gilt die gleichmaessige Aufteilung nicht mehr:
+
+- Das geaenderte Segment wird als `manual` markiert und bleibt fest.
+- Die uebrigen (nicht manuellen) Segmente teilen sich die Restlaenge gleichmaessig, z. B. 2400 mm, Segment 1 auf 1000 mm → Segment 2 und 3 je 700 mm. Wird danach Segment 2 auf 500 mm gesetzt, bleibt Segment 1 bei 1000 mm und Segment 3 erhaelt 900 mm.
+- Sind alle anderen Segmente bereits manuell, werden sie wieder freigegeben und gleichen die Aenderung aus.
+- Erreichen die festen Segmente die Nahtlaenge oder ueberschreiten sie sie, werden die anderen nicht angepasst; unter dem Feld erscheint eine Warnung.
+- `Split evenly` stellt die gleichmaessige Aufteilung wieder her (ebenso eine neue Eingabe im Feld sowie Hinzufuegen, Duplizieren oder Loeschen).
+- Manuelle Aenderung und Ausgleich bilden einen gemeinsamen Zurueck-Schritt.
+
 Segmente werden im Editor ab 1 nummeriert (Segment 1, 2, …). Im XML bleibt das Attribut `index` wie von der Maschine erwartet bei 0 beginnend.
 
 Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten. Das geoeffnete Segment ist in der Liste hervorgehoben und bleibt nach Duplizieren, Verschieben, Undo/Redo und Bereichswechsel ausgewaehlt; nach dem Duplizieren ist die Kopie gewaehlt.
