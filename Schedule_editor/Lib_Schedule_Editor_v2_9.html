@@ -2657,12 +2657,12 @@
         }
 
         .segment-overview-table tbody tr.active {
-            background: color-mix(in srgb, var(--segment-color, var(--accent)) 16%, transparent);
-            box-shadow: inset 3px 0 0 var(--segment-color, var(--accent));
+            background: var(--accent-soft);
+            box-shadow: inset 3px 0 0 var(--accent);
         }
 
         .segment-overview-table tbody tr.active td:first-child {
-            color: var(--segment-color, #ffb77f);
+            color: #ffb77f;
             font-weight: 700;
         }
 
@@ -2723,58 +2723,8 @@
             color: #ffc095;
         }
 
-        /* Segment-Panel in der Farbe des ausgewaehlten Segments */
-        .segment-panel {
-            --segment-color: var(--accent);
-            border-color: color-mix(in srgb, var(--segment-color) 45%, var(--border-color));
-            box-shadow: inset 4px 0 0 var(--segment-color);
-        }
-
         .segment-panel .panel-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--segment-color);
-            background: color-mix(in srgb, var(--segment-color) 16%, var(--bg-panel-2));
-            border-bottom-color: color-mix(in srgb, var(--segment-color) 40%, var(--border-color));
-        }
-
-        .segment-panel-swatch {
-            display: inline-block;
-            width: 11px;
-            height: 11px;
-            border-radius: 50%;
-            background: var(--segment-color);
-        }
-
-        .segment-panel td input:not(.changed),
-        .segment-panel td textarea:not(.changed) {
-            color: var(--segment-color);
-        }
-
-        .segment-panel td input:focus,
-        .segment-panel td textarea:focus {
-            border-color: var(--segment-color);
-            box-shadow: 0 0 0 3px color-mix(in srgb, var(--segment-color) 22%, transparent);
-        }
-
-        .segment-panel .param-table tr:hover {
-            background: color-mix(in srgb, var(--segment-color) 7%, transparent);
-        }
-
-        /* geaenderte Werte: gruener Rahmen bleibt, Text in Segmentfarbe */
-        .segment-panel td input.changed,
-        .segment-panel td textarea.changed {
-            color: var(--segment-color) !important;
-        }
-
-        .segment-panel .important-cell {
-            background: color-mix(in srgb, var(--segment-color) 10%, transparent) !important;
-        }
-
-        .segment-panel .param-table .important-name .param-name,
-        .segment-panel .param-action-btn.is-important {
-            color: var(--segment-color);
+            color: #ffb77f;
         }
 
         /* ---- Comparison / other tables: compact rows ---- */
@@ -4324,14 +4274,10 @@
             applyTableSearch();
         }
 
-        // Segmentfarben: Ring, Tabelle und Segment-Panel nutzen dieselbe Farbe je Position.
-        const SEGMENT_COLORS = ["#e87532", "#16a085", "#477bd1", "#c84d83", "#a3a82b", "#7955b5", "#d2a027", "#54747d"];
-        const segmentColor = position => SEGMENT_COLORS[Math.max(position, 0) % SEGMENT_COLORS.length];
-
         // Ring (ein Umlauf, Boegen anteilig je Segment) + Wertetabelle, die zugleich die Segmentliste ist.
         function renderSegmentVisualization(file, container, weldTimeSummary) {
             const namespace = "http://www.w3.org/2000/svg";
-            const colors = SEGMENT_COLORS;
+            const colors = ["#e87532", "#16a085", "#477bd1", "#c84d83", "#a3a82b", "#7955b5", "#d2a027", "#54747d"];
             const segments = file.sections.segments;
             const readPositiveNumber = node => {
                 if (!node || node.textContent.trim() === "") return null;
@@ -4553,7 +4499,6 @@
                 row.className = "segment-list-item" + (info.enabled ? "" : " is-disabled")
                     + (index === selectedSegmentPosition ? " active" : "");
                 row.dataset.segmentPosition = String(index);
-                row.style.setProperty("--segment-color", colors[index % colors.length]);
                 row.tabIndex = 0;
                 row.setAttribute("role", "button");
                 row.title = "Open segment";
@@ -4933,11 +4878,7 @@
             highlightSelectedSegment(content);
 
             const panel = document.createElement("div"); panel.className = "panel segment-panel";
-            const header = document.createElement("div"); header.className = "panel-header";
-            const headerSwatch = document.createElement("span");
-            headerSwatch.className = "segment-visualization-swatch segment-panel-swatch";
-            header.append(headerSwatch, document.createTextNode(`Segment ${segmentDisplayNumber(seg)}`));
-            panel.style.setProperty("--segment-color", segmentColor(selectedSegmentPosition));
+            const header = document.createElement("div"); header.className = "panel-header"; header.textContent = `Segment ${segmentDisplayNumber(seg)}`;
             const body = document.createElement("div"); body.className = "panel-content open";
             const table = document.createElement("table"); table.className = "param-table"; const tbody = document.createElement("tbody");
 
