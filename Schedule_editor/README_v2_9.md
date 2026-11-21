@@ -122,7 +122,6 @@ Vor dem Speichern oeffnet sich ein Dialog fuer einen optionalen **Revisions-Tag*
 - Checkbox `Download files` (standardmaessig an): Ist sie aus, werden die Dateien nur mit dem Tag umbenannt und nicht heruntergeladen; sie bleiben dann `Unsaved`
 
 - Bei mehreren Dateien wird ein ZIP-Archiv erstellt.
-- Das Archiv enthaelt zusaetzlich `batch_change_log.txt` mit dem Revisions-Tag und den in dieser Sitzung protokollierten Aenderungen der gespeicherten Dateien.
 - Bei nur einer Zieldatei wird eine einzelne XML-Datei heruntergeladen.
 
 ## Tools
@@ -146,7 +145,7 @@ Die Anzeige in der Kopfzeile nennt die Zahl ungespeicherter Dateien. Beim Schlie
 
 ## Lokale Einstellungen
 
-Ausgeblendete Parameter, wichtige Parameter, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll bleibt ueber Sitzungen erhalten; in das Batch-Log fliessen aber nur Aenderungen der aktuell geladenen Dateien ein. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
+Ausgeblendete Parameter, wichtige Parameter, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll (`Tools > Change Log`) bleibt ueber Sitzungen erhalten. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
 
 Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Nicht passende oder fehlerhafte XML-Dateien werden beim Laden abgewiesen.
 

@@ -2243,7 +2243,7 @@
                     <button id="saveAsBtn" class="btn-secondary" type="button" disabled
                         title="Save the active file under a new name (Ctrl+Shift+S)">Save As…</button>
                     <button id="batchSaveBtn" class="batch-save-btn" type="button" disabled
-                        title="Save selected files with an optional revision tag (ZIP with change log for several files)">Batch Save…</button>
+                        title="Save selected files with an optional revision tag (ZIP for several files)">Batch Save…</button>
                 </div>
             </div>
         </div>
@@ -2353,7 +2353,7 @@
                         An optional revision tag (e.g. <code>Rev1</code>) is appended to every file name
                         (<code>Name_Rev1.xml</code>); an existing <code>_Rev…</code> suffix is replaced and the files
                         are renamed in the editor.
-                        Several files are saved as a ZIP archive with a change log.</li>
+                        Several files are saved as a ZIP archive.</li>
                     <li><strong>Revert:</strong> reset all loaded files to the last saved state.</li>
                 </ul>
 
@@ -4086,35 +4086,6 @@
             if (document.querySelector("#content .file-title-container")) showSection(lastSelectedSection);
         }
 
-        function buildBatchChangeLogText(filesToSave) {
-            const savedIds = new Set(filesToSave.map(file => file.id));
-            const matchingEntries = changeLog.filter(entry => savedIds.has(entry.fileId));
-
-            if (!matchingEntries.length) {
-                return [
-                    "Batch Save Change Log",
-                    `Saved files: ${filesToSave.length}`,
-                    "No tracked file changes found for this batch.",
-                    ""
-                ].join("\n");
-            }
-
-            const lines = [
-                "Batch Save Change Log",
-                `Generated: ${new Date().toISOString()}`,
-                `Saved files: ${filesToSave.length}`,
-                ""
-            ];
-
-            matchingEntries.forEach(entry => {
-                lines.push(
-                    `[${new Date(entry.timestamp).toLocaleString()}] ${entry.fileName} | ${entry.section} | ${entry.key} | ${entry.oldValue || "-"} -> ${entry.newValue || "-"}`
-                );
-            });
-
-            return lines.join("\n");
-        }
-
         function saveActiveFile() {
             commitPendingEdit();
             const file = loadedFiles[activeFile];
@@ -4185,14 +4156,12 @@
             if (window.JSZip && targetFiles.length > 1) {
                 const zip = new JSZip();
                 targetFiles.forEach(file => zip.file(ensureXmlExtension(file.name), serializeXml(file.xml)));
-                const logText = buildBatchChangeLogText(targetFiles);
-                zip.file("batch_change_log.txt", cleanTag ? `Revision: ${cleanTag}\n${logText}` : logText);
 
                 zip.generateAsync({ type: "blob" }).then(blob => {
                     const zipName = `schedule_batch_export_${new Date().toISOString().replace(/[:.]/g, "-")}.zip`;
                     triggerDownload(zipName, blob);
                     markFilesSaved(targetFiles);
-                    document.getElementById("status").textContent = `${targetFiles.length} file(s) saved as ZIP archive with change log.`;
+                    document.getElementById("status").textContent = `${targetFiles.length} file(s) saved as ZIP archive.`;
                 }).catch(error => {
                     document.getElementById("status").textContent = `Batch save failed: ${error.message}`;
                 });
