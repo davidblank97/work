@@ -2622,6 +2622,77 @@
             gap: 6px;
         }
 
+        .heat-grid-minor {
+            stroke-opacity: 0.45;
+        }
+
+        .heat-target-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 14px;
+            margin: 2px 0 10px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .heat-target-caption {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .heat-target-caption::before {
+            content: "";
+            width: 14px;
+            height: 0;
+            border-top: 2px solid var(--danger);
+        }
+
+        .heat-target-field {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .heat-target-field input {
+            width: 70px;
+            height: 28px;
+            box-sizing: border-box;
+            padding: 3px 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            color: var(--text-main);
+            font: inherit;
+            text-align: right;
+        }
+
+        .heat-target-field input:focus {
+            outline: none;
+            border-color: var(--danger);
+            box-shadow: 0 0 0 3px rgba(240, 120, 120, 0.15);
+        }
+
+        .heat-target-clear {
+            min-height: 26px !important;
+            height: 26px;
+            padding: 0 10px !important;
+            font-size: 12px !important;
+        }
+
+        .heat-target-line {
+            stroke: var(--danger);
+            stroke-width: 2;
+        }
+
+        .heat-target-label {
+            fill: var(--text-main);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
         .heat-group-divider {
             stroke: var(--border-strong);
             stroke-width: 1;
@@ -3221,7 +3292,7 @@
                     <li><strong>Heat Input:</strong> heat input per segment with efficiency η = 0.6 (background values
                         during excursion, primary values during indwell/outdwell); min/max from the percentage
                         overrides. A chart shows the min–max range and nominal value per segment, with the heat input limits
-                        from &lt;limits&gt; as dashed lines.</li>
+                        from &lt;limits&gt; as dashed lines. Enter a target Min/Max to draw red reference lines.</li>
                     <li><strong>Hidden Parameters:</strong> restore hidden parameters.</li>
                     <li><strong>Change Log:</strong> show recorded changes.</li>
                     <li><strong>XML Viewer:</strong> read-only XML of the active file; with a saved XDR schema, missing
@@ -5172,6 +5243,98 @@
             return Number.isFinite(value) && value > 0 && value < 9999 ? value : null;
         }
 
+        // Ziel-Bereich fuer den Heat Input (Benutzereingabe Min/Max, im Browser gespeichert).
+        const HEAT_TARGET_KEY = "scheduleEditorHeatInputTarget";
+
+        function readHeatInputTarget() {
+            const stored = readStoredJson(HEAT_TARGET_KEY, {});
+            const parse = value => {
+                if (value === undefined || String(value).trim() === "") return null;
+                const number = parseNumberInput(value);
+                return Number.isFinite(number) && number >= 0 ? number : null;
+            };
+            return { min: parse(stored.min), max: parse(stored.max) };
+        }
+
+        function buildHeatTargetControls(target) {
+            const box = document.createElement("div");
+            box.className = "heat-target-controls";
+            const caption = document.createElement("span");
+            caption.className = "heat-target-caption";
+            caption.textContent = "Target range (red lines)";
+            box.appendChild(caption);
+            const inputs = {};
+            [["min", "Min"], ["max", "Max"]].forEach(([key, labelText]) => {
+                const label = document.createElement("label");
+                label.className = "heat-target-field";
+                label.textContent = labelText;
+                const input = document.createElement("input");
+                input.type = "text";
+                input.inputMode = "decimal";
+                input.id = `heatTarget${labelText}`;
+                input.placeholder = "–";
+                input.value = target[key] === null ? "" : String(target[key]);
+                input.onkeydown = event => {
+                    if (event.key === "Enter") { event.preventDefault(); input.blur(); }
+                };
+                input.onchange = () => applyHeatTargetInputs(inputs, target);
+                label.appendChild(input);
+                inputs[key] = input;
+                box.appendChild(label);
+            });
+            const unit = document.createElement("span");
+            unit.className = "heat-target-unit";
+            unit.textContent = "kJ/mm";
+            box.appendChild(unit);
+            if (target.min !== null || target.max !== null) {
+                const clear = document.createElement("button");
+                clear.type = "button";
+                clear.className = "btn-secondary heat-target-clear";
+                clear.textContent = "Clear";
+                clear.onclick = () => {
+                    try { localStorage.removeItem(HEAT_TARGET_KEY); } catch (error) { /* ignore */ }
+                    renderHeatInput();
+                };
+                box.appendChild(clear);
+            }
+            return box;
+        }
+
+        function applyHeatTargetInputs(inputs, previous) {
+            const parse = text => {
+                if (String(text).trim() === "") return { value: null, ok: true };
+                const number = parseNumberInput(text);
+                return { value: number, ok: Number.isFinite(number) && number >= 0 };
+            };
+            const min = parse(inputs.min.value);
+            const max = parse(inputs.max.value);
+            const status = document.getElementById("status");
+            const revert = () => {
+                inputs.min.value = previous.min === null ? "" : String(previous.min);
+                inputs.max.value = previous.max === null ? "" : String(previous.max);
+            };
+            if (!min.ok || !max.ok) {
+                status.textContent = "Please enter heat input values >= 0 (kJ/mm).";
+                revert();
+                return;
+            }
+            if (min.value !== null && max.value !== null && min.value >= max.value) {
+                status.textContent = "Target min must be smaller than target max.";
+                revert();
+                return;
+            }
+            try {
+                localStorage.setItem(HEAT_TARGET_KEY, JSON.stringify({
+                    min: min.value === null ? "" : String(min.value),
+                    max: max.value === null ? "" : String(max.value)
+                }));
+            } catch (error) {
+                console.warn("Could not store the heat input target range.", error);
+            }
+            status.textContent = "Heat input target range updated.";
+            renderHeatInput();
+        }
+
         // Ein gemeinsames Diagramm fuer alle Dateien: x-Achse nach Datei gruppiert, je Segment Balken
         // Min->Max (Override-Grenzen) und Punkt fuer den Nominalwert; Grenzwerte je Datei-Gruppe.
         function renderHeatInputChart(entriesByFile, container) {
@@ -5185,6 +5348,8 @@
             title.className = "heat-chart-title";
             title.textContent = "Heat input per segment (kJ/mm) — bar: min–max from overrides, dot: nominal";
             wrap.appendChild(title);
+            const target = readHeatInputTarget();
+            wrap.appendChild(buildHeatTargetControls(target));
 
             // Keine separate Legende: jede Zeile traegt Farbpunkt und Segmentnamen direkt.
 
@@ -5199,11 +5364,16 @@
 
             // Skala (x): 0 bis Maximum (inkl. Grenzwerte), auf "schoene" Schritte gerundet.
             const limitValues = entriesByFile.flatMap(group => [group.limitLow, group.limitHigh]).filter(value => value !== null);
-            const rawMax = Math.max(...valid.map(entry => entry.result.maxHeatInput), ...limitValues) * 1.1;
-            const rough = rawMax / 6;
-            const magnitude = 10 ** Math.floor(Math.log10(rough));
-            const step = [1, 2, 2.5, 5, 10].map(f => f * magnitude).find(s => s >= rough);
-            const xMax = Math.ceil(rawMax / step) * step;
+            const targetValues = [target.min, target.max].filter(value => value !== null);
+            const rawMax = Math.max(...valid.map(entry => entry.result.maxHeatInput), ...limitValues, ...targetValues) * 1.1;
+            // Gitter in 0,1-Schritten (bei sehr grossen Werten groeber, damit es lesbar bleibt).
+            let step = 0.1;
+            if (rawMax / step > 60) {
+                const rough = rawMax / 6;
+                const magnitude = 10 ** Math.floor(Math.log10(rough));
+                step = [1, 2, 2.5, 5, 10].map(f => f * magnitude).find(s => s >= rough);
+            }
+            const xMax = Math.ceil(rawMax / step - 1e-9) * step;
 
             // Horizontal: je Segment eine Zeile, nach Datei gruppiert; Hoehe waechst mit der Zeilenzahl.
             const contentWidth = document.getElementById("content")?.clientWidth || 760;
@@ -5211,7 +5381,7 @@
             const rowHeight = 28;
             const groupHeaderHeight = entriesByFile.length > 1 ? 24 : 0;
             const groupGap = entriesByFile.length > 1 ? 10 : 0;
-            const margin = { top: 12, right: 24, bottom: 30, left: 100 };
+            const margin = { top: targetValues.length ? 24 : 12, right: 24, bottom: 30, left: 100 };
             const plotH = entriesByFile.reduce((sum, group) => sum + groupHeaderHeight + group.entries.length * rowHeight, 0)
                 + groupGap * (entriesByFile.length - 1);
             const height = margin.top + plotH + margin.bottom;
@@ -5233,13 +5403,28 @@
 
             // Gitter + x-Achse (zurueckhaltend)
             const axisY = margin.top + plotH;
-            for (let value = 0; value <= xMax + 1e-9; value += step) {
-                make("line", { x1: x(value), x2: x(value), y1: margin.top, y2: axisY, class: value === 0 ? "heat-axis" : "heat-grid" });
-                const label = make("text", { x: x(value), y: axisY + 16, class: "heat-tick", "text-anchor": "middle" });
-                label.textContent = Number(value.toFixed(3)).toString();
+            const tickCount = Math.round(xMax / step);
+            // Beschriftung jedes k-ten Strichs, damit sich die Zahlen nicht ueberlappen.
+            const labelEvery = [1, 2, 5, 10, 20].find(k => plotW / tickCount * k >= 34) || 20;
+            for (let i = 0; i <= tickCount; i++) {
+                const value = i * step;
+                const labelled = i % labelEvery === 0;
+                make("line", { x1: x(value), x2: x(value), y1: margin.top, y2: axisY, class: i === 0 ? "heat-axis" : labelled ? "heat-grid" : "heat-grid heat-grid-minor" });
+                if (labelled) {
+                    const label = make("text", { x: x(value), y: axisY + 16, class: "heat-tick", "text-anchor": "middle" });
+                    label.textContent = Number(value.toFixed(3)).toString();
+                }
             }
             const axisTitle = make("text", { x: width - margin.right, y: axisY + 28, class: "heat-tick", "text-anchor": "end" });
             axisTitle.textContent = "kJ/mm";
+
+            // Ziel-Bereich als rote Linien ueber das ganze Diagramm
+            [[target.min, "min"], [target.max, "max"]].forEach(([value, name]) => {
+                if (value === null) return;
+                make("line", { x1: x(value), x2: x(value), y1: margin.top - 4, y2: axisY, class: "heat-target-line" });
+                const label = make("text", { x: x(value), y: margin.top - 8, class: "heat-target-label", "text-anchor": name === "min" ? "end" : "start" });
+                label.textContent = `${name} ${value}`;
+            });
 
             const tooltip = document.createElement("div");
             tooltip.className = "heat-tooltip";
@@ -6640,7 +6825,8 @@
             "importantFields",
             "scheduleEditorCustomHeads",
             "scheduleEditorSidebarState",
-            "scheduleEditorBatchSave"
+            "scheduleEditorBatchSave",
+            "scheduleEditorHeatInputTarget"
         ];
         const localStorageBackupModal = document.getElementById("localStorageBackupModal");
         const localStorageBackupStatus = document.getElementById("localStorageBackupStatus");
@@ -6671,7 +6857,8 @@
                     importantFields: isStringArray,
                     scheduleEditorCustomHeads: isStringArray,
                     scheduleEditorSidebarState: isBooleanMap,
-                    scheduleEditorBatchSave: isStringMap
+                    scheduleEditorBatchSave: isStringMap,
+                    scheduleEditorHeatInputTarget: isStringMap
                 }[key];
                 if (!validValue) throw new Error(`Invalid data for backup entry: ${key}`);
             }
