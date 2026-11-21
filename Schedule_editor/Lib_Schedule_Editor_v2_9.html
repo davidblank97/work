@@ -2626,6 +2626,19 @@
             stroke-opacity: 0.45;
         }
 
+        .heat-file-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 16px;
+            padding: 12px 16px 0;
+            font-size: 12.5px;
+        }
+
+        .heat-no-files {
+            padding: 12px 16px 16px;
+        }
+
         .heat-target-controls {
             display: flex;
             flex-wrap: wrap;
@@ -3334,6 +3347,7 @@
         let lastSelectedSection = "segments";
         let selectedSegmentPosition = 0; // Position des geoeffneten Segments in file.sections.segments
         let comparisonDifferencesOnly = false;
+        let heatInputHiddenFileIds = new Set(); // im Heat Input ausgeblendete Dateien (nur fuer diese Sitzung)
         const SEGMENT_SORTING_CONFIG = {
             "version": 1,
             "segmentPriorityOrder": [
@@ -5483,7 +5497,8 @@
                         make("circle", { cx: x(result.heatInput), cy, r: 6, class: "heat-nominal", fill: color }, rowGroup);
                         if (entry.outside) {
                             const warn = make("text", { x: x(result.maxHeatInput) + 8, y: cy + 4, class: "heat-warning" }, rowGroup);
-                            warn.textContent = "! outside limit";
+                            warn.textContent = [entry.outsideLimit ? "! outside limit" : "", entry.outsideTarget ? "! outside target" : ""]
+                                .filter(Boolean).join(" · ");
                         }
                     }
 
@@ -5510,12 +5525,13 @@
                         if (entry.outside) {
                             const row = document.createElement("div");
                             row.className = "heat-tooltip-warning";
-                            row.textContent = "! Range outside the heat input limits";
+                            row.textContent = [entry.outsideLimit ? "! Range outside the <limits> values" : "", entry.outsideTarget ? "! Range outside the target range" : ""]
+                                .filter(Boolean).join(" / ");
                             tooltip.appendChild(row);
                         }
                         tooltip.hidden = false;
                         // Rechts neben dem Balken, sonst links davon; Balken bleibt sichtbar.
-                        const barEnd = result.disabled || result.error ? margin.left + 80 : x(result.maxHeatInput) + (entry.outside ? 110 : 0);
+                        const barEnd = result.disabled || result.error ? margin.left + 80 : x(result.maxHeatInput) + (entry.outside ? 120 : 0);
                         const onRight = barEnd + 230 < width;
                         const barStart = result.disabled || result.error ? margin.left : x(result.minHeatInput);
                         tooltip.style.left = `${onRight ? barEnd + 16 : barStart - 16}px`;
@@ -5573,16 +5589,24 @@
                 return;
             }
 
-            // Ergebnisse aller geladenen Dateien
-            const entriesByFile = loadedFiles.map((file, fileIndex) => {
+            // Ergebnisse aller sichtbaren Dateien; geprueft gegen <limits> und den Ziel-Bereich (Min/Max).
+            const target = readHeatInputTarget();
+            const visibleFiles = loadedFiles
+                .map((file, fileIndex) => ({ file, fileIndex }))
+                .filter(({ file }) => !heatInputHiddenFileIds.has(file.id));
+            const entriesByFile = visibleFiles.map(({ file, fileIndex }) => {
                 const limitLow = readHeatInputLimit(file, "heat_input_fault_low");
                 const limitHigh = readHeatInputLimit(file, "heat_input_fault_high");
                 const entries = file.sections.segments.map((segment, segmentIndex) => {
                     const result = calculateSegmentHeatInput(segment, file.sections.overrides);
-                    const outside = !result.disabled && !result.error && (
+                    const valid = !result.disabled && !result.error;
+                    const outsideLimit = valid && (
                         (limitLow !== null && result.minHeatInput < limitLow)
                         || (limitHigh !== null && result.maxHeatInput > limitHigh));
-                    return { result, segmentIndex, outside };
+                    const outsideTarget = valid && (
+                        (target.min !== null && result.minHeatInput < target.min)
+                        || (target.max !== null && result.maxHeatInput > target.max));
+                    return { result, segmentIndex, outsideLimit, outsideTarget, outside: outsideLimit || outsideTarget };
                 });
                 return { file, fileIndex, limitLow, limitHigh, entries };
             });
@@ -5591,10 +5615,51 @@
             panel.className = "panel";
             const header = document.createElement("div");
             header.className = "panel-header";
-            header.textContent = loadedFiles.length > 1 ? `${loadedFiles.length} files` : loadedFiles[0].name;
+            header.textContent = loadedFiles.length > 1
+                ? `${visibleFiles.length} of ${loadedFiles.length} files shown`
+                : loadedFiles[0].name;
             panel.appendChild(header);
             const body = document.createElement("div");
             body.className = "panel-content open";
+
+            // Dateien ein-/ausblenden
+            if (loadedFiles.length > 1) {
+                const fileControls = document.createElement("div");
+                fileControls.className = "heat-file-controls";
+                loadedFiles.forEach(file => {
+                    const label = document.createElement("label");
+                    label.className = "comparison-file-control";
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.checked = !heatInputHiddenFileIds.has(file.id);
+                    checkbox.onchange = () => {
+                        if (checkbox.checked) heatInputHiddenFileIds.delete(file.id);
+                        else heatInputHiddenFileIds.add(file.id);
+                        renderHeatInput();
+                    };
+                    label.append(checkbox, document.createTextNode(file.name));
+                    fileControls.appendChild(label);
+                });
+                if (heatInputHiddenFileIds.size) {
+                    const showAll = document.createElement("button");
+                    showAll.type = "button";
+                    showAll.className = "btn-secondary heat-target-clear";
+                    showAll.textContent = "Show all";
+                    showAll.onclick = () => { heatInputHiddenFileIds.clear(); renderHeatInput(); };
+                    fileControls.appendChild(showAll);
+                }
+                body.appendChild(fileControls);
+            }
+
+            if (!entriesByFile.length) {
+                const empty = document.createElement("p");
+                empty.className = "heat-chart-empty heat-no-files";
+                empty.textContent = "All files are hidden. Tick a file above to show it.";
+                body.appendChild(empty);
+                panel.appendChild(body);
+                content.appendChild(panel);
+                return;
+            }
             renderHeatInputChart(entriesByFile, body);
 
             // Eine Tabelle: je Datei eine Kopfzeile, darunter die Segmente.
@@ -5645,7 +5710,7 @@
                 fileRow.appendChild(fileCell);
                 tbody.appendChild(fileRow);
 
-                group.entries.forEach(({ result, segmentIndex, outside }) => {
+                group.entries.forEach(({ result, segmentIndex, outsideLimit, outsideTarget }) => {
                     const segment = group.file.sections.segments[segmentIndex];
                     const row = document.createElement("tr");
                     row.className = "heat-segment-row" + (result.disabled || result.error ? " is-muted" : "");
@@ -5685,12 +5750,16 @@
                         status.className = "heat-status is-error";
                         status.textContent = "! not calculable";
                         status.title = result.error;
-                    } else if (outside) {
+                    } else if (outsideLimit || outsideTarget) {
                         status.className = "heat-status is-outside";
-                        status.textContent = "! outside limit";
+                        status.textContent = [outsideLimit ? "! outside limit" : "", outsideTarget ? "! outside target" : ""]
+                            .filter(Boolean).join(" · ");
                     } else {
                         status.className = "heat-status is-ok";
-                        status.textContent = group.limitLow === null && group.limitHigh === null ? "—" : "✓ within limits";
+                        const hasLimits = group.limitLow !== null || group.limitHigh !== null;
+                        const hasTarget = target.min !== null || target.max !== null;
+                        status.textContent = hasLimits || hasTarget ? "✓ OK" : "—";
+                        status.title = [hasLimits ? "within limits" : "", hasTarget ? "within target range" : ""].filter(Boolean).join(", ");
                     }
                     statusCell.appendChild(status);
                     row.appendChild(statusCell);
