@@ -2607,6 +2607,122 @@
             stroke: var(--danger);
         }
 
+        .heat-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 14px;
+            margin: 0 0 6px;
+            color: var(--text-muted);
+            font-size: 11.5px;
+        }
+
+        .heat-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .heat-group-divider {
+            stroke: var(--border-strong);
+            stroke-width: 1;
+            stroke-dasharray: 2 3;
+        }
+
+        .heat-group-label {
+            fill: var(--text-main);
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        .heat-tooltip-file {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
+
+        .heat-table-wrap {
+            overflow-x: auto;
+        }
+
+        .heat-table {
+            font-size: 12.5px;
+        }
+
+        .heat-table th {
+            padding: 8px 12px 2px;
+            font-size: 10.5px;
+            white-space: nowrap;
+        }
+
+        .heat-table .heat-unit-row th {
+            padding: 0 12px 7px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .heat-table td {
+            padding: 6px 12px;
+            white-space: nowrap;
+        }
+
+        .heat-table .num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .heat-table .heat-file-row td {
+            padding: 9px 12px 6px;
+            background: var(--bg-panel-2);
+            border-top: 1px solid var(--border-strong);
+        }
+
+        .heat-file-name {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .heat-file-limits {
+            margin-left: 12px;
+            color: var(--text-muted);
+            font-size: 11.5px;
+        }
+
+        .heat-segment-row {
+            cursor: pointer;
+        }
+
+        .heat-segment-row:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        .heat-segment-row.is-muted td {
+            color: var(--text-muted);
+        }
+
+        .heat-nominal-cell {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .heat-status {
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        .heat-status.is-ok,
+        .heat-status.is-off {
+            color: var(--text-muted);
+        }
+
+        .heat-status.is-outside,
+        .heat-status.is-error {
+            color: var(--danger);
+        }
+
         .heat-table-swatch {
             display: inline-block;
             margin-right: 8px;
@@ -5056,13 +5172,13 @@
             return Number.isFinite(value) && value > 0 && value < 9999 ? value : null;
         }
 
-        // Bandbreiten-Diagramm: je Segment Balken Min->Max (Override-Grenzen) und Punkt fuer den Nominalwert.
-        function renderHeatInputChart(file, results, container, { sharedMax = null, fileIndex = activeFile } = {}) {
+        // Ein gemeinsames Diagramm fuer alle Dateien: x-Achse nach Datei gruppiert, je Segment Balken
+        // Min->Max (Override-Grenzen) und Punkt fuer den Nominalwert; Grenzwerte je Datei-Gruppe.
+        function renderHeatInputChart(entriesByFile, container) {
             const svgNs = "http://www.w3.org/2000/svg";
-            const segments = file.sections.segments;
-            const limitLow = readHeatInputLimit(file, "heat_input_fault_low");
-            const limitHigh = readHeatInputLimit(file, "heat_input_fault_high");
-            const valid = results.filter(result => !result.disabled && !result.error);
+            const allEntries = entriesByFile.flatMap(group => group.entries);
+            const valid = allEntries.filter(entry => !entry.result.disabled && !entry.result.error);
+            const maxSegments = Math.max(...entriesByFile.map(group => group.entries.length));
 
             const wrap = document.createElement("div");
             wrap.className = "heat-chart";
@@ -5070,6 +5186,22 @@
             title.className = "heat-chart-title";
             title.textContent = "Heat input per segment (kJ/mm) — bar: min–max from overrides, dot: nominal";
             wrap.appendChild(title);
+
+            if (maxSegments > 1) {
+                const legend = document.createElement("div");
+                legend.className = "heat-legend";
+                for (let index = 0; index < Math.min(maxSegments, SEGMENT_COLORS.length); index++) {
+                    const item = document.createElement("span");
+                    item.className = "heat-legend-item";
+                    const swatch = document.createElement("span");
+                    swatch.className = "segment-visualization-swatch";
+                    swatch.style.backgroundColor = SEGMENT_COLORS[index];
+                    item.append(swatch, document.createTextNode(`Segment ${index + 1}`));
+                    legend.appendChild(item);
+                }
+                wrap.appendChild(legend);
+            }
+
             if (!valid.length) {
                 const empty = document.createElement("p");
                 empty.className = "heat-chart-empty";
@@ -5080,8 +5212,8 @@
             }
 
             // Skala: 0 bis Maximum (inkl. Grenzwerte), auf "schoene" Schritte gerundet.
-            // Gemeinsame Skala ueber alle Dateien, damit die Diagramme vergleichbar sind.
-            const rawMax = Math.max(sharedMax ?? 0, ...valid.map(r => r.maxHeatInput), limitHigh ?? 0, limitLow ?? 0) * 1.1;
+            const limitValues = entriesByFile.flatMap(group => [group.limitLow, group.limitHigh]).filter(value => value !== null);
+            const rawMax = Math.max(...valid.map(entry => entry.result.maxHeatInput), ...limitValues) * 1.1;
             const rough = rawMax / 5;
             const magnitude = 10 ** Math.floor(Math.log10(rough));
             const step = [1, 2, 2.5, 5, 10].map(f => f * magnitude).find(s => s >= rough);
@@ -5089,20 +5221,21 @@
 
             // Zeichnen in tatsaechlicher Pixelbreite, damit die Schrift nicht mitskaliert.
             const contentWidth = document.getElementById("content")?.clientWidth || 760;
-            const width = Math.max(320, Math.min(1400, contentWidth - 74)), height = 250;
-            const margin = { top: 16, right: 16, bottom: 34, left: 48 };
+            const width = Math.max(320, Math.min(1400, contentWidth - 74));
+            const height = 270;
+            const margin = { top: 18, right: 16, bottom: entriesByFile.length > 1 ? 52 : 34, left: 48 };
             const plotW = width - margin.left - margin.right;
             const plotH = height - margin.top - margin.bottom;
             const y = value => margin.top + plotH - value / yMax * plotH;
-            const band = plotW / segments.length;
-            const x = index => margin.left + band * (index + 0.5);
+            const groupGap = 0.8; // Abstand zwischen Datei-Gruppen in Spaltenbreiten
+            const unit = plotW / (allEntries.length + groupGap * (entriesByFile.length - 1));
 
             const svg = document.createElementNS(svgNs, "svg");
             svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
             svg.setAttribute("width", String(width));
             svg.setAttribute("height", String(height));
             svg.setAttribute("role", "img");
-            svg.setAttribute("aria-label", "Heat input per segment with min-max range; values are listed in the table below.");
+            svg.setAttribute("aria-label", "Heat input per segment for all loaded files; values are listed in the table below.");
             const make = (tag, attributes, parent = svg) => {
                 const element = document.createElementNS(svgNs, tag);
                 Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
@@ -5117,95 +5250,123 @@
                 label.textContent = Number(value.toFixed(3)).toString();
             }
 
-            // Grenzwerte aus <limits>
-            [[limitLow, "Fault low"], [limitHigh, "Fault high"]].forEach(([value, name]) => {
-                if (value === null) return;
-                make("line", { x1: margin.left, x2: width - margin.right, y1: y(value), y2: y(value), class: "heat-limit" });
-                const label = make("text", { x: width - margin.right - 4, y: y(value) - 5, class: "heat-limit-label", "text-anchor": "end" });
-                label.textContent = `${name} ${value}`;
-            });
-
             const tooltip = document.createElement("div");
             tooltip.className = "heat-tooltip";
             tooltip.hidden = true;
 
-            results.forEach((result, index) => {
-                const segmentNumber = segmentDisplayNumber(segments[index], index);
-                const cx = x(index);
-                const xLabel = make("text", { x: cx, y: height - 12, class: "heat-tick", "text-anchor": "middle" });
-                xLabel.textContent = `Segment ${segmentNumber}`;
-                const group = make("g", { class: "heat-column" });
-                group.dataset.segmentPosition = String(index);
+            let cursor = margin.left;
+            entriesByFile.forEach((group, groupIndex) => {
+                const groupStart = cursor;
+                const groupEnd = groupStart + unit * group.entries.length;
+                const center = (groupStart + groupEnd) / 2;
 
-                if (result.disabled || result.error) {
-                    const note = make("text", { x: cx, y: margin.top + plotH / 2, class: "heat-column-note", "text-anchor": "middle" }, group);
-                    note.textContent = result.disabled ? "disabled" : "n/a";
-                } else {
-                    const outside = (limitLow !== null && result.minHeatInput < limitLow)
-                        || (limitHigh !== null && result.maxHeatInput > limitHigh);
-                    if (outside) group.classList.add("is-outside");
-                    const barWidth = Math.min(14, band * 0.35);
-                    const color = SEGMENT_COLORS[index % SEGMENT_COLORS.length];
-                    make("rect", {
-                        x: cx - barWidth / 2, y: y(result.maxHeatInput), width: barWidth,
-                        height: Math.max(2, y(result.minHeatInput) - y(result.maxHeatInput)), rx: 4, class: "heat-range", fill: color
-                    }, group);
-                    make("circle", { cx, cy: y(result.heatInput), r: 6, class: "heat-nominal", fill: color }, group);
-                    if (outside) {
-                        const warn = make("text", { x: cx, y: y(result.maxHeatInput) - 8, class: "heat-warning", "text-anchor": "middle" }, group);
-                        warn.textContent = "! outside limit";
-                    }
+                if (groupIndex > 0) {
+                    const divider = groupStart - unit * groupGap / 2;
+                    make("line", { x1: divider, x2: divider, y1: margin.top, y2: margin.top + plotH, class: "heat-group-divider" });
                 }
-                // Trefferflaeche: ganze Spalte
-                const hit = make("rect", { x: cx - band / 2, y: margin.top, width: band, height: plotH, class: "heat-hit" }, group);
-                const lines = result.disabled ? ["Segment disabled"]
-                    : result.error ? [result.error]
-                        : [`Nominal: ${result.heatInput.toFixed(3)} kJ/mm`, `Min: ${result.minHeatInput.toFixed(3)} kJ/mm`,
-                            `Max: ${result.maxHeatInput.toFixed(3)} kJ/mm`, `Avg. current: ${result.averageAmps.toFixed(1)} A`];
-                hit.addEventListener("mouseenter", () => {
-                    group.classList.add("is-hover");
-                    tooltip.replaceChildren();
-                    const head = document.createElement("strong");
-                    head.textContent = `Segment ${segmentNumber}`;
-                    tooltip.appendChild(head);
-                    lines.forEach(line => {
-                        const row = document.createElement("div");
-                        row.textContent = line;
-                        tooltip.appendChild(row);
-                    });
-                    if (group.classList.contains("is-outside")) {
-                        const row = document.createElement("div");
-                        row.className = "heat-tooltip-warning";
-                        row.textContent = "! Range outside the heat input limits";
-                        tooltip.appendChild(row);
+                if (entriesByFile.length > 1) {
+                    const groupLabel = make("text", { x: center, y: height - 10, class: "heat-group-label", "text-anchor": "middle" });
+                    const maxChars = Math.max(6, Math.floor((groupEnd - groupStart) / 7));
+                    groupLabel.textContent = group.file.name.length > maxChars ? `${group.file.name.slice(0, maxChars - 1)}…` : group.file.name;
+                    const fullName = document.createElementNS(svgNs, "title");
+                    fullName.textContent = group.file.name;
+                    groupLabel.appendChild(fullName);
+                }
+
+                // Grenzwerte dieser Datei nur ueber ihrer Gruppe
+                [[group.limitLow, "low"], [group.limitHigh, "high"]].forEach(([value, name]) => {
+                    if (value === null) return;
+                    make("line", { x1: groupStart, x2: groupEnd, y1: y(value), y2: y(value), class: "heat-limit" });
+                    const label = make("text", { x: groupEnd - 2, y: y(value) - 5, class: "heat-limit-label", "text-anchor": "end" });
+                    label.textContent = `${name} ${value}`;
+                });
+
+                group.entries.forEach(entry => {
+                    const { result, segmentIndex } = entry;
+                    const cx = cursor + unit / 2;
+                    cursor += unit;
+                    const segmentNumber = segmentDisplayNumber(group.file.sections.segments[segmentIndex], segmentIndex);
+                    const xLabel = make("text", { x: cx, y: margin.top + plotH + 16, class: "heat-tick", "text-anchor": "middle" });
+                    xLabel.textContent = unit < 46 ? String(segmentNumber) : `Seg ${segmentNumber}`;
+                    const columnGroup = make("g", { class: "heat-column" });
+                    columnGroup.dataset.fileIndex = String(group.fileIndex);
+                    columnGroup.dataset.segmentPosition = String(segmentIndex);
+
+                    if (result.disabled || result.error) {
+                        const note = make("text", { x: cx, y: margin.top + plotH / 2, class: "heat-column-note", "text-anchor": "middle" }, columnGroup);
+                        note.textContent = result.disabled ? "off" : "n/a";
+                    } else {
+                        if (entry.outside) columnGroup.classList.add("is-outside");
+                        const barWidth = Math.max(6, Math.min(14, unit * 0.35));
+                        const color = SEGMENT_COLORS[segmentIndex % SEGMENT_COLORS.length];
+                        make("rect", {
+                            x: cx - barWidth / 2, y: y(result.maxHeatInput), width: barWidth,
+                            height: Math.max(2, y(result.minHeatInput) - y(result.maxHeatInput)), rx: 4, class: "heat-range", fill: color
+                        }, columnGroup);
+                        make("circle", { cx, cy: y(result.heatInput), r: 6, class: "heat-nominal", fill: color }, columnGroup);
+                        if (entry.outside) {
+                            const warn = make("text", { x: cx, y: y(result.maxHeatInput) - 8, class: "heat-warning", "text-anchor": "middle" }, columnGroup);
+                            warn.textContent = "!";
+                        }
                     }
-                    tooltip.hidden = false;
-                    // Seitlich neben die Spalte, damit Balken und Punkt sichtbar bleiben.
-                    const onRight = cx < width * 0.6;
-                    tooltip.style.left = `${onRight ? cx + 18 : cx - 18}px`;
-                    tooltip.style.transform = onRight ? "none" : "translateX(-100%)";
+
+                    // Trefferflaeche: ganze Spalte
+                    const hit = make("rect", { x: cx - unit / 2, y: margin.top, width: unit, height: plotH, class: "heat-hit" }, columnGroup);
+                    const lines = result.disabled ? ["Segment disabled"]
+                        : result.error ? [result.error]
+                            : [`Nominal: ${result.heatInput.toFixed(3)} kJ/mm`, `Range: ${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)} kJ/mm`,
+                                `Avg. current: ${result.averageAmps.toFixed(1)} A`];
+                    hit.addEventListener("mouseenter", () => {
+                        columnGroup.classList.add("is-hover");
+                        tooltip.replaceChildren();
+                        const head = document.createElement("strong");
+                        head.textContent = `Segment ${segmentNumber}`;
+                        const fileLine = document.createElement("div");
+                        fileLine.className = "heat-tooltip-file";
+                        fileLine.textContent = group.file.name;
+                        tooltip.append(head, fileLine);
+                        lines.forEach(line => {
+                            const row = document.createElement("div");
+                            row.textContent = line;
+                            tooltip.appendChild(row);
+                        });
+                        if (entry.outside) {
+                            const row = document.createElement("div");
+                            row.className = "heat-tooltip-warning";
+                            row.textContent = "! Range outside the heat input limits";
+                            tooltip.appendChild(row);
+                        }
+                        tooltip.hidden = false;
+                        // Seitlich neben die Spalte, damit Balken und Punkt sichtbar bleiben.
+                        const onRight = cx < width * 0.6;
+                        tooltip.style.left = `${onRight ? cx + 18 : cx - 18}px`;
+                        tooltip.style.transform = onRight ? "none" : "translateX(-100%)";
+                    });
+                    hit.addEventListener("mouseleave", () => { columnGroup.classList.remove("is-hover"); tooltip.hidden = true; });
+                    hit.addEventListener("click", () => openHeatInputSegment(group.fileIndex, segmentIndex));
                 });
-                hit.addEventListener("mouseleave", () => { group.classList.remove("is-hover"); tooltip.hidden = true; });
-                hit.addEventListener("click", () => {
-                    activeFile = fileIndex;
-                    selectedSegmentPosition = index;
-                    renderFileList();
-                    renderSidebar();
-                    showSection("segments");
-                });
+                cursor += unit * groupGap;
             });
 
             const plot = document.createElement("div");
             plot.className = "heat-chart-plot";
             plot.append(svg, tooltip);
             wrap.appendChild(plot);
-            if (limitLow === null && limitHigh === null) {
+            if (entriesByFile.every(group => group.limitLow === null && group.limitHigh === null)) {
                 const note = document.createElement("div");
                 note.className = "heat-chart-note";
                 note.textContent = "No heat input limits set in <limits> (heat_input_fault_low/high).";
                 wrap.appendChild(note);
             }
             container.appendChild(wrap);
+        }
+
+        function openHeatInputSegment(fileIndex, segmentIndex) {
+            activeFile = fileIndex;
+            selectedSegmentPosition = segmentIndex;
+            renderFileList();
+            renderSidebar();
+            showSection("segments");
         }
 
         // Heat-Input-Diagramm bei Groessenaenderung des Fensters neu zeichnen.
@@ -5233,83 +5394,139 @@
                 return;
             }
 
-            // Alle geladenen Dateien untereinander, mit gemeinsamer y-Skala.
-            const allResults = loadedFiles.map(file =>
-                file.sections.segments.map(segment => calculateSegmentHeatInput(segment, file.sections.overrides)));
-            const sharedMax = Math.max(0, ...allResults.flat()
-                .filter(result => !result.disabled && !result.error)
-                .map(result => result.maxHeatInput));
+            // Ergebnisse aller geladenen Dateien
+            const entriesByFile = loadedFiles.map((file, fileIndex) => {
+                const limitLow = readHeatInputLimit(file, "heat_input_fault_low");
+                const limitHigh = readHeatInputLimit(file, "heat_input_fault_high");
+                const entries = file.sections.segments.map((segment, segmentIndex) => {
+                    const result = calculateSegmentHeatInput(segment, file.sections.overrides);
+                    const outside = !result.disabled && !result.error && (
+                        (limitLow !== null && result.minHeatInput < limitLow)
+                        || (limitHigh !== null && result.maxHeatInput > limitHigh));
+                    return { result, segmentIndex, outside };
+                });
+                return { file, fileIndex, limitLow, limitHigh, entries };
+            });
 
-            loadedFiles.forEach((file, fileIndex) => {
-                const panel = document.createElement("div");
-                panel.className = "panel";
-                const header = document.createElement("div");
-                header.className = "panel-header";
-                header.textContent = file.name;
-                if (fileIndex === activeFile && loadedFiles.length > 1) {
+            const panel = document.createElement("div");
+            panel.className = "panel";
+            const header = document.createElement("div");
+            header.className = "panel-header";
+            header.textContent = loadedFiles.length > 1 ? `${loadedFiles.length} files` : loadedFiles[0].name;
+            panel.appendChild(header);
+            const body = document.createElement("div");
+            body.className = "panel-content open";
+            renderHeatInputChart(entriesByFile, body);
+
+            // Eine Tabelle: je Datei eine Kopfzeile, darunter die Segmente.
+            const table = document.createElement("table");
+            table.className = "heat-table";
+            const thead = document.createElement("thead");
+            const headRow = document.createElement("tr");
+            [["Segment", ""], ["Heat input", "num"], ["Range (min – max)", "num"], ["Avg. current", "num"], ["Travel speed", "num"], ["Status", ""]]
+                .forEach(([text, className]) => {
+                    const th = document.createElement("th");
+                    th.textContent = text;
+                    if (className) th.className = className;
+                    headRow.appendChild(th);
+                });
+            const unitRow = document.createElement("tr");
+            unitRow.className = "heat-unit-row";
+            ["", "kJ/mm", "kJ/mm", "A", "mm/min", ""].forEach((text, index) => {
+                const th = document.createElement("th");
+                th.textContent = text;
+                if (index > 0 && index < 5) th.className = "num";
+                unitRow.appendChild(th);
+            });
+            thead.append(headRow, unitRow);
+            table.appendChild(thead);
+
+            entriesByFile.forEach(group => {
+                const tbody = document.createElement("tbody");
+                const fileRow = document.createElement("tr");
+                fileRow.className = "heat-file-row";
+                const fileCell = document.createElement("td");
+                fileCell.colSpan = 6;
+                const fileName = document.createElement("span");
+                fileName.className = "heat-file-name";
+                fileName.textContent = group.file.name;
+                fileCell.appendChild(fileName);
+                if (group.fileIndex === activeFile && loadedFiles.length > 1) {
                     const activeBadge = document.createElement("span");
                     activeBadge.className = "heat-file-active";
                     activeBadge.textContent = "active";
-                    header.appendChild(activeBadge);
+                    fileCell.appendChild(activeBadge);
                 }
-                panel.appendChild(header);
+                const limitInfo = document.createElement("span");
+                limitInfo.className = "heat-file-limits";
+                limitInfo.textContent = group.limitLow === null && group.limitHigh === null
+                    ? "no limits set"
+                    : `limits ${group.limitLow ?? "–"} – ${group.limitHigh ?? "–"} kJ/mm`;
+                fileCell.appendChild(limitInfo);
+                fileRow.appendChild(fileCell);
+                tbody.appendChild(fileRow);
 
-                const body = document.createElement("div");
-                body.className = "panel-content open";
-                const heatResults = allResults[fileIndex];
-                renderHeatInputChart(file, heatResults, body, { sharedMax, fileIndex });
-                const table = document.createElement("table");
-                const thead = document.createElement("thead");
-                thead.innerHTML = "<tr><th>Segment</th><th>Average current (A)</th><th>Travel speed (mm/min)</th><th>Heat Input (kJ/mm)</th><th>Min (kJ/mm)</th><th>Max (kJ/mm)</th></tr>";
-                thead.querySelectorAll("th:nth-child(5), th:nth-child(6)").forEach(cell => cell.classList.add("heat-input-range"));
-                table.appendChild(thead);
-                const tbody = document.createElement("tbody");
-
-                file.sections.segments.forEach((segment, index) => {
-                    const result = heatResults[index];
+                group.entries.forEach(({ result, segmentIndex, outside }) => {
+                    const segment = group.file.sections.segments[segmentIndex];
                     const row = document.createElement("tr");
+                    row.className = "heat-segment-row" + (result.disabled || result.error ? " is-muted" : "");
+                    row.tabIndex = 0;
+                    row.title = "Open segment";
+                    row.onclick = () => openHeatInputSegment(group.fileIndex, segmentIndex);
+                    row.onkeydown = event => {
+                        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); row.click(); }
+                    };
+
                     const segmentCell = document.createElement("td");
-                    const segmentSwatch = document.createElement("span");
-                    segmentSwatch.className = "segment-visualization-swatch heat-table-swatch";
-                    segmentSwatch.style.backgroundColor = SEGMENT_COLORS[index % SEGMENT_COLORS.length];
-                    segmentCell.append(segmentSwatch, document.createTextNode(String(segmentDisplayNumber(segment, index))));
+                    const swatch = document.createElement("span");
+                    swatch.className = "segment-visualization-swatch heat-table-swatch";
+                    swatch.style.backgroundColor = SEGMENT_COLORS[segmentIndex % SEGMENT_COLORS.length];
+                    segmentCell.append(swatch, document.createTextNode(`Segment ${segmentDisplayNumber(segment, segmentIndex)}`));
                     row.appendChild(segmentCell);
 
+                    const valid = !result.disabled && !result.error;
+                    [
+                        valid ? result.heatInput.toFixed(3) : "–",
+                        valid ? `${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)}` : "–",
+                        valid ? result.averageAmps.toFixed(1) : "–",
+                        valid ? result.averageTravelMmPerMinute.toFixed(1) : "–"
+                    ].forEach((text, index) => {
+                        const cell = document.createElement("td");
+                        cell.className = "num" + (index === 0 && valid ? " heat-nominal-cell" : "");
+                        cell.textContent = text;
+                        row.appendChild(cell);
+                    });
+
+                    const statusCell = document.createElement("td");
+                    const status = document.createElement("span");
                     if (result.disabled) {
-                        const status = document.createElement("td");
-                        status.colSpan = 5;
-                        status.textContent = "Segment disabled";
-                        row.appendChild(status);
+                        status.className = "heat-status is-off";
+                        status.textContent = "disabled";
                     } else if (result.error) {
-                        const status = document.createElement("td");
-                        status.colSpan = 5;
-                        status.textContent = result.error;
-                        status.style.color = "#c0392b";
-                        row.appendChild(status);
+                        status.className = "heat-status is-error";
+                        status.textContent = "! not calculable";
+                        status.title = result.error;
+                    } else if (outside) {
+                        status.className = "heat-status is-outside";
+                        status.textContent = "! outside limit";
                     } else {
-                        [
-                            result.averageAmps.toFixed(2),
-                            result.averageTravelMmPerMinute.toFixed(2),
-                            result.heatInput.toFixed(3),
-                            result.minHeatInput.toFixed(3),
-                            result.maxHeatInput.toFixed(3)
-                        ]
-                            .forEach((value, valueIndex) => {
-                                const cell = document.createElement("td");
-                                cell.textContent = value;
-                                if (valueIndex >= 3) cell.classList.add("heat-input-range");
-                                row.appendChild(cell);
-                            });
+                        status.className = "heat-status is-ok";
+                        status.textContent = group.limitLow === null && group.limitHigh === null ? "—" : "✓ within limits";
                     }
+                    statusCell.appendChild(status);
+                    row.appendChild(statusCell);
                     tbody.appendChild(row);
                 });
                 table.appendChild(tbody);
-                body.appendChild(table);
-                panel.appendChild(body);
-                content.appendChild(panel);
             });
-        }
 
+            const tableWrap = document.createElement("div");
+            tableWrap.className = "heat-table-wrap";
+            tableWrap.appendChild(table);
+            body.appendChild(tableWrap);
+            panel.appendChild(body);
+            content.appendChild(panel);
+        }
 
         // Uebertraegt einen Wert (ausser Segmente) auf alle weiteren markierten Dateien, sofern die
         // aktive Datei selbst markiert ist. Jede Aenderung landet im Change Log und im Undo-Schritt.
