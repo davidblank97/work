@@ -71,6 +71,10 @@ Die Suche filtert die Tabellen nach Parametername und angezeigtem Wert und zeigt
 
 Ueber die Einheiten-Taste neben einem Feld wird die Anzeige umgeschaltet (z. B. `in`/`mm` fuer Durchmesser, `cm/min` fuer Vorschub und Draht, Grad fuer `tungsten_width`). In der Datei bleibt der Wert immer in der XML-Einheit gespeichert.
 
+Die Parameter werden platzsparend in mehreren Spalten angezeigt (je nach Fensterbreite eine bis drei); `note` und `custom_search_tag` nutzen die volle Breite.
+
+Im Bereich `Segments` zeigt die Uebersicht links einen Ring (ein Umlauf = gesamte Schweisslaenge, jedes Segment als anteiliger Bogen; in der Mitte Durchmesser, Umdrehungen und Gesamtwinkel) und rechts eine Tabelle mit Laenge, Winkel, Umdrehungen und Schweisszeit je Segment sowie einer Summenzeile. Ein Klick auf eine Tabellenzeile oder einen Bogen oeffnet das Segment; die Knoepfe ⧉ ↑ ↓ × in der Zeile duplizieren, verschieben bzw. loeschen es. Die geschaetzte Gesamt-Schweisszeit steht in der Kopfzeile der Uebersicht.
+
 Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten. Das geoeffnete Segment ist in der Liste hervorgehoben und bleibt nach Duplizieren, Verschieben, Undo/Redo und Bereichswechsel ausgewaehlt; nach dem Duplizieren ist die Kopie gewaehlt.
 
 Die Reihenfolge der hervorgehobenen Segmentfelder wird ueber `segments_sorting.json` (im selben Ordner) gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Die Datei wird nur geladen, wenn der Editor ueber einen Webserver laeuft. Beim direkten Oeffnen der HTML-Datei oder bei einer fehlerhaften JSON-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
