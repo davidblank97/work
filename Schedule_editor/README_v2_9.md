@@ -110,8 +110,18 @@ Fragt nur den neuen Dateinamen ab (Enter bestaetigt, Esc bricht ab) und speicher
 
 Speichert die markierten Dateien. Wenn keine Datei markiert ist, werden alle geladenen Dateien verwendet.
 
+Vor dem Speichern oeffnet sich ein Dialog fuer einen optionalen **Revisions-Tag** (z. B. `Rev1`). Der Tag wird an jeden Dateinamen angehaengt:
+
+- `Naht_A.xml` + `Rev1` → `Naht_A_Rev1.xml`
+- Ein vorhandenes Suffix `_Rev…` wird ersetzt: `Naht_A_Rev1.xml` + `Rev2` → `Naht_A_Rev2.xml` (gilt fuer Tags, die mit `Rev` beginnen; andere Tags werden nur angehaengt)
+- Leerzeichen und in Dateinamen unzulaessige Zeichen (`\ / : * ? " < > |`) werden aus dem Tag entfernt
+- Leeres Feld: Dateinamen bleiben unveraendert
+- Die Dateien werden auch im Editor umbenannt; Zurueck (Strg+Z) stellt die alten Namen wieder her
+- Der Dialog zeigt eine Vorschau der neuen Namen und schlaegt den zuletzt verwendeten Tag vor
+- Ergeben zwei Dateien denselben Namen, wird das Speichern mit einer Meldung abgebrochen
+
 - Bei mehreren Dateien wird ein ZIP-Archiv erstellt.
-- Das Archiv enthaelt zusaetzlich `batch_change_log.txt` mit den in dieser Sitzung protokollierten Aenderungen der gespeicherten Dateien.
+- Das Archiv enthaelt zusaetzlich `batch_change_log.txt` mit dem Revisions-Tag und den in dieser Sitzung protokollierten Aenderungen der gespeicherten Dateien.
 - Bei nur einer Zieldatei wird eine einzelne XML-Datei heruntergeladen.
 
 ## Tools

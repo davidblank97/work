@@ -2109,6 +2109,20 @@
             margin-left: 8px;
         }
 
+        .batch-save-preview {
+            margin: 10px 0 4px;
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .batch-save-preview-line {
+            padding-left: 10px;
+            color: var(--text-main);
+            font-family: Consolas, "Courier New", monospace;
+            overflow-wrap: anywhere;
+        }
+
         .comparison-summary {
             margin: 4px 0 10px;
             color: var(--text-muted);
@@ -2219,7 +2233,7 @@
                     <button id="saveAsBtn" class="btn-secondary" type="button" disabled
                         title="Save the active file under a new name (Ctrl+Shift+S)">Save As…</button>
                     <button id="batchSaveBtn" class="batch-save-btn" type="button" disabled
-                        title="Save selected files (ZIP with change log for several files)">Batch Save</button>
+                        title="Save selected files with an optional revision tag (ZIP with change log for several files)">Batch Save…</button>
                 </div>
             </div>
         </div>
@@ -2246,6 +2260,21 @@
                 <button id="modalCancelBtn" class="btn-secondary"
                     style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
                 <button id="modalConfirmBtn" class="btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="batchSaveModal">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="batchSaveTitle">
+            <h3 id="batchSaveTitle">Batch Save</h3>
+            <label for="revisionTagInput" style="font-size: 12px; color: var(--text-muted);">Revision tag
+                (optional, appended to every file name):</label>
+            <input type="text" id="revisionTagInput" placeholder="Rev1" autocomplete="off">
+            <div id="batchSavePreview" class="batch-save-preview" aria-live="polite"></div>
+            <div class="modal-actions">
+                <button id="batchSaveCancelBtn" class="btn-secondary" type="button"
+                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                <button id="batchSaveConfirmBtn" class="btn-primary" type="button">Save</button>
             </div>
         </div>
     </div>
@@ -2307,6 +2336,9 @@
                     <li><strong>Save:</strong> download the active file with its current name.</li>
                     <li><strong>Save As…:</strong> download the active file under a new name; the file is renamed.</li>
                     <li><strong>Batch Save:</strong> save the selected files (all files if none are selected).
+                        An optional revision tag (e.g. <code>Rev1</code>) is appended to every file name
+                        (<code>Name_Rev1.xml</code>); an existing <code>_Rev…</code> suffix is replaced and the files
+                        are renamed in the editor.
                         Several files are saved as a ZIP archive with a change log.</li>
                     <li><strong>Revert:</strong> reset all loaded files to the last saved state.</li>
                 </ul>
@@ -4079,20 +4111,60 @@
             document.getElementById("status").textContent = `Saved "${fileName}".`;
         }
 
-        function saveSelectedFiles() {
-            commitPendingEdit();
+        // Entfernt Zeichen, die in Dateinamen nicht erlaubt sind (und Leerzeichen).
+        function sanitizeRevisionTag(tag) {
+            return String(tag ?? "").replace(/[\\/:*?"<>|\s]/g, "").trim();
+        }
+
+        // "Naht_A.xml" + "Rev1" -> "Naht_A_Rev1.xml"; ein vorhandenes "_Rev..."-Suffix wird ersetzt.
+        function applyRevisionTag(fileName, tag) {
+            const cleanTag = sanitizeRevisionTag(tag);
+            if (!cleanTag) return fileName;
+            const baseName = ensureXmlExtension(fileName).replace(/\.xml$/i, "");
+            const withoutOldTag = /^rev/i.test(cleanTag) ? baseName.replace(/_rev[^_]*$/i, "") : baseName;
+            return `${withoutOldTag}_${cleanTag}.xml`;
+        }
+
+        function getBatchSaveTargets() {
             const filesToSave = [...selectedFiles].map(index => loadedFiles[index]).filter(Boolean);
-            const targetFiles = filesToSave.length ? filesToSave : loadedFiles;
+            return filesToSave.length ? filesToSave : loadedFiles;
+        }
+
+        function saveSelectedFiles(revisionTag = "") {
+            commitPendingEdit();
+            let targetFiles = getBatchSaveTargets();
 
             if (!targetFiles.length) {
                 document.getElementById("status").textContent = "Please load at least one file to save.";
                 return;
             }
 
+            const cleanTag = sanitizeRevisionTag(revisionTag);
+            if (cleanTag) {
+                const newNames = targetFiles.map(file => applyRevisionTag(file.name, cleanTag));
+                const duplicates = newNames.filter((name, index) => newNames.indexOf(name) !== index);
+                if (duplicates.length) {
+                    document.getElementById("status").textContent =
+                        `Batch save cancelled: duplicate file name(s) ${[...new Set(duplicates)].join(", ")}.`;
+                    return;
+                }
+                if (targetFiles.some((file, index) => file.name !== newNames[index])) {
+                    const targetIds = targetFiles.map(file => file.id);
+                    recordHistoryAction("Batch save rename", () => {
+                        targetFiles.forEach((file, index) => { file.name = newNames[index]; });
+                        renderFileList();
+                        refreshCurrentView();
+                    });
+                    // Nach dem Snapshot sind die Datei-Objekte dieselben; sicherheitshalber neu aufloesen.
+                    targetFiles = targetIds.map(id => loadedFiles.find(file => file.id === id)).filter(Boolean);
+                }
+            }
+
             if (window.JSZip && targetFiles.length > 1) {
                 const zip = new JSZip();
                 targetFiles.forEach(file => zip.file(ensureXmlExtension(file.name), serializeXml(file.xml)));
-                zip.file("batch_change_log.txt", buildBatchChangeLogText(targetFiles));
+                const logText = buildBatchChangeLogText(targetFiles);
+                zip.file("batch_change_log.txt", cleanTag ? `Revision: ${cleanTag}\n${logText}` : logText);
 
                 zip.generateAsync({ type: "blob" }).then(blob => {
                     const zipName = `schedule_batch_export_${new Date().toISOString().replace(/[:.]/g, "-")}.zip`;
@@ -4147,7 +4219,55 @@
         }
 
         document.getElementById("saveBtn").onclick = saveActiveFile;
-        document.getElementById("batchSaveBtn").onclick = saveSelectedFiles;
+        /* BATCH SAVE DIALOG */
+        const batchSaveModal = document.getElementById("batchSaveModal");
+        const revisionTagInput = document.getElementById("revisionTagInput");
+        const batchSavePreview = document.getElementById("batchSavePreview");
+
+        function updateBatchSavePreview() {
+            const targets = getBatchSaveTargets();
+            const tag = sanitizeRevisionTag(revisionTagInput.value);
+            batchSavePreview.replaceChildren();
+            const summary = document.createElement("div");
+            summary.textContent = `${targets.length} file(s)${targets.length > 1 ? " as ZIP archive" : ""}${tag ? ` with tag "${tag}"` : ""}:`;
+            batchSavePreview.appendChild(summary);
+            targets.slice(0, 3).forEach(file => {
+                const line = document.createElement("div");
+                line.className = "batch-save-preview-line";
+                const newName = applyRevisionTag(file.name, tag);
+                line.textContent = newName === file.name ? file.name : `${file.name} → ${newName}`;
+                batchSavePreview.appendChild(line);
+            });
+            if (targets.length > 3) {
+                const more = document.createElement("div");
+                more.className = "batch-save-preview-line";
+                more.textContent = `… and ${targets.length - 3} more`;
+                batchSavePreview.appendChild(more);
+            }
+        }
+
+        function openBatchSaveModal() {
+            commitPendingEdit();
+            if (!loadedFiles.length) return;
+            revisionTagInput.value = readStoredJson("scheduleEditorBatchSave", {}).revisionTag || "";
+            updateBatchSavePreview();
+            openModal(batchSaveModal, revisionTagInput);
+        }
+
+        revisionTagInput.oninput = updateBatchSavePreview;
+        document.getElementById("batchSaveBtn").onclick = openBatchSaveModal;
+        document.getElementById("batchSaveCancelBtn").onclick = () => closeModal(batchSaveModal);
+        document.getElementById("batchSaveConfirmBtn").onclick = () => {
+            const tag = sanitizeRevisionTag(revisionTagInput.value);
+            try {
+                localStorage.setItem("scheduleEditorBatchSave", JSON.stringify({ revisionTag: tag }));
+            } catch (error) {
+                console.warn("Could not store the revision tag.", error);
+            }
+            closeModal(batchSaveModal);
+            saveSelectedFiles(tag);
+        };
+        bindEnterToConfirm(revisionTagInput, document.getElementById("batchSaveConfirmBtn"));
 
         const headModal = document.getElementById("headModal");
         const headInput = document.getElementById("headInput");
@@ -5016,7 +5136,8 @@
             "parameterUnits",
             "importantFields",
             "scheduleEditorCustomHeads",
-            "scheduleEditorSidebarState"
+            "scheduleEditorSidebarState",
+            "scheduleEditorBatchSave"
         ];
         const localStorageBackupModal = document.getElementById("localStorageBackupModal");
         const localStorageBackupStatus = document.getElementById("localStorageBackupStatus");
@@ -5046,7 +5167,8 @@
                     parameterUnits: isStringMap,
                     importantFields: isStringArray,
                     scheduleEditorCustomHeads: isStringArray,
-                    scheduleEditorSidebarState: isBooleanMap
+                    scheduleEditorSidebarState: isBooleanMap,
+                    scheduleEditorBatchSave: isStringMap
                 }[key];
                 if (!validValue) throw new Error(`Invalid data for backup entry: ${key}`);
             }
