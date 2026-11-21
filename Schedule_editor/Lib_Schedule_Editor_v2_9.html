@@ -2688,6 +2688,7 @@
             box-shadow: 0 0 0 3px rgba(240, 120, 120, 0.15);
         }
 
+        .heat-file-toggle,
         .heat-target-clear {
             min-height: 26px !important;
             height: 26px;
@@ -5650,14 +5651,21 @@
                     label.append(checkbox, document.createTextNode(fileShortLabel(file)));
                     fileControls.appendChild(label);
                 });
-                if (heatInputHiddenFileIds.size) {
-                    const showAll = document.createElement("button");
-                    showAll.type = "button";
-                    showAll.className = "btn-secondary heat-target-clear";
-                    showAll.textContent = "Show all";
-                    showAll.onclick = () => { heatInputHiddenFileIds.clear(); renderHeatInput(); };
-                    fileControls.appendChild(showAll);
-                }
+                // Alle Dateien auf einmal ein-/ausblenden
+                const hiddenCount = loadedFiles.filter(file => heatInputHiddenFileIds.has(file.id)).length;
+                const showAll = document.createElement("button");
+                showAll.type = "button";
+                showAll.className = "btn-secondary heat-file-toggle";
+                showAll.textContent = "Show all";
+                showAll.disabled = hiddenCount === 0;
+                showAll.onclick = () => { heatInputHiddenFileIds.clear(); renderHeatInput(); };
+                const hideAll = document.createElement("button");
+                hideAll.type = "button";
+                hideAll.className = "btn-secondary heat-file-toggle";
+                hideAll.textContent = "Hide all";
+                hideAll.disabled = hiddenCount === loadedFiles.length;
+                hideAll.onclick = () => { heatInputHiddenFileIds = new Set(loadedFiles.map(file => file.id)); renderHeatInput(); };
+                fileControls.append(showAll, hideAll);
                 body.appendChild(fileControls);
             }
 

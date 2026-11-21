@@ -160,7 +160,7 @@ Ueber dem Diagramm stehen zwei Felder **Min** und **Max** (Target range, kJ/mm).
 
 In Heat Input und Comparison werden Dateien mit ihrer Kurzbezeichnung angezeigt: den vier Ziffern am Anfang des Dateinamens (z. B. `0303` fuer `0303-HOT PASS 2 ….xml`). Der volle Name erscheint im Tooltip. Fehlen die vier Ziffern oder haben mehrere geladene Dateien dieselben, wird fuer diese der volle Name verwendet. Im Heat-Input-Diagramm steht die Kurzbezeichnung direkt in der Zeile (`0303 · Segment 1`), sodass keine eigene Kopfzeile je Datei noetig ist.
 
-Sind mehrere Dateien geladen, kann jede Datei ueber eine Checkbox oberhalb des Diagramms ein- oder ausgeblendet werden; ausgeblendete Dateien fehlen in Diagramm und Tabelle. `Show all` blendet alle wieder ein. Die Auswahl gilt nur fuer die laufende Sitzung. Hover zeigt die Werte, ein Klick oeffnet das Segment.
+Sind mehrere Dateien geladen, kann jede Datei ueber eine Checkbox oberhalb des Diagramms ein- oder ausgeblendet werden; ausgeblendete Dateien fehlen in Diagramm und Tabelle. `Show all` blendet alle Dateien auf einmal ein, `Hide all` alle aus. Die Auswahl gilt nur fuer die laufende Sitzung. Hover zeigt die Werte, ein Klick oeffnet das Segment.
 
 Darunter steht eine gemeinsame Tabelle: je Datei eine Kopfzeile mit Name und Grenzwerten, darunter je Segment Heat Input (fett), Bereich Min – Max, Mittelstrom, Vorschub und ein Status (`✓ within limits`, `! outside limit`, `disabled` oder `! not calculable` mit Grund im Tooltip). Ein Klick auf eine Zeile oeffnet das Segment.
 - `Hidden Parameters`: Verwaltet ausgeblendete Parameter.
