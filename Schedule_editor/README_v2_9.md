@@ -4,9 +4,16 @@ Browserbasierter Editor fuer Liburdi-Schedule-XML-Dateien.
 
 ## Start
 
-Die gemeinsame Startseite [`../index.html`](../index.html) oeffnen und **Schedule Editor** waehlen, oder `Lib_Schedule_Editor_v2_9.html` direkt in einem aktuellen Browser oeffnen. CSS und JavaScript liegen separat in `styles.css` und `app.js`. Ein lokaler oder gehosteter Webserver wird fuer den regulaeren Betrieb empfohlen.
+`Lib_Schedule_Editor_v2_9.html` direkt in einem aktuellen Browser oeffnen. Die Datei ist eigenstaendig: CSS, JavaScript und die ZIP-Bibliothek JSZip sind eingebettet, eine Internetverbindung ist nicht noetig.
 
-Fuer die ZIP-Funktion beim Batch-Speichern wird die Bibliothek JSZip von einem CDN geladen. Dafuer ist beim Start eine Internetverbindung erforderlich.
+Empfohlen wird der Start ueber einen lokalen Webserver, damit `segments_sorting.json` geladen wird und der XML Viewer auf die Schemas der Schedule Database zugreifen kann:
+
+```bash
+cd Schedule_editor
+python3 -m http.server 8000
+```
+
+Danach `http://localhost:8000/Lib_Schedule_Editor_v2_9.html` oeffnen.
 
 ## XML-Dateien laden
 
@@ -16,6 +23,8 @@ Fuer die ZIP-Funktion beim Batch-Speichern wird die Bibliothek JSZip von einem C
 4. Mehrere Dateien koennen ueber die Kontrollkaestchen fuer Batch-Aktionen markiert werden.
 
 Die Dateien werden im Browser geladen und dort bearbeitet. Es wird keine Datei automatisch auf einen Server hochgeladen.
+
+Angenommen werden nur gueltige XML-Dateien mit dem Wurzelelement `<sched>` und mindestens einem `<segment>`. Abgewiesene Dateien werden in der Statusleiste mit Grund aufgefuehrt. Nach dem Laden sind alle neuen Dateien markiert. Das Laden ist ein eigener Schritt im Zurueck-Verlauf.
 
 ## Bearbeiten
 
@@ -27,9 +36,15 @@ Die XML-Daten sind in folgende Bereiche gegliedert:
 - `Overrides`
 - `Segments`
 
-Werte koennen direkt in den Eingabefeldern geaendert werden. Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten.
+Werte koennen direkt in den Eingabefeldern geaendert werden. Dezimalzahlen duerfen mit Punkt oder Komma eingegeben werden (`12,5` = `12.5`); Eingaben wie `12abc` werden nicht uebernommen. Gespeichert wird immer mit der Anzahl Nachkommastellen, die der Wert in der Datei hat. Wird dabei gerundet, erscheint ein Hinweis in der Statusleiste.
 
-Die Reihenfolge der hervorgehobenen Segmentfelder wird ueber `segments_sorting.json` gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Zum Laden dieser Datei den Editor ueber einen lokalen Webserver oeffnen. Beim direkten Oeffnen der HTML-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
+Ist die aktive Datei markiert, werden Aenderungen in `Description`, `Global`, `Limits` und `Overrides` auch in alle anderen markierten Dateien uebernommen. Diese Aenderungen erscheinen im Change Log, in der Save-Notiz und lassen sich gemeinsam rueckgaengig machen. Segmentwerte gelten immer nur fuer die aktive Datei.
+
+Ueber die Einheiten-Taste neben einem Feld wird die Anzeige umgeschaltet (z. B. `in`/`mm` fuer Durchmesser, `cm/min` fuer Vorschub und Draht, Grad fuer `tungsten_width`). In der Datei bleibt der Wert immer in der XML-Einheit gespeichert.
+
+Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten.
+
+Die Reihenfolge der hervorgehobenen Segmentfelder wird ueber `segments_sorting.json` (im selben Ordner) gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Die Datei wird nur geladen, wenn der Editor ueber einen Webserver laeuft. Beim direkten Oeffnen der HTML-Datei oder bei einer fehlerhaften JSON-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
 
 Aenderungen werden direkt im geladenen XML-DOM gespeichert. Die urspruengliche Datei auf der Festplatte bleibt bis zum Download unveraendert.
 
@@ -61,6 +76,8 @@ Speichert die aktive Datei als XML-Datei mit ihrem aktuellen Namen. Vor dem Spei
 - Note
 - Use notes on save
 
+Nur wenn `Use notes on save` aktiviert ist, wird `<note>` in `<description>` ersetzt: durch Author, WPS, die in dieser Sitzung protokollierten Aenderungen der Datei und die Notiz. Ist die Option aus, bleibt eine vorhandene Notiz unveraendert. In der Notiz bleiben nur Buchstaben, Ziffern und Leerzeichen erhalten (maximal 500 Zeichen); Punkte, Unterstriche und andere Sonderzeichen werden entfernt.
+
 ### Save As...
 
 Speichert die aktive Datei unter einem neuen Dateinamen.
@@ -70,7 +87,7 @@ Speichert die aktive Datei unter einem neuen Dateinamen.
 Speichert die markierten Dateien. Wenn keine Datei markiert ist, werden alle geladenen Dateien verwendet.
 
 - Bei mehreren Dateien wird ein ZIP-Archiv erstellt.
-- Das Archiv enthaelt zusaetzlich `batch_change_log.txt`.
+- Das Archiv enthaelt zusaetzlich `batch_change_log.txt` mit den in dieser Sitzung protokollierten Aenderungen der gespeicherten Dateien.
 - Bei nur einer Zieldatei wird eine einzelne XML-Datei heruntergeladen.
 
 ## Tools
@@ -88,20 +105,20 @@ Speichert die markierten Dateien. Wenn keine Datei markiert ist, werden alle gel
 - `Select all` markiert alle geladenen Dateien.
 - `Clear selection` hebt die Auswahl auf.
 - `Invert selection` kehrt die Auswahl um.
-- Der Zurueck- und Wiederholen-Verlauf steht fuer Bearbeitungen zur Verfuegung.
+- Der Zurueck- und Wiederholen-Verlauf steht fuer Bearbeitungen zur Verfuegung (Strg+Z, Strg+Y bzw. Strg+Umschalt+Z). Steht der Cursor in einem Eingabefeld, gilt dort das normale Rueckgaengig des Browsers.
 - `Restore Original Values` stellt die zuletzt geladene Originalversion der Dateien wieder her.
 
-Beim Schliessen des Browsers warnt der Editor, wenn noch Aenderungen vorhanden sind.
+Beim Schliessen des Browsers warnt der Editor, wenn eine geladene Datei vom zuletzt geladenen Stand abweicht.
 
 ## Lokale Einstellungen
 
-Ausgeblendete Parameter, wichtige Parameter, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
+Ausgeblendete Parameter, wichtige Parameter, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll bleibt ueber Sitzungen erhalten; in Save-Notiz und Batch-Log fliessen aber nur Aenderungen der aktuell geladenen Dateien ein. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
 
 Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Nicht passende oder fehlerhafte XML-Dateien werden beim Laden abgewiesen.
 
 ## Dateien
 
-- `Lib_Schedule_Editor_v2_9.html`: Editor-Anwendung
-- `styles.css`: Styles der Editor-Anwendung
-- `app.js`: JavaScript der Editor-Anwendung
+- `Lib_Schedule_Editor_v2_9.html`: Editor-Anwendung (HTML, CSS, JavaScript und JSZip in einer Datei)
+- `segments_sorting.json`: Reihenfolge der Segmentfelder
 - `README_v2_9.md`: Diese Anleitung
+- `schedule_beispiel.xml`, `Test 2 Segmente.xml`: Beispiel-Schedules zum Testen

@@ -2187,15 +2187,31 @@
             ]
         };
         let segmentPriorityOrder = [...SEGMENT_SORTING_CONFIG.segmentPriorityOrder];
-        let hiddenFields = new Set(JSON.parse(localStorage.getItem("hiddenFields") || "[]"));
-        let changeLog = JSON.parse(localStorage.getItem("scheduleEditorChangeLog") || "[]");
+
+        // Liest JSON aus localStorage; bei defekten oder unpassenden Daten wird der Fallback genutzt.
+        function readStoredJson(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (raw === null) return fallback;
+                const value = JSON.parse(raw);
+                if (Array.isArray(fallback) !== Array.isArray(value)) return fallback;
+                if (value === null || typeof value !== "object") return fallback;
+                return value;
+            } catch (error) {
+                console.warn(`Ungueltiger localStorage-Eintrag "${key}" wird ignoriert.`, error);
+                return fallback;
+            }
+        }
+
+        let hiddenFields = new Set(readStoredJson("hiddenFields", []));
+        let changeLog = readStoredJson("scheduleEditorChangeLog", []);
         let undoStack = [];
         let redoStack = [];
         let pendingEdit = null;
         let draggedFileIndex = -1;
         let comparisonHiddenFileNames = new Set();
 
-        let parameterUnits = JSON.parse(localStorage.getItem("parameterUnits") || "{}");
+        let parameterUnits = readStoredJson("parameterUnits", {});
 
         let defaultImportant = [
             "pri_amp", "bkg_amp",
@@ -2203,31 +2219,34 @@
             "pulse_freq", "pulse_width",
             "pri_wire", "bkg_wire"
         ];
-        let importantFields = new Set(JSON.parse(localStorage.getItem("importantFields") || JSON.stringify(defaultImportant)));
+        let importantFields = new Set(readStoredJson("importantFields", defaultImportant));
 
         const MODES_ORDER = ['none', 'in', 'mm', 'cmmin', 'ampere', 'volt', 'seconds', 'degree'];
+
+        // Sinnvolle Anzeige-Einheiten je Parameter; unbekannte Parameter behalten alle Einheiten.
+        function getUnitModesFor(key) {
+            if (key === "tungsten_width") return ["degree", "none", "in", "mm"];
+            if (/^(pri|bkg)_amp$|_amps$/.test(key)) return ["none", "ampere"];
+            if (/^(pri|bkg)_ahc$|^volts$/.test(key)) return ["none", "volt"];
+            if (/^(pri|bkg)_(travel|wire2?)$/.test(key)) return ["none", "cmmin"];
+            if (/diameter$/.test(key)) return ["none", "in", "mm"];
+            if (/^(indwell|outdwell|excursion)$/.test(key)) return ["none", "seconds"];
+            return MODES_ORDER;
+        }
         const DEFAULT_HEADS = ["NGRT + H-HEAD", "H2-FV-100S"];
+        const NGRT_HEAD_PRESET = {
+            travel_jog: "20",
+            wire_jog_fwd: "100",
+            wire_jog_rev: "100",
+            ahc_jog: "60",
+            osc_jog: "50",
+            wire_manipulator_in_out_jog: "243.75",
+            wire_manipulator_up_down_jog: "3.4",
+            tungsten_jog: "163.36"
+        };
         const HEAD_PARAMETER_PRESETS = {
-            "NGRT + H-HEAD": {
-                travel_jog: "20",
-                wire_jog_fwd: "100",
-                wire_jog_rev: "100",
-                ahc_jog: "60",
-                osc_jog: "50",
-                wire_manipulator_in_out_jog: "243.75",
-                wire_manipulator_up_down_jog: "3.4",
-                tungsten_jog: "163.36"
-            },
-            "NGRT-Head": {
-                travel_jog: "20",
-                wire_jog_fwd: "100",
-                wire_jog_rev: "100",
-                ahc_jog: "60",
-                osc_jog: "50",
-                wire_manipulator_in_out_jog: "243.75",
-                wire_manipulator_up_down_jog: "3.4",
-                tungsten_jog: "163.36"
-            },
+            "NGRT + H-HEAD": NGRT_HEAD_PRESET,
+            "NGRT-Head": NGRT_HEAD_PRESET,
             "H2-FV-100S": {
                 travel_jog: "20",
                 wire_jog_fwd: "100",
@@ -2238,7 +2257,7 @@
                 wire_manipulator_up_down_jog: "60"
             }
         };
-        let customHeads = JSON.parse(localStorage.getItem("scheduleEditorCustomHeads") || "[]");
+        let customHeads = readStoredJson("scheduleEditorCustomHeads", []);
 
         /* HELPERS */
         function saveHidden() { localStorage.setItem("hiddenFields", JSON.stringify([...hiddenFields])); }
@@ -2387,7 +2406,7 @@
         }
 
         function setupSidebarToggles() {
-            const savedState = JSON.parse(localStorage.getItem("scheduleEditorSidebarState") || "{}");
+            const savedState = readStoredJson("scheduleEditorSidebarState", {});
             document.querySelectorAll(".sidebar-section-toggle").forEach(toggle => {
                 const target = document.getElementById(toggle.getAttribute("aria-controls"));
                 if (!target) return;
@@ -2414,14 +2433,20 @@
             });
         }
 
-        function createFileRecord(name, xml, originalXml = xml) {
+        const xmlSerializer = new XMLSerializer();
+        const serializeXml = doc => xmlSerializer.serializeToString(doc);
+        const parseXml = text => new DOMParser().parseFromString(text, "application/xml");
+
+        // originalXml wird nie veraendert; seine Serialisierung wird einmal zwischengespeichert.
+        function createFileRecord(name, xml, originalXml = xml,
+            id = `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            originalXmlString = serializeXml(originalXml)) {
             return {
-                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                id,
                 name,
-                status: "ready",
-                errorMessage: "",
                 xml,
                 originalXml,
+                originalXmlString,
                 sections: {
                     description: xml.querySelector("description"),
                     global: xml.querySelector("global"),
@@ -2432,12 +2457,20 @@
             };
         }
 
+        function isFileDirty(file) {
+            return Boolean(file) && serializeXml(file.xml) !== file.originalXmlString;
+        }
+
+        // Snapshots speichern das aktuelle XML als Text (kleiner und schneller als DOM-Klone).
+        // originalXml wird nur referenziert, da es nie veraendert wird.
         function createHistorySnapshot() {
             return {
                 files: loadedFiles.map(file => ({
+                    id: file.id,
                     name: file.name,
-                    xml: file.xml.cloneNode(true),
-                    originalXml: file.originalXml.cloneNode(true)
+                    xmlString: serializeXml(file.xml),
+                    originalXml: file.originalXml,
+                    originalXmlString: file.originalXmlString
                 })),
                 selectedFiles: [...selectedFiles],
                 activeFile,
@@ -2452,7 +2485,7 @@
 
         function historySnapshotKey(snapshot) {
             return JSON.stringify({
-                files: snapshot.files.map(file => ({ name: file.name, xml: new XMLSerializer().serializeToString(file.xml) })),
+                files: snapshot.files.map(file => ({ name: file.name, xml: file.xmlString })),
                 selectedFiles: snapshot.selectedFiles,
                 activeFile: snapshot.activeFile,
                 lastSelectedSection: snapshot.lastSelectedSection,
@@ -2485,8 +2518,10 @@
         function restoreHistorySnapshot(snapshot) {
             loadedFiles = snapshot.files.map(file => createFileRecord(
                 file.name,
-                file.xml.cloneNode(true),
-                file.originalXml.cloneNode(true)
+                parseXml(file.xmlString),
+                file.originalXml,
+                file.id,
+                file.originalXmlString
             ));
             selectedFiles = new Set(snapshot.selectedFiles);
             activeFile = snapshot.activeFile;
@@ -2510,10 +2545,6 @@
             const redoBtn = document.getElementById("redoBtn");
             if (undoBtn) undoBtn.disabled = undoStack.length === 0;
             if (redoBtn) redoBtn.disabled = redoStack.length === 0;
-        }
-
-        function setPendingEdit(edit) {
-            pendingEdit = edit;
         }
 
         function commitPendingEdit() {
@@ -2591,9 +2622,12 @@
             updateUndoRedoButtons();
         }
 
+        // Eintraege werden ueber die Datei-ID der aktuellen Sitzung zugeordnet, damit alte
+        // Eintraege (fruehere Sitzungen, andere Datei am selben Index) nicht vermischt werden.
         function findChangeLogIndex({ fileIndex, sectionName, key, segmentIndex }) {
+            const fileId = loadedFiles[fileIndex]?.id;
             return changeLog.findIndex(entry => {
-                const sameIndex = entry.fileIndex === fileIndex || (!isFinite(entry.fileIndex) && entry.fileName === loadedFiles[fileIndex]?.name);
+                const sameIndex = Boolean(fileId) && entry.fileId === fileId;
                 const sameSection = entry.section === sectionName;
                 const sameKey = entry.key === key;
                 const sameSegment = (entry.segmentIndex || "") === (segmentIndex || "");
@@ -2606,12 +2640,14 @@
             const entry = {
                 id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
                 timestamp: new Date().toISOString(),
+                fileId: loadedFiles[fileIndex]?.id || "",
                 fileIndex,
                 fileName,
                 section: sectionName || "unknown",
                 key,
                 segmentIndex: segmentIndex || "",
-                oldValue: String(oldValue ?? ""),
+                // Der urspruengliche Altwert bleibt erhalten, auch wenn ein Feld mehrfach geaendert wird.
+                oldValue: idx >= 0 ? changeLog[idx].oldValue : String(oldValue ?? ""),
                 newValue: String(newValue ?? "")
             };
             if (entry.newValue === entry.oldValue) {
@@ -2648,14 +2684,18 @@
 
             changeLog.forEach(entry => {
                 const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${new Date(entry.timestamp).toLocaleString()}</td>
-                    <td>${entry.fileName}</td>
-                    <td>${entry.section}</td>
-                    <td>${entry.key}</td>
-                    <td>${entry.oldValue || "-"}</td>
-                    <td>${entry.newValue || "-"}</td>
-                `;
+                [
+                    new Date(entry.timestamp).toLocaleString(),
+                    entry.fileName,
+                    entry.section,
+                    entry.key,
+                    entry.oldValue || "-",
+                    entry.newValue || "-"
+                ].forEach(value => {
+                    const td = document.createElement("td");
+                    td.textContent = String(value ?? "");
+                    tr.appendChild(td);
+                });
                 table.appendChild(tr);
             });
 
@@ -2666,6 +2706,17 @@
             const pureVal = input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
             if (pureVal === "0") input.classList.add("zero");
             else input.classList.remove("zero");
+        }
+
+        // Wandelt eine Eingabe wie "12,5 mm" oder "0.125" in eine Zahl um.
+        // Akzeptiert Dezimal-Komma; teilweise ungueltige Eingaben (z. B. "12abc") ergeben NaN.
+        function parseNumberInput(text) {
+            const numericText = String(text ?? "")
+                .replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "")
+                .trim()
+                .replace(",", ".");
+            if (!/^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/.test(numericText)) return NaN;
+            return Number(numericText);
         }
 
         function getDecimalPlaces(value) {
@@ -2691,9 +2742,20 @@
             return a.localeCompare(b);
         }
 
-        function loadSegmentPriorityConfig() {
-            const order = SEGMENT_SORTING_CONFIG && SEGMENT_SORTING_CONFIG.version === 1
-                ? SEGMENT_SORTING_CONFIG.segmentPriorityOrder
+        // Laedt segments_sorting.json, wenn der Editor ueber einen Webserver laeuft.
+        // Beim direkten Oeffnen (file://) oder bei Fehlern gilt die eingebaute Standardreihenfolge.
+        async function loadSegmentPriorityConfig() {
+            let config = SEGMENT_SORTING_CONFIG;
+            if (/^https?:$/.test(window.location.protocol) && typeof window.fetch === "function") {
+                try {
+                    const response = await window.fetch("segments_sorting.json", { cache: "no-store" });
+                    if (response.ok) config = await response.json();
+                } catch (error) {
+                    console.warn("segments_sorting.json konnte nicht geladen werden; Standardreihenfolge wird verwendet.", error);
+                }
+            }
+            const order = config && config.version === 1
+                ? config.segmentPriorityOrder
                 : null;
             if (!Array.isArray(order) || !order.every(field => typeof field === "string" && field.trim())) {
                 console.warn("Using default segment field order: Invalid segment sorting configuration");
@@ -2719,6 +2781,24 @@
             let loadedCounter = 0;
             const targetCount = files.length;
             const currentSelectionStart = loadedFiles.length;
+            const failedFiles = [];
+            // Laden wird als ein Undo-Schritt erfasst, damit spaetere Undo-Schritte
+            // nachgeladene Dateien nicht unbemerkt wieder entfernen.
+            commitPendingEdit();
+            const beforeSnapshot = createHistorySnapshot();
+
+            const finishLoading = () => {
+                loadedCounter++;
+                if (loadedCounter !== targetCount) return;
+                const successCount = targetCount - failedFiles.length;
+                if (successCount > 0) activeFile = currentSelectionStart;
+                updateUI();
+                pushHistorySnapshot("Load files", beforeSnapshot);
+                document.getElementById("status").textContent = failedFiles.length
+                    ? `${successCount} von ${targetCount} Datei(en) geladen. Abgewiesen: ${failedFiles.join("; ")}`
+                    : `${successCount} file(s) loaded successfully.`;
+                e.target.value = "";
+            };
 
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
@@ -2727,23 +2807,18 @@
                 reader.onload = () => {
                     const xml = new DOMParser().parseFromString(reader.result, "application/xml");
                     if (xml.querySelector("parsererror")) {
-                        document.getElementById("status").textContent = `Fehler beim Laden: ${file.name}`;
+                        failedFiles.push(`${file.name} (kein gueltiges XML)`);
+                    } else if (xml.documentElement.tagName !== "sched" || !xml.querySelector("segment")) {
+                        failedFiles.push(`${file.name} (keine Liburdi-Schedule-Datei)`);
                     } else {
                         loadedFiles.push(createFileRecord(file.name, xml, xml.cloneNode(true)));
                         selectedFiles.add(loadedFiles.length - 1);
                     }
-                    loadedCounter++;
-                    if (loadedCounter === targetCount) {
-                        activeFile = currentSelectionStart;
-                        updateUI();
-                        document.getElementById("status").textContent = `${targetCount} file(s) loaded successfully.`;
-                        e.target.value = "";
-                    }
+                    finishLoading();
                 };
                 reader.onerror = () => {
-                    document.getElementById("status").textContent = `Lesefehler: ${file.name}`;
-                    loadedCounter++;
-                    if (loadedCounter === targetCount) updateUI();
+                    failedFiles.push(`${file.name} (Lesefehler)`);
+                    finishLoading();
                 };
                 reader.readAsText(file);
             }
@@ -2844,7 +2919,7 @@
                     else showSection(lastSelectedSection);
                 };
                 const statusSpan = document.createElement("span");
-                const dirty = new XMLSerializer().serializeToString(f.xml) !== new XMLSerializer().serializeToString(f.originalXml);
+                const dirty = isFileDirty(f);
                 statusSpan.className = "file-status" + (dirty ? " changed" : "");
                 statusSpan.textContent = dirty ? "Changed" : "Ready";
                 const delBtn = document.createElement("button");
@@ -2872,7 +2947,7 @@
 
         function removeFile(index) {
             const file = loadedFiles[index];
-            const dirty = file && new XMLSerializer().serializeToString(file.xml) !== new XMLSerializer().serializeToString(file.originalXml);
+            const dirty = isFileDirty(file);
             if (dirty && !window.confirm(`Die Datei "${file.name}" enthält ungespeicherte Änderungen. Entfernen?`)) return;
             recordHistoryAction("Remove file", () => {
                 loadedFiles.splice(index, 1);
@@ -3091,17 +3166,14 @@
             }
 
             input.dataset.originalValue = child.textContent;
-            input.dataset.changeKey = key + "_" + Math.random();
-            input.dataset.lastLoggedValue = "";
 
             btn.onclick = (e) => {
                 e.preventDefault();
                 if (isTextField) return;
                 recordHistoryAction("Change unit", () => {
-                    let currentMode = parameterUnits[key] || 'none';
-                    let idx = MODES_ORDER.indexOf(currentMode);
-                    let nextIdx = (idx + 1) % MODES_ORDER.length;
-                    currentMode = MODES_ORDER[nextIdx];
+                    const modes = getUnitModesFor(key);
+                    const idx = modes.indexOf(parameterUnits[key] || 'none');
+                    const currentMode = modes[(idx + 1) % modes.length];
 
                     parameterUnits[key] = currentMode;
                     saveParameterUnits();
@@ -3121,10 +3193,11 @@
                 }
 
                 let currentMode = parameterUnits[key] || 'none';
-                let valStr = input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
-                let parsed = parseFloat(valStr);
+                let parsed = parseNumberInput(input.value);
 
                 if (!isNaN(parsed)) {
+                    const isConvertedUnit = (key === 'tungsten_width' && currentMode === 'degree')
+                        || currentMode === 'mm' || currentMode === 'cmmin';
                     if (key === 'tungsten_width' && currentMode === 'degree') {
                         currentInchValue = degreeToInch(parsed);
                     } else if (currentMode === 'mm') {
@@ -3135,8 +3208,14 @@
                         currentInchValue = parsed;
                     }
                     child.textContent = currentInchValue.toFixed(originalPlaces);
-                    registerChange(input, input.dataset.originalValue);
+                    registerChange(input, input.dataset.originalValue, child.textContent);
+                    propagateValueToSelectedFiles(sectionName, key, child.textContent);
                     commitPendingEdit();
+                    // Hinweis, wenn die Eingabe auf das Format der Datei gerundet wurde.
+                    if (!isConvertedUnit && Number(child.textContent) !== parsed) {
+                        document.getElementById("status").textContent =
+                            `Hinweis: ${key} wurde auf ${child.textContent} gerundet (${originalPlaces} Nachkommastellen).`;
+                    }
                 }
                 updateDisplay();
             };
@@ -3148,8 +3227,7 @@
                     return;
                 }
                 let currentMode = parameterUnits[key] || 'none';
-                let valStr = input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
-                let parsed = parseFloat(valStr);
+                let parsed = parseNumberInput(input.value);
                 if (!isNaN(parsed)) {
                     let calculatedInch = parsed;
                     if (key === 'tungsten_width' && currentMode === 'degree') {
@@ -3164,9 +3242,9 @@
                         const file = loadedFiles[activeFile];
                         if (visualization && weldTimeSummary && file) renderSegmentVisualization(file, visualization, weldTimeSummary);
                     }
-                    if (selectedFiles.size && lastSelectedSection !== "segments") { applyValueToSelectedFiles(lastSelectedSection, key, child.textContent); }
                     styleInput(input);
-                    registerChange(input, input.dataset.originalValue);
+                    registerChange(input, input.dataset.originalValue, child.textContent);
+                    propagateValueToSelectedFiles(sectionName, key, child.textContent);
                 }
             };
 
@@ -3619,7 +3697,35 @@
         }
 
 
-        function applyValueToSelectedFiles(sectionName, key, value) { selectedFiles.forEach(index => { const file = loadedFiles[index]; if (!file) return; if (sectionName === 'segments') { file.sections.segments.forEach(seg => { const node = seg.querySelector(key); if (node) node.textContent = value; }); } else { const section = file.sections[sectionName]; if (!section) return; const node = section.querySelector(key); if (node) node.textContent = value; } }); }
+        // Uebertraegt einen Wert (ausser Segmente) auf alle weiteren markierten Dateien, sofern die
+        // aktive Datei selbst markiert ist. Jede Aenderung landet im Change Log und im Undo-Schritt.
+        function propagateValueToSelectedFiles(sectionName, key, value) {
+            if (sectionName === "segments" || !selectedFiles.has(activeFile)) return;
+            let changedFiles = 0;
+            selectedFiles.forEach(index => {
+                if (index === activeFile) return;
+                const file = loadedFiles[index];
+                const section = file?.sections[sectionName];
+                const node = section ? [...section.children].find(child => child.tagName === key) : null;
+                if (!node) return;
+                if (!pendingEdit) pendingEdit = { changes: [] };
+                let change = pendingEdit.changes.find(c => c.fileIndex === index && c.sectionName === sectionName
+                    && c.key === key && !c.segmentIndex);
+                if (!change) {
+                    if (node.textContent === value) return;
+                    change = { fileIndex: index, fileName: file.name, sectionName, key, segmentIndex: "", oldValue: node.textContent, newValue: value };
+                    pendingEdit.changes.push(change);
+                }
+                const previousValue = node.textContent;
+                node.textContent = value;
+                change.newValue = value;
+                updateChangeLogEntry({ fileIndex: index, fileName: file.name, sectionName, key, segmentIndex: "", oldValue: previousValue, newValue: value });
+                changedFiles++;
+            });
+            if (changedFiles) {
+                document.getElementById("status").textContent = `${key} auch in ${changedFiles} weiteren markierten Datei(en) gesetzt.`;
+            }
+        }
 
         /* EXPORT & SAVE */
         function triggerDownload(filename, blob) {
@@ -3641,8 +3747,8 @@
         }
 
         function buildBatchChangeLogText(filesToSave) {
-            const savedNames = new Set(filesToSave.map(file => file.name));
-            const matchingEntries = changeLog.filter(entry => savedNames.has(entry.fileName));
+            const savedIds = new Set(filesToSave.map(file => file.id));
+            const matchingEntries = changeLog.filter(entry => savedIds.has(entry.fileId));
 
             if (!matchingEntries.length) {
                 return [
@@ -3711,6 +3817,8 @@
         }
 
         function updateNoteWithSaveInfo(file, author, wps, note, useNotes = true) {
+            // Ohne "Use notes on save" bleibt die vorhandene Notiz unveraendert.
+            if (!useNotes) return;
             const desc = file.sections.description;
             if (!desc) return;
             let noteNode = desc.querySelector("note");
@@ -3719,18 +3827,7 @@
                 desc.appendChild(noteNode);
             }
 
-            if (!useNotes) {
-                noteNode.textContent = "";
-                return;
-            }
-
-            const fileIndex = loadedFiles.indexOf(file);
-            const fileChanges = changeLog.filter(entry => {
-                const sameName = entry.fileName === file.name;
-                const sameIndex = Number.isInteger(fileIndex) && fileIndex >= 0 && entry.fileIndex === fileIndex;
-                const sameLegacyIndex = !Number.isFinite(entry.fileIndex) && sameName;
-                return sameName || sameIndex || sameLegacyIndex;
-            });
+            const fileChanges = changeLog.filter(entry => entry.fileId === file.id);
 
             let noteText = "";
             if (author) noteText += `Author: ${author}\n`;
@@ -3956,8 +4053,7 @@
 
         function parseComparisonValue(parameter, inputValue) {
             const mode = parameterUnits[parameter] || "none";
-            const numericText = inputValue.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
-            const number = parseFloat(numericText);
+            const number = parseNumberInput(inputValue);
             if (!Number.isFinite(number)) return null;
 
             if (parameter === "tungsten_width" && mode === "degree") {
@@ -4008,12 +4104,6 @@
             const heading = document.createElement("h2");
             heading.textContent = "Schedule Comparison";
             content.appendChild(heading);
-
-            loadedFiles.forEach(file => {
-                if (!comparisonHiddenFileNames.has(file.name) && !comparisonHiddenFileNames.has(String(loadedFiles.indexOf(file)))) {
-                    return;
-                }
-            });
 
             const fileControls = document.createElement("div");
             fileControls.className = "comparison-file-controls";
@@ -4535,10 +4625,13 @@
         let changeCount = 0;
         function updateChangeCounter() { changeCount = changeLog.length; document.getElementById("changeCounter").textContent = changeCount + " Changes"; }
 
-        function registerChange(input, original) {
-            const key = input.dataset.fieldName || input.dataset.changeKey;
+        // storedValue: der tatsaechlich ins XML geschriebene Wert (bei Zahlenfeldern immer in XML-Einheit).
+        function registerChange(input, original, storedValue) {
+            const key = input.dataset.fieldName;
             const isTextField = input.tagName === 'TEXTAREA' || key === 'note' || key === 'custom_search_tag';
-            const cleanVal = isTextField ? input.value.trim() : input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
+            const cleanVal = storedValue !== undefined
+                ? String(storedValue).trim()
+                : isTextField ? input.value.trim() : input.value.replace(/\s*(in|mm|cm\/min|A|V|s|°)$/i, "").trim();
             const changed = cleanVal !== String(original || "").trim();
             const fileIndex = parseInt(input.dataset.fileIndex, 10);
             const sectionName = input.dataset.sectionName || lastSelectedSection || "unknown";
@@ -4580,7 +4673,10 @@
 
         document.getElementById("searchBox").oninput = applyTableSearch;
 
-        window.addEventListener("beforeunload", e => { if (changeCount > 0) { e.preventDefault(); e.returnValue = ""; } });
+        window.addEventListener("beforeunload", e => {
+            commitPendingEdit();
+            if (loadedFiles.some(isFileDirty)) { e.preventDefault(); e.returnValue = ""; }
+        });
 
         /* ORIGINAL RESTORE INTEGRATION */
         document.getElementById('selectAllBtn').onclick = () => { selectedFiles.clear(); loadedFiles.forEach((f, i) => selectedFiles.add(i)); renderFileList(); updateSelectionStatus(); };
@@ -4714,6 +4810,11 @@
 
         window.addEventListener("keydown", e => {
             if (!(e.ctrlKey || e.metaKey)) return;
+            // In Text-/Zahlenfeldern bleibt das native Undo des Browsers aktiv.
+            const target = e.target;
+            const isTextEntry = target instanceof HTMLTextAreaElement
+                || (target instanceof HTMLInputElement && !["checkbox", "radio", "button", "file"].includes(target.type));
+            if (isTextEntry) return;
             if (e.key.toLowerCase() === "z") {
                 e.preventDefault();
                 if (e.shiftKey) redoLastEdit();
@@ -4736,7 +4837,7 @@
             recordHistoryAction("Restore original values", () => {
                 loadedFiles = loadedFiles.map(file => {
                     const xml = file.originalXml.cloneNode(true);
-                    return createFileRecord(file.name, xml, file.originalXml);
+                    return createFileRecord(file.name, xml, file.originalXml, file.id, file.originalXmlString);
                 });
                 pendingEdit = null;
                 changeLog = [];

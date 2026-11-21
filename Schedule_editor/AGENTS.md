@@ -2,39 +2,35 @@
 
 ## Project overview
 
-This repository contains a small XML batch-editing utility for manufacturing data. The core logic is in the `Code/` directory, where Python scripts and a browser-based GUI manipulate XML files in a folder tree such as `Schedule_new/G10/...` or sibling group folders like `G10` through `G38`.
+`Schedule_editor/` contains a browser-based editor for Liburdi welding schedule XML files (`<sched>` root with `description`, `global`, `limits`, `overrides` and `segment` sections). Everything runs client-side; files are only written when the user downloads them.
 
 ## Key files
 
-- `Code/batch_editor1.py`: Tkinter desktop version that updates XML values in a source folder and writes results into sibling target folders.
-- `Code/batch_editor_gui.html`: browser-based GUI version for the same XML editing workflow.
-- `Code/test/`: local test area or scratch space for validation.
-- `Schedule_new/`: source data structure with multiple XML files grouped by test or machine area.
-- `README.md`: project-level overview and any usage notes.
+- `Lib_Schedule_Editor_v2_9.html`: current editor. Single self-contained file: embedded JSZip (top `<script>`), CSS (`<style>`), application JavaScript (last `<script>`).
+- `Lib_Schedule_Editor_v2.html`, `_v2_7.html`, `_v2_8.html`: older versions, kept for reference. Do not edit unless asked.
+- `segments_sorting.json`: priority order of segment fields; fetched only when served over http(s), otherwise the built-in `SEGMENT_SORTING_CONFIG` is used.
+- `README_v2_9.md`: user documentation (German). Update it when behavior changes.
+- `schedule_beispiel.xml`, `Test 2 Segmente.xml`: sample schedules for manual testing.
+- `to_do`: open feature ideas from the user.
 
-## Working conventions
+## Architecture notes (app script)
 
-- Treat the Python scripts in `Code/` as the operational reference for XML editing behavior.
-- Preserve the existing folder logic: the scripts derive target folders from the parent directory of the selected source folder and write to sibling groups such as `G10`, `G12`, etc.
-- Keep XML field updates limited to the known target nodes: `outer_diameter` and `layer_diameter`.
-- When updating the GUI, keep the behavior aligned with the Python versions unless the change is intentionally version-specific.
-- Do not rename or restructure the generated target folders without a clear reason; many scripts assume the `Gxx` layout.
+- State: `loadedFiles` (records from `createFileRecord`, each with a stable `id`), `selectedFiles` (indexes), `activeFile`, `changeLog` (persisted in localStorage, entries linked via `fileId`).
+- History: `recordHistoryAction(label, fn)` for structural changes (string-based snapshots); field edits go through `registerChange` → `pendingEdit` → `commitPendingEdit`.
+- Edits in non-segment sections are propagated to other selected files by `propagateValueToSelectedFiles` and must stay logged (change log + undo).
+- Numbers are parsed with `parseNumberInput` (accepts decimal comma) and stored with the original number of decimals.
+- localStorage is read through `readStoredJson` (tolerates corrupt values).
 
 ## Validation and usage
 
-- Run Python scripts directly with the local interpreter, for example: `python3 Code/batch_editor1.py`
-- The browser UI is a static HTML file and is usually opened directly in a browser.
-- This project is primarily data-processing and GUI automation, not a package-based app; there is no formal build/test pipeline to run.
+- Start a local server for the full feature set: `cd Schedule_editor && python3 -m http.server 8000`, then open `http://localhost:8000/Lib_Schedule_Editor_v2_9.html`.
+- There is no build or test pipeline. For quick checks, extract the last `<script>` block and run `node --check`, or drive the page with jsdom (needs an `innerText` polyfill).
+- Manually test with the sample XML files: load, edit, undo/redo, save, batch save, comparison, heat input.
 
 ## Safe change guidance
 
-- Prefer minimal, targeted edits.
-- Preserve XML serialization behavior and existing error handling unless the task specifically requires a change there.
-- If you add new batch-editing options, keep defaults compatible with the current workflow and document any new input fields or output assumptions.
-- Avoid broad refactors in this repo unless the task explicitly calls for them.
-
-## Repository-specific notes
-
-- Files under `Schedule_new/` are data artifacts, not app source code.
-- The scripts are intentionally simple and rely on `xml.etree.ElementTree`.
-- Most user-facing text is German, so preserve localized labels and error messages unless a task explicitly requires translation.
+- Prefer minimal, targeted edits; avoid broad refactors unless asked.
+- Preserve XML serialization behavior (`XMLSerializer`) and the number formatting of existing values.
+- Keep the save note restricted to letters, digits and whitespace (`sanitizeNoteText`): the welding machine requires this.
+- Most user-facing text is German; preserve localized labels and messages.
+- New versions: prefer Git history over copying the HTML file to a new version number.
