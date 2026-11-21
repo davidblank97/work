@@ -5178,7 +5178,6 @@
             const svgNs = "http://www.w3.org/2000/svg";
             const allEntries = entriesByFile.flatMap(group => group.entries);
             const valid = allEntries.filter(entry => !entry.result.disabled && !entry.result.error);
-            const maxSegments = Math.max(...entriesByFile.map(group => group.entries.length));
 
             const wrap = document.createElement("div");
             wrap.className = "heat-chart";
@@ -5187,20 +5186,7 @@
             title.textContent = "Heat input per segment (kJ/mm) — bar: min–max from overrides, dot: nominal";
             wrap.appendChild(title);
 
-            if (maxSegments > 1) {
-                const legend = document.createElement("div");
-                legend.className = "heat-legend";
-                for (let index = 0; index < Math.min(maxSegments, SEGMENT_COLORS.length); index++) {
-                    const item = document.createElement("span");
-                    item.className = "heat-legend-item";
-                    const swatch = document.createElement("span");
-                    swatch.className = "segment-visualization-swatch";
-                    swatch.style.backgroundColor = SEGMENT_COLORS[index];
-                    item.append(swatch, document.createTextNode(`Segment ${index + 1}`));
-                    legend.appendChild(item);
-                }
-                wrap.appendChild(legend);
-            }
+            // Keine separate Legende: jede Zeile traegt Farbpunkt und Segmentnamen direkt.
 
             if (!valid.length) {
                 const empty = document.createElement("p");
@@ -5211,24 +5197,26 @@
                 return;
             }
 
-            // Skala: 0 bis Maximum (inkl. Grenzwerte), auf "schoene" Schritte gerundet.
+            // Skala (x): 0 bis Maximum (inkl. Grenzwerte), auf "schoene" Schritte gerundet.
             const limitValues = entriesByFile.flatMap(group => [group.limitLow, group.limitHigh]).filter(value => value !== null);
             const rawMax = Math.max(...valid.map(entry => entry.result.maxHeatInput), ...limitValues) * 1.1;
-            const rough = rawMax / 5;
+            const rough = rawMax / 6;
             const magnitude = 10 ** Math.floor(Math.log10(rough));
             const step = [1, 2, 2.5, 5, 10].map(f => f * magnitude).find(s => s >= rough);
-            const yMax = Math.ceil(rawMax / step) * step;
+            const xMax = Math.ceil(rawMax / step) * step;
 
-            // Zeichnen in tatsaechlicher Pixelbreite, damit die Schrift nicht mitskaliert.
+            // Horizontal: je Segment eine Zeile, nach Datei gruppiert; Hoehe waechst mit der Zeilenzahl.
             const contentWidth = document.getElementById("content")?.clientWidth || 760;
             const width = Math.max(320, Math.min(1400, contentWidth - 74));
-            const height = 270;
-            const margin = { top: 18, right: 16, bottom: entriesByFile.length > 1 ? 52 : 34, left: 48 };
+            const rowHeight = 28;
+            const groupHeaderHeight = entriesByFile.length > 1 ? 24 : 0;
+            const groupGap = entriesByFile.length > 1 ? 10 : 0;
+            const margin = { top: 12, right: 24, bottom: 30, left: 100 };
+            const plotH = entriesByFile.reduce((sum, group) => sum + groupHeaderHeight + group.entries.length * rowHeight, 0)
+                + groupGap * (entriesByFile.length - 1);
+            const height = margin.top + plotH + margin.bottom;
             const plotW = width - margin.left - margin.right;
-            const plotH = height - margin.top - margin.bottom;
-            const y = value => margin.top + plotH - value / yMax * plotH;
-            const groupGap = 0.8; // Abstand zwischen Datei-Gruppen in Spaltenbreiten
-            const unit = plotW / (allEntries.length + groupGap * (entriesByFile.length - 1));
+            const x = value => margin.left + value / xMax * plotW;
 
             const svg = document.createElementNS(svgNs, "svg");
             svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -5243,81 +5231,85 @@
                 return element;
             };
 
-            // Gitter + y-Achse (zurueckhaltend)
-            for (let value = 0; value <= yMax + 1e-9; value += step) {
-                make("line", { x1: margin.left, x2: width - margin.right, y1: y(value), y2: y(value), class: value === 0 ? "heat-axis" : "heat-grid" });
-                const label = make("text", { x: margin.left - 8, y: y(value) + 4, class: "heat-tick", "text-anchor": "end" });
+            // Gitter + x-Achse (zurueckhaltend)
+            const axisY = margin.top + plotH;
+            for (let value = 0; value <= xMax + 1e-9; value += step) {
+                make("line", { x1: x(value), x2: x(value), y1: margin.top, y2: axisY, class: value === 0 ? "heat-axis" : "heat-grid" });
+                const label = make("text", { x: x(value), y: axisY + 16, class: "heat-tick", "text-anchor": "middle" });
                 label.textContent = Number(value.toFixed(3)).toString();
             }
+            const axisTitle = make("text", { x: width - margin.right, y: axisY + 28, class: "heat-tick", "text-anchor": "end" });
+            axisTitle.textContent = "kJ/mm";
 
             const tooltip = document.createElement("div");
             tooltip.className = "heat-tooltip";
             tooltip.hidden = true;
 
-            let cursor = margin.left;
+            let cursor = margin.top;
             entriesByFile.forEach((group, groupIndex) => {
-                const groupStart = cursor;
-                const groupEnd = groupStart + unit * group.entries.length;
-                const center = (groupStart + groupEnd) / 2;
-
                 if (groupIndex > 0) {
-                    const divider = groupStart - unit * groupGap / 2;
-                    make("line", { x1: divider, x2: divider, y1: margin.top, y2: margin.top + plotH, class: "heat-group-divider" });
+                    const dividerY = cursor + groupGap / 2;
+                    make("line", { x1: 8, x2: width - margin.right, y1: dividerY, y2: dividerY, class: "heat-group-divider" });
+                    cursor += groupGap;
                 }
-                if (entriesByFile.length > 1) {
-                    const groupLabel = make("text", { x: center, y: height - 10, class: "heat-group-label", "text-anchor": "middle" });
-                    const maxChars = Math.max(6, Math.floor((groupEnd - groupStart) / 7));
+                if (groupHeaderHeight) {
+                    const groupLabel = make("text", { x: 8, y: cursor + 16, class: "heat-group-label" });
+                    const maxChars = Math.max(10, Math.floor((width - 16) / 7));
                     groupLabel.textContent = group.file.name.length > maxChars ? `${group.file.name.slice(0, maxChars - 1)}…` : group.file.name;
-                    const fullName = document.createElementNS(svgNs, "title");
-                    fullName.textContent = group.file.name;
-                    groupLabel.appendChild(fullName);
+                    cursor += groupHeaderHeight;
                 }
+                const groupTop = cursor;
+                const groupBottom = groupTop + group.entries.length * rowHeight;
 
-                // Grenzwerte dieser Datei nur ueber ihrer Gruppe
+                // Grenzwerte dieser Datei nur ueber ihrer Gruppe (senkrecht)
                 [[group.limitLow, "low"], [group.limitHigh, "high"]].forEach(([value, name]) => {
                     if (value === null) return;
-                    make("line", { x1: groupStart, x2: groupEnd, y1: y(value), y2: y(value), class: "heat-limit" });
-                    const label = make("text", { x: groupEnd - 2, y: y(value) - 5, class: "heat-limit-label", "text-anchor": "end" });
+                    make("line", { x1: x(value), x2: x(value), y1: groupTop - 2, y2: groupBottom, class: "heat-limit" });
+                    const label = make("text", { x: x(value) + 4, y: groupTop + 9, class: "heat-limit-label", "text-anchor": "start" });
                     label.textContent = `${name} ${value}`;
                 });
 
                 group.entries.forEach(entry => {
                     const { result, segmentIndex } = entry;
-                    const cx = cursor + unit / 2;
-                    cursor += unit;
+                    const cy = cursor + rowHeight / 2;
+                    cursor += rowHeight;
                     const segmentNumber = segmentDisplayNumber(group.file.sections.segments[segmentIndex], segmentIndex);
-                    const xLabel = make("text", { x: cx, y: margin.top + plotH + 16, class: "heat-tick", "text-anchor": "middle" });
-                    xLabel.textContent = unit < 46 ? String(segmentNumber) : `Seg ${segmentNumber}`;
-                    const columnGroup = make("g", { class: "heat-column" });
-                    columnGroup.dataset.fileIndex = String(group.fileIndex);
-                    columnGroup.dataset.segmentPosition = String(segmentIndex);
+                    const color = SEGMENT_COLORS[segmentIndex % SEGMENT_COLORS.length];
+                    const rowGroup = make("g", { class: "heat-column" });
+                    rowGroup.dataset.fileIndex = String(group.fileIndex);
+                    rowGroup.dataset.segmentPosition = String(segmentIndex);
+
+                    // Zeilenbeschriftung mit Farbpunkt
+                    make("circle", { cx: 14, cy, r: 4.5, fill: color }, rowGroup);
+                    const yLabel = make("text", { x: 24, y: cy + 4, class: "heat-tick heat-row-label" }, rowGroup);
+                    yLabel.textContent = `Segment ${segmentNumber}`;
 
                     if (result.disabled || result.error) {
-                        const note = make("text", { x: cx, y: margin.top + plotH / 2, class: "heat-column-note", "text-anchor": "middle" }, columnGroup);
-                        note.textContent = result.disabled ? "off" : "n/a";
+                        const note = make("text", { x: margin.left + 8, y: cy + 4, class: "heat-column-note" }, rowGroup);
+                        note.textContent = result.disabled ? "disabled" : "not calculable";
                     } else {
-                        if (entry.outside) columnGroup.classList.add("is-outside");
-                        const barWidth = Math.max(6, Math.min(14, unit * 0.35));
-                        const color = SEGMENT_COLORS[segmentIndex % SEGMENT_COLORS.length];
+                        if (entry.outside) rowGroup.classList.add("is-outside");
+                        const barHeight = 12;
                         make("rect", {
-                            x: cx - barWidth / 2, y: y(result.maxHeatInput), width: barWidth,
-                            height: Math.max(2, y(result.minHeatInput) - y(result.maxHeatInput)), rx: 4, class: "heat-range", fill: color
-                        }, columnGroup);
-                        make("circle", { cx, cy: y(result.heatInput), r: 6, class: "heat-nominal", fill: color }, columnGroup);
+                            x: x(result.minHeatInput), y: cy - barHeight / 2,
+                            width: Math.max(2, x(result.maxHeatInput) - x(result.minHeatInput)), height: barHeight,
+                            rx: 4, class: "heat-range", fill: color
+                        }, rowGroup);
+                        make("circle", { cx: x(result.heatInput), cy, r: 6, class: "heat-nominal", fill: color }, rowGroup);
                         if (entry.outside) {
-                            const warn = make("text", { x: cx, y: y(result.maxHeatInput) - 8, class: "heat-warning", "text-anchor": "middle" }, columnGroup);
-                            warn.textContent = "!";
+                            const warn = make("text", { x: x(result.maxHeatInput) + 8, y: cy + 4, class: "heat-warning" }, rowGroup);
+                            warn.textContent = "! outside limit";
                         }
                     }
 
-                    // Trefferflaeche: ganze Spalte
-                    const hit = make("rect", { x: cx - unit / 2, y: margin.top, width: unit, height: plotH, class: "heat-hit" }, columnGroup);
+                    // Trefferflaeche: ganze Zeile
+                    const hit = make("rect", { x: 0, y: cy - rowHeight / 2, width, height: rowHeight, class: "heat-hit" }, rowGroup);
                     const lines = result.disabled ? ["Segment disabled"]
                         : result.error ? [result.error]
                             : [`Nominal: ${result.heatInput.toFixed(3)} kJ/mm`, `Range: ${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)} kJ/mm`,
                                 `Avg. current: ${result.averageAmps.toFixed(1)} A`];
                     hit.addEventListener("mouseenter", () => {
-                        columnGroup.classList.add("is-hover");
+                        rowGroup.classList.add("is-hover");
                         tooltip.replaceChildren();
                         const head = document.createElement("strong");
                         head.textContent = `Segment ${segmentNumber}`;
@@ -5337,15 +5329,17 @@
                             tooltip.appendChild(row);
                         }
                         tooltip.hidden = false;
-                        // Seitlich neben die Spalte, damit Balken und Punkt sichtbar bleiben.
-                        const onRight = cx < width * 0.6;
-                        tooltip.style.left = `${onRight ? cx + 18 : cx - 18}px`;
+                        // Rechts neben dem Balken, sonst links davon; Balken bleibt sichtbar.
+                        const barEnd = result.disabled || result.error ? margin.left + 80 : x(result.maxHeatInput) + (entry.outside ? 110 : 0);
+                        const onRight = barEnd + 230 < width;
+                        const barStart = result.disabled || result.error ? margin.left : x(result.minHeatInput);
+                        tooltip.style.left = `${onRight ? barEnd + 16 : barStart - 16}px`;
                         tooltip.style.transform = onRight ? "none" : "translateX(-100%)";
+                        tooltip.style.top = `${Math.max(0, cy - 24)}px`;
                     });
-                    hit.addEventListener("mouseleave", () => { columnGroup.classList.remove("is-hover"); tooltip.hidden = true; });
+                    hit.addEventListener("mouseleave", () => { rowGroup.classList.remove("is-hover"); tooltip.hidden = true; });
                     hit.addEventListener("click", () => openHeatInputSegment(group.fileIndex, segmentIndex));
                 });
-                cursor += unit * groupGap;
             });
 
             const plot = document.createElement("div");
