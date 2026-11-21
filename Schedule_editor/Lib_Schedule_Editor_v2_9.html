@@ -2473,7 +2473,7 @@
         }
 
         .segment-visualization {
-            grid-template-columns: 200px 190px minmax(0, 1fr);
+            grid-template-columns: 180px 170px minmax(0, 1fr);
             align-items: center;
             gap: 20px;
             padding: 14px 16px;
@@ -2535,6 +2535,43 @@
             font-size: 12px !important;
         }
 
+        .overview-input {
+            width: 66px;
+            height: 26px;
+            box-sizing: border-box;
+            padding: 2px 6px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            color: var(--text-main);
+            font: inherit;
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+            cursor: text;
+        }
+
+        .overview-input.is-wide {
+            width: 100px;
+        }
+
+        .overview-input:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-input);
+        }
+
+        .overview-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--bg-input);
+            color: #ffb77f;
+            box-shadow: 0 0 0 3px rgba(242, 138, 61, 0.14);
+        }
+
+        tfoot .overview-input {
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
         .segment-manual-badge {
             border-color: #805236;
             color: #f4a069;
@@ -2542,8 +2579,8 @@
 
         .segment-ring-wrap svg {
             display: block;
-            width: 200px;
-            height: 200px;
+            width: 180px;
+            height: 180px;
             margin: 0 auto;
         }
 
@@ -2591,13 +2628,18 @@
         }
 
         .segment-overview-table th {
-            padding: 7px 10px;
+            padding: 7px 8px;
             font-size: 10.5px;
         }
 
         .segment-overview-table td {
-            padding: 6px 10px;
+            padding: 5px 6px;
             white-space: nowrap;
+        }
+
+        .segment-overview-table td:first-child,
+        .segment-overview-table th:first-child {
+            padding-left: 10px;
         }
 
         .segment-overview-table .num {
@@ -2664,7 +2706,7 @@
         .segment-action-btn,
         .segment-action-btn:hover:not(:disabled) {
             min-height: 0;
-            width: 26px;
+            width: 22px;
             height: 24px;
             padding: 0;
             border: 1px solid transparent;
@@ -4279,7 +4321,7 @@
                         : hasLength && averageTravelMmPerMinute > 0
                             ? lengthIn * 25.4 / averageTravelMmPerMinute * 60
                             : null;
-                return { lengthIn, angle, enabled, weldTimeSeconds };
+                return { lengthIn, angle, enabled, weldTimeSeconds, averageTravelMmPerMinute };
             });
             const totalDegrees = segmentData.reduce((sum, segment) => sum + segment.angle, 0);
             const totalLengthIn = segmentData.reduce((sum, segment) => sum + segment.lengthIn, 0);
@@ -4488,15 +4530,53 @@
                     nameCell.appendChild(badge);
                 }
                 row.appendChild(nameCell);
+                // Editierbare Werte: jede Eingabe wird in segment_time (Zoll) umgerechnet.
+                const circumferenceIn = diameter ? diameter * Math.PI : null;
+                const canEditTime = info.enabled && segments.length > 1 && info.averageTravelMmPerMinute > 0;
                 [
-                    formatNumber(info.lengthIn * 25.4, 1),
-                    diameter ? formatNumber(info.angle, 1) : "n/a",
-                    diameter ? formatNumber(info.angle / 360) : "n/a",
-                    info.enabled ? formatDuration(info.weldTimeSeconds) : "–"
-                ].forEach(text => {
+                    { label: "length (mm)", value: plainNumber(info.lengthIn * 25.4, 1), parse: text => parseNumberInput(text) / 25.4 },
+                    circumferenceIn
+                        ? { label: "angle (°)", value: plainNumber(info.angle, 1), parse: text => parseNumberInput(text) / 360 * circumferenceIn }
+                        : { text: "n/a", reason: "Enter layer_diameter to edit the angle" },
+                    circumferenceIn
+                        ? { label: "turns", value: plainNumber(info.angle / 360, 2), parse: text => parseNumberInput(text) * circumferenceIn }
+                        : { text: "n/a", reason: "Enter layer_diameter to edit the turns" },
+                    canEditTime
+                        ? { label: "weld time", value: formatDuration(info.weldTimeSeconds), wide: true,
+                            parse: text => parseDurationInput(text) * info.averageTravelMmPerMinute / 60 / 25.4 }
+                        : { text: info.enabled ? formatDuration(info.weldTimeSeconds) : "–",
+                            reason: info.enabled ? "Weld time can be edited with two or more segments and valid travel/dwell values" : "Segment disabled" }
+                ].forEach(column => {
                     const cell = document.createElement("td");
                     cell.className = "num";
-                    cell.textContent = text;
+                    if (column.parse) {
+                        const field = document.createElement("input");
+                        field.type = "text";
+                        field.className = "overview-input" + (column.wide ? " is-wide" : "");
+                        field.value = column.value;
+                        field.setAttribute("aria-label", `Segment ${segmentDisplayNumber(segment, index)} ${column.label}`);
+                        field.title = `Edit ${column.label}; segment_time is recalculated and the other segments adjust`;
+                        field.onclick = event => event.stopPropagation();
+                        field.onkeydown = event => {
+                            event.stopPropagation();
+                            if (event.key === "Enter") { event.preventDefault(); field.blur(); }
+                            if (event.key === "Escape") { field.value = column.value; field.blur(); }
+                        };
+                        field.onfocus = () => { if (selectedSegmentPosition !== index) renderSegment(segment); field.select(); };
+                        field.onchange = () => {
+                            const lengthIn = column.parse(field.value);
+                            if (!(lengthIn > 0) || !Number.isFinite(lengthIn)) {
+                                document.getElementById("status").textContent = `Invalid ${column.label}: "${field.value}".`;
+                                field.value = column.value;
+                                return;
+                            }
+                            applyManualSegmentLength(file, index, lengthIn);
+                        };
+                        cell.appendChild(field);
+                    } else {
+                        cell.textContent = column.text;
+                        if (column.reason) cell.title = column.reason;
+                    }
                     row.appendChild(cell);
                 });
                 const actionsCell = document.createElement("td");
@@ -4523,12 +4603,43 @@
             });
             const tfoot = document.createElement("tfoot");
             const totalRow = document.createElement("tr");
-            ["Total", formatNumber(totalLengthIn * 25.4, 1), diameter ? formatNumber(totalDegrees, 1) : "n/a",
+            ["Total", null, diameter ? formatNumber(totalDegrees, 1) : "n/a",
                 diameter ? formatNumber(totalDegrees / 360) : "n/a", formatDuration(totalWeldTimeSeconds), ""]
                 .forEach((text, index) => {
                     const cell = document.createElement("td");
                     if (index > 0 && index < 5) cell.className = "num";
-                    cell.textContent = text;
+                    if (index === 1) {
+                        // Gesamtlaenge = Schweissnahtlaenge: Eingabe verteilt gleichmaessig (wie das Feld).
+                        const field = document.createElement("input");
+                        field.type = "text";
+                        field.className = "overview-input";
+                        const original = plainNumber(totalLengthIn * 25.4, 1);
+                        field.value = original;
+                        field.setAttribute("aria-label", "Total weld seam length (mm)");
+                        field.title = "Edit the total weld seam length; it is split evenly over all segments";
+                        field.onkeydown = event => {
+                            event.stopPropagation();
+                            if (event.key === "Enter") { event.preventDefault(); field.blur(); }
+                            if (event.key === "Escape") { field.value = original; field.blur(); }
+                        };
+                        field.onchange = () => {
+                            const mm = parseNumberInput(field.value);
+                            if (!(mm > 0)) {
+                                document.getElementById("status").textContent = "Please enter a weld seam length greater than 0.";
+                                field.value = original;
+                                return;
+                            }
+                            recordHistoryAction("Set weld seam length", () => {
+                                distributeSeamLength(file, mm / 25.4);
+                                renderSegmentList(file);
+                            });
+                            document.getElementById("status").textContent =
+                                `Weld seam length ${formatNumber(mm, 2)} mm split into ${segments.length} segment(s).`;
+                        };
+                        cell.appendChild(field);
+                    } else {
+                        cell.textContent = text;
+                    }
                     totalRow.appendChild(cell);
                 });
             tfoot.appendChild(totalRow);
@@ -4589,6 +4700,44 @@
             const segmentIndex = segment.getAttribute("index") || "";
             updateChangeLogEntry({ fileIndex, fileName: file.name, sectionName: "segments", key: "segment_time", segmentIndex, oldValue, newValue });
             if (changes) changes.push({ fileIndex, fileName: file.name, sectionName: "segments", key: "segment_time", segmentIndex, oldValue, newValue });
+        }
+
+        // Zahl ohne Tausendertrennzeichen (fuer Eingabefelder).
+        function plainNumber(value, digits) {
+            return Number.isFinite(value) ? String(Number(value.toFixed(digits))) : "";
+        }
+
+        // "320", "5:20", "1:05:20", "5 min 20 s", "1 h 2 min" -> Sekunden (NaN bei ungueltig).
+        function parseDurationInput(text) {
+            const value = String(text ?? "").trim().toLowerCase().replace(/,/g, ".");
+            if (/^\d+(\.\d+)?$/.test(value)) return Number(value);
+            const clock = value.match(/^(\d+):(\d{1,2})(?::(\d{1,2}))?$/);
+            if (clock) {
+                const [, a, b, c] = clock.map(Number);
+                return c === undefined || Number.isNaN(c) ? a * 60 + b : a * 3600 + b * 60 + c;
+            }
+            const parts = [...value.matchAll(/(\d+(?:\.\d+)?)\s*(h|min|m|s)\b/g)];
+            if (!parts.length || value.replace(/(\d+(?:\.\d+)?)\s*(h|min|m|s)\b/g, "").trim()) return NaN;
+            return parts.reduce((sum, [, number, unit]) => sum + Number(number) * (unit === "h" ? 3600 : unit === "s" ? 1 : 60), 0);
+        }
+
+        // Setzt die Laenge eines Segments (aus der Uebersichtstabelle) wie eine manuelle segment_time-Aenderung.
+        function applyManualSegmentLength(file, position, lengthIn) {
+            const segment = file.sections.segments[position];
+            if (!segment || !(lengthIn > 0)) return;
+            commitPendingEdit();
+            let message = "";
+            recordHistoryAction("Edit segment length", () => {
+                pendingEdit = { changes: [] };
+                setSegmentTime(file, segment, lengthIn, pendingEdit.changes);
+                if (file.sections.segments.length === 1) file.seamLengthIn = lengthIn;
+                else message = rebalanceAfterManualEdit(file, position);
+                pendingEdit = null;
+                selectedSegmentPosition = position;
+                renderSegmentList(file);
+            });
+            document.getElementById("status").textContent = message
+                || `Segment ${segmentDisplayNumber(segment, position)} set to ${(lengthIn * 25.4).toFixed(1)} mm.`;
         }
 
         // Nach manueller Aenderung von segment_time: Nahtlaenge bleibt fest, die nicht manuell

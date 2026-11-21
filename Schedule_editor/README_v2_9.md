@@ -86,6 +86,16 @@ Die eingegebene Nahtlaenge bleibt fest, auch wenn `segment_time` eines Segments 
 - `Split evenly` stellt die gleichmaessige Aufteilung wieder her (ebenso eine neue Eingabe im Feld sowie Hinzufuegen, Duplizieren oder Loeschen).
 - Manuelle Aenderung und Ausgleich bilden einen gemeinsamen Zurueck-Schritt.
 
+Die Werte in der Segment-Tabelle sind direkt editierbar (Klick in die Zahl, Enter uebernimmt, Esc verwirft). Jede Eingabe wird in `segment_time` umgerechnet und wirkt wie eine manuelle Aenderung (Segment wird `manual`, die anderen gleichen aus):
+
+- **Length (mm):** Laenge des Segments
+- **Angle (°):** Laenge = Winkel / 360 × π × `layer_diameter`
+- **Turns:** Laenge = Umdrehungen × π × `layer_diameter`
+- **Weld time:** Laenge = Zeit × mittlerer Vorschub des Segments; Eingabe als `320`, `5:20`, `1:05:20` oder `5 min 20 s`. Nur bei zwei oder mehr Segmenten mit gueltigen Vorschub-/Dwell-Werten editierbar.
+- **Total – Length:** entspricht dem Feld `Weld seam length` und verteilt gleichmaessig auf alle Segmente.
+
+Bei nur einem Segment uebernimmt eine geaenderte Laenge direkt die Nahtlaenge.
+
 Segmente werden im Editor ab 1 nummeriert (Segment 1, 2, …). Im XML bleibt das Attribut `index` wie von der Maschine erwartet bei 0 beginnend.
 
 Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten. Das geoeffnete Segment ist in der Liste hervorgehoben und bleibt nach Duplizieren, Verschieben, Undo/Redo und Bereichswechsel ausgewaehlt; nach dem Duplizieren ist die Kopie gewaehlt.
