@@ -171,7 +171,7 @@ In Heat Input und Comparison werden Dateien mit ihrer Kurzbezeichnung angezeigt:
 Sind mehrere Dateien geladen, kann jede Datei ueber eine Checkbox oberhalb des Diagramms ein- oder ausgeblendet werden; ausgeblendete Dateien fehlen in Diagramm und Tabelle. `Show all` blendet alle Dateien auf einmal ein, `Hide all` alle aus. Die Auswahl gilt nur fuer die laufende Sitzung. Hover zeigt die Werte, ein Klick oeffnet das Segment.
 
 Darunter steht eine gemeinsame Tabelle: je Datei eine Kopfzeile mit Name und Grenzwerten, darunter je Segment Heat Input (fett), Bereich Min – Max, Mittelstrom, Vorschub und ein Status (`✓ within limits`, `! outside limit`, `disabled` oder `! not calculable` mit Grund im Tooltip). Ein Klick auf eine Zeile oeffnet das Segment.
-- `Hidden Parameters`: Zeigt ausgeblendete Parameter nach Bereich gruppiert (`Description`, `Global`, `Limits`, `Overrides`, `Segments`; Parameter, die in keiner geladenen Datei vorkommen, unter `Not in loaded files`) mit ihrem aktuellen Wert in der aktiven Datei (bei Segmenten je Segment, falls verschieden). Einzelne Parameter, ein ganzer Bereich (`Restore section`) oder alle (`Restore all`) lassen sich wiederherstellen; Undo ist moeglich.
+- `Hidden Parameters`: Verwaltet ausgeblendete Parameter.
 - `Change Log`: Zeigt protokollierte Aenderungen.
 - `XML Viewer`: Oeffnet den schreibgeschuetzten XML-Inhalt der aktiven Datei.
 - `Local Storage Backup`: Exportiert die lokalen Editor-Einstellungen als JSON-Datei oder importiert ein zuvor erstelltes JSON-Backup. Beim Import wird bestaetigt, dass die aktuellen Editor-Einstellungen ersetzt werden; anschliessend wird die Seite neu geladen. Nicht zum Schedule Editor gehoerende Local-Storage-Eintraege bleiben unberuehrt.
