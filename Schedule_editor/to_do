@@ -27,4 +27,6 @@ Schema kontrolle einfügen
 
  Im Lib_Schedule_Editor muss das Schema überprüft werden. Das Schedule muss den vorgaben des Schema entsprechen. wenn nicht Fehlermeldung
  IM Lib_Schedule_Editor zwei Checkboxen einfügen um Changelog zu aktivieren und um die SaveNote zu aktivieren.
-  
+
+
+scrollbar in "Comparison" verbugged

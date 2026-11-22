@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -10,130 +10,173 @@
     <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
     <style>
+        /* --- MODERN ENTERPRISE DARK THEME (same as Liburdi Schedule Editor) --- */
         :root {
-            --bg-color: #0b0f19;
-            --container-bg: #131a26;
-            --border-color: #2c2520;
-            --text-color: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent-color: #ff6a00;
-            --accent-hover: #e05300;
-            --success-color: #10b981;
+            --bg-main: #141416;
+            --bg-sidebar: #1b1b1f;
+            --bg-panel: #202024;
+            --bg-panel-header: #26262b;
+            --bg-input: #18181c;
+            --border-color: #2d2d34;
+            --text-main: #f3f3f5;
+            --text-muted: #8e8e93;
+            --accent: #ff9800;
+            --accent-hover: #e68900;
+            --success: #4caf50;
+            --danger: #ff5252;
         }
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0;
+            background: var(--bg-main);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container {
-            background-color: var(--container-bg);
-            width: 100%;
-            max-width: 700px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            padding: 30px;
-            border: 1px solid rgba(255, 106, 0, 0.15);
+        /* HEADER */
+        #header {
+            padding: 14px 24px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        h1 {
-            text-align: center;
-            font-size: 26px;
-            margin-bottom: 25px;
-            color: #ffffff;
+        #header strong {
+            color: #fff;
+            font-size: 16px;
             font-weight: 600;
-            letter-spacing: 0.5px;
         }
 
-        .section {
-            background-color: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 106, 0, 0.1);
-            border-radius: 6px;
-            padding: 20px;
+        #header .header-sub {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-left: auto;
+        }
+
+        /* CONTENT */
+        #content {
+            flex: 1;
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* PANELS */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
         }
 
-        .section-title {
+        .panel-header {
+            padding: 14px 20px;
+            background: var(--bg-panel-header);
+            border-bottom: 1px solid var(--border-color);
             font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent-color);
-            margin-bottom: 15px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #fff;
         }
 
-        .drop-zone {
-            border: 2px dashed var(--accent-color);
+        .panel-body {
+            padding: 20px;
+        }
+
+        .hint {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        /* BUTTONS */
+        button {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 7px 16px;
             border-radius: 6px;
-            padding: 30px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            background: var(--accent-hover);
+        }
+
+        button:disabled {
+            background: #2a2a30;
+            color: #555;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent !important;
+            color: var(--accent) !important;
+            border: 1px solid rgba(255, 152, 0, 0.4) !important;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 152, 0, 0.08) !important;
+            border-color: var(--accent) !important;
+        }
+
+        .btn-danger {
+            background: transparent !important;
+            color: var(--danger) !important;
+            border: 1px solid rgba(255, 82, 82, 0.3) !important;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: rgba(255, 82, 82, 0.08) !important;
+            border-color: var(--danger) !important;
+        }
+
+        /* DROP ZONE */
+        .drop-zone {
+            border: 1px dashed rgba(255, 152, 0, 0.45);
+            border-radius: 8px;
+            padding: 28px 20px;
             text-align: center;
             cursor: pointer;
-            transition: background 0.3s, border-color 0.3s;
-            background: rgba(255, 106, 0, 0.01);
+            background: var(--bg-input);
+            transition: background 0.2s, border-color 0.2s;
         }
 
         .drop-zone:hover,
         .drop-zone.drag-over {
-            background: rgba(255, 106, 0, 0.06);
-            border-color: #ffffff;
+            background: rgba(255, 152, 0, 0.05);
+            border-color: var(--accent);
         }
 
         .drop-zone p {
-            font-size: 15px;
-            color: var(--text-color);
-            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--text-main);
+            margin: 0 0 14px 0;
         }
 
         .selection-options {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 12px;
-        }
-
-        .btn-select {
-            background-color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-            color: #0b0f19;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
-        }
-
-        .btn-select:hover {
-            background-color: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid rgba(255, 106, 0, 0.4);
-            color: var(--text-color);
-            padding: 10px 20px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(255, 106, 0, 0.1);
-            border-color: var(--accent-color);
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         #file-input,
@@ -141,136 +184,124 @@
             display: none;
         }
 
+        #file-count-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 14px;
+        }
+
         .file-listbox {
-            background-color: #0d131f;
-            border: 1px solid rgba(255, 106, 0, 0.15);
-            border-radius: 4px;
-            max-height: 120px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            max-height: 160px;
             overflow-y: auto;
-            margin-top: 15px;
-            font-family: 'Consolas', monospace;
-            font-size: 13px;
+            margin-top: 14px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 12px;
         }
 
         .file-item {
-            padding: 8px 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            color: #ffb07c;
+            padding: 7px 12px;
+            border-bottom: 1px solid #26262b;
+            color: #c5c5c9;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .radio-group {
-            display: flex;
-            gap: 25px;
-            align-items: center;
+        .file-item:last-child {
+            border-bottom: none;
         }
 
+        /* RADIO */
         .radio-label {
             display: flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 13.5px;
         }
 
         .radio-label input {
-            accent-color: var(--accent-color);
-            width: 18px;
-            height: 18px;
+            accent-color: var(--accent);
+            width: 16px;
+            height: 16px;
+            margin: 0;
         }
 
+        /* PROGRESS */
         .progress-container {
             margin-bottom: 20px;
             display: none;
         }
 
         .progress-text {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
             margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
+            gap: 12px;
+        }
+
+        #progress-status {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .progress-bar-bg {
-            background-color: #1e293b;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
             width: 100%;
-            height: 10px;
-            border-radius: 5px;
+            height: 8px;
+            border-radius: 4px;
             overflow: hidden;
         }
 
         .progress-bar-fill {
-            background-color: #43ec0f;
+            background: var(--accent);
             width: 0%;
             height: 100%;
-            transition: width 0.1s ease;
-            box-shadow: 0 0 10px rgba(255, 106, 0, 0.5);
+            transition: width 0.15s ease;
         }
 
-        .btn-convert {
-            display: block;
-            width: 100%;
-            background-color: var(--accent-color);
-            color: #0b0f19;
-            border: none;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 12px rgba(255, 106, 0, 0.25);
-        }
-
-        .btn-convert:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .btn-convert:active {
-            transform: scale(0.99);
-        }
-
-        .download-container {
-            background-color: rgba(16, 185, 129, 0.05);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 6px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-        }
-
-        .download-container .section-title {
-            color: var(--success-color);
+        /* DOWNLOAD */
+        .download-container .panel-header {
+            color: var(--success);
         }
 
         .download-container p {
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin: 0 0 12px 0;
+            line-height: 1.5;
         }
 
         .btn-download {
-            display: block;
             width: 100%;
-            background-color: var(--success-color);
-            color: #0b0f19;
-            border: none;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
+            background: var(--success);
+            padding: 10px;
         }
 
-        .btn-download:hover {
-            background-color: #0ea371;
+        .btn-download:hover:not(:disabled) {
+            background: #43a047;
+        }
+
+        .btn-convert {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
         }
 
         .footer {
             text-align: center;
-            margin-top: 25px;
-            font-size: 12px;
-            font-style: italic;
+            margin-top: 24px;
+            font-size: 11px;
             color: var(--text-muted);
         }
     </style>
@@ -278,43 +309,49 @@
 
 <body>
 
-    <div class="container">
-        <h1>Liburdi Welddata Converter</h1>
+    <div id="header">
+        <strong>Welddata Converter</strong>
+        <span class="header-sub">CSV &rarr; Excel (.xlsx)</span>
+    </div>
 
-        <div class="section">
-            <div class="section-title">1. CSV-/XML-Quelldateien oder Ordner auswählen</div>
-            <div class="drop-zone" id="drop-zone">
-                <p>Dateien/Ordner hierher ziehen oder über die Buttons auswählen</p>
-                <div class="selection-options">
-                    <button type="button" class="btn-select" id="browse-files">CSV-/XML-Dateien...</button>
-                    <button type="button" class="btn-secondary" id="browse-folder">Ganze Ordner...</button>
-                    <button type="button" class="btn-secondary" id="clear-selection">Auswahl leeren</button>
+    <div id="content">
+        <div class="panel">
+            <div class="panel-header">1. Select CSV/XML source files or folders</div>
+            <div class="panel-body">
+                <div class="drop-zone" id="drop-zone">
+                    <p>Drop files/folders here or use the buttons</p>
+                    <div class="selection-options">
+                        <button type="button" id="browse-files">Select files...</button>
+                        <button type="button" class="btn-secondary" id="browse-folder">Select folder...</button>
+                        <button type="button" class="btn-danger" id="clear-selection">Clear selection</button>
+                    </div>
+                    <span id="file-count-label">No files selected</span>
+                    <span class="hint" style="margin-top:4px;">Multiple folders can be selected one after another
+                        and are added to the list.</span>
+
+                    <input type="file" id="file-input" multiple accept=".csv,.xml">
+                    <input type="file" id="folder-input" webkitdirectory mozdirectory msdirectory odirectory directory
+                        multiple>
                 </div>
-                <span id="file-count-label"
-                    style="display:block; font-size:12px; color:var(--text-muted); margin-top:15px;">Keine Dateien
-                    ausgewählt</span>
-                <span style="display:block; font-size:11px; color:var(--text-muted); margin-top:6px;">Tipp: Mehrere
-                    Ordner können nacheinander ausgewählt und hinzugefügt werden.</span>
-
-                <input type="file" id="file-input" multiple accept=".csv,.xml">
-                <input type="file" id="folder-input" webkitdirectory mozdirectory msdirectory odirectory directory
-                    multiple>
+                <div class="file-listbox" id="file-listbox" style="display: none;"></div>
             </div>
-            <div class="file-listbox" id="file-listbox" style="display: none;"></div>
         </div>
 
-        <div class="section">
-            <div class="section-title">2. Zielformat festlegen</div>
-            <div class="radio-group">
+        <div class="panel">
+            <div class="panel-header">2. Output format</div>
+            <div class="panel-body">
                 <label class="radio-label">
-                    <input type="radio" name="format" value="Excel" checked> Excel (.xlsx) für CSV-Dateien
+                    <input type="radio" name="format" value="Excel" checked> Excel (.xlsx) for CSV files
                 </label>
+                <span class="hint">On start you will be asked for a target folder (Chrome/Edge). The Excel files are
+                    saved there directly. Other browsers download a ZIP archive (split into several parts for large
+                    batches). XML files are copied unchanged.</span>
             </div>
         </div>
 
         <div class="progress-container" id="progress-container">
             <div class="progress-text">
-                <span id="progress-status">Verarbeite Dateien...</span>
+                <span id="progress-status">Processing files...</span>
                 <span id="progress-percent">0%</span>
             </div>
             <div class="progress-bar-bg">
@@ -322,16 +359,18 @@
             </div>
         </div>
 
-        <div class="download-container" id="download-container" style="display: none;">
-            <div class="section-title">3. Download</div>
-            <p id="download-info">Die konvertierten Dateien wurden erfolgreich als ZIP-Archiv erstellt.</p>
-            <button class="btn-download" id="download-btn">ZIP-Datei herunterladen</button>
+        <div class="panel download-container" id="download-container" style="display: none;">
+            <div class="panel-header">3. Download</div>
+            <div class="panel-body">
+                <p id="download-info">The converted files were packed into a ZIP archive.</p>
+                <button class="btn-download" id="download-btn">Download ZIP file</button>
+            </div>
         </div>
 
-        <button class="btn-convert" id="convert-btn">KONVERTIERUNG STARTEN</button>
+        <button class="btn-convert" id="convert-btn">START CONVERSION</button>
 
         <div class="footer">
-            Ersteller: David Blank, Bilfinger
+            Created by: David Blank, Bilfinger
         </div>
     </div>
 
@@ -357,12 +396,13 @@
         const downloadBtn = document.getElementById('download-btn');
         const downloadInfo = document.getElementById('download-info');
 
-        const maxParallelJobs = Math.max(1, Math.min(3, Math.floor((navigator.hardwareConcurrency || 4) / 2)));
         const zipFileOptions = { compression: "STORE" };
+        // Fallback without folder access: the ZIP is split into parts of max. ~400 MB
+        // so browser memory does not overflow with many large files.
+        const MAX_ZIP_BYTES = 400 * 1024 * 1024;
 
         let latestZipBlob = null;
-        let latestZipUrl = null;
-        let latestZipName = 'Excel_Konvertiert.zip';
+        let latestZipName = 'Excel_Converted.zip';
 
         function isCsvFile(name) {
             return name.toLowerCase().endsWith('.csv');
@@ -372,7 +412,7 @@
             return name.toLowerCase().endsWith('.xml');
         }
 
-        function getZipPath(file) {
+        function getOutputPath(file) {
             const relativePath = file.webkitRelativePath || file.name || '';
             const normalized = relativePath.replace(/\\/g, '/');
             if (!normalized) return 'converted.xlsx';
@@ -382,7 +422,7 @@
             return normalized;
         }
 
-        // Event-Listener für Buttons
+        // Button event listeners
         browseFiles.addEventListener('click', (e) => {
             e.stopPropagation();
             fileInput.click();
@@ -396,21 +436,17 @@
         clearSelectionBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             selectedFiles = [];
-            fileCountLabel.textContent = "Keine Dateien ausgewählt";
+            fileCountLabel.textContent = "No files selected";
             fileListbox.innerHTML = '';
             fileListbox.style.display = 'none';
             convertBtn.disabled = true;
             progressContainer.style.display = 'none';
             downloadContainer.style.display = 'none';
             latestZipBlob = null;
-            if (latestZipUrl) {
-                URL.revokeObjectURL(latestZipUrl);
-                latestZipUrl = null;
-            }
             updateProgressBar(0, 0);
         });
 
-        // Klick in die neutrale Dropzone triggert Dateiauswahl
+        // Clicking the neutral drop zone area opens the file dialog
         dropZone.addEventListener('click', (e) => {
             if (e.target === dropZone || e.target.tagName === 'P' || e.target === fileCountLabel) {
                 fileInput.click();
@@ -426,7 +462,7 @@
             dropZone.classList.remove('drag-over');
         });
 
-        // Rekursives Drag & Drop für Ordnerstrukturen
+        // Recursive drag & drop for folder structures
         dropZone.addEventListener('drop', async (e) => {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
@@ -450,7 +486,7 @@
                 } else if (item.isDirectory) {
                     const dirReader = item.createReader();
 
-                    // Hilfsfunktion um ALLE Einträge eines Verzeichnisses zu lesen (behebt Browser-Limits)
+                    // Read ALL entries of a directory (readEntries returns them in chunks)
                     const readAllEntries = async (reader) => {
                         let allEntries = [];
                         let read = async () => {
@@ -506,19 +542,15 @@
                 .filter(file => file && file.name && (isCsvFile(file.name) || isXmlFile(file.name)));
 
             if (validFiles.length === 0) {
-                alert("Es wurden keine gültigen .csv oder .xml Dateien im ausgewählten Verzeichnis gefunden.");
+                alert("No valid .csv or .xml files were found in the selection.");
                 return;
             }
 
-            // Download-Bereich zurücksetzen bei neuer Auswahl
+            // Reset download area on new selection
             downloadContainer.style.display = 'none';
             latestZipBlob = null;
-            if (latestZipUrl) {
-                URL.revokeObjectURL(latestZipUrl);
-                latestZipUrl = null;
-            }
 
-            // Bei append=true werden die neuen Dateien zur bestehenden Auswahl hinzugefügt
+            // append=true adds the new files to the existing selection
             const combined = append ? [...selectedFiles, ...validFiles] : [...validFiles];
 
             const uniqueMap = new Map();
@@ -529,15 +561,14 @@
                 return aName.localeCompare(bName);
             });
 
-            fileCountLabel.textContent = `${selectedFiles.length} Datei(en) geladen`;
+            fileCountLabel.textContent = `${selectedFiles.length} file(s) loaded`;
             fileListbox.innerHTML = '';
             fileListbox.style.display = 'block';
 
             selectedFiles.forEach(file => {
                 const item = document.createElement('div');
                 item.className = 'file-item';
-                const displayName = file.webkitRelativePath ? file.webkitRelativePath : file.name;
-                item.textContent = `LOADED: ${displayName}`;
+                item.textContent = file.webkitRelativePath ? file.webkitRelativePath : file.name;
                 fileListbox.appendChild(item);
             });
 
@@ -550,52 +581,18 @@
             const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
             progressBarFill.style.width = `${percentage}%`;
             progressPercent.textContent = `${percentage}%`;
-            progressStatus.textContent = `Datei ${current} von ${total} wird verarbeitet...`;
+            progressStatus.textContent = `Processing file ${current} of ${total}...`;
         }
 
         downloadBtn.addEventListener('click', () => {
             if (!latestZipBlob) {
-                alert("Keine ZIP-Datei verfügbar. Bitte zuerst konvertieren.");
+                alert("No ZIP file available. Please run the conversion first.");
                 return;
             }
-
-            if (latestZipUrl) URL.revokeObjectURL(latestZipUrl);
-            latestZipUrl = URL.createObjectURL(latestZipBlob);
-
-            const link = document.createElement('a');
-            link.href = latestZipUrl;
-            link.download = latestZipName;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            setTimeout(() => {
-                link.remove();
-            }, 1000);
+            downloadBlob(latestZipName, latestZipBlob);
         });
 
-        async function triggerDownload(filename, blob) {
-            if (window.showSaveFilePicker) {
-                try {
-                    const handle = await window.showSaveFilePicker({
-                        suggestedName: filename,
-                        types: [{
-                            description: 'ZIP Archive',
-                            accept: { 'application/zip': ['.zip'] }
-                        }]
-                    });
-                    const writable = await handle.createWritable();
-                    await writable.write(blob);
-                    await writable.close();
-                    return;
-                } catch (err) {
-                    if (err && err.name !== 'AbortError') {
-                        console.warn('showSaveFilePicker failed, fallback to anchor download:', err);
-                    } else {
-                        return;
-                    }
-                }
-            }
-
+        function downloadBlob(filename, blob) {
             if (window.saveAs) {
                 window.saveAs(blob, filename);
                 return;
@@ -611,7 +608,21 @@
             setTimeout(() => {
                 link.remove();
                 URL.revokeObjectURL(url);
-            }, 1000);
+            }, 60000);
+        }
+
+        // Writes a file (incl. subfolders from the relative path) directly into the chosen target folder
+        async function writeToDirectory(rootHandle, relativePath, data) {
+            const parts = relativePath.split('/').filter(Boolean);
+            const fileName = parts.pop();
+            let dir = rootHandle;
+            for (const part of parts) {
+                dir = await dir.getDirectoryHandle(part, { create: true });
+            }
+            const fileHandle = await dir.getFileHandle(fileName, { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(data);
+            await writable.close();
         }
 
         function parseCsv(csvText) {
@@ -634,10 +645,7 @@
                         } else {
                             inQuotes = !inQuotes;
                         }
-                    } else if (char === ';' && !inQuotes) {
-                        result.push(current.trim());
-                        current = '';
-                    } else if (char === ',' && !inQuotes) {
+                    } else if ((char === ';' || char === ',') && !inQuotes) {
                         result.push(current.trim());
                         current = '';
                     } else {
@@ -661,94 +669,135 @@
             return matrix;
         }
 
+        // Store numbers as real Excel numbers (smaller file, directly usable in Excel).
+        // Values with a leading zero (e.g. "0404") and date/time values stay text.
+        const numberPattern = /^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/;
+        function toCellValue(cell) {
+            if (cell !== '' && numberPattern.test(cell) && !/^[-+]?0\d/.test(cell)) {
+                return Number(cell);
+            }
+            return cell;
+        }
+
+        function convertCsvToXlsx(csvText) {
+            const matrix = parseCsv(csvText);
+            if (matrix.length === 0) return null;
+
+            const typed = matrix.map(row => row.map(toCellValue));
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(typed);
+            XLSX.utils.book_append_sheet(wb, ws, "Data");
+            return XLSX.write(wb, { bookType: 'xlsx', type: 'array', compression: true });
+        }
+
+        const nextFrame = () => new Promise(resolve => setTimeout(resolve, 0));
+
         convertBtn.addEventListener('click', async () => {
             if (selectedFiles.length === 0) {
-                alert("Fehler: Keine CSV-/XML-Dateien ausgewählt.");
+                alert("Error: no CSV/XML files selected.");
                 return;
             }
 
-            convertBtn.disabled = true;
-            const zip = new JSZip();
-            let successCount = 0;
+            // Choose the target folder right on click (browsers only allow this directly after a user action).
+            // Each Excel file is written there immediately -> no huge ZIP in memory.
+            let targetDir = null;
+            if (window.showDirectoryPicker) {
+                try {
+                    targetDir = await window.showDirectoryPicker({ id: 'wdr-output', mode: 'readwrite' });
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return; // user cancelled
+                    console.warn('Folder selection not available, falling back to ZIP download:', err);
+                    targetDir = null;
+                }
+            }
 
+            convertBtn.disabled = true;
+            downloadContainer.style.display = 'none';
             progressContainer.style.display = 'block';
-            updateProgressBar(0, selectedFiles.length);
+
+            const total = selectedFiles.length;
+            const failed = [];
+            let successCount = 0;
+            let zip = null;
+            let zipBytes = 0;
+            let zipPart = 0;
+
+            const flushZip = async () => {
+                if (!zip || zipBytes === 0) return;
+                zipPart++;
+                progressStatus.textContent = `Creating ZIP part ${zipPart}...`;
+                await nextFrame();
+                const blob = await zip.generateAsync({ type: "blob", compression: "STORE" });
+                const name = `Excel_Converted_Part${zipPart}.zip`;
+                latestZipBlob = blob;
+                latestZipName = name;
+                downloadBlob(name, blob);
+                zip = null;
+                zipBytes = 0;
+            };
 
             try {
-                const queue = [...selectedFiles];
-                let processedCount = 0;
+                for (let i = 0; i < total; i++) {
+                    const file = selectedFiles[i];
+                    updateProgressBar(i, total);
+                    progressStatus.textContent = `File ${i + 1} of ${total}: ${file.name}`;
+                    await nextFrame(); // let the progress display repaint
 
-                while (queue.length) {
-                    const batch = queue.splice(0, maxParallelJobs);
-                    const batchResults = await Promise.all(batch.map(async (file) => {
-                        try {
-                            const zipPath = getZipPath(file);
+                    try {
+                        const outPath = getOutputPath(file);
+                        let data;
 
-                            // XML-Dateien werden unverändert in das ZIP übernommen
-                            if (isXmlFile(file.name)) {
-                                const text = await file.text();
-                                return { ok: true, zipPath, data: text };
+                        if (isXmlFile(file.name)) {
+                            // XML files are copied unchanged
+                            data = new Uint8Array(await file.arrayBuffer());
+                        } else {
+                            data = convertCsvToXlsx(await file.text());
+                            if (!data) {
+                                failed.push(file.name);
+                                continue;
                             }
+                        }
 
-                            // CSV-Dateien werden in Excel konvertiert
-                            const text = await file.text();
-                            const matrix = parseCsv(text);
-
-                            if (matrix.length === 0) {
-                                return { ok: false, fileName: file.name };
+                        if (targetDir) {
+                            await writeToDirectory(targetDir, outPath, data);
+                        } else {
+                            if (zip && zipBytes + data.byteLength > MAX_ZIP_BYTES) {
+                                await flushZip();
                             }
-
-                            const wb = XLSX.utils.book_new();
-                            const ws = XLSX.utils.aoa_to_sheet(matrix);
-                            XLSX.utils.book_append_sheet(wb, ws, "Data");
-
-                            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-
-                            return { ok: true, zipPath, data: wbout };
-                        } catch (err) {
-                            console.error(`Fehler bei Datei ${file.name}:`, err);
-                            return { ok: false, fileName: file.name };
+                            if (!zip) zip = new JSZip();
+                            zip.file(outPath, data, zipFileOptions);
+                            zipBytes += data.byteLength;
                         }
-                    }));
-
-                    batchResults.forEach(result => {
-                        if (result.ok) {
-                            zip.file(result.zipPath, result.data, zipFileOptions);
-                            successCount++;
-                        }
-                    });
-
-                    processedCount += batch.length;
-                    updateProgressBar(processedCount, selectedFiles.length);
+                        successCount++;
+                    } catch (err) {
+                        console.error(`Error in file ${file.name}:`, err);
+                        failed.push(file.name);
+                    }
                 }
 
-                if (successCount > 0) {
-                    progressStatus.textContent = "ZIP-Archiv wird generiert...";
-                    const finalZipName = "Excel_Konvertiert.zip";
+                if (!targetDir) await flushZip();
 
-                    const content = await zip.generateAsync({ type: "blob", compression: "STORE" });
+                updateProgressBar(total, total);
+                const failedText = failed.length
+                    ? `\n\nFailed (${failed.length}):\n${failed.slice(0, 15).join('\n')}${failed.length > 15 ? '\n...' : ''}`
+                    : '';
 
-                    // Blob für manuellen Download speichern und Download-Bereich anzeigen
-                    latestZipBlob = content;
-                    latestZipName = finalZipName;
-                    if (latestZipUrl) URL.revokeObjectURL(latestZipUrl);
-                    latestZipUrl = URL.createObjectURL(content);
-
-                    downloadInfo.textContent = `ZIP-Archiv mit ${successCount} von ${selectedFiles.length} Dateien wurde erstellt. Klicken Sie auf den Button, um die Datei herunterzuladen.`;
-                    downloadContainer.style.display = 'block';
-
-                    // Automatischen Download versuchen
-                    await triggerDownload(finalZipName, content);
-
-                    progressStatus.textContent = "Konvertierung erfolgreich abgeschlossen!";
-                    alert(`Prozess abgeschlossen!\n\nErfolgreich verarbeitet: ${successCount} von ${selectedFiles.length} Dateien.\n\nDas ZIP-Archiv wurde erstellt.`);
+                if (successCount === 0) {
+                    progressStatus.textContent = "Conversion failed.";
+                    alert("No files could be processed. Please check that the CSV files contain data." + failedText);
+                } else if (targetDir) {
+                    progressStatus.textContent = `Done: ${successCount} of ${total} files saved in "${targetDir.name}".`;
+                    alert(`Process completed!\n\n${successCount} of ${total} files were saved in the folder "${targetDir.name}".` + failedText);
                 } else {
-                    progressStatus.textContent = "Konvertierung fehlgeschlagen.";
-                    alert("Es konnten keine Dateien verarbeitet werden. Bitte prüfe, ob die CSV-Dateien Daten enthalten.");
+                    progressStatus.textContent = "Conversion completed successfully!";
+                    downloadInfo.textContent = zipPart > 1
+                        ? `${successCount} of ${total} files were downloaded in ${zipPart} ZIP parts. If the browser asks, allow multiple downloads. The button downloads the last part again.`
+                        : `ZIP archive with ${successCount} of ${total} files was created. If the download did not start automatically, click the button.`;
+                    downloadContainer.style.display = 'block';
+                    alert(`Process completed!\n\nSuccessfully processed: ${successCount} of ${total} files in ${zipPart} ZIP file(s).` + failedText);
                 }
             } finally {
                 convertBtn.disabled = false;
-                updateProgressBar(successCount, selectedFiles.length);
             }
         });
     </script>
