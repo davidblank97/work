@@ -3963,7 +3963,7 @@
                     <span class="badge" id="changeCounter">No changes</span>
                     <button id="resetChangesBtn" class="btn-secondary" type="button" disabled
                         title="Revert all loaded files to the last saved state">Revert</button>
-                    <button id="saveBtn" type="button" disabled title="Save the active file in the editor and log it in the Change Log – no download (Ctrl+S)">Save</button>
+                    <button id="saveBtn" type="button" disabled title="Save all changed files in the editor and log them in the Change Log – no download (Ctrl+S)">Save</button>
                     <button id="batchSaveBtn" class="batch-save-btn" type="button" disabled
                         title="Download the selected files, optionally with a revision tag (ZIP for several files)">Batch Save…</button>
                 </div>
@@ -5504,7 +5504,7 @@
 
                 <h4>Keyboard shortcuts</h4>
                 <ul>
-                    <li><strong>Ctrl+S</strong> save (in the editor, logged in the Change Log)</li>
+                    <li><strong>Ctrl+S</strong> save all changed files (in the editor, logged in the Change Log)</li>
                     <li><strong>Ctrl+Z</strong> undo, <strong>Ctrl+Y</strong> / <strong>Ctrl+Shift+Z</strong> redo
                         (inside an input field the browser's own undo applies)</li>
                     <li><strong>Ctrl+F</strong> or <strong>/</strong> search, <strong>Esc</strong> clear search or
@@ -5513,7 +5513,7 @@
 
                 <h4>Saving</h4>
                 <ul>
-                    <li><strong>Save:</strong> saves the active file in the editor (new baseline for "changed" markers,
+                    <li><strong>Save:</strong> saves all changed files in the editor (new baseline for "changed" markers,
                         Revert and the XML Viewer) and adds a "Saved" entry with the number of changes to the Change Log.
                         Nothing is downloaded; saved files that were not downloaded show <em>Saved ↓</em>.
                         To rename a file, edit the file name above the sections.</li>
@@ -8570,23 +8570,27 @@
             saveChangeLog();
         }
 
-        // Save laedt nicht mehr herunter: Stand wird im Editor gespeichert und im Change Log eingetragen.
+        // Save laedt nicht herunter: speichert alle geaenderten Dateien im Editor und traegt sie im Change Log ein.
         // Herunterladen nur ueber Batch Save.
         function saveActiveFile() {
             commitPendingEdit();
-            const file = loadedFiles[activeFile];
-            if (!file) return;
             const status = document.getElementById("status");
-            if (!isFileDirty(file)) {
-                status.textContent = needsDownload(file)
-                    ? `"${file.name}" is already saved – download it with Batch Save.`
-                    : `"${file.name}" has no changes.`;
+            const dirtyFiles = loadedFiles.filter(isFileDirty);
+            if (!dirtyFiles.length) {
+                const pending = loadedFiles.filter(needsDownload).length;
+                status.textContent = pending
+                    ? `All files are saved – ${pending} not downloaded yet (Batch Save).`
+                    : "No changes to save.";
                 return;
             }
-            const count = countChangesSinceSave(file);
-            addSaveLogEntry(file, "Saved", `${count} change${count === 1 ? "" : "s"}`);
-            markFilesSaved([file]);
-            status.textContent = `Saved "${file.name}" (${count} change${count === 1 ? "" : "s"} logged). Download with Batch Save.`;
+            let total = 0;
+            dirtyFiles.forEach(file => {
+                const count = countChangesSinceSave(file);
+                total += count;
+                addSaveLogEntry(file, "Saved", `${count} change${count === 1 ? "" : "s"}`);
+            });
+            markFilesSaved(dirtyFiles);
+            status.textContent = `Saved ${dirtyFiles.length} file${dirtyFiles.length === 1 ? "" : "s"} (${total} change${total === 1 ? "" : "s"} logged). Download with Batch Save.`;
         }
 
         // Entfernt Zeichen, die in Dateinamen nicht erlaubt sind (und Leerzeichen).

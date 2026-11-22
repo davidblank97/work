@@ -219,7 +219,7 @@ Die Versionen und eigene Layout-Muster liegen im `localStorage` (`scheduleEditor
 
 ### Save
 
-`Save` (Strg+S) laedt **nichts herunter**. Der aktuelle Stand der aktiven Datei wird im Editor gespeichert und im Change Log eingetragen: eine gruen hervorgehobene Zeile `Saved` mit der Anzahl der Aenderungen seit dem letzten Speichern. Die einzelnen Feldaenderungen stehen wie bisher darunter.
+`Save` (Strg+S) laedt **nichts herunter**. Gespeichert werden **alle geladenen Dateien mit Aenderungen**, nicht nur die aktive. Jede gespeicherte Datei bekommt im Change Log eine gruen hervorgehobene Zeile `Saved` mit der Anzahl ihrer Aenderungen seit dem letzten Speichern. Die einzelnen Feldaenderungen stehen wie bisher darunter.
 
 Nach dem Speichern gilt der gespeicherte Stand als neue Vergleichsbasis:
 
