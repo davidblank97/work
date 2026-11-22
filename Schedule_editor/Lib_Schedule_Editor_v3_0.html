@@ -11299,7 +11299,7 @@
     </div>
 
     <script>
-        let selectedFiles = [];
+        let wdrSelectedFiles = [];
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -11359,7 +11359,7 @@
 
         clearSelectionBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectedFiles = [];
+            wdrSelectedFiles = [];
             fileCountLabel.textContent = "No files selected";
             fileListbox.innerHTML = '';
             fileListbox.style.display = 'none';
@@ -11475,21 +11475,21 @@
             latestZipBlob = null;
 
             // append=true adds the new files to the existing selection
-            const combined = append ? [...selectedFiles, ...validFiles] : [...validFiles];
+            const combined = append ? [...wdrSelectedFiles, ...validFiles] : [...validFiles];
 
             const uniqueMap = new Map();
             combined.forEach(file => uniqueMap.set(normalizeFileKey(file), file));
-            selectedFiles = [...uniqueMap.values()].sort((a, b) => {
+            wdrSelectedFiles = [...uniqueMap.values()].sort((a, b) => {
                 const aName = (a.webkitRelativePath || a.name || '').toLowerCase();
                 const bName = (b.webkitRelativePath || b.name || '').toLowerCase();
                 return aName.localeCompare(bName);
             });
 
-            fileCountLabel.textContent = `${selectedFiles.length} file(s) loaded`;
+            fileCountLabel.textContent = `${wdrSelectedFiles.length} file(s) loaded`;
             fileListbox.innerHTML = '';
             fileListbox.style.display = 'block';
 
-            selectedFiles.forEach(file => {
+            wdrSelectedFiles.forEach(file => {
                 const item = document.createElement('div');
                 item.className = 'file-item';
                 item.textContent = file.webkitRelativePath ? file.webkitRelativePath : file.name;
@@ -11498,7 +11498,7 @@
 
             convertBtn.disabled = false;
             progressContainer.style.display = 'none';
-            updateProgressBar(0, selectedFiles.length);
+            updateProgressBar(0, wdrSelectedFiles.length);
         }
 
         function updateProgressBar(current, total) {
@@ -11617,7 +11617,7 @@
         const nextFrame = () => new Promise(resolve => setTimeout(resolve, 0));
 
         convertBtn.addEventListener('click', async () => {
-            if (selectedFiles.length === 0) {
+            if (wdrSelectedFiles.length === 0) {
                 alert("Error: no CSV/XML files selected.");
                 return;
             }
@@ -11639,7 +11639,7 @@
             downloadContainer.style.display = 'none';
             progressContainer.style.display = 'block';
 
-            const total = selectedFiles.length;
+            const total = wdrSelectedFiles.length;
             const failed = [];
             let successCount = 0;
             let zip = null;
@@ -11662,7 +11662,7 @@
 
             try {
                 for (let i = 0; i < total; i++) {
-                    const file = selectedFiles[i];
+                    const file = wdrSelectedFiles[i];
                     updateProgressBar(i, total);
                     progressStatus.textContent = `File ${i + 1} of ${total}: ${file.name}`;
                     await nextFrame(); // let the progress display repaint
