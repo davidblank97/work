@@ -171,6 +171,33 @@ Geprueft werden:
 
 Ist eine passende Version gespeichert, bietet `Use v…` an, sie zu aktivieren.
 
+**Auf die neueste Version bringen (Upgrade):** Aeltere Schedules lassen sich direkt im Editor auf die Version des aktiven Schemas bringen, damit die Maschine sie ohne Fehlermeldung liest.
+
+- `Tools > Schema Check` zeigt bei jeder Datei mit Schemafehlern oder aelterer Version `Upgrade to v…`.
+- Oben gibt es `Upgrade all to v… (n)` fuer alle betroffenen Dateien.
+- Ein Dialog zeigt vorher je Datei: Version alt → neu, Anzahl ergaenzter, entfernter und umbenannter Felder sowie das verwendete Muster.
+
+Regeln (wie `Schedule_Org/batch_editor1.6.py`: Layout von der neuesten Version, nicht die Werte):
+
+1. **Werte bleiben erhalten:** Alle vorhandenen Felder behalten ihren Wert, auch gesperrte (🔒). Alle Segmente bleiben erhalten.
+2. **Fehlende Pflichtfelder ergaenzen:** Sie werden mit dem Wert aus dem Layout-Muster ergaenzt. Das Muster richtet sich nach dem Head:
+   - Head mit `NGRT` → `8888-layout new NGRT.xml`
+   - sonst → `7777-layout new NG.xml`
+
+   Beide sind eingebaut. Eigene Muster laedt man unter `Tools > Settings` (`Load template XML…`); sie werden ueber ihren Head zugeordnet.
+3. **Umbenennungen:** `amp_max` → `pri_amp_max` und `bkg_amp_max`, `amp_rate` → `pri_amp_rate` und `bkg_amp_rate` (Wert wird uebernommen).
+4. **Felder ohne Gegenstueck im Schema werden entfernt**, z. B. `ahc_retract`, `blast_time`, `mig_pulse_*`.
+5. **Reihenfolge:** Die Felder werden in die Reihenfolge des Schemas gebracht. Der Python-Batch-Editor haengt neue Felder dagegen hinten an.
+6. **Feste Werte:** `config_version` wird auf die Schema-Version gesetzt, `jog_speed_edit_mode` auf `1`.
+
+Nach dem Upgrade:
+
+- Die Dateien sind `Unsaved` und werden wie gewohnt gespeichert.
+- Der Vorgang laesst sich mit Undo komplett zuruecknehmen und steht im Change Log.
+- Unter `Last upgrade` listet der Editor alle ergaenzten, entfernten (mit altem Wert) und umbenannten Felder auf.
+
+Geprueft mit `schedule_beispiel.xml` (1.7.4.1), `5555-layout old NG.xml` (1.8.3.3) und `Test 2 Segmente.xml` (1.8.3.5): Danach sind alle schema-konform, und ihr Aufbau entspricht genau den 1.8.3.7-Programmen in `04_HIC_PK_764_CS_NGRT_Rev1/`.
+
 **Schema-Versionen verwalten:** Unter `Tools > Settings` (Bereich „XDR schema“):
 
 - Liste aller gespeicherten Versionen mit Version, Dateiname und Ladedatum.
@@ -178,7 +205,7 @@ Ist eine passende Version gespeichert, bietet `Use v…` an, sie zu aktivieren.
 - `Delete` loescht eine geladene Version; die eingebaute laesst sich nicht loeschen.
 - Neue Versionen werden ueber `Load XDR…` oder per Ablegen einer `.XDR`-Datei aufgenommen und sofort aktiviert. Eine bereits gespeicherte Version kann ersetzt werden.
 
-Die Versionen liegen im `localStorage` und sind im JSON-Backup enthalten.
+Die Versionen und eigene Layout-Muster liegen im `localStorage` (`scheduleEditorXdrSchemas`, `scheduleEditorLayoutTemplates`) und sind im JSON-Backup enthalten.
 
 ## Speichern
 

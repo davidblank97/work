@@ -3040,6 +3040,52 @@
             white-space: nowrap;
         }
 
+        .upgrade-modal-box {
+            width: min(640px, calc(100vw - 32px)) !important;
+        }
+
+        .upgrade-line.is-error {
+            color: var(--danger);
+        }
+
+        .schema-upgrade-report {
+            margin: 0 16px 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .schema-upgrade-report summary {
+            cursor: pointer;
+            color: var(--success);
+        }
+
+        .schema-upgrade-lines {
+            max-height: 220px;
+            margin: 6px 0 0;
+            padding-left: 18px;
+            overflow-y: auto;
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .layout-template-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .layout-template-chip {
+            padding: 2px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+        }
+
         .schema-save-text {
             margin: 0 0 10px;
             font-size: 13px;
@@ -4633,6 +4679,704 @@
 </Schema>
     </script>
 
+    <div class="modal-overlay" id="upgradeModal">
+        <div class="modal-box upgrade-modal-box" role="dialog" aria-modal="true" aria-labelledby="upgradeTitle">
+            <h3 id="upgradeTitle">Upgrade to the latest schema version</h3>
+            <p id="upgradeText" class="schema-save-text"></p>
+            <div id="upgradeList" class="schema-save-list"></div>
+            <div class="modal-actions">
+                <button id="upgradeCancelBtn" class="btn-secondary" type="button">Cancel</button>
+                <button id="upgradeConfirmBtn" class="btn-primary" type="button">Upgrade</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eingebaute Layout-Muster fuer das Upgrade (Werte neuer Felder), Auswahl nach Head. -->
+    <script type="text/xml" id="layoutNGRT">
+<sched id="" head="NGRT + H-HEAD">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.7</config_version>
+		<author>David Blank BHR151</author>
+		<date>2026/09/09 07:57:27</date>
+		<signature>nQPESML7YuE5GWWJJbku6ZukM9paMWz3IB4jQ2hNfz2q6LELb+FT8d3tWYn1SbScmx5cwOmeRH5Ax7o0x2Zj2M1Hb6o/TeBOcdJeAuQOFPjmm8ooKz0/q+XC+2I00k/OsBdfORnfNCliCuU6dO3jxH9teZADCsMnbkXb8T/dwX0=|BgIAAAAkAABSU0ExAAQAAAEAAQDvxtAfz+82d4YEBVw7cF4j8zuyoKpsKMEqI7AmUu8Ie/SJsnz7TbNC0ZoJlsu6hXxflJs+M0r2dIz1iY0gdyN8tih/uBEQRGNnIfdI3l2QjdWkScZJCarj+tRu2JtJn/LoMr42S5D5DUFCfXx7Tb8Tw1+JVEl/m0HZA/rVtTqYuQ==</signature>
+	</metadata>
+	<description>
+		<outer_diameter>0.000000</outer_diameter>
+		<groove_depth>0.000000</groove_depth>
+		<custom_search_tag/>
+		<note/>
+	</description>
+	<global>
+		<arc_type>TOUCH</arc_type>
+		<excursion_mode>0</excursion_mode>
+		<datalog_mode>1</datalog_mode>
+		<prepurge>5.000000</prepurge>
+		<postpurge>10.000000</postpurge>
+		<trail_gas>0</trail_gas>
+		<backup_gas>0</backup_gas>
+		<plasma_gas>1</plasma_gas>
+		<auto_disable_pilot_arc>0</auto_disable_pilot_arc>
+		<pilot_arc_amps>10.000000</pilot_arc_amps>
+		<initial_amps>20.000000</initial_amps>
+		<final_amps>10.000000</final_amps>
+		<impulse_amps>20.000000</impulse_amps>
+		<impulse_time>0.040000</impulse_time>
+		<downslope>3.000000</downslope>
+		<downslope_mode>0</downslope_mode>
+		<theta_torch_height>6.500000</theta_torch_height>
+		<travel_direction>0</travel_direction>
+		<ahc_gap>0.100000</ahc_gap>
+		<hotwire>0.000000</hotwire>
+		<hotwire2>0.000000</hotwire2>
+		<hotwire_mode>0</hotwire_mode>
+		<hotwire2_mode>0</hotwire2_mode>
+		<wire_retract>0.200000</wire_retract>
+		<wire2_retract>0.200000</wire2_retract>
+		<travel_delay>0.000000</travel_delay>
+		<ahc_delay>2.000000</ahc_delay>
+		<ahc_stop_delay>1.000000</ahc_stop_delay>
+		<wire_delay>0.000000</wire_delay>
+		<wire2_delay>0.000000</wire2_delay>
+		<travel_jog>20.000000</travel_jog>
+		<wire_jog_fwd>100.000000</wire_jog_fwd>
+		<wire_jog_rev>100</wire_jog_rev>
+		<wire2_jog_fwd>100.000000</wire2_jog_fwd>
+		<wire2_jog_rev>100</wire2_jog_rev>
+		<ahc_jog>15.000000</ahc_jog>
+		<osc_jog>25.000000</osc_jog>
+		<theta_jog>10.000000</theta_jog>
+		<aux0_jog>10.000000</aux0_jog>
+		<aux1_jog>10.000000</aux1_jog>
+		<aux2_jog>10.000000</aux2_jog>
+		<aux3_jog>10.000000</aux3_jog>
+		<aux4_jog>10.000000</aux4_jog>
+		<aux5_jog>10.000000</aux5_jog>
+		<aux6_jog>10.000000</aux6_jog>
+		<aux7_jog>10.000000</aux7_jog>
+		<aux8_jog>10.000000</aux8_jog>
+		<aux9_jog>10.000000</aux9_jog>
+		<travel_step>0.000000</travel_step>
+		<wire_step>0.040000</wire_step>
+		<wire2_step>0.000000</wire2_step>
+		<ahc_step>0.000000</ahc_step>
+		<theta_step>0.000000</theta_step>
+		<osc_step>0.020000</osc_step>
+		<aux0_step>0.000000</aux0_step>
+		<aux1_step>0.000000</aux1_step>
+		<aux2_step>0.000000</aux2_step>
+		<aux3_step>0.000000</aux3_step>
+		<aux4_step>0.000000</aux4_step>
+		<aux5_step>0.000000</aux5_step>
+		<aux6_step>0.000000</aux6_step>
+		<aux7_step>0.000000</aux7_step>
+		<aux8_step>0.000000</aux8_step>
+		<aux9_step>0.000000</aux9_step>
+		<osc_auto_center>0</osc_auto_center>
+		<osc_auto_postposition>0.000000</osc_auto_postposition>
+		<theta_auto_postposition>0.000000</theta_auto_postposition>
+		<travel_auto_postposition>0.000000</travel_auto_postposition>
+		<travel_auto_preposition>9999.000000</travel_auto_preposition>
+		<travel_auto_zero>0</travel_auto_zero>
+		<travel_auto_home>0</travel_auto_home>
+		<cut_angle>0</cut_angle>
+		<electrode_diameter>0</electrode_diameter>
+		<burn_back_time>0.100000</burn_back_time>
+		<seamtrack_x_tracking_on>1</seamtrack_x_tracking_on>
+		<seamtrack_z_tracking_on>0</seamtrack_z_tracking_on>
+		<seamtrack_width_tracking_on>0</seamtrack_width_tracking_on>
+		<seamtrack_x_channel>1</seamtrack_x_channel>
+		<seamtrack_z_channel>2</seamtrack_z_channel>
+		<seamtrack_width_channel>3</seamtrack_width_channel>
+		<seamtrack_program>1</seamtrack_program>
+		<seamtrack_angle>0.000000</seamtrack_angle>
+		<groovetrack_max_correction_edit_mode>0</groovetrack_max_correction_edit_mode>
+		<groovetrack_sensitivity_edit_mode>0</groovetrack_sensitivity_edit_mode>
+		<groovetrack_axis>0</groovetrack_axis>
+		<loop_count>0</loop_count>
+		<loop_to>0</loop_to>
+		<crater_fill_time>0.000000</crater_fill_time>
+		<initial_amps_time>0.075000</initial_amps_time>
+		<avc_sensitivity>0.050000</avc_sensitivity>
+		<avc_high_sensitivity>0.100000</avc_high_sensitivity>
+		<avc_deadband>0.100000</avc_deadband>
+		<avc_slowband>0.500000</avc_slowband>
+		<acc_sensitivity>0.200000</acc_sensitivity>
+		<acc_high_sensitivity>0.200000</acc_high_sensitivity>
+		<acc_deadband>1.000000</acc_deadband>
+		<acc_slowband>5.000000</acc_slowband>
+		<flying_start>0.000000</flying_start>
+		<initial_wire_speed>10.000000</initial_wire_speed>
+		<acc_compound_angle>0.000000</acc_compound_angle>
+		<aux_0_auto_postposition>0.000000</aux_0_auto_postposition>
+		<aux_1_auto_postposition>0.000000</aux_1_auto_postposition>
+		<layer_diameter_edit_mode>0.000000</layer_diameter_edit_mode>
+		<torch_centering_height>0.000000</torch_centering_height>
+		<gas_flow_edit_mode>0</gas_flow_edit_mode>
+		<theta_tool_center_point>0</theta_tool_center_point>
+		<travel_speed_compensated_by_height>0</travel_speed_compensated_by_height>
+		<osc_auto_preposition>9999.000000</osc_auto_preposition>
+		<theta_auto_preposition>9999.000000</theta_auto_preposition>
+		<ahc_auto_preposition>9999.000000</ahc_auto_preposition>
+		<travel_speed_compensated_by_width>0</travel_speed_compensated_by_width>
+		<ahc_auto_postposition>0.250000</ahc_auto_postposition>
+		<initial_travel_speed>1.000000</initial_travel_speed>
+		<initial_volts>0.000000</initial_volts>
+		<wire_manipulator_up_down_jog>1.000000</wire_manipulator_up_down_jog>
+		<wire_manipulator_up_down_step>0.000000</wire_manipulator_up_down_step>
+		<wire_manipulator_in_out_jog>1.000000</wire_manipulator_in_out_jog>
+		<wire_manipulator_in_out_step>0.000000</wire_manipulator_in_out_step>
+		<tungsten_jog>10.000000</tungsten_jog>
+		<tungsten_step>0.000000</tungsten_step>
+		<wire_manipulator_in_out_auto_preposition>9999.000000</wire_manipulator_in_out_auto_preposition>
+		<wire_manipulator_in_out_auto_postposition>0.000000</wire_manipulator_in_out_auto_postposition>
+		<tungsten_auto_preposition>9999.000000</tungsten_auto_preposition>
+		<tungsten_auto_postposition>0.000000</tungsten_auto_postposition>
+		<reverse_downslope>0</reverse_downslope>
+		<tilt_jog>30.000000</tilt_jog>
+		<tilt_step>0.000000</tilt_step>
+		<wire_select_mode>2</wire_select_mode>
+		<pulse_edit_mode>0</pulse_edit_mode>
+		<initial_wire2_speed>10.000000</initial_wire2_speed>
+		<osc_centre_position_offset>0.000000</osc_centre_position_offset>
+		<theta_centre_position_offset>0.000000</theta_centre_position_offset>
+		<wire_manipulator_in_out_centre_position_offset>0.000000</wire_manipulator_in_out_centre_position_offset>
+		<tungsten_centre_position_offset>0.000000</tungsten_centre_position_offset>
+		<aux_0_pre_position>9999.000000</aux_0_pre_position>
+		<aux_1_pre_position>9999.000000</aux_1_pre_position>
+		<tilt_pre_position>9999.000000</tilt_pre_position>
+		<tilt_post_position>0.000000</tilt_post_position>
+		<is_weld_closed>0</is_weld_closed>
+		<groovetrack_real_time_id>0</groovetrack_real_time_id>
+		<is_residue_chipper_enabled>0</is_residue_chipper_enabled>
+		<is_layer_diameter_detection_enabled>0</is_layer_diameter_detection_enabled>
+		<layer_diameter_lift_gap>0.000000</layer_diameter_lift_gap>
+		<layer_diameter_touch_gap>0.000000</layer_diameter_touch_gap>
+		<is_layer_diameter_pipe_touch_enabled>1</is_layer_diameter_pipe_touch_enabled>
+		<residue_chipper_wire_speed>0.000000</residue_chipper_wire_speed>
+		<residue_chipper_wire_retract>0.000000</residue_chipper_wire_retract>
+		<jog_speed_edit_mode>1</jog_speed_edit_mode>
+	</global>
+	<limits>
+		<pri_amp_error>300.000000</pri_amp_error>
+		<pri_amp_fault>300.000000</pri_amp_fault>
+		<bkg_amp_error>300.000000</bkg_amp_error>
+		<bkg_amp_fault>300.000000</bkg_amp_fault>
+		<wire_error>10.000000</wire_error>
+		<wire_fault>10.000000</wire_fault>
+		<wire2_error>10.000000</wire2_error>
+		<wire2_fault>10.000000</wire2_fault>
+		<travel_error>10.000000</travel_error>
+		<travel_fault>10.000000</travel_fault>
+		<voltage_low>6.000000</voltage_low>
+		<voltage_high>50.000000</voltage_high>
+		<avg_amp_fault_low>0.000000</avg_amp_fault_low>
+		<avg_amp_fault_high>300.000000</avg_amp_fault_high>
+		<heat_input_fault_low>0.000000</heat_input_fault_low>
+		<heat_input_fault_high>9999000.000000</heat_input_fault_high>
+	</limits>
+	<overrides>
+		<pri_amp_max>10.000000</pri_amp_max>
+		<pri_amp_rate>5.000000</pri_amp_rate>
+		<bkg_amp_max>10.000000</bkg_amp_max>
+		<bkg_amp_rate>5.000000</bkg_amp_rate>
+		<travel_max>10.000000</travel_max>
+		<travel_rate>0.100000</travel_rate>
+		<wire_max>10.000000</wire_max>
+		<wire_rate>5.000000</wire_rate>
+		<wire_retract_distance_max>10.000000</wire_retract_distance_max>
+		<wire_retract_distance_rate>0.100000</wire_retract_distance_rate>
+		<avg_wire_speed_max>10.000000</avg_wire_speed_max>
+		<avg_wire_speed_rate>0.500000</avg_wire_speed_rate>
+		<wire2_max>10.000000</wire2_max>
+		<wire2_rate>1.000000</wire2_rate>
+		<wire2_retract_distance_max>10</wire2_retract_distance_max>
+		<wire2_retract_distance_rate>0.1</wire2_retract_distance_rate>
+		<avg_wire2_speed_max>10</avg_wire2_speed_max>
+		<avg_wire2_speed_rate>0.5</avg_wire2_speed_rate>
+		<hotwire_amps_max>10.000000</hotwire_amps_max>
+		<hotwire_amps_rate>1.000000</hotwire_amps_rate>
+		<hotwire2_amps_max>10.000000</hotwire2_amps_max>
+		<hotwire2_amps_rate>1.000000</hotwire2_amps_rate>
+		<volt_max>10.000000</volt_max>
+		<volt_rate>0.100000</volt_rate>
+		<theta_width_max>90.000000</theta_width_max>
+		<theta_width_rate>0.020000</theta_width_rate>
+		<osc_width_max>10.000000</osc_width_max>
+		<osc_width_rate>0.020000</osc_width_rate>
+		<dwell_max>10.000000</dwell_max>
+		<dwell_rate>0.050000</dwell_rate>
+		<excursion_max>10.000000</excursion_max>
+		<excursion_rate>0.050000</excursion_rate>
+		<acc_override_max>10.000000</acc_override_max>
+		<acc_override_rate>1.000000</acc_override_rate>
+		<avc_override_max>10.000000</avc_override_max>
+		<avc_override_rate>0.100000</avc_override_rate>
+		<workpoint_override_max>10.000000</workpoint_override_max>
+		<workpoint_override_rate>0.100000</workpoint_override_rate>
+		<trim_override_max>10.000000</trim_override_max>
+		<trim_override_rate>0.100000</trim_override_rate>
+		<wave_control_1_override_max>10.000000</wave_control_1_override_max>
+		<wave_control_1_override_rate>0.100000</wave_control_1_override_rate>
+		<wave_control_2_override_max>10.000000</wave_control_2_override_max>
+		<wave_control_2_override_rate>0.100000</wave_control_2_override_rate>
+		<wave_control_3_override_max>10.000000</wave_control_3_override_max>
+		<wave_control_3_override_rate>0.100000</wave_control_3_override_rate>
+		<wave_control_4_override_max>10.000000</wave_control_4_override_max>
+		<wave_control_4_override_rate>0.100000</wave_control_4_override_rate>
+		<mig_sensitivity_override_max>10.000000</mig_sensitivity_override_max>
+		<mig_sensitivity_override_rate>0.100000</mig_sensitivity_override_rate>
+		<mig_pulse_width_min_override_max>10.000000</mig_pulse_width_min_override_max>
+		<mig_pulse_width_min_override_rate>0.100000</mig_pulse_width_min_override_rate>
+		<mig_pulse_width_max_override_max>10.000000</mig_pulse_width_max_override_max>
+		<mig_pulse_width_max_override_rate>0.100000</mig_pulse_width_max_override_rate>
+		<blast_amps_override_max>10.000000</blast_amps_override_max>
+		<blast_amps_override_rate>0.100000</blast_amps_override_rate>
+		<pulse_freq_override_max>10.000000</pulse_freq_override_max>
+		<pulse_freq_override_rate>0.100000</pulse_freq_override_rate>
+		<pulse_width_override_max>10.000000</pulse_width_override_max>
+		<pulse_width_override_rate>0.100000</pulse_width_override_rate>
+		<motion_pulse_width_override_max>10.000000</motion_pulse_width_override_max>
+		<motion_pulse_width_override_rate>0.100000</motion_pulse_width_override_rate>
+		<motion_pulse_freq_override_max>10.000000</motion_pulse_freq_override_max>
+		<motion_pulse_freq_override_rate>0.100000</motion_pulse_freq_override_rate>
+		<compound_steering_angle_offset_max>10.000000</compound_steering_angle_offset_max>
+		<compound_steering_angle_offset_rate>1.000000</compound_steering_angle_offset_rate>
+		<wire_manipulator_in_out_width_max>10.000000</wire_manipulator_in_out_width_max>
+		<wire_manipulator_in_out_width_rate>0.020000</wire_manipulator_in_out_width_rate>
+		<tungsten_width_max>10.000000</tungsten_width_max>
+		<tungsten_width_rate>0.020000</tungsten_width_rate>
+		<pulse_time_max>10.000000</pulse_time_max>
+		<pulse_time_rate>0.001000</pulse_time_rate>
+		<motion_pulse_time_max>10.000000</motion_pulse_time_max>
+		<motion_pulse_time_rate>0.001000</motion_pulse_time_rate>
+	</overrides>
+	<segment index="0">
+		<enable>1</enable>
+		<mode>0</mode>
+		<segment_time>5.000000</segment_time>
+		<slope>2.000000</slope>
+		<travel_angle>0.000000</travel_angle>
+		<sync_mode>0</sync_mode>
+		<pri_ahc>0.000000</pri_ahc>
+		<bkg_ahc>0.000000</bkg_ahc>
+		<volts>10.000000</volts>
+		<pri_amp>20.000000</pri_amp>
+		<bkg_amp>20.000000</bkg_amp>
+		<pulse_freq>2.000000</pulse_freq>
+		<pulse_width>50.000000</pulse_width>
+		<motion_pulse_freq>2.000000</motion_pulse_freq>
+		<motion_pulse_width>50.000000</motion_pulse_width>
+		<pri_travel>5.000000</pri_travel>
+		<bkg_travel>5.000000</bkg_travel>
+		<pri_wire>50.000000</pri_wire>
+		<bkg_wire>50.000000</bkg_wire>
+		<pri_wire2>20.000000</pri_wire2>
+		<bkg_wire2>20.000000</bkg_wire2>
+		<avc_mode>0</avc_mode>
+		<theta_width>0.000000</theta_width>
+		<osc_width>0.000000</osc_width>
+		<indwell>0.300000</indwell>
+		<outdwell>0.300000</outdwell>
+		<excursion>1.000000</excursion>
+		<hotwire_amps>0.000000</hotwire_amps>
+		<hotwire2_amps>0.000000</hotwire2_amps>
+		<mig_mode>1</mig_mode>
+		<workpoint>50.000000</workpoint>
+		<trim>0.000000</trim>
+		<wave_control1>0.000000</wave_control1>
+		<wave_control2>0.000000</wave_control2>
+		<wave_control3>0.000000</wave_control3>
+		<wave_control4>0.000000</wave_control4>
+		<groovetrack_mode>0</groovetrack_mode>
+		<groovetrack_sensitivity>0.000000</groovetrack_sensitivity>
+		<groovetrack_smoothing>0.000000</groovetrack_smoothing>
+		<groovetrack_max_correction>0.000000</groovetrack_max_correction>
+		<groovetrack_bias>0.000000</groovetrack_bias>
+		<mig_pulse_width_min>5.000000</mig_pulse_width_min>
+		<mig_pulse_width_max>30.000000</mig_pulse_width_max>
+		<blast_amps>90.000000</blast_amps>
+		<compound_steering_angle_offset>0.000000</compound_steering_angle_offset>
+		<mig_sensitivity>0.010000</mig_sensitivity>
+		<detachment_amps>75.000000</detachment_amps>
+		<dip_burn_back_amps>230.000000</dip_burn_back_amps>
+		<wetting_amps>30.000000</wetting_amps>
+		<wetting_time_1>0.000500</wetting_time_1>
+		<wetting_time_2>0.000500</wetting_time_2>
+		<dip_min_burn_back_time>0.002000</dip_min_burn_back_time>
+		<clear_short_ramp_rate>60.000000</clear_short_ramp_rate>
+		<detect_short_threshold>60.000000</detect_short_threshold>
+		<clear_short_threshold>40.000000</clear_short_threshold>
+		<detach_ramp_rate>300.000000</detach_ramp_rate>
+		<dip_burn_back_decay_period>0.000200</dip_burn_back_decay_period>
+		<clear_short_max_current>500.000000</clear_short_max_current>
+		<wetting_ramp_rate>120.000000</wetting_ramp_rate>
+		<dip_dynamics_enable_voltage>10.000000</dip_dynamics_enable_voltage>
+		<dip_blast_current_ramp_rate>300.000000</dip_blast_current_ramp_rate>
+		<dip_burnback_current_ramp_rate>300.000000</dip_burnback_current_ramp_rate>
+		<layer_diameter>0.000000</layer_diameter>
+		<dip_pre_detachment_ramp_rate>200.000000</dip_pre_detachment_ramp_rate>
+		<dip_energy>0.000000</dip_energy>
+		<shield_flow>0.000000</shield_flow>
+		<trail_flow>0.000000</trail_flow>
+		<plasma_flow>0.000000</plasma_flow>
+		<backup_flow>0.000000</backup_flow>
+		<cv_min_current>60.000000</cv_min_current>
+		<cv_max_current>500.000000</cv_max_current>
+		<mig_pulse_deadband>0.100000</mig_pulse_deadband>
+		<mig_pulse_slowband>2.000000</mig_pulse_slowband>
+		<mig_pulse_low_sensitivity>0.100000</mig_pulse_low_sensitivity>
+		<mig_pulse_high_sensitivity>0.250000</mig_pulse_high_sensitivity>
+		<wire_manipulator_in_out_width>0.000000</wire_manipulator_in_out_width>
+		<tungsten_width>0.000000</tungsten_width>
+		<reverse_travel>0</reverse_travel>
+		<tilt_position>9999.000000</tilt_position>
+	</segment>
+</sched>
+    </script>
+    <script type="text/xml" id="layoutNG">
+<sched id="" head="H2-FV-100S">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.7</config_version>
+		<author>David Blank BHR151</author>
+		<date>2026/09/09 07:56:41</date>
+		<signature>nQPESML7YuE5GWWJJbku6ZukM9paMWz3IB4jQ2hNfz2q6LELb+FT8d3tWYn1SbScmx5cwOmeRH5Ax7o0x2Zj2M1Hb6o/TeBOcdJeAuQOFPjmm8ooKz0/q+XC+2I00k/OsBdfORnfNCliCuU6dO3jxH9teZADCsMnbkXb8T/dwX0=|BgIAAAAkAABSU0ExAAQAAAEAAQDvxtAfz+82d4YEBVw7cF4j8zuyoKpsKMEqI7AmUu8Ie/SJsnz7TbNC0ZoJlsu6hXxflJs+M0r2dIz1iY0gdyN8tih/uBEQRGNnIfdI3l2QjdWkScZJCarj+tRu2JtJn/LoMr42S5D5DUFCfXx7Tb8Tw1+JVEl/m0HZA/rVtTqYuQ==</signature>
+	</metadata>
+	<description>
+		<outer_diameter>0.000000</outer_diameter>
+		<groove_depth>0.000000</groove_depth>
+		<custom_search_tag/>
+		<note/>
+	</description>
+	<global>
+		<arc_type>TOUCH</arc_type>
+		<excursion_mode>0</excursion_mode>
+		<datalog_mode>1</datalog_mode>
+		<prepurge>5.000000</prepurge>
+		<postpurge>10.000000</postpurge>
+		<trail_gas>0</trail_gas>
+		<backup_gas>0</backup_gas>
+		<plasma_gas>1</plasma_gas>
+		<auto_disable_pilot_arc>0</auto_disable_pilot_arc>
+		<pilot_arc_amps>10.000000</pilot_arc_amps>
+		<initial_amps>20.000000</initial_amps>
+		<final_amps>10.000000</final_amps>
+		<impulse_amps>20.000000</impulse_amps>
+		<impulse_time>0.040000</impulse_time>
+		<downslope>3.000000</downslope>
+		<downslope_mode>0</downslope_mode>
+		<theta_torch_height>6.500000</theta_torch_height>
+		<travel_direction>0</travel_direction>
+		<ahc_gap>0.100000</ahc_gap>
+		<hotwire>0.000000</hotwire>
+		<hotwire2>0.000000</hotwire2>
+		<hotwire_mode>0</hotwire_mode>
+		<hotwire2_mode>0</hotwire2_mode>
+		<wire_retract>0.200000</wire_retract>
+		<wire2_retract>0.200000</wire2_retract>
+		<travel_delay>0.000000</travel_delay>
+		<ahc_delay>2.000000</ahc_delay>
+		<ahc_stop_delay>1.000000</ahc_stop_delay>
+		<wire_delay>0.000000</wire_delay>
+		<wire2_delay>0.000000</wire2_delay>
+		<travel_jog>20.000000</travel_jog>
+		<wire_jog_fwd>100.000000</wire_jog_fwd>
+		<wire_jog_rev>100</wire_jog_rev>
+		<wire2_jog_fwd>100.000000</wire2_jog_fwd>
+		<wire2_jog_rev>100</wire2_jog_rev>
+		<ahc_jog>15.000000</ahc_jog>
+		<osc_jog>25.000000</osc_jog>
+		<theta_jog>10.000000</theta_jog>
+		<aux0_jog>10.000000</aux0_jog>
+		<aux1_jog>10.000000</aux1_jog>
+		<aux2_jog>10.000000</aux2_jog>
+		<aux3_jog>10.000000</aux3_jog>
+		<aux4_jog>10.000000</aux4_jog>
+		<aux5_jog>10.000000</aux5_jog>
+		<aux6_jog>10.000000</aux6_jog>
+		<aux7_jog>10.000000</aux7_jog>
+		<aux8_jog>10.000000</aux8_jog>
+		<aux9_jog>10.000000</aux9_jog>
+		<travel_step>0.000000</travel_step>
+		<wire_step>0.040000</wire_step>
+		<wire2_step>0.000000</wire2_step>
+		<ahc_step>0.000000</ahc_step>
+		<theta_step>0.000000</theta_step>
+		<osc_step>0.020000</osc_step>
+		<aux0_step>0.000000</aux0_step>
+		<aux1_step>0.000000</aux1_step>
+		<aux2_step>0.000000</aux2_step>
+		<aux3_step>0.000000</aux3_step>
+		<aux4_step>0.000000</aux4_step>
+		<aux5_step>0.000000</aux5_step>
+		<aux6_step>0.000000</aux6_step>
+		<aux7_step>0.000000</aux7_step>
+		<aux8_step>0.000000</aux8_step>
+		<aux9_step>0.000000</aux9_step>
+		<osc_auto_center>0</osc_auto_center>
+		<osc_auto_postposition>0.000000</osc_auto_postposition>
+		<theta_auto_postposition>0.000000</theta_auto_postposition>
+		<travel_auto_postposition>0.000000</travel_auto_postposition>
+		<travel_auto_preposition>9999.000000</travel_auto_preposition>
+		<travel_auto_zero>0</travel_auto_zero>
+		<travel_auto_home>0</travel_auto_home>
+		<cut_angle>0</cut_angle>
+		<electrode_diameter>0</electrode_diameter>
+		<burn_back_time>0.100000</burn_back_time>
+		<seamtrack_x_tracking_on>1</seamtrack_x_tracking_on>
+		<seamtrack_z_tracking_on>0</seamtrack_z_tracking_on>
+		<seamtrack_width_tracking_on>0</seamtrack_width_tracking_on>
+		<seamtrack_x_channel>1</seamtrack_x_channel>
+		<seamtrack_z_channel>2</seamtrack_z_channel>
+		<seamtrack_width_channel>3</seamtrack_width_channel>
+		<seamtrack_program>1</seamtrack_program>
+		<seamtrack_angle>0.000000</seamtrack_angle>
+		<groovetrack_max_correction_edit_mode>0</groovetrack_max_correction_edit_mode>
+		<groovetrack_sensitivity_edit_mode>0</groovetrack_sensitivity_edit_mode>
+		<groovetrack_axis>0</groovetrack_axis>
+		<loop_count>0</loop_count>
+		<loop_to>0</loop_to>
+		<crater_fill_time>0.000000</crater_fill_time>
+		<initial_amps_time>0.075000</initial_amps_time>
+		<avc_sensitivity>0.050000</avc_sensitivity>
+		<avc_high_sensitivity>0.100000</avc_high_sensitivity>
+		<avc_deadband>0.100000</avc_deadband>
+		<avc_slowband>0.500000</avc_slowband>
+		<acc_sensitivity>0.200000</acc_sensitivity>
+		<acc_high_sensitivity>0.200000</acc_high_sensitivity>
+		<acc_deadband>1.000000</acc_deadband>
+		<acc_slowband>5.000000</acc_slowband>
+		<flying_start>0.000000</flying_start>
+		<initial_wire_speed>10.000000</initial_wire_speed>
+		<acc_compound_angle>0.000000</acc_compound_angle>
+		<aux_0_auto_postposition>0.000000</aux_0_auto_postposition>
+		<aux_1_auto_postposition>0.000000</aux_1_auto_postposition>
+		<layer_diameter_edit_mode>0.000000</layer_diameter_edit_mode>
+		<torch_centering_height>0.000000</torch_centering_height>
+		<gas_flow_edit_mode>0</gas_flow_edit_mode>
+		<theta_tool_center_point>0</theta_tool_center_point>
+		<travel_speed_compensated_by_height>0</travel_speed_compensated_by_height>
+		<osc_auto_preposition>9999.000000</osc_auto_preposition>
+		<theta_auto_preposition>9999.000000</theta_auto_preposition>
+		<ahc_auto_preposition>9999.000000</ahc_auto_preposition>
+		<travel_speed_compensated_by_width>0</travel_speed_compensated_by_width>
+		<ahc_auto_postposition>0.250000</ahc_auto_postposition>
+		<initial_travel_speed>1.000000</initial_travel_speed>
+		<initial_volts>0.000000</initial_volts>
+		<wire_manipulator_up_down_jog>1.000000</wire_manipulator_up_down_jog>
+		<wire_manipulator_up_down_step>0.000000</wire_manipulator_up_down_step>
+		<wire_manipulator_in_out_jog>1.000000</wire_manipulator_in_out_jog>
+		<wire_manipulator_in_out_step>0.000000</wire_manipulator_in_out_step>
+		<tungsten_jog>10.000000</tungsten_jog>
+		<tungsten_step>0.000000</tungsten_step>
+		<wire_manipulator_in_out_auto_preposition>9999.000000</wire_manipulator_in_out_auto_preposition>
+		<wire_manipulator_in_out_auto_postposition>0.000000</wire_manipulator_in_out_auto_postposition>
+		<tungsten_auto_preposition>9999.000000</tungsten_auto_preposition>
+		<tungsten_auto_postposition>0.000000</tungsten_auto_postposition>
+		<reverse_downslope>0</reverse_downslope>
+		<tilt_jog>30.000000</tilt_jog>
+		<tilt_step>0.000000</tilt_step>
+		<wire_select_mode>2</wire_select_mode>
+		<pulse_edit_mode>0</pulse_edit_mode>
+		<initial_wire2_speed>10.000000</initial_wire2_speed>
+		<osc_centre_position_offset>0.000000</osc_centre_position_offset>
+		<theta_centre_position_offset>0.000000</theta_centre_position_offset>
+		<wire_manipulator_in_out_centre_position_offset>0.000000</wire_manipulator_in_out_centre_position_offset>
+		<tungsten_centre_position_offset>0.000000</tungsten_centre_position_offset>
+		<aux_0_pre_position>9999.000000</aux_0_pre_position>
+		<aux_1_pre_position>9999.000000</aux_1_pre_position>
+		<tilt_pre_position>9999.000000</tilt_pre_position>
+		<tilt_post_position>0.000000</tilt_post_position>
+		<is_weld_closed>0</is_weld_closed>
+		<groovetrack_real_time_id>0</groovetrack_real_time_id>
+		<is_residue_chipper_enabled>0</is_residue_chipper_enabled>
+		<is_layer_diameter_detection_enabled>0</is_layer_diameter_detection_enabled>
+		<layer_diameter_lift_gap>0.000000</layer_diameter_lift_gap>
+		<layer_diameter_touch_gap>0.000000</layer_diameter_touch_gap>
+		<is_layer_diameter_pipe_touch_enabled>1</is_layer_diameter_pipe_touch_enabled>
+		<residue_chipper_wire_speed>0.000000</residue_chipper_wire_speed>
+		<residue_chipper_wire_retract>0.000000</residue_chipper_wire_retract>
+		<jog_speed_edit_mode>1</jog_speed_edit_mode>
+	</global>
+	<limits>
+		<pri_amp_error>300.000000</pri_amp_error>
+		<pri_amp_fault>300.000000</pri_amp_fault>
+		<bkg_amp_error>300.000000</bkg_amp_error>
+		<bkg_amp_fault>300.000000</bkg_amp_fault>
+		<wire_error>10.000000</wire_error>
+		<wire_fault>10.000000</wire_fault>
+		<wire2_error>10.000000</wire2_error>
+		<wire2_fault>10.000000</wire2_fault>
+		<travel_error>10.000000</travel_error>
+		<travel_fault>10.000000</travel_fault>
+		<voltage_low>6.000000</voltage_low>
+		<voltage_high>50.000000</voltage_high>
+		<avg_amp_fault_low>0.000000</avg_amp_fault_low>
+		<avg_amp_fault_high>300.000000</avg_amp_fault_high>
+		<heat_input_fault_low>0.000000</heat_input_fault_low>
+		<heat_input_fault_high>9999000.000000</heat_input_fault_high>
+	</limits>
+	<overrides>
+		<pri_amp_max>10.000000</pri_amp_max>
+		<pri_amp_rate>5.000000</pri_amp_rate>
+		<bkg_amp_max>10.000000</bkg_amp_max>
+		<bkg_amp_rate>5.000000</bkg_amp_rate>
+		<travel_max>10.000000</travel_max>
+		<travel_rate>0.100000</travel_rate>
+		<wire_max>10.000000</wire_max>
+		<wire_rate>5.000000</wire_rate>
+		<wire_retract_distance_max>10.000000</wire_retract_distance_max>
+		<wire_retract_distance_rate>0.100000</wire_retract_distance_rate>
+		<avg_wire_speed_max>10.000000</avg_wire_speed_max>
+		<avg_wire_speed_rate>0.500000</avg_wire_speed_rate>
+		<wire2_max>10.000000</wire2_max>
+		<wire2_rate>1.000000</wire2_rate>
+		<wire2_retract_distance_max>10</wire2_retract_distance_max>
+		<wire2_retract_distance_rate>0.1</wire2_retract_distance_rate>
+		<avg_wire2_speed_max>10</avg_wire2_speed_max>
+		<avg_wire2_speed_rate>0.5</avg_wire2_speed_rate>
+		<hotwire_amps_max>10.000000</hotwire_amps_max>
+		<hotwire_amps_rate>1.000000</hotwire_amps_rate>
+		<hotwire2_amps_max>10.000000</hotwire2_amps_max>
+		<hotwire2_amps_rate>1.000000</hotwire2_amps_rate>
+		<volt_max>10.000000</volt_max>
+		<volt_rate>0.100000</volt_rate>
+		<theta_width_max>90.000000</theta_width_max>
+		<theta_width_rate>0.020000</theta_width_rate>
+		<osc_width_max>10.000000</osc_width_max>
+		<osc_width_rate>0.020000</osc_width_rate>
+		<dwell_max>10.000000</dwell_max>
+		<dwell_rate>0.050000</dwell_rate>
+		<excursion_max>10.000000</excursion_max>
+		<excursion_rate>0.050000</excursion_rate>
+		<acc_override_max>10.000000</acc_override_max>
+		<acc_override_rate>1.000000</acc_override_rate>
+		<avc_override_max>10.000000</avc_override_max>
+		<avc_override_rate>0.100000</avc_override_rate>
+		<workpoint_override_max>10.000000</workpoint_override_max>
+		<workpoint_override_rate>0.100000</workpoint_override_rate>
+		<trim_override_max>10.000000</trim_override_max>
+		<trim_override_rate>0.100000</trim_override_rate>
+		<wave_control_1_override_max>10.000000</wave_control_1_override_max>
+		<wave_control_1_override_rate>0.100000</wave_control_1_override_rate>
+		<wave_control_2_override_max>10.000000</wave_control_2_override_max>
+		<wave_control_2_override_rate>0.100000</wave_control_2_override_rate>
+		<wave_control_3_override_max>10.000000</wave_control_3_override_max>
+		<wave_control_3_override_rate>0.100000</wave_control_3_override_rate>
+		<wave_control_4_override_max>10.000000</wave_control_4_override_max>
+		<wave_control_4_override_rate>0.100000</wave_control_4_override_rate>
+		<mig_sensitivity_override_max>10.000000</mig_sensitivity_override_max>
+		<mig_sensitivity_override_rate>0.100000</mig_sensitivity_override_rate>
+		<mig_pulse_width_min_override_max>10.000000</mig_pulse_width_min_override_max>
+		<mig_pulse_width_min_override_rate>0.100000</mig_pulse_width_min_override_rate>
+		<mig_pulse_width_max_override_max>10.000000</mig_pulse_width_max_override_max>
+		<mig_pulse_width_max_override_rate>0.100000</mig_pulse_width_max_override_rate>
+		<blast_amps_override_max>10.000000</blast_amps_override_max>
+		<blast_amps_override_rate>0.100000</blast_amps_override_rate>
+		<pulse_freq_override_max>10.000000</pulse_freq_override_max>
+		<pulse_freq_override_rate>0.100000</pulse_freq_override_rate>
+		<pulse_width_override_max>10.000000</pulse_width_override_max>
+		<pulse_width_override_rate>0.100000</pulse_width_override_rate>
+		<motion_pulse_width_override_max>10.000000</motion_pulse_width_override_max>
+		<motion_pulse_width_override_rate>0.100000</motion_pulse_width_override_rate>
+		<motion_pulse_freq_override_max>10.000000</motion_pulse_freq_override_max>
+		<motion_pulse_freq_override_rate>0.100000</motion_pulse_freq_override_rate>
+		<compound_steering_angle_offset_max>10.000000</compound_steering_angle_offset_max>
+		<compound_steering_angle_offset_rate>1.000000</compound_steering_angle_offset_rate>
+		<wire_manipulator_in_out_width_max>10.000000</wire_manipulator_in_out_width_max>
+		<wire_manipulator_in_out_width_rate>0.020000</wire_manipulator_in_out_width_rate>
+		<tungsten_width_max>10.000000</tungsten_width_max>
+		<tungsten_width_rate>0.020000</tungsten_width_rate>
+		<pulse_time_max>10.000000</pulse_time_max>
+		<pulse_time_rate>0.001000</pulse_time_rate>
+		<motion_pulse_time_max>10.000000</motion_pulse_time_max>
+		<motion_pulse_time_rate>0.001000</motion_pulse_time_rate>
+	</overrides>
+	<segment index="0">
+		<enable>1</enable>
+		<mode>0</mode>
+		<segment_time>5.000000</segment_time>
+		<slope>2.000000</slope>
+		<travel_angle>0.000000</travel_angle>
+		<sync_mode>0</sync_mode>
+		<pri_ahc>0.000000</pri_ahc>
+		<bkg_ahc>0.000000</bkg_ahc>
+		<volts>10.000000</volts>
+		<pri_amp>20.000000</pri_amp>
+		<bkg_amp>20.000000</bkg_amp>
+		<pulse_freq>2.000000</pulse_freq>
+		<pulse_width>50.000000</pulse_width>
+		<motion_pulse_freq>2.000000</motion_pulse_freq>
+		<motion_pulse_width>50.000000</motion_pulse_width>
+		<pri_travel>5.000000</pri_travel>
+		<bkg_travel>5.000000</bkg_travel>
+		<pri_wire>50.000000</pri_wire>
+		<bkg_wire>50.000000</bkg_wire>
+		<pri_wire2>20.000000</pri_wire2>
+		<bkg_wire2>20.000000</bkg_wire2>
+		<avc_mode>0</avc_mode>
+		<theta_width>0.000000</theta_width>
+		<osc_width>0.000000</osc_width>
+		<indwell>0.300000</indwell>
+		<outdwell>0.300000</outdwell>
+		<excursion>1.000000</excursion>
+		<hotwire_amps>0.000000</hotwire_amps>
+		<hotwire2_amps>0.000000</hotwire2_amps>
+		<mig_mode>1</mig_mode>
+		<workpoint>50.000000</workpoint>
+		<trim>0.000000</trim>
+		<wave_control1>0.000000</wave_control1>
+		<wave_control2>0.000000</wave_control2>
+		<wave_control3>0.000000</wave_control3>
+		<wave_control4>0.000000</wave_control4>
+		<groovetrack_mode>0</groovetrack_mode>
+		<groovetrack_sensitivity>0.000000</groovetrack_sensitivity>
+		<groovetrack_smoothing>0.000000</groovetrack_smoothing>
+		<groovetrack_max_correction>0.000000</groovetrack_max_correction>
+		<groovetrack_bias>0.000000</groovetrack_bias>
+		<mig_pulse_width_min>5.000000</mig_pulse_width_min>
+		<mig_pulse_width_max>30.000000</mig_pulse_width_max>
+		<blast_amps>90.000000</blast_amps>
+		<compound_steering_angle_offset>0.000000</compound_steering_angle_offset>
+		<mig_sensitivity>0.010000</mig_sensitivity>
+		<detachment_amps>75.000000</detachment_amps>
+		<dip_burn_back_amps>230.000000</dip_burn_back_amps>
+		<wetting_amps>30.000000</wetting_amps>
+		<wetting_time_1>0.000500</wetting_time_1>
+		<wetting_time_2>0.000500</wetting_time_2>
+		<dip_min_burn_back_time>0.002000</dip_min_burn_back_time>
+		<clear_short_ramp_rate>60.000000</clear_short_ramp_rate>
+		<detect_short_threshold>60.000000</detect_short_threshold>
+		<clear_short_threshold>40.000000</clear_short_threshold>
+		<detach_ramp_rate>300.000000</detach_ramp_rate>
+		<dip_burn_back_decay_period>0.000200</dip_burn_back_decay_period>
+		<clear_short_max_current>500.000000</clear_short_max_current>
+		<wetting_ramp_rate>120.000000</wetting_ramp_rate>
+		<dip_dynamics_enable_voltage>10.000000</dip_dynamics_enable_voltage>
+		<dip_blast_current_ramp_rate>300.000000</dip_blast_current_ramp_rate>
+		<dip_burnback_current_ramp_rate>300.000000</dip_burnback_current_ramp_rate>
+		<layer_diameter>0.000000</layer_diameter>
+		<dip_pre_detachment_ramp_rate>200.000000</dip_pre_detachment_ramp_rate>
+		<dip_energy>0.000000</dip_energy>
+		<shield_flow>0.000000</shield_flow>
+		<trail_flow>0.000000</trail_flow>
+		<plasma_flow>0.000000</plasma_flow>
+		<backup_flow>0.000000</backup_flow>
+		<cv_min_current>60.000000</cv_min_current>
+		<cv_max_current>500.000000</cv_max_current>
+		<mig_pulse_deadband>0.100000</mig_pulse_deadband>
+		<mig_pulse_slowband>2.000000</mig_pulse_slowband>
+		<mig_pulse_low_sensitivity>0.100000</mig_pulse_low_sensitivity>
+		<mig_pulse_high_sensitivity>0.250000</mig_pulse_high_sensitivity>
+		<wire_manipulator_in_out_width>0.000000</wire_manipulator_in_out_width>
+		<tungsten_width>0.000000</tungsten_width>
+		<reverse_travel>0</reverse_travel>
+		<tilt_position>9999.000000</tilt_position>
+	</segment>
+</sched>
+    </script>
+
     <div class="modal-overlay" id="batchSaveModal">
         <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="batchSaveTitle">
             <h3 id="batchSaveTitle">Batch Save</h3>
@@ -4733,7 +5477,9 @@
                     <li><strong>XML Viewer:</strong> read-only XML of the active file; with a saved XDR schema, missing
                         required values are marked in red.</li>
                     <li><strong>Schema Check:</strong> checks all loaded files against the active XDR schema (required and unknown
-                        elements, order, attributes, data types) and compares the file version with the schema version.</li>
+                        elements, order, attributes, data types) and compares the file version with the schema version.
+                        <strong>Upgrade</strong> brings older files to the schema version: values are kept, missing fields come from
+                        the layout template (NGRT/NG by head), unknown fields are removed.</li>
                     <li><strong>Settings:</strong> manage XDR schema versions (load, activate, delete) and export or import the
                         editor settings as JSON.</li>
                 </ul>
@@ -8313,6 +9059,33 @@
             };
             drop.append(loadButton, fileInput);
             container.appendChild(drop);
+
+            // Layout-Muster fuer das Upgrade
+            const templates = make("div", "layout-template-row");
+            templates.appendChild(make("span", "layout-template-label", "Upgrade layout templates:"));
+            ["NGRT", "NG"].forEach(kind => {
+                const template = getLayoutTemplate(kind);
+                const chip = make("span", "layout-template-chip", `${kind}: ${template.name}${template.version ? ` · v${template.version}` : ""}`);
+                if (!template.builtin) {
+                    const reset = make("button", "schema-small-btn", "Reset");
+                    reset.type = "button";
+                    reset.title = "Use the built-in template again";
+                    reset.onclick = () => resetLayoutTemplate(kind);
+                    chip.appendChild(reset);
+                }
+                templates.appendChild(chip);
+            });
+            const templateButton = make("button", "btn-secondary schema-small-btn", "Load template XML…");
+            templateButton.type = "button";
+            templateButton.title = "Schedule XML of the latest version; assigned to NGRT or NG by its head";
+            const templateInput = document.createElement("input");
+            templateInput.type = "file";
+            templateInput.accept = ".xml";
+            templateInput.hidden = true;
+            templateInput.onchange = () => { if (templateInput.files[0]) importLayoutTemplate(templateInput.files[0]); };
+            templateButton.onclick = () => templateInput.click();
+            templates.append(templateButton, templateInput);
+            container.appendChild(templates);
         }
 
         // Nach Aenderungen an den XDR-Versionen: Dialog, Dateiliste und Schema-Check-Ansicht aktualisieren.
@@ -8344,6 +9117,14 @@
             const manage = make("button", "btn-secondary schema-small-btn", "Manage schemas…");
             manage.type = "button";
             manage.onclick = openSettings;
+            const candidates = active ? upgradeCandidates() : [];
+            if (candidates.length) {
+                const upgradeAll = make("button", "schema-small-btn", `Upgrade all to v${active.version} (${candidates.length})`);
+                upgradeAll.type = "button";
+                upgradeAll.title = "Bring all files with schema errors or an older version to the active schema version";
+                upgradeAll.onclick = () => openUpgradeDialog(candidates);
+                activeLine.appendChild(upgradeAll);
+            }
             activeLine.appendChild(manage);
             content.appendChild(activeLine);
 
@@ -8381,7 +9162,27 @@
                     useMatching.onclick = event => { event.preventDefault(); setActiveXdr(result.matchingSchema.id); };
                     summary.appendChild(useMatching);
                 }
+                if (result.errors > 0 || result.comparison < 0) {
+                    const upgrade = make("button", "schema-small-btn", `Upgrade to v${result.schema.version}`);
+                    upgrade.type = "button";
+                    upgrade.onclick = event => { event.preventDefault(); openUpgradeDialog([file]); };
+                    summary.appendChild(upgrade);
+                }
                 block.appendChild(summary);
+                if (file.lastUpgrade) {
+                    const info = file.lastUpgrade;
+                    const upgradeInfo = make("details", "schema-upgrade-report");
+                    upgradeInfo.appendChild(make("summary", "", `Last upgrade: v${info.versionFrom || "?"} → v${info.versionTo} · +${info.added.length} added · −${info.removed.length} removed${info.renamed.length ? ` · ${info.renamed.length} renamed` : ""} · template ${info.template}`));
+                    const lines = [
+                        ...info.renamed.map(entry => `Renamed: ${entry.from} → ${entry.to} (value ${entry.value})`),
+                        ...info.added.map(path => `Added: ${path}`),
+                        ...info.removed.map(entry => `Removed: ${entry.path}${entry.value ? ` (was ${entry.value})` : ""}`)
+                    ];
+                    const list = make("ul", "schema-upgrade-lines");
+                    lines.forEach(text => list.appendChild(make("li", "", text)));
+                    upgradeInfo.appendChild(list);
+                    block.appendChild(upgradeInfo);
+                }
                 if (!result.findings.length) {
                     block.appendChild(make("p", "schema-empty", "No findings – the file matches the schema."));
                 } else {
@@ -8409,6 +9210,264 @@
         }
 
         document.getElementById("schemaCheckBtn").onclick = showSchemaCheck;
+
+        /* UPGRADE TO SCHEMA VERSION */
+        // Bringt eine Datei auf die Struktur der aktiven XDR: Werte bleiben, fehlende Felder kommen aus dem
+        // Layout-Muster (nach Head), unbekannte Felder werden entfernt, Reihenfolge nach XDR.
+        const LAYOUT_TEMPLATE_KEY = "scheduleEditorLayoutTemplates";
+        // Umbenennungen aelterer Versionen: alter Name -> neue Felder (Wert wird uebernommen).
+        const SCHEMA_RENAMES = {
+            amp_max: ["pri_amp_max", "bkg_amp_max"],
+            amp_rate: ["pri_amp_rate", "bkg_amp_rate"]
+        };
+        const FIXED_UPGRADE_VALUES = { jog_speed_edit_mode: "1" };
+        let customLayoutTemplates = readStoredJson(LAYOUT_TEMPLATE_KEY, {});
+
+        function layoutKindForHead(head) {
+            return /ngrt/i.test(String(head || "")) ? "NGRT" : "NG";
+        }
+
+        function getLayoutTemplate(kind) {
+            const custom = customLayoutTemplates[kind];
+            if (custom && typeof custom.xml === "string") return { kind, name: custom.name, version: custom.version, xml: custom.xml, builtin: false };
+            const xml = document.getElementById(kind === "NGRT" ? "layoutNGRT" : "layoutNG")?.textContent.trim() || "";
+            const version = (xml.match(/<config_version>([^<]*)</) || [])[1] || "";
+            return { kind, name: kind === "NGRT" ? "8888-layout new NGRT.xml (built-in)" : "7777-layout new NG.xml (built-in)", version, xml, builtin: true };
+        }
+
+        function parseLayoutTemplate(template) {
+            const doc = new DOMParser().parseFromString(template.xml, "application/xml");
+            if (doc.querySelector("parsererror") || doc.documentElement.localName !== "sched") throw new Error(`${template.name}: not a valid schedule XML.`);
+            return doc;
+        }
+
+        function directChildren(element, name) {
+            return [...element.children].filter(child => child.localName === name);
+        }
+
+        // Standardwert fuer ein neues Feld ohne Musterwert.
+        function defaultValueForType(type) {
+            const kind = String(type || "string").toLowerCase();
+            if (kind === "boolean" || XDR_INTEGER_RANGES[kind]) return "0";
+            if (["float", "number", "r4", "r8"].includes(kind) || kind.startsWith("fixed")) return "0.000000";
+            return "";
+        }
+
+        function upgradeDocument(xmlDocument, schema, templateDoc) {
+            const { model, version } = buildXdrModel(schema);
+            const report = { added: [], removed: [], renamed: [], reordered: 0 };
+            const ownerDoc = xmlDocument;
+
+            const createDefault = name => {
+                const element = ownerDoc.createElement(name);
+                const definition = model.get(name);
+                if (definition && definition.elements.length && definition.content !== "textOnly") {
+                    definition.elements.filter(entry => entry.min > 0).forEach(entry => {
+                        for (let index = 0; index < entry.min; index++) element.appendChild(createDefault(entry.name));
+                    });
+                } else if (definition) {
+                    element.textContent = defaultValueForType(definition.dtType);
+                }
+                return element;
+            };
+
+            const pathOf = element => {
+                const parts = [];
+                for (let node = element; node && node.nodeType === 1; node = node.parentElement) {
+                    parts.unshift(node.localName === "segment" && node.hasAttribute("index") ? `segment[${node.getAttribute("index")}]` : node.localName);
+                }
+                return parts.join("/");
+            };
+
+            const indent = (element, depth) => {
+                const children = [...element.children];
+                [...element.childNodes].forEach(node => { if (node.nodeType !== 1) element.removeChild(node); });
+                children.forEach(child => {
+                    element.insertBefore(ownerDoc.createTextNode(`\n${"\t".repeat(depth + 1)}`), child);
+                });
+                if (children.length) element.appendChild(ownerDoc.createTextNode(`\n${"\t".repeat(depth)}`));
+            };
+
+            const visit = (element, templateElement, depth, position) => {
+                const definition = model.get(element.localName);
+                if (!definition) return;
+                // Pflichtattribute
+                definition.attributes.forEach(attribute => {
+                    if (!attribute.required || element.hasAttribute(attribute.name)) return;
+                    let value = templateElement?.getAttribute(attribute.name) ?? defaultValueForType(attribute.dtType);
+                    if (element.localName === "segment" && attribute.name === "index") value = String(position);
+                    element.setAttribute(attribute.name, value);
+                    report.added.push(`${pathOf(element)} @${attribute.name}`);
+                });
+                if (definition.content === "textOnly" || !definition.elements.length) return;
+
+                const declared = new Set(definition.elements.map(entry => entry.name));
+                const before = [...element.children].map(child => child.localName).join("|");
+
+                // Umbenannte Felder: Wert in die neuen Felder uebernehmen (nur wenn diese fehlen).
+                Object.entries(SCHEMA_RENAMES).forEach(([oldName, newNames]) => {
+                    const source = directChildren(element, oldName)[0];
+                    if (!source || declared.has(oldName)) return;
+                    newNames.forEach(newName => {
+                        if (!declared.has(newName) || directChildren(element, newName).length) return;
+                        const target = ownerDoc.createElement(newName);
+                        target.textContent = source.textContent;
+                        element.appendChild(target);
+                        report.renamed.push({ from: oldName, to: newName, value: source.textContent, path: pathOf(element) });
+                    });
+                });
+
+                const ordered = [];
+                definition.elements.forEach(entry => {
+                    const existing = directChildren(element, entry.name);
+                    const templateMatches = templateElement ? directChildren(templateElement, entry.name) : [];
+                    existing.forEach((child, index) => {
+                        if (index >= entry.max) {
+                            report.removed.push({ path: pathOf(child), value: child.textContent.trim().slice(0, 60) });
+                            return;
+                        }
+                        ordered.push({ child, template: templateMatches[Math.min(index, templateMatches.length - 1)] || null });
+                    });
+                    for (let index = existing.length; index < entry.min; index++) {
+                        const templateChild = templateMatches[Math.min(index, templateMatches.length - 1)];
+                        const created = templateChild ? ownerDoc.importNode(templateChild, true) : createDefault(entry.name);
+                        ordered.push({ child: created, template: templateChild || null, isNew: true });
+                        report.added.push(`${pathOf(element)}/${entry.name}${templateChild ? "" : " (default)"}`);
+                    }
+                });
+                [...element.children].forEach(child => {
+                    if (!declared.has(child.localName)) {
+                        report.removed.push({ path: pathOf(child), value: child.children.length ? "…" : child.textContent.trim().slice(0, 60) });
+                    }
+                });
+
+                [...element.childNodes].forEach(node => element.removeChild(node));
+                let segmentPosition = 0;
+                ordered.forEach(({ child }) => element.appendChild(child));
+                if (ordered.map(entry => entry.child.localName).join("|") !== before) report.reordered++;
+                ordered.forEach(({ child, template }) => {
+                    visit(child, template, depth + 1, child.localName === "segment" ? segmentPosition++ : 0);
+                });
+                indent(element, depth);
+            };
+
+            const root = xmlDocument.documentElement;
+            const versionFrom = (root.querySelector("metadata > config_version")?.textContent || "").trim();
+            visit(root, templateDoc?.documentElement || null, 0, 0);
+
+            const configVersion = root.querySelector("metadata > config_version");
+            if (configVersion && version) configVersion.textContent = version;
+            Object.entries(FIXED_UPGRADE_VALUES).forEach(([name, value]) => {
+                if (isLocked(name)) return;
+                root.querySelectorAll(name).forEach(node => { node.textContent = value; });
+            });
+            return { ...report, versionFrom, versionTo: version };
+        }
+
+        // Probelauf an einer Kopie (fuer die Vorschau im Dialog).
+        function previewUpgrade(file) {
+            const schema = getActiveXdr();
+            const template = getLayoutTemplate(layoutKindForHead(file.xml.documentElement.getAttribute("head")));
+            const copy = file.xml.cloneNode(true);
+            const report = upgradeDocument(copy, schema, parseLayoutTemplate(template));
+            return { report, template, schema };
+        }
+
+        function upgradeCandidates() {
+            return loadedFiles.filter(file => {
+                const result = getSchemaResult(file);
+                return result && (result.errors > 0 || result.comparison < 0);
+            });
+        }
+
+        const upgradeModal = document.getElementById("upgradeModal");
+        let pendingUpgradeIds = [];
+        function openUpgradeDialog(files) {
+            commitPendingEdit();
+            const schema = getActiveXdr();
+            if (!schema || !files.length) return;
+            pendingUpgradeIds = files.map(file => file.id);
+            document.getElementById("upgradeText").textContent =
+                `${files.length} file(s) will be brought to schema v${schema.version}. Values of existing fields are kept; missing fields are added from the layout template, fields unknown to the schema are removed.`;
+            const list = document.getElementById("upgradeList");
+            list.replaceChildren();
+            files.forEach(file => {
+                const line = document.createElement("div");
+                line.className = "upgrade-line";
+                try {
+                    const { report, template } = previewUpgrade(file);
+                    line.textContent = `${fileShortLabel(file)}: v${report.versionFrom || "?"} → v${report.versionTo} · +${report.added.length} added · −${report.removed.length} removed${report.renamed.length ? ` · ${report.renamed.length} renamed` : ""} · template ${template.kind}`;
+                } catch (error) {
+                    line.textContent = `${fileShortLabel(file)}: ${error.message}`;
+                    line.classList.add("is-error");
+                }
+                list.appendChild(line);
+            });
+            openModal(upgradeModal, document.getElementById("upgradeConfirmBtn"));
+        }
+
+        function upgradeFiles(fileIds) {
+            const schema = getActiveXdr();
+            let done = 0;
+            let stillFailing = 0;
+            recordHistoryAction("Upgrade schedule", () => {
+                fileIds.forEach(id => {
+                    const fileIndex = loadedFiles.findIndex(file => file.id === id);
+                    const file = loadedFiles[fileIndex];
+                    if (!file) return;
+                    const template = getLayoutTemplate(layoutKindForHead(file.xml.documentElement.getAttribute("head")));
+                    const report = upgradeDocument(file.xml, schema, parseLayoutTemplate(template));
+                    file.sections = createFileRecord(file.name, file.xml, file.originalXml, file.id, file.originalXmlString).sections;
+                    file.lastUpgrade = { ...report, template: template.name, at: new Date().toISOString() };
+                    updateChangeLogEntry({
+                        fileIndex, fileName: file.name, sectionName: "metadata", key: "schema upgrade", segmentIndex: "",
+                        oldValue: `v${report.versionFrom || "?"}`,
+                        newValue: `v${report.versionTo} (+${report.added.length} / −${report.removed.length} fields${report.renamed.length ? `, ${report.renamed.length} renamed` : ""})`
+                    });
+                    done++;
+                    if ((getSchemaResult(file)?.errors || 0) > 0) stillFailing++;
+                });
+                renderFileList();
+            });
+            document.getElementById("status").textContent = `${done} file(s) upgraded to v${schema.version}`
+                + (stillFailing ? ` – ${stillFailing} still with schema errors.` : " – all match the schema.") + " Save to keep the changes.";
+            showSchemaCheck();
+        }
+
+        document.getElementById("upgradeCancelBtn").onclick = () => { pendingUpgradeIds = []; closeModal(upgradeModal); };
+        document.getElementById("upgradeConfirmBtn").onclick = () => {
+            const ids = pendingUpgradeIds;
+            pendingUpgradeIds = [];
+            closeModal(upgradeModal);
+            if (ids.length) upgradeFiles(ids);
+        };
+
+        // Eigene Layout-Muster (Settings): Zuordnung ueber das head-Attribut.
+        async function importLayoutTemplate(file) {
+            const status = document.getElementById("status");
+            try {
+                const xml = await file.text();
+                const doc = new DOMParser().parseFromString(xml, "application/xml");
+                if (doc.querySelector("parsererror") || doc.documentElement.localName !== "sched") throw new Error(`${file.name}: not a schedule XML.`);
+                const kind = layoutKindForHead(doc.documentElement.getAttribute("head"));
+                const version = (doc.querySelector("metadata > config_version")?.textContent || "").trim();
+                customLayoutTemplates = { ...customLayoutTemplates, [kind]: { name: file.name, version, xml } };
+                localStorage.setItem(LAYOUT_TEMPLATE_KEY, JSON.stringify(customLayoutTemplates));
+                status.textContent = `Layout template ${file.name} (v${version}) used for ${kind} heads.`;
+            } catch (error) {
+                status.textContent = `Template not loaded: ${error.message}`;
+                window.alert(`Template not loaded:\n${error.message}`);
+            }
+            renderXdrManager();
+        }
+
+        function resetLayoutTemplate(kind) {
+            const next = { ...customLayoutTemplates };
+            delete next[kind];
+            customLayoutTemplates = next;
+            try { localStorage.setItem(LAYOUT_TEMPLATE_KEY, JSON.stringify(customLayoutTemplates)); } catch (error) { /* ignore */ }
+            renderXdrManager();
+        }
 
         /* COMPARE & CONVERTER TOOLS */
         function collectComparisonEntries(file) {
@@ -9218,7 +10277,8 @@
             "scheduleEditorHeatInputTarget",
             "scheduleEditorParameterOrder",
             "scheduleEditorXdrSchemas",
-            "scheduleEditorActiveXdr"
+            "scheduleEditorActiveXdr",
+            "scheduleEditorLayoutTemplates"
         ];
         const localStorageBackupModal = document.getElementById("localStorageBackupModal");
         const localStorageBackupStatus = document.getElementById("localStorageBackupStatus");
@@ -9256,7 +10316,9 @@
                         Array.isArray(item) && item.every(entry => typeof entry === "string")),
                     scheduleEditorXdrSchemas: Array.isArray(value) && value.every(item => isXdrRecord(item)
                         && /<Schema\b/.test(item.xml)),
-                    scheduleEditorActiveXdr: isObject && typeof value.id === "string"
+                    scheduleEditorActiveXdr: isObject && typeof value.id === "string",
+                    scheduleEditorLayoutTemplates: isObject && Object.values(value).every(item => item && typeof item === "object"
+                        && typeof item.xml === "string" && typeof item.name === "string")
                 }[key];
                 if (!validValue) throw new Error(`Invalid data for backup entry: ${key}`);
             }
