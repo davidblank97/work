@@ -2135,8 +2135,16 @@
             font-size: 14px;
             line-height: 20px;
             cursor: grab;
-            opacity: 0.45;
+            opacity: 0.7;
             flex: 0 0 auto;
+        }
+
+        .param-table .param-name-cell {
+            cursor: grab;
+        }
+
+        .param-table .param-name-cell .param-action-btn {
+            cursor: pointer;
         }
 
         tr:hover .param-drag-handle,
@@ -3346,7 +3354,7 @@
                     files.</p>
                 <p>Hover a parameter row to mark it as important (★) or hide it (⊘). Double-click and right-click
                     on the name do the same.</p>
-                <p>Drag a parameter row by its handle (⠿) to reorder it; Alt+↑/↓ on the handle moves it by one row.
+                <p>Drag a parameter row by its name or handle (⠿) to reorder it; Alt+↑/↓ on the handle moves it by one row.
                     The order is stored per section (all segments share one order) and included in the Local Storage
                     Backup. <strong>Reset order</strong> in the panel header restores the default order.</p>
                 <p>In Segments, segments can be duplicated, moved and deleted. The selected segment stays open.</p>
@@ -4084,7 +4092,7 @@
             handle.type = "button";
             handle.className = "param-drag-handle";
             handle.textContent = "⠿";
-            handle.title = "Drag to reorder · Alt+↑/↓ moves the row";
+            handle.title = "Drag (or drag the name) to reorder · Alt+↑/↓ moves the row";
             handle.setAttribute("aria-label", `Move ${key} (Alt+Arrow keys)`);
             handle.dataset.key = key;
             handle.onmousedown = () => { tr.draggable = true; };
@@ -4104,6 +4112,11 @@
             };
             const clearMarkers = () => document.querySelectorAll(".param-drop-before, .param-drop-after")
                 .forEach(row => row.classList.remove("param-drop-before", "param-drop-after"));
+            // Auch der Parametername dient als Griff (nicht die Knoepfe ★/🔒/⊘).
+            tdName.addEventListener("mousedown", event => {
+                if (event.button === 0 && !event.target.closest(".param-action-btn")) tr.draggable = true;
+            });
+            tdName.addEventListener("mouseup", () => { tr.draggable = false; });
             tr.ondragstart = event => {
                 draggedParameter = { section, key };
                 tr.classList.add("param-dragging");
