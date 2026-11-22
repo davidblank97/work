@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<infinitykeys>
+	<metadata>
+		<schema_version/>
+		<config_version>1.0.0.0</config_version>
+		<author>Jonathan S</author>
+		<date>2026-02-24</date>
+	</metadata>
+	<mode index='0' name='NUMPAD'>
+		<row index='0'>
+			<key index='0'></key>
+			<key index='1'></key>
+			<key index='2'></key>
+			<key index='3'></key>
+		</row>
+		<row index='1'>
+			<key index='0'></key>
+			<key index='1'></key>
+			<key index='2'></key>
+			<key index='3'></key>
+		</row>
+		<row index='2'>
+			<key index='0'></key>
+			<key index='1'></key>
+			<key index='2'></key>
+			<key index='3'></key>
+		</row>
+		<row index='3'>
+			<key index='0'></key>
+			<key index='1'>one</key>
+			<key index='2'>two</key>
+			<key index='3'>three</key>
+		</row>
+		<row index='4'>
+			<key index='0'></key>
+			<key index='1'>four</key>
+			<key index='2'>five</key>
+			<key index='3'>six</key>
+		</row>
+		<row index='5'>
+			<key index='0'>decimal</key>
+			<key index='1'>seven</key>
+			<key index='2'>eight</key>
+			<key index='3'>nine</key>
+		</row>
+		<row index='6'>
+			<key index='0'>num</key>
+			<key index='1'>clear</key>
+			<key index='2'>zero</key>
+			<key index='3'>enter</key>
+		</row>
+	</mode>
+	<mode index='1' name='JOG'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>cross_in</key>
+			<key index='3'>cross_out</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_up</key>
+			<key index='1'>ahc_up</key>
+			<key index='2'>rotate_in</key>
+			<key index='3'>rotate_out</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_down</key>
+			<key index='1'>ahc_down</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='3'>
+			<key index='0'>wire_up</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>wire_pos_up</key>
+		</row>
+		<row index='4'>
+			<key index='0'>wire_down</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>wire_pos_down</key>
+		</row>
+		<row index='5'>
+			<key index='0'>purge</key>
+			<key index='1'>light</key>
+			<key index='2'>wire_pos_cross_in</key>
+			<key index='3'>wire_pos_cross_out</key>
+		</row>
+		<row index='6'>
+			<key index='0'>ctrl</key>
+			<key index='1'>clear</key>
+			<key index='2'>enter</key>
+			<key index='3'>more</key>
+		</row>
+	</mode>
+	<mode index='2' name='AUXJOG'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>menu</key>
+		</row>
+		<row index='1'>
+			<key index='0'>aux0_up</key>
+			<key index='1'>aux1_up</key>
+			<key index='2'>tilt_in</key>
+			<key index='3'>tilt_out</key>
+		</row>
+		<row index='2'>
+			<key index='0'>aux0_down</key>
+			<key index='1'>aux1_down</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='3'>
+			<key index='0'>aux2_up</key>
+			<key index='1'>aux3_up</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='4'>
+			<key index='0'>aux2_down</key>
+			<key index='1'>aux3_down</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='5'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='6'>
+			<key index='0'>ctrl</key>
+			<key index='1'>clear</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>back</key>
+		</row>
+	</mode>
+	<mode index='3' name='MENU'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>jog</key>
+		</row>
+		<row index='1'>
+			<key index='0'>load</key>
+			<key index='1'>save</key>
+			<key index='2'>view</key>
+			<key index='3'>edit</key>
+		</row>
+		<row index='2'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>light</key>
+		</row>
+		<row index='3'>
+			<key index='0'>blank_black</key>
+			<key index='1'>one</key>
+			<key index='2'>two</key>
+			<key index='3'>three</key>
+		</row>
+		<row index='4'>
+			<key index='0'>blank_black</key>
+			<key index='1'>four</key>
+			<key index='2'>five</key>
+			<key index='3'>six</key>
+		</row>
+		<row index='5'>
+			<key index='0'>decimal</key>
+			<key index='1'>seven</key>
+			<key index='2'>eight</key>
+			<key index='3'>nine</key>
+		</row>
+		<row index='6'>
+			<key index='0'>ctrl</key>
+			<key index='1'>clear</key>
+			<key index='2'>zero</key>
+			<key index='3'>enter</key>
+		</row>
+	</mode>
+	<mode index='4' name='INPUT'>
+		<row index='0'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='1'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>arrow_down</key>
+		</row>
+		<row index='3'>
+			<key index='0'>blank_black</key>
+			<key index='1'>one</key>
+			<key index='2'>two</key>
+			<key index='3'>three</key>
+		</row>
+		<row index='4'>
+			<key index='0'>blank_black</key>
+			<key index='1'>four</key>
+			<key index='2'>five</key>
+			<key index='3'>six</key>
+		</row>
+		<row index='5'>
+			<key index='0'>decimal</key>
+			<key index='1'>seven</key>
+			<key index='2'>eight</key>
+			<key index='3'>nine</key>
+		</row>
+		<row index='6'>
+			<key index='0'>blank_black</key>
+			<key index='1'>clear</key>
+			<key index='2'>zero</key>
+			<key index='3'>enter</key>
+		</row>
+	</mode>
+	<mode index='5' name='VIEW'>
+		<row index='0'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>exit</key>
+		</row>
+		<row index='1'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>arrow_down</key>
+		</row>
+		<row index='3'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='4'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='5'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='6'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+	</mode>
+	<mode index='6' name='EDIT'>
+		<row index='0'>
+			<key index='0'>blank_black</key>
+			<key index='1'>blank_black</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>exit</key>
+		</row>
+		<row index='1'>
+			<key index='0'>pri_trav</key>
+			<key index='1'>pri_volts</key>
+			<key index='2'>pri_amps</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>bkg_trav</key>
+			<key index='1'>bkg_volts</key>
+			<key index='2'>bkg_amps</key>
+			<key index='3'>arrow_down</key>
+		</row>
+		<row index='3'>
+			<key index='0'>pri_wire</key>
+			<key index='1'>width</key>
+			<key index='2'>excursion</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='4'>
+			<key index='0'>bkg_wire</key>
+			<key index='1'>rotate</key>
+			<key index='2'>wire_pos</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='5'>
+			<key index='0'>angle</key>
+			<key index='1'>in_dwell</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+		<row index='6'>
+			<key index='0'>num</key>
+			<key index='1'>out_dwell</key>
+			<key index='2'>blank_black</key>
+			<key index='3'>blank_black</key>
+		</row>
+	</mode>
+	<mode index='7' name='WELD'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>cross_in</key>
+			<key index='3'>cross_out</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_up</key>
+			<key index='1'>ahc_up</key>
+			<key index='2'>wire_up</key>
+			<key index='3'>amps_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_down</key>
+			<key index='1'>ahc_down</key>
+			<key index='2'>wire_down</key>
+			<key index='3'>amps_down</key>
+		</row>
+		<row index='3'>
+			<key index='0'>pri</key>
+			<key index='1'>wire_pos</key>
+			<key index='2'>excursion</key>
+			<key index='3'>wire_pos_up</key>
+		</row>
+		<row index='4'>
+			<key index='0'>bkg</key>
+			<key index='1'>in_dwell</key>
+			<key index='2'>out_dwell</key>
+			<key index='3'>wire_pos_down</key>
+		</row>
+		<row index='5'>
+			<key index='0'>width</key>
+			<key index='1'>arrow_up</key>
+			<key index='2'>wire_pos_cross_in</key>
+			<key index='3'>wire_pos_cross_out</key>
+		</row>
+		<row index='6'>
+			<key index='0'>light</key>
+			<key index='1'>arrow_down</key>
+			<key index='2'>ctrl</key>
+			<key index='3'>more</key>
+		</row>
+	</mode>
+	<mode index='8' name='WELD2'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>cross_in</key>
+			<key index='3'>cross_out</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_up</key>
+			<key index='1'>ahc_up</key>
+			<key index='2'>wire_up</key>
+			<key index='3'>amps_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_down</key>
+			<key index='1'>ahc_down</key>
+			<key index='2'>wire_down</key>
+			<key index='3'>amps_down</key>
+		</row>
+		<row index='3'>
+			<key index='0'>pri</key>
+			<key index='1'>rotate</key>
+			<key index='2'>excursion</key>
+			<key index='3'>wire_pos_up</key>
+		</row>
+		<row index='4'>
+			<key index='0'>bkg</key>
+			<key index='1'>in_dwell</key>
+			<key index='2'>out_dwell</key>
+			<key index='3'>wire_pos_down</key>
+		</row>
+		<row index='5'>
+			<key index='0'>width</key>
+			<key index='1'>arrow_up</key>
+			<key index='2'>rotate_cross_in</key>
+			<key index='3'>rotate_cross_out</key>
+		</row>
+		<row index='6'>
+			<key index='0'>light</key>
+			<key index='1'>arrow_down</key>
+			<key index='2'>ctrl</key>
+			<key index='3'>back</key>
+		</row>
+	</mode>
+</infinitykeys>

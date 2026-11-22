@@ -1,6 +1,6 @@
 # Liburdi Schedule Suite v3.0
 
-Version 3.0 fasst den **Schedule Editor** und den **WDR Converter** (Welddata Converter) in einer Datei zusammen: `Lib_Schedule_Editor_v3_0.html`.
+Version 3.0 fasst den **Schedule Editor**, den **WDR Converter** (Welddata Converter) und den **Pendant Layout Editor** in einer Datei zusammen: `Lib_Schedule_Editor_v3_0.html`.
 
 ## Start
 
@@ -9,10 +9,12 @@ Version 3.0 fasst den **Schedule Editor** und den **WDR Converter** (Welddata Co
 - **Schedule Editor:** Liburdi-Schedule-XML-Dateien bearbeiten, vergleichen und speichern (Beschreibung ab „Aufbau der Oberflaeche“).
 - **WDR Converter:** Schweissdaten-Aufzeichnungen (CSV/XML) in Excel-Dateien (.xlsx) umwandeln. Chrome/Edge fragen beim Start nach einem Zielordner und schreiben die Dateien direkt dorthin; andere Browser laden ein ZIP herunter. XML-Dateien werden unveraendert kopiert.
 
+- **Pendant Layout:** Tastenbelegung des Handbediengeraets (Pendant) bearbeiten und als `key_layout_<Suffix>.xml` oder PDF-Vorschau ausgeben (siehe „Pendant Layout“ unten).
+
 Nach der Auswahl wird die Anwendung geoeffnet. Oben erscheint eine schmale Leiste:
 
 - `⌂ Start` fuehrt zur Startseite zurueck.
-- `Schedule Editor` / `WDR Converter` wechseln direkt zwischen den Anwendungen.
+- `Schedule Editor` / `WDR Converter` / `Pendant Layout` wechseln direkt zwischen den Anwendungen.
 
 Einmal geoeffnete Anwendungen laufen weiter: Geladene XML-Dateien, Undo-Verlauf und Auswahl bleiben beim Wechsel erhalten, auf der Startseite sind sie mit `Open` markiert. Erst beim Schliessen oder Neuladen des Browser-Tabs gehen sie verloren (der Editor warnt bei ungespeicherten Aenderungen). Die Adresse merkt sich die gewaehlte Anwendung (`…v3_0.html#editor` bzw. `#wdr`); solche Links und die Zurueck-Taste des Browsers funktionieren.
 
@@ -30,6 +32,24 @@ Danach `http://localhost:8000/Schedule_editor/Lib_Schedule_Editor_v3_0.html` oef
 Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 
 **Aufbau der Datei:** Startseite und Umschaltung stehen am Anfang und Ende der Datei. Die beiden Anwendungen liegen unveraendert in `<template id="app-editor">` bzw. `<template id="app-wdr">` und werden beim Oeffnen jeweils als eigenes Dokument (iframe) gestartet, damit sich CSS und JavaScript nicht gegenseitig stoeren. Aenderungen am Editor oder Converter werden direkt im jeweiligen Template vorgenommen. Einstellungen im `localStorage` (ausgeblendete/gesperrte Parameter, Reihenfolge usw.) sind dieselben wie bei der Einzeldatei, solange sie ueber dieselbe Adresse geoeffnet wird.
+
+## Pendant Layout
+
+Bearbeitet die Tastenbelegung des Pendants (Datei `key_layout_*.xml`). Quelle: `Pendant_layout/Pendant_Layout_Generator_Simplified_v2_offline.html`; in der Suite im Farbschema des Editors.
+
+- **Dateiformat:**
+  - Root `<termkeys>` (neu) oder `<infinitykeys>` (alt, wird beim Laden akzeptiert).
+  - Darunter `metadata` (u. a. Autor, Datum) und neun Modi `<mode index name>`: NUMPAD, JOG, AUXJOG, MENU, INPUT, VIEW, EDIT, WELD, WELD2.
+  - Jeder Modus hat 7 Zeilen × 4 Tasten (`<row index>` / `<key index>`); der Tasteninhalt ist der Funktionsname (z. B. `trav_fwd`), leer bedeutet unbelegt.
+  - Beispiel: `Pendant_layout/key_layout.xml`.
+- **Bearbeiten:**
+  - Datei laden (`Choose File`) oder mit den Werkseinstellungen beginnen; Autor und Dateinamen-Suffix eintragen.
+  - Die Modi **JOG, WELD, WELD2** in Tabs bearbeiten: je Taste eine Auswahlliste, `--- CUSTOM ---` fuer freie Namen.
+  - `Copy page` / `Paste page` kopiert eine Seite, `Fill page with blank_black` leert sie.
+- **Ausgabe:**
+  - `Generate XML` laedt `key_layout_<Suffix>.xml` herunter, immer mit Root `<termkeys>` und allen neun Modi. Die nicht bearbeitbaren Modi stammen aus der geladenen Datei oder den Werkseinstellungen.
+  - `Preview PDF` oeffnet eine helle Druckansicht (A4) zum Drucken bzw. Speichern als PDF.
+- **Hinweis:** Beim Laden wird das Suffix aus dem Dateinamen nach `key_layout_` uebernommen. Heisst die Datei nur `key_layout.xml`, lautet der Vorschlag `key_layout_modified`; das Suffix laesst sich vor dem Erzeugen frei aendern.
 
 ## Aufbau der Oberflaeche
 

@@ -75,7 +75,10 @@ function createContext(browser, baseUrl, results, testName) {
 }
 
 async function waitForAppFrame(page, route) {
-    const probe = route === "wdr" ? "typeof wdrSelectedFiles !== 'undefined'" : "typeof loadedFiles !== 'undefined'";
+    const probe = {
+        wdr: "typeof wdrSelectedFiles !== 'undefined'",
+        pendant: "Boolean(document.getElementById('generate-xml-button')) && document.querySelectorAll('#tabs-container button').length > 0"
+    }[route] || "typeof loadedFiles !== 'undefined'";
     for (let attempt = 0; attempt < 100; attempt++) {
         for (const frame of page.frames()) {
             if (frame.url() !== "about:srcdoc") continue;
