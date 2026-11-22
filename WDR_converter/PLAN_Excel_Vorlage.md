@@ -3,7 +3,7 @@
 > **Status (2026-11-22): pausiert.** Der User erstellt zuerst selbst eine Excel-Vorlage. Wenn sie vorliegt:
 > 1. Vorlage ansehen. Prüfen, wo Daten und Kopfwerte hin sollen und ob es ein Blatt `Data` gibt.
 > 2. Die Regeln unten (Datenblatt, Platzhalter) an die echte Vorlage anpassen.
-> 3. Dann umsetzen. Noch nichts implementiert, kein Branch angelegt.
+> 3. Dann umsetzen. Bisher gibt es nur ein Platzhalter-Panel „2. Excel template – Coming soon“ (deaktivierter Button, `.template-panel`) im WDR-Template; die Funktion fehlt noch.
 > Stand des Repos beim Pausieren: `main` = `8bdb46d` (Version 3.0 mit Startseite, WDR-Farbschema).
 
 ## Context

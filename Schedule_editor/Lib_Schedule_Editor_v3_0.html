@@ -10943,6 +10943,65 @@
             font-size: 11px;
             color: var(--text-muted);
         }
+    
+        /* TEMPLATE (Platzhalter) */
+        .template-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .optional-tag {
+            margin-left: 6px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .soon-badge {
+            padding: 2px 9px;
+            border: 1px solid var(--border-strong);
+            border-radius: 999px;
+            color: var(--accent-soft);
+            font-size: 11px;
+            font-weight: 650;
+        }
+
+        .template-drop {
+            padding: 22px 20px;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-input);
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        .template-drop p {
+            margin: 0 0 12px 0;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        .template-state {
+            display: block;
+            margin-top: 12px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .template-panel .hint code {
+            padding: 0 4px;
+            border-radius: 4px;
+            background: var(--bg-input);
+            color: var(--accent-soft);
+            font-size: 11.5px;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
     </style>
 
 <div id="header">
@@ -10973,8 +11032,28 @@
             </div>
         </div>
 
+        <!-- Platzhalter: Excel-Vorlage (Funktion folgt, siehe WDR_converter/PLAN_Excel_Vorlage.md) -->
+        <div class="panel template-panel">
+            <div class="panel-header template-panel-header">
+                <span>2. Excel template <span class="optional-tag">optional</span></span>
+                <span class="soon-badge">Coming soon</span>
+            </div>
+            <div class="panel-body">
+                <div class="template-drop" aria-disabled="true">
+                    <p>Drop an .xlsx template here</p>
+                    <div class="selection-options">
+                        <button type="button" class="btn-secondary" disabled title="Template support is not available yet">Load template (.xlsx)...</button>
+                    </div>
+                    <span class="template-state">No template loaded – the data is written to a new workbook.</span>
+                </div>
+                <span class="hint">Later: the converter fills a copy of your template for every CSV file. The raw data goes into the
+                    sheet <code>Data</code> (from cell A1); placeholders such as <code>{{SCHEDULE}}</code> or
+                    <code>{{DATE}}</code> on other sheets are replaced with the values from the CSV header.</span>
+            </div>
+        </div>
+
         <div class="panel">
-            <div class="panel-header">2. Output format</div>
+            <div class="panel-header">3. Output format</div>
             <div class="panel-body">
                 <label class="radio-label">
                     <input type="radio" name="format" value="Excel" checked> Excel (.xlsx) for CSV files
@@ -10996,7 +11075,7 @@
         </div>
 
         <div class="panel download-container" id="download-container" style="display: none;">
-            <div class="panel-header">3. Download</div>
+            <div class="panel-header">4. Download</div>
             <div class="panel-body">
                 <p id="download-info">The converted files were packed into a ZIP archive.</p>
                 <button class="btn-download" id="download-btn">Download ZIP file</button>
