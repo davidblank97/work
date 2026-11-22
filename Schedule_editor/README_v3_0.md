@@ -85,7 +85,7 @@ Beim Ueberfahren einer Parameterzeile erscheinen drei Knoepfe: ★ markiert den 
 
 **Reihenfolge:** Die Parameterzeilen werden nicht mehr automatisch sortiert. Am Parameternamen oder am Griff ⠿ links davon laesst sich eine Zeile per Drag & Drop verschieben; mit `Alt+↑` / `Alt+↓` auf dem Griff rueckt sie um eine Position. Die Reihenfolge gilt je Bereich (`Description`, `Global`, `Limits`, `Overrides`; alle Segmente teilen sich eine Reihenfolge) fuer alle Dateien, laesst sich mit Undo zuruecknehmen und wird im `localStorage` gespeichert (Schluessel `scheduleEditorParameterOrder`, auch im Local Storage Backup enthalten). `Reset order` im Panel-Kopf stellt die Standardreihenfolge wieder her: XML-Reihenfolge bzw. bei Segmenten die Vorgabe aus `segments_sorting.json`. Neue Felder, die in der gespeicherten Reihenfolge fehlen, erscheinen am Ende. Gesperrte Parameter (🔒) lassen sich nicht verschieben und bleiben an ihrer Position stehen, wenn andere Zeilen verschoben werden.
 
-**Sperren:** Ein gesperrter Parameter (🔒 bleibt sichtbar, Feld gestrichelt und schreibgeschuetzt) kann nicht versehentlich geaendert werden. Die Sperre gilt je Parametername fuer alle Dateien und bleibt im Browser gespeichert (auch im Local Storage Backup). Sie schuetzt auch vor indirekten Aenderungen: Uebertragung auf markierte Dateien, Comparison (Bearbeiten und `Apply to all`), Kopf-Presets beim Wechsel des Heads sowie – bei gesperrtem `segment_time` – Nahtlaenge, editierbare Segment-Tabelle und die Neuverteilung beim Hinzufuegen/Duplizieren/Loeschen. Zurueck (Undo) und `Revert` bleiben moeglich. Ein erneuter Klick auf 🔒 entsperrt. Doppelklick bzw. Rechtsklick auf den Namen funktionieren weiterhin. Ausgeblendete Parameter werden unter `Tools > Hidden Parameters` wiederhergestellt.
+**Sperren:** Ein gesperrter Parameter (🔒 bleibt sichtbar, Feld gestrichelt und schreibgeschuetzt) kann nicht versehentlich geaendert werden. Die Sperre gilt je Parametername fuer alle Dateien und bleibt im Browser gespeichert (auch im Settings). Sie schuetzt auch vor indirekten Aenderungen: Uebertragung auf markierte Dateien, Comparison (Bearbeiten und `Apply to all`), Kopf-Presets beim Wechsel des Heads sowie – bei gesperrtem `segment_time` – Nahtlaenge, editierbare Segment-Tabelle und die Neuverteilung beim Hinzufuegen/Duplizieren/Loeschen. Zurueck (Undo) und `Revert` bleiben moeglich. Ein erneuter Klick auf 🔒 entsperrt. Doppelklick bzw. Rechtsklick auf den Namen funktionieren weiterhin. Ausgeblendete Parameter werden unter `Tools > Hidden Parameters` wiederhergestellt.
 
 Die Suche filtert die Tabellen nach Parametername und angezeigtem Wert und zeigt die Trefferzahl. Mit × oder Esc wird sie geleert.
 
@@ -137,11 +137,48 @@ Der Viewer zeigt:
 - den aktuellen XML-Stand inklusive noch nicht gespeicherter Aenderungen;
 - den Dateinamen der aktiven Datei;
 - den XML-Inhalt schreibgeschuetzt;
-- nach Auswahl eines in der Schedule Database gespeicherten XDR-Schemas fehlende erforderliche Elemente, Werte und Attribute als rote, rein visuelle Platzhalter an der passenden XML-Position.
+- nach Auswahl eines XDR-Schemas (im Editor gespeichert oder aus der Schedule Database; das im Editor aktive ist vorausgewaehlt) fehlende erforderliche Elemente, Werte und Attribute als rote, rein visuelle Platzhalter an der passenden XML-Position.
 
 Die Schemas werden aus derselben IndexedDB-Datenbank wie die Schedule Database gelesen. Beide Seiten muessen dazu im selben Browserprofil und unter demselben Ursprung (zum Beispiel demselben lokalen Webserver und Port) geoeffnet sein. Wenn kein Schema gespeichert ist, laden Sie es zuerst in der Schedule Database und oeffnen den Viewer erneut. Die Platzhalter aendern weder das XML im Editor noch gespeicherte Dateien.
 
 Wenn kein separates Fenster erscheint, muss der Popup-Blocker des Browsers fuer die HTML-Datei deaktiviert bzw. eine Ausnahme hinzugefuegt werden. Der Viewer aendert die XML-Datei nicht.
+
+## Schema-Pruefung (XDR)
+
+Jede geladene Datei wird automatisch gegen das **aktive XDR-Schema** geprueft – beim Laden, nach jeder Aenderung und nach Undo/Redo. Eingebaut ist `WELDSCHEDULE.XDR` in Version 1.8.3.7; sie steht auch ohne Webserver und offline zur Verfuegung.
+
+Geprueft werden:
+
+- fehlende Pflichtelemente (`minOccurs`) und zu haeufige Elemente (`maxOccurs`),
+- unbekannte Elemente (das Schema ist geschlossen, `model="closed"`),
+- die Reihenfolge der Elemente (`order="seq"`),
+- Pflichtattribute wie `head` an `<sched>` oder `index` an `<segment>`,
+- Datentypen von Werten und Attributen: `float` (Zahl), `int`, `ui1` (0–255), `ui2`, `ui4`, `boolean` (0 oder 1). Leere Zahlenfelder gelten als Warnung.
+
+**Anzeige:**
+
+- In der Dateiliste markiert ein rotes `! n` Dateien mit Schemafehlern; der Tooltip zeigt den ersten Fehler.
+- Nach dem Laden nennt die Statuszeile die Anzahl abweichender Dateien.
+- `Tools > Schema Check` zeigt je Datei den Status (`✓ Valid`, `! n errors`, `△ n warnings`), die Version der Datei im Vergleich zur Schema-Version und die Liste der Befunde mit Pfad. `Show` springt zum betroffenen Bereich bzw. Segment und hebt die Zeile kurz hervor.
+
+**Speichern:** Hat eine zu speichernde Datei Schemafehler, fragt der Editor bei `Save`, `Save As…` und `Batch Save` nach (`Save anyway`, `Cancel` oder `Show details`). Warnungen allein loesen keine Rueckfrage aus.
+
+**Versionskontrolle:** Die Version einer Datei wird aus `metadata/schema_version` gelesen, wenn gefuellt, sonst aus `metadata/config_version`, und mit der Version des aktiven Schemas (`xmlns:version` in der XDR) verglichen.
+
+- `= schema ✓`: Die Versionen stimmen ueberein.
+- `older than schema`: Die Datei stammt aus einer aelteren Version. Abweichungen sind dann zu erwarten; z. B. hat eine 1.8.3.5-Datei gegenueber 1.8.3.7 vier Unterschiede in `<global>`.
+- `newer than schema – load a newer XDR`: Das geladene Schema ist aelter als die Datei.
+
+Ist eine passende Version gespeichert, bietet `Use v…` an, sie zu aktivieren.
+
+**Schema-Versionen verwalten:** Unter `Tools > Settings` (Bereich „XDR schema“):
+
+- Liste aller gespeicherten Versionen mit Version, Dateiname und Ladedatum.
+- `Use` aktiviert eine Version.
+- `Delete` loescht eine geladene Version; die eingebaute laesst sich nicht loeschen.
+- Neue Versionen werden ueber `Load XDR…` oder per Ablegen einer `.XDR`-Datei aufgenommen und sofort aktiviert. Eine bereits gespeicherte Version kann ersetzt werden.
+
+Die Versionen liegen im `localStorage` und sind im JSON-Backup enthalten.
 
 ## Speichern
 
@@ -178,7 +215,7 @@ Vor dem Speichern oeffnet sich ein Dialog fuer einen optionalen **Revisions-Tag*
 - `Comparison`: Vergleicht die geladenen Dateien und kann Werte auf andere Dateien uebertragen. `Show differences only` blendet gleiche Parameter aus; Zellen, die vom haeufigsten Wert der Zeile abweichen, sind rot markiert. Eine Zusammenfassung zeigt, wie viele Parameter sich unterscheiden.
 - `Heat Input`: Zeigt nominalen Heat Input, Min und Max je aktivem Segment mit TIG-Wirkungsgrad η = 0,6 in kJ/mm. Grundwerte gelten waehrend `excursion`, Hauptwerte waehrend `indwell + outdwell`; Zeiten in Sekunden und IPM wird fuer die Wegberechnung in mm/s umgerechnet. Min/Max beruecksichtigen die in `<overrides>` angegebenen Grenzen als symmetrische ±%-Abweichungen: `avc_override_max` fuer beide Spannungen, `bkg_amp_max`/`pri_amp_max` fuer die Stroeme, `travel_max` fuer beide Vorschuebe, `dwell_max` fuer `indwell`/`outdwell` und `excursion_max` fuer `excursion`. Alle Grenzen werden gleichzeitig kombiniert; fehlende Werte gelten als 0%. `pulse_freq`, `pulse_width` und `*_rate` werden nicht zusaetzlich gewichtet. Alle geladenen XML-Dateien werden in **einem** Diagramm gezeigt: das Diagramm ist waagerecht angeordnet: Heat Input (kJ/mm) auf der x-Achse, je Segment eine Zeile, nach Datei gruppiert (Dateiname ueber der Gruppe). Ein waagerechter Balken zeigt die Bandbreite Min–Max, ein Punkt den Nominalwert. Jede Zeile ist mit Farbpunkt und Segmentname beschriftet; die Farben entsprechen dem Ring der Segment-Uebersicht. Die Hoehe waechst mit der Anzahl Segmente. Plausible Grenzwerte aus `<limits>` (`heat_input_fault_low`/`heat_input_fault_high` groesser 0 und kleiner 9999) erscheinen je Datei als senkrechte gestrichelte Linien ueber deren Gruppe; die Grenzwerte werden in kJ/mm angenommen. Ueberschreitungen sind rot umrandet und mit „! outside limit“ beschriftet. Die x-Achse hat ein Raster in 0,1-kJ/mm-Schritten (bei schmalem Fenster wird nur jeder zweite bzw. fuenfte Strich beschriftet).
 
-Ueber dem Diagramm stehen zwei Felder **Min** und **Max** (Target range, kJ/mm). Eingetragene Werte erscheinen als durchgezogene rote Linien ueber das gesamte Diagramm. Enter oder Verlassen des Feldes uebernimmt den Wert, Dezimal-Komma ist erlaubt, ein leeres Feld entfernt die Linie, `Clear` entfernt beide. Min muss kleiner als Max sein. Die Werte werden im Browser gespeichert (auch im Local Storage Backup) und gelten fuer alle Dateien. Der Ziel-Bereich wird auch geprueft: Liegt die Bandbreite eines Segments (Min–Max) unter dem Ziel-Min oder ueber dem Ziel-Max, wird es im Diagramm rot umrandet und mit „! outside target“ beschriftet; die Statusspalte zeigt dasselbe (bei gleichzeitiger Grenzwertverletzung „! outside limit · ! outside target“). Liegt alles innerhalb, steht dort „✓ OK“.
+Ueber dem Diagramm stehen zwei Felder **Min** und **Max** (Target range, kJ/mm). Eingetragene Werte erscheinen als durchgezogene rote Linien ueber das gesamte Diagramm. Enter oder Verlassen des Feldes uebernimmt den Wert, Dezimal-Komma ist erlaubt, ein leeres Feld entfernt die Linie, `Clear` entfernt beide. Min muss kleiner als Max sein. Die Werte werden im Browser gespeichert (auch im Settings) und gelten fuer alle Dateien. Der Ziel-Bereich wird auch geprueft: Liegt die Bandbreite eines Segments (Min–Max) unter dem Ziel-Min oder ueber dem Ziel-Max, wird es im Diagramm rot umrandet und mit „! outside target“ beschriftet; die Statusspalte zeigt dasselbe (bei gleichzeitiger Grenzwertverletzung „! outside limit · ! outside target“). Liegt alles innerhalb, steht dort „✓ OK“.
 
 In Heat Input und Comparison werden Dateien mit ihrer Kurzbezeichnung angezeigt: den vier Ziffern am Anfang des Dateinamens (z. B. `0303` fuer `0303-HOT PASS 2 ….xml`). Der volle Name erscheint im Tooltip. Fehlen die vier Ziffern oder haben mehrere geladene Dateien dieselben, wird fuer diese der volle Name verwendet. Im Heat-Input-Diagramm steht die Kurzbezeichnung direkt in der Zeile (`0303 · Segment 1`), sodass keine eigene Kopfzeile je Datei noetig ist.
 
@@ -188,7 +225,8 @@ Darunter steht eine gemeinsame Tabelle: je Datei eine Kopfzeile mit Name und Gre
 - `Hidden Parameters`: Verwaltet ausgeblendete Parameter.
 - `Change Log`: Zeigt protokollierte Aenderungen.
 - `XML Viewer`: Oeffnet den schreibgeschuetzten XML-Inhalt der aktiven Datei.
-- `Local Storage Backup`: Exportiert die lokalen Editor-Einstellungen als JSON-Datei oder importiert ein zuvor erstelltes JSON-Backup. Beim Import wird bestaetigt, dass die aktuellen Editor-Einstellungen ersetzt werden; anschliessend wird die Seite neu geladen. Nicht zum Schedule Editor gehoerende Local-Storage-Eintraege bleiben unberuehrt.
+- `Schema Check`: Prueft alle geladenen Dateien gegen das aktive XDR-Schema (siehe „Schema-Pruefung (XDR)“).
+- `Settings` (frueher `Local Storage Backup`): Verwaltet die XDR-Schema-Versionen und exportiert die lokalen Editor-Einstellungen als JSON-Datei oder importiert ein zuvor erstelltes JSON-Backup. Beim Import wird bestaetigt, dass die aktuellen Editor-Einstellungen ersetzt werden; anschliessend wird die Seite neu geladen. Nicht zum Schedule Editor gehoerende Local-Storage-Eintraege bleiben unberuehrt.
 
 ## Auswahl und Verlauf
 
@@ -202,7 +240,7 @@ Die Anzeige in der Kopfzeile nennt die Zahl ungespeicherter Dateien. Beim Schlie
 
 ## Lokale Einstellungen
 
-Ausgeblendete, wichtige und gesperrte Parameter, die Parameter-Reihenfolge, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll (`Tools > Change Log`) bleibt ueber Sitzungen erhalten. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
+Ausgeblendete, wichtige und gesperrte Parameter, die Parameter-Reihenfolge, die XDR-Schemas, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll (`Tools > Change Log`) bleibt ueber Sitzungen erhalten. Die XDR-Schema-Versionen liegen ebenfalls dort (`scheduleEditorXdrSchemas`, aktive Version in `scheduleEditorActiveXdr`). Mit `Tools > Settings` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
 
 Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Nicht passende oder fehlerhafte XML-Dateien werden beim Laden abgewiesen.
 

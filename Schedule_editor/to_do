@@ -21,7 +21,7 @@ H2-FV-100S:
 "wire_manipulator_in_out_jog"=60
 "wire_manipulator_up_down_jog"=60
 
-Schema kontrolle einfügen
+Schema kontrolle einfügen  [erledigt in v3.0: Tools › Schema Check, XDR-Versionen unter Tools › Settings]
 
  Für den empfohlenen Start im Projektordner python3 -m http.server 8000 ausführen und http://localhost:8000 öffnen.
 

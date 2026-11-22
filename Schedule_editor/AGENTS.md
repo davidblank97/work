@@ -9,6 +9,8 @@
 - `Lib_Schedule_Editor_v3_0.html`: current version (Liburdi Schedule Suite 3.0). Start page + router at the top/bottom of the file; the Schedule Editor lives unchanged in `<template id="app-editor">` (embedded JSZip, CSS, app JavaScript), the WDR (Welddata) Converter in `<template id="app-wdr">`. Each app is started as its own document via `iframe.srcdoc` (same origin, `<base href>` set to the suite URL) and kept alive when switching. Edit the apps inside their templates; never put `</template>` inside an app.
 - `Lib_Schedule_Editor_v2_9.html`: previous standalone editor, kept for reference.
 - `Lib_Schedule_Editor_v2.html`, `_v2_7.html`, `_v2_8.html`, `Liburdi_Schedule_Suite_V1.0.html`: older versions, kept for reference. Do not edit unless asked.
+- Schema check: `validateAgainstXdr` / `getSchemaResult` (editor template) validate each file against the active XDR (built-in copy of `WELDSCHEDULE.XDR` in `<script id="defaultXdr">`, more versions in localStorage `scheduleEditorXdrSchemas`, managed in Tools › Settings). Save paths go through `confirmSchemaBeforeSave`. Schedules older than the XDR version legitimately differ.
+- `WELDSCHEDULE.XDR`: Liburdi schedule schema 1.8.3.7 (source of the built-in copy).
 - `segments_sorting.json`: priority order of segment fields; fetched only when served over http(s), otherwise the built-in `SEGMENT_SORTING_CONFIG` is used.
 - `README_v3_0.md`: user documentation (German). Update it when behavior changes.
 - `schedule_beispiel.xml`, `Test 2 Segmente.xml`: sample schedules for manual testing.

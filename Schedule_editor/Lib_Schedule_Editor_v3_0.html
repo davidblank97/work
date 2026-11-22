@@ -2814,6 +2814,254 @@
             cursor: not-allowed;
         }
 
+        /* ---- Schema Check (XDR) ---- */
+        .file-schema-badge {
+            flex: 0 0 auto;
+            margin-right: 4px;
+            padding: 0 6px;
+            border: 1px solid rgba(240, 120, 120, 0.55);
+            border-radius: 999px;
+            color: var(--danger);
+            font-size: 10.5px;
+            font-weight: 700;
+            line-height: 16px;
+        }
+
+        .storage-modal-box {
+            width: min(680px, calc(100vw - 32px)) !important;
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin: 0 0 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .settings-section h4 {
+            margin: 0 0 6px;
+            color: var(--accent);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .settings-section p {
+            margin: 0 0 10px;
+            color: var(--text-muted);
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
+
+        .settings-section .schema-version-table {
+            border: 1px solid var(--border-color);
+        }
+
+        .settings-section .schema-drop {
+            margin: 10px 0 0;
+        }
+
+        .schema-name-cell {
+            overflow-wrap: anywhere;
+        }
+
+        .schema-active-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+
+        .schema-version-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schema-version-table th,
+        .schema-version-table td {
+            padding: 6px 14px;
+            font-size: 12.5px;
+            text-align: left;
+        }
+
+        .schema-version-table tr.is-active td {
+            background: rgba(242, 138, 61, 0.08);
+        }
+
+        .schema-state-cell {
+            width: 90px;
+            color: var(--accent);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .schema-version-cell {
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            white-space: nowrap;
+        }
+
+        .schema-date-cell {
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .schema-actions-cell {
+            text-align: right !important;
+            white-space: nowrap;
+        }
+
+        .schema-small-btn {
+            min-height: 0 !important;
+            height: 24px;
+            margin-left: 6px;
+            padding: 0 10px !important;
+            font-size: 11.5px !important;
+            line-height: 22px;
+        }
+
+        .schema-drop {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 12px 14px 14px;
+            padding: 14px;
+            border: 1px dashed #76513d;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 12.5px;
+        }
+
+        .schema-drop.dragover {
+            border-color: var(--accent);
+            background: rgba(242, 138, 61, 0.06);
+        }
+
+        .schema-empty {
+            margin: 12px 16px;
+            color: var(--text-muted);
+            font-size: 12.5px;
+        }
+
+        .schema-file {
+            border-top: 1px solid var(--border-color);
+        }
+
+        .schema-file-summary {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 9px 16px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .schema-file-label {
+            min-width: 48px;
+            font-weight: 700;
+        }
+
+        .schema-status {
+            padding: 1px 9px;
+            border: 1px solid currentColor;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+
+        .schema-status.is-ok {
+            color: var(--success);
+        }
+
+        .schema-status.is-warning {
+            color: #e4b363;
+        }
+
+        .schema-status.is-error {
+            color: var(--danger);
+        }
+
+        .schema-version-info {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .schema-version-info.is-warning {
+            color: #e4b363;
+        }
+
+        .schema-findings {
+            margin: 0;
+            padding: 0 16px 10px 16px;
+            list-style: none;
+        }
+
+        .schema-finding {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 0;
+            border-top: 1px solid var(--border-color);
+            font-size: 12.5px;
+        }
+
+        .schema-finding-severity {
+            flex: 0 0 64px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .schema-finding.is-error .schema-finding-severity {
+            color: var(--danger);
+        }
+
+        .schema-finding.is-warning .schema-finding-severity {
+            color: #e4b363;
+        }
+
+        .schema-finding-text {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .schema-finding-path {
+            overflow: hidden;
+            color: var(--text-muted);
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 11px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .schema-save-text {
+            margin: 0 0 10px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .schema-save-list {
+            margin-bottom: 14px;
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        tr.schema-flash > td {
+            animation: schema-flash 2.4s ease;
+        }
+
+        @keyframes schema-flash {
+            0%, 40% { background: rgba(240, 120, 120, 0.28); }
+            100% { background: transparent; }
+        }
+
         /* ---- Hidden Parameters: kompakte Zeilen ---- */
         .hidden-table th,
         .hidden-table td {
@@ -3560,10 +3808,11 @@
             <div id="toolsSection" class="sidebar-section-content">
                 <div class="sidebar-item" role="button" tabindex="0" id="compareBtn">Comparison</div>
                 <div class="sidebar-item" role="button" tabindex="0" id="heatInputBtn">Heat Input</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="schemaCheckBtn">Schema Check</div>
                 <div class="sidebar-item" role="button" tabindex="0" id="hiddenManagerBtn">Hidden Parameters</div>
                 <div class="sidebar-item" role="button" tabindex="0" id="changeLogBtn">Change Log</div>
                 <div class="sidebar-item" role="button" tabindex="0" id="xmlViewerBtn">XML Viewer</div>
-                <div class="sidebar-item" role="button" tabindex="0" id="localStorageBackupBtn">Local Storage Backup</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="localStorageBackupBtn">Settings</div>
             </div>
         </div>
     </div>
@@ -3628,6 +3877,761 @@
             </div>
         </div>
     </div>
+
+    <div class="modal-overlay" id="schemaSaveModal">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="schemaSaveTitle">
+            <h3 id="schemaSaveTitle">Schema errors</h3>
+            <p id="schemaSaveText" class="schema-save-text"></p>
+            <div id="schemaSaveList" class="schema-save-list"></div>
+            <div class="modal-actions">
+                <button id="schemaSaveShowBtn" class="btn-secondary" type="button">Show details</button>
+                <button id="schemaSaveCancelBtn" class="btn-secondary" type="button">Cancel</button>
+                <button id="schemaSaveConfirmBtn" class="btn-primary" type="button">Save anyway</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eingebaute Standard-XDR (WELDSCHEDULE.XDR); neue Versionen ueber Tools > Schema Check laden. -->
+    <script type="text/xml" id="defaultXdr">
+<Schema name="WeldSchedule" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.7">
+
+	<ElementType name="sched" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="id" required="no" dt:type="string" />
+		<AttributeType name="type" required="no" dt:type="string" />
+		<AttributeType name="head" required="yes" dt:type="string" />
+		<attribute type="id" />
+		<attribute type="type" />
+		<attribute type="head" />
+		<!--DECLARE ALL ELEMENTS (SCHED)-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="description" minOccurs="1" maxOccurs="1" />
+		<element type="global" minOccurs="1" maxOccurs="1" />
+		<element type="limits" minOccurs="1" maxOccurs="1" />
+		<element type="overrides" minOccurs="1" maxOccurs="1" />
+		<element type="path" minOccurs="0" maxOccurs="1" />
+		<element type="segment" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (METADATA)-->
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+		<element type="signature" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="description" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (DESC)-->
+		<element type="outer_diameter" minOccurs="1" maxOccurs="1" />
+		<element type="groove_depth" minOccurs="1" maxOccurs="1" />
+		<element type="custom_search_tag" minOccurs="1" maxOccurs="1" />
+		<element type="note" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="global" model="closed" content="eltOnly" order="seq" >
+		<!--DECLARE ALL ELEMENTS (GLOBAL)-->
+		<element type="arc_type" minOccurs="1" maxOccurs="1" />
+		<element type="excursion_mode" minOccurs="1" maxOccurs="1" />
+		<element type="datalog_mode" minOccurs="1" maxOccurs="1" />
+		<element type="prepurge" minOccurs="1" maxOccurs="1" />
+		<element type="postpurge" minOccurs="1" maxOccurs="1" />
+		<element type="trail_gas" minOccurs="1" maxOccurs="1" />
+		<element type="backup_gas" minOccurs="1" maxOccurs="1" />
+		<element type="plasma_gas" minOccurs="1" maxOccurs="1" />
+		<element type="auto_disable_pilot_arc" minOccurs="1" maxOccurs="1" />
+		<element type="pilot_arc_amps" minOccurs="1" maxOccurs="1" />
+		<element type="initial_amps" minOccurs="1" maxOccurs="1" />
+		<element type="final_amps" minOccurs="1" maxOccurs="1" />
+		<element type="impulse_amps" minOccurs="1" maxOccurs="1" />
+		<element type="impulse_time" minOccurs="1" maxOccurs="1" />
+		<element type="downslope" minOccurs="1" maxOccurs="1" />
+		<element type="downslope_mode" minOccurs="1" maxOccurs="1" />
+		<element type="theta_torch_height" minOccurs="1" maxOccurs="1" />
+		<element type="travel_direction" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_gap" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_mode" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2_mode" minOccurs="1" maxOccurs="1" />
+		<element type="wire_retract" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_retract" minOccurs="1" maxOccurs="1" />
+		<element type="travel_delay" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_delay" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_stop_delay" minOccurs="1" maxOccurs="1" />
+		<element type="wire_delay" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_delay" minOccurs="1" maxOccurs="1" />
+		<element type="travel_jog" minOccurs="1" maxOccurs="1" />
+		<element type="wire_jog_fwd" minOccurs="1" maxOccurs="1" />
+		<element type="wire_jog_rev" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_jog_fwd" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_jog_rev" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_jog" minOccurs="1" maxOccurs="1" />
+		<element type="osc_jog" minOccurs="1" maxOccurs="1" />
+		<element type="theta_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux0_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux1_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux2_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux3_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux4_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux5_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux6_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux7_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux8_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux9_jog" minOccurs="1" maxOccurs="1" />
+		<element type="travel_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_step" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_step" minOccurs="1" maxOccurs="1" />
+		<element type="theta_step" minOccurs="1" maxOccurs="1" />
+		<element type="osc_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux0_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux1_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux2_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux3_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux4_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux5_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux6_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux7_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux8_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux9_step" minOccurs="1" maxOccurs="1" />
+		<element type="osc_auto_center" minOccurs="1" maxOccurs="1" />
+		<element type="osc_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="theta_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="travel_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="travel_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="travel_auto_zero" minOccurs="1" maxOccurs="1" />
+		<element type="travel_auto_home" minOccurs="1" maxOccurs="1" />
+		<element type="cut_angle" minOccurs="1" maxOccurs="1" />
+		<element type="electrode_diameter" minOccurs="1" maxOccurs="1" />
+		<element type="burn_back_time" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_x_tracking_on" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_z_tracking_on" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_width_tracking_on" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_x_channel" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_z_channel" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_width_channel" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_program" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_angle" minOccurs="1" maxOccurs="1" />
+		<element type="groovetrack_max_correction_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="groovetrack_sensitivity_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="groovetrack_axis" minOccurs="1" maxOccurs="1" />
+		<element type="loop_count" minOccurs="1" maxOccurs="1" />
+		<element type="loop_to" minOccurs="1" maxOccurs="1" />
+		<element type="crater_fill_time" minOccurs="1" maxOccurs="1" />
+		<element type="initial_amps_time" minOccurs="1" maxOccurs="1" />
+		<element type="avc_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="avc_high_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="avc_deadband" minOccurs="1" maxOccurs="1" />
+		<element type="avc_slowband" minOccurs="1" maxOccurs="1" />
+		<element type="acc_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="acc_high_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="acc_deadband" minOccurs="1" maxOccurs="1" />
+		<element type="acc_slowband" minOccurs="1" maxOccurs="1" />
+		<element type="flying_start" minOccurs="1" maxOccurs="1" />
+		<element type="initial_wire_speed" minOccurs="1" maxOccurs="1" />
+		<element type="acc_compound_angle" minOccurs="1" maxOccurs="1" />
+		<element type="aux_0_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="aux_1_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="layer_diameter_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="torch_centering_height" minOccurs="1" maxOccurs="1" />
+		<element type="gas_flow_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="theta_tool_center_point" minOccurs="1" maxOccurs="1" />
+		<element type="travel_speed_compensated_by_height" minOccurs="1" maxOccurs="1" />
+		<element type="osc_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="theta_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="travel_speed_compensated_by_width" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="initial_travel_speed" minOccurs="1" maxOccurs="1" />
+		<element type="initial_volts" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_up_down_jog" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_up_down_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_jog" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_step" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_jog" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="reverse_downslope" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_jog" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire_select_mode" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="initial_wire2_speed" minOccurs="1" maxOccurs="1" />
+		<element type="osc_centre_position_offset" minOccurs="1" maxOccurs="1" />
+		<element type="theta_centre_position_offset" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_centre_position_offset" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_centre_position_offset" minOccurs="1" maxOccurs="1" />
+		<element type="aux_0_pre_position" minOccurs="1" maxOccurs="1" />
+		<element type="aux_1_pre_position" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_pre_position" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_post_position" minOccurs="1" maxOccurs="1" />
+		<element type="is_weld_closed" minOccurs="1" maxOccurs="1" />
+		<element type="groovetrack_real_time_id" minOccurs="1" maxOccurs="1" />
+		<element type="is_residue_chipper_enabled" minOccurs="1" maxOccurs="1" />
+		<element type="is_layer_diameter_detection_enabled" minOccurs="1" maxOccurs="1" />
+		<element type="layer_diameter_lift_gap" minOccurs="1" maxOccurs="1" />
+		<element type="layer_diameter_touch_gap" minOccurs="1" maxOccurs="1" />
+		<element type="is_layer_diameter_pipe_touch_enabled" minOccurs="1" maxOccurs="1" />
+		<element type="residue_chipper_wire_speed" minOccurs="1" maxOccurs="1" />
+		<element type="residue_chipper_wire_retract" minOccurs="1" maxOccurs="1" />
+		<element type="jog_speed_edit_mode" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="limits" model="closed" content="eltOnly" order="seq" >
+		<!--DECLARE ALL ELEMENTS (LIMITS)-->
+		<element type="pri_amp_error" minOccurs="1" maxOccurs="1" />
+		<element type="pri_amp_fault" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp_error" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp_fault" minOccurs="1" maxOccurs="1" />
+		<element type="wire_error" minOccurs="1" maxOccurs="1" />
+		<element type="wire_fault" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_error" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_fault" minOccurs="1" maxOccurs="1" />
+		<element type="travel_error" minOccurs="1" maxOccurs="1" />
+		<element type="travel_fault" minOccurs="1" maxOccurs="1" />
+		<element type="voltage_low" minOccurs="1" maxOccurs="1" />
+		<element type="voltage_high" minOccurs="1" maxOccurs="1" />
+		<element type="avg_amp_fault_low" minOccurs="1" maxOccurs="1" />
+		<element type="avg_amp_fault_high" minOccurs="1" maxOccurs="1" />
+		<element type="heat_input_fault_low" minOccurs="1" maxOccurs="1" />
+		<element type="heat_input_fault_high" minOccurs="1" maxOccurs="1" />
+		<!--ANY ADDITIONAL PARAMETERS THAT SHOULD BE BACKWARDS COMPATIBLE WITH OLD SCHEDULES SHOULD BE ADDED WITH minOccurs="1"-->
+	</ElementType>
+
+	<ElementType name="overrides" model="closed" content="eltOnly" order="seq" >
+		<!--DECLARE ALL ELEMENTS (OVERRIDES)-->
+		<element type="pri_amp_max" minOccurs="1" maxOccurs="1" />
+		<element type="pri_amp_rate" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp_max" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp_rate" minOccurs="1" maxOccurs="1" />
+		<element type="travel_max" minOccurs="1" maxOccurs="1" />
+		<element type="travel_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire_retract_distance_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire_retract_distance_rate" minOccurs="1" maxOccurs="1" />
+		<element type="avg_wire_speed_max" minOccurs="1" maxOccurs="1" />
+		<element type="avg_wire_speed_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_retract_distance_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_retract_distance_rate" minOccurs="1" maxOccurs="1" />
+		<element type="avg_wire2_speed_max" minOccurs="1" maxOccurs="1" />
+		<element type="avg_wire2_speed_rate" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_amps_max" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_amps_rate" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2_amps_max" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2_amps_rate" minOccurs="1" maxOccurs="1" />
+		<element type="volt_max" minOccurs="1" maxOccurs="1" />
+		<element type="volt_rate" minOccurs="1" maxOccurs="1" />
+		<element type="theta_width_max" minOccurs="1" maxOccurs="1" />
+		<element type="theta_width_rate" minOccurs="1" maxOccurs="1" />
+		<element type="osc_width_max" minOccurs="1" maxOccurs="1" />
+		<element type="osc_width_rate" minOccurs="1" maxOccurs="1" />
+		<element type="dwell_max" minOccurs="1" maxOccurs="1" />
+		<element type="dwell_rate" minOccurs="1" maxOccurs="1" />
+		<element type="excursion_max" minOccurs="1" maxOccurs="1" />
+		<element type="excursion_rate" minOccurs="1" maxOccurs="1" />
+		<element type="acc_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="acc_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="avc_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="avc_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="workpoint_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="workpoint_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="trim_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="trim_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_1_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_1_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_2_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_2_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_3_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_3_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_4_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_4_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="mig_sensitivity_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="mig_sensitivity_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_width_min_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_width_min_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_width_max_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_width_max_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="blast_amps_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="blast_amps_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_freq_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_freq_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_width_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_width_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_width_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_width_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_freq_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_freq_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="compound_steering_angle_offset_max" minOccurs="1" maxOccurs="1" />
+		<element type="compound_steering_angle_offset_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_width_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_width_rate" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_width_max" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_width_rate" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_time_max" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_time_rate" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_time_max" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_time_rate" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="path" model="closed" content="eltOnly" order="seq" >
+		<AttributeType name="tension" required="yes" dt:type="float" />
+		<AttributeType name="closed" required="yes" dt:type="ui1" />
+		<AttributeType name="offset" required="yes" dt:type="float" />
+		<attribute type="tension" />
+		<attribute type="closed" />
+		<attribute type="offset" />
+		<!--DECLARE ALL ELEMENTS (PATH)-->
+		<element type="point" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="segment" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ALL ELEMENTS (SEG)-->
+		<element type="enable" minOccurs="1" maxOccurs="1" />
+		<element type="mode" minOccurs="1" maxOccurs="1" />
+		<element type="segment_time" minOccurs="1" maxOccurs="1" />
+		<element type="slope" minOccurs="1" maxOccurs="1" />
+		<element type="travel_angle" minOccurs="1" maxOccurs="1" />
+		<element type="sync_mode" minOccurs="1" maxOccurs="1" />
+		<element type="pri_ahc" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_ahc" minOccurs="1" maxOccurs="1" />
+		<element type="volts" minOccurs="1" maxOccurs="1" />
+		<element type="pri_amp" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_freq" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_width" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_freq" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_width" minOccurs="1" maxOccurs="1" />
+		<element type="pri_travel" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_travel" minOccurs="1" maxOccurs="1" />
+		<element type="pri_wire" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_wire" minOccurs="1" maxOccurs="1" />
+		<element type="pri_wire2" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_wire2" minOccurs="1" maxOccurs="1" />
+		<element type="avc_mode" minOccurs="1" maxOccurs="1" />
+		<element type="theta_width" minOccurs="1" maxOccurs="1" />
+		<element type="osc_width" minOccurs="1" maxOccurs="1" />
+		<element type="indwell" minOccurs="1" maxOccurs="1" />
+		<element type="outdwell" minOccurs="1" maxOccurs="1" />
+		<element type="excursion" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_amps" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2_amps" minOccurs="1" maxOccurs="1" />
+		<element type="mig_mode" minOccurs="1" maxOccurs="1" />
+		<element type="workpoint" minOccurs="1" maxOccurs="1" />
+		<element type="trim" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control1" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control2" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control3" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control4" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_mode" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_sensitivity" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_smoothing" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_max_correction" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_bias" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_width_min" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_width_max" minOccurs="1" maxOccurs="1"/>
+		<element type="blast_amps" minOccurs="1" maxOccurs="1"/>
+		<element type="compound_steering_angle_offset" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="detachment_amps" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_burn_back_amps" minOccurs="1" maxOccurs="1"/>
+		<element type="wetting_amps" minOccurs="1" maxOccurs="1"/>
+		<element type="wetting_time_1" minOccurs="1" maxOccurs="1"/>
+		<element type="wetting_time_2" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_min_burn_back_time" minOccurs="1" maxOccurs="1"/>
+		<element type="clear_short_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="detect_short_threshold" minOccurs="1" maxOccurs="1"/>
+		<element type="clear_short_threshold" minOccurs="1" maxOccurs="1"/>
+		<element type="detach_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_burn_back_decay_period" minOccurs="1" maxOccurs="1"/>
+		<element type="clear_short_max_current" minOccurs="1" maxOccurs="1"/>
+		<element type="wetting_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_dynamics_enable_voltage" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_blast_current_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_burnback_current_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="layer_diameter" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_pre_detachment_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_energy" minOccurs="1" maxOccurs="1"/>
+		<element type="shield_flow" minOccurs="1" maxOccurs="1"/>
+		<element type="trail_flow" minOccurs="1" maxOccurs="1"/>
+		<element type="plasma_flow" minOccurs="1" maxOccurs="1"/>
+		<element type="backup_flow" minOccurs="1" maxOccurs="1"/>
+		<element type="cv_min_current" minOccurs="1" maxOccurs="1"/>
+		<element type="cv_max_current" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_deadband" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_slowband" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_low_sensitivity" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_high_sensitivity" minOccurs="1" maxOccurs="1"/>
+		<element type="wire_manipulator_in_out_width" minOccurs="1" maxOccurs="1"/>
+		<element type="tungsten_width" minOccurs="1" maxOccurs="1"/>
+		<element type="reverse_travel" minOccurs="1" maxOccurs="1"/>
+		<element type="tilt_position" minOccurs="1" maxOccurs="1"/>
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="signature" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS(DESC)-->
+	<ElementType name="outer_diameter" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groove_depth" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="custom_search_tag" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="note" model="closed" content="eltOnly" order="seq">
+		<element type="entry" minOccurs="0" maxOccurs="*"/>
+	</ElementType>
+	<ElementType name="entry" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="user" required="yes" dt:type="string" />
+		<AttributeType name="timestamp" required="yes" dt:type="string" />
+		<attribute type="user" />
+		<attribute type="timestamp" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS(GLOBAL)-->
+	<ElementType name="arc_type" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="excursion_mode" model="closed"  dt:type="ui1" content="textOnly"/>
+	<ElementType name="datalog_mode" model="closed"  dt:type="ui1" content="textOnly"/>
+	<ElementType name="prepurge" model="closed"  dt:type="float" content="textOnly"/>
+	<ElementType name="postpurge" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trail_gas" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="backup_gas" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="plasma_gas" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="auto_disable_pilot_arc" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="pilot_arc_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="initial_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="final_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="impulse_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="impulse_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="downslope" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="downslope_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="theta_torch_height" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_direction" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="ahc_gap" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_high_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_deadband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_slowband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_high_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_deadband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_slowband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_retract" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_retract" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="hotwire2_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="travel_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_stop_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_jog_fwd" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_jog_rev" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_jog_fwd" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_jog_rev" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux0_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux1_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux2_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux3_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux4_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux5_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux6_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux7_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux8_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux9_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux0_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux1_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux2_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux3_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux4_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux5_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux6_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux7_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux8_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux9_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_auto_center" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="osc_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_auto_zero" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="travel_auto_home" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="cut_angle" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="electrode_diameter" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="burn_back_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="seamtrack_x_tracking_on" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="seamtrack_z_tracking_on" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="seamtrack_width_tracking_on" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="seamtrack_x_channel" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="seamtrack_z_channel" model="closed"  dt:type="ui1" content="textOnly"/>
+	<ElementType name="seamtrack_width_channel" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="seamtrack_program" model="closed"  dt:type="ui2" content="textOnly" />
+	<ElementType name="seamtrack_angle" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_max_correction_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="groovetrack_sensitivity_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="groovetrack_axis" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="travel_home_enable" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="loop_count" model="closed"  dt:type="ui2" content="textOnly" />
+	<ElementType name="loop_to" model="closed"  dt:type="ui2" content="textOnly" />
+	<ElementType name="mig_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="crater_fill_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_runin_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="initial_amps_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="initial_wire_speed" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_compound_angle" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux_0_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux_1_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="layer_diameter_edit_mode" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="torch_centering_height" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_tool_center_point" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="travel_speed_compensated_by_height" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="osc_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="flying_start" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="gas_flow_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="travel_speed_compensated_by_width" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="initial_travel_speed" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="initial_volts" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_up_down_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_up_down_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="reverse_downslope" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="tilt_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tilt_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_select_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="pulse_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="initial_wire2_speed" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_centre_position_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_centre_position_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_centre_position_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_centre_position_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux_0_pre_position" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux_1_pre_position" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tilt_pre_position" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tilt_post_position" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="is_weld_closed" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="groovetrack_real_time_id" model="closed"  dt:type="ui4" content="textOnly" />
+	<ElementType name="is_residue_chipper_enabled" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="is_layer_diameter_detection_enabled" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="layer_diameter_lift_gap" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="layer_diameter_touch_gap" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="is_layer_diameter_pipe_touch_enabled" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="residue_chipper_wire_speed" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="residue_chipper_wire_retract" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="jog_speed_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+
+	<!--DEFINE ELEMENTS(LIMITS)-->
+	<ElementType name="pri_amp_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_amp_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="voltage_low" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="voltage_high" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_amp_fault_low" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_amp_fault_high" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="heat_input_fault_low" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="heat_input_fault_high" model="closed"  dt:type="float" content="textOnly" />
+
+	<!--DEFINE ELEMENTS(OVERRIDES)-->
+	<ElementType name="pri_amp_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_amp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_retract_distance_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_retract_distance_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_wire_speed_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_wire_speed_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_retract_distance_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_retract_distance_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_wire2_speed_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_wire2_speed_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire_amps_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire_amps_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire2_amps_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire2_amps_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="volt_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="volt_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_width_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_width_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dwell_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dwell_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="excursion_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="excursion_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="workpoint_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="workpoint_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trim_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trim_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_1_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_1_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_2_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_2_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_3_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_3_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_4_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_4_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_sensitivity_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_sensitivity_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_min_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_min_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_max_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_max_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="blast_amps_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="blast_amps_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_freq_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_freq_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_width_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_width_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_width_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_width_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_freq_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_freq_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="compound_steering_angle_offset_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="compound_steering_angle_offset_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_width_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_width_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_time_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_time_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_time_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_time_rate" model="closed"  dt:type="float" content="textOnly" />
+
+	<!--DEFINE ELEMENTS(PATH)-->
+	<ElementType name="point" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="x" required="yes" dt:type="float" />
+		<AttributeType name="y" required="yes" dt:type="float" />
+		<attribute type="x" />
+		<attribute type="y" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS(SEG)-->
+	<ElementType name="enable" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="segment_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="slope" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_angle" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="sync_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="pri_ahc" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_ahc" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_amp" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_freq" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_freq" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_travel" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_travel" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_wire" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_wire" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_wire2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_wire2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="volts" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="theta_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="indwell" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="outdwell" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="excursion" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire2_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_mode" model="closed"  dt:type="ui2" content="textOnly" />
+	<ElementType name="workpoint" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trim" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control1" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control3" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control4" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="groovetrack_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_smoothing" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_max_correction" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_bias" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_min" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="blast_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="compound_steering_angle_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="detachment_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_burn_back_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wetting_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wetting_time_1" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wetting_time_2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_min_burn_back_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="clear_short_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="detect_short_threshold" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="clear_short_threshold" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="detach_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_burn_back_decay_period" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="clear_short_max_current" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wetting_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_dynamics_enable_voltage" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_blast_current_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_burnback_current_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="layer_diameter" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_pre_detachment_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_energy" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="shield_flow" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trail_flow" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="plasma_flow" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="backup_flow" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="cv_min_current" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="cv_max_current" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_deadband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_slowband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_low_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_high_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="reverse_travel" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="tilt_position" model="closed"  dt:type="float" content="textOnly" />
+</Schema>
+    </script>
 
     <div class="modal-overlay" id="batchSaveModal">
         <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="batchSaveTitle">
@@ -3728,7 +4732,10 @@
                     <li><strong>Change Log:</strong> show recorded changes.</li>
                     <li><strong>XML Viewer:</strong> read-only XML of the active file; with a saved XDR schema, missing
                         required values are marked in red.</li>
-                    <li><strong>Local Storage Backup:</strong> export or import the editor settings as JSON.</li>
+                    <li><strong>Schema Check:</strong> checks all loaded files against the active XDR schema (required and unknown
+                        elements, order, attributes, data types) and compares the file version with the schema version.</li>
+                    <li><strong>Settings:</strong> manage XDR schema versions (load, activate, delete) and export or import the
+                        editor settings as JSON.</li>
                 </ul>
 
                 <h4>Local settings</h4>
@@ -3744,9 +4751,18 @@
     <div class="modal-overlay" id="localStorageBackupModal">
         <div class="modal-box storage-modal-box" role="dialog" aria-modal="true"
             aria-labelledby="localStorageBackupTitle">
-            <h3 id="localStorageBackupTitle">Local Storage Backup</h3>
-            <p>Export or import the local editor settings as a JSON file. Importing replaces the stored editor
-                settings and reloads the page.</p>
+            <h3 id="localStorageBackupTitle">Settings</h3>
+            <section class="settings-section">
+                <h4>XDR schema</h4>
+                <p>Schedules are checked against the active XDR schema (results: Tools › Schema Check). Load new
+                    XDR versions here; they are stored in the browser.</p>
+                <div id="xdrManager"></div>
+            </section>
+            <section class="settings-section">
+                <h4>Backup</h4>
+                <p>Export or import the local editor settings (including the XDR versions) as a JSON file.
+                    Importing replaces the stored editor settings and reloads the page.</p>
+            </section>
             <input id="localStorageBackupFile" type="file" accept=".json,application/json" hidden>
             <p id="localStorageBackupStatus" class="storage-backup-status" role="status" aria-live="polite"></p>
             <div class="modal-actions storage-modal-actions">
@@ -4245,6 +5261,7 @@
             applyChangeAction(action, true);
             redoStack.push(action);
             updateUndoRedoButtons();
+            renderFileList();
         }
 
         function redoLastEdit() {
@@ -4253,6 +5270,7 @@
             applyChangeAction(action, false);
             undoStack.push(action);
             updateUndoRedoButtons();
+            renderFileList();
         }
 
         // Eintraege werden ueber die Datei-ID der aktuellen Sitzung zugeordnet, damit alte
@@ -4599,6 +5617,7 @@
                 document.getElementById("status").textContent = failedFiles.length
                     ? `${successCount} of ${targetCount} file(s) loaded. Rejected: ${failedFiles.join("; ")}`
                     : `${successCount} file(s) loaded successfully.`;
+                document.getElementById("status").textContent += schemaLoadSummary([...newRecords]);
                 e.target.value = "";
             };
 
@@ -4739,7 +5758,17 @@
                 delBtn.setAttribute("aria-label", `Remove ${f.name}`);
                 delBtn.onkeydown = e => e.stopPropagation();
                 delBtn.onclick = (e) => { e.stopPropagation(); removeFile(i); };
-                div.appendChild(checkbox); div.appendChild(textSpan); div.appendChild(statusSpan); div.appendChild(delBtn);
+                div.appendChild(checkbox); div.appendChild(textSpan);
+                const schemaResult = getSchemaResult(f);
+                if (schemaResult?.errors) {
+                    const schemaBadge = document.createElement("span");
+                    schemaBadge.className = "file-schema-badge";
+                    schemaBadge.textContent = `! ${schemaResult.errors}`;
+                    schemaBadge.title = `${schemaResult.errors} schema error(s) – ${schemaResult.findings.find(finding => finding.severity === "error")?.message || ""}\nDetails: Tools › Schema Check`;
+                    schemaBadge.setAttribute("aria-label", `${schemaResult.errors} schema errors`);
+                    div.appendChild(schemaBadge);
+                }
+                div.appendChild(statusSpan); div.appendChild(delBtn);
                 list.appendChild(div);
             });
             updateChangeCounter();
@@ -4872,6 +5901,7 @@
             commitPendingEdit();
             lastSelectedSection = name;
             document.getElementById("heatInputBtn").classList.remove("active");
+            document.getElementById("schemaCheckBtn")?.classList.remove("active");
             document.querySelectorAll("#sidebarItems .sidebar-item").forEach(el => el.classList.remove("active"));
 
             const sectionItems = document.querySelectorAll("#sidebarItems .sidebar-item");
@@ -6689,7 +7719,8 @@
             });
         }
 
-        document.getElementById("saveBtn").onclick = saveActiveFile;
+        const saveActiveFileChecked = () => { commitPendingEdit(); confirmSchemaBeforeSave([loadedFiles[activeFile]], saveActiveFile); };
+        document.getElementById("saveBtn").onclick = saveActiveFileChecked;
         /* BATCH SAVE DIALOG */
         const batchSaveModal = document.getElementById("batchSaveModal");
         const revisionTagInput = document.getElementById("revisionTagInput");
@@ -6743,7 +7774,9 @@
                 console.warn("Could not store the revision tag.", error);
             }
             closeModal(batchSaveModal);
-            saveSelectedFiles(tag, batchDownloadToggle.checked);
+            const download = batchDownloadToggle.checked;
+            if (download) confirmSchemaBeforeSave(getBatchSaveTargets(), () => saveSelectedFiles(tag, true));
+            else saveSelectedFiles(tag, false);
         };
         bindEnterToConfirm(revisionTagInput, document.getElementById("batchSaveConfirmBtn"));
 
@@ -6824,13 +7857,558 @@
             }
             const name = ensureXmlExtension(rawName);
             closeModal(saveAsModal);
+            confirmSchemaBeforeSave([file], () => saveFileAs(file, name));
+        };
+        function saveFileAs(file, name) {
             // Save As benennt die Datei im Editor um, damit spaeteres "Save" den neuen Namen nutzt.
             file.name = name;
             exportXmlFile(name, file.xml);
             markFilesSaved([file]);
             document.getElementById("status").textContent = `Saved as "${name}".`;
-        };
+        }
         bindEnterToConfirm(customFileNameInput, modalConfirmBtn);
+
+        /* SCHEMA CHECK (XDR) */
+        // XDR-Versionen liegen im localStorage; die eingebaute WELDSCHEDULE.XDR wird beim ersten Start uebernommen.
+        const XDR_STORE_KEY = "scheduleEditorXdrSchemas";
+        const XDR_ACTIVE_KEY = "scheduleEditorActiveXdr";
+        const BUILTIN_XDR_ID = "builtin-weldschedule";
+
+        function readXdrVersion(xmlText) {
+            const match = String(xmlText).match(/<Schema\b[^>]*\bxmlns:version\s*=\s*"([^"]*)"/i);
+            return match ? match[1].trim() : "";
+        }
+
+        function compareVersions(left, right) {
+            const a = String(left || "").split(".").map(part => parseInt(part, 10) || 0);
+            const b = String(right || "").split(".").map(part => parseInt(part, 10) || 0);
+            for (let index = 0; index < Math.max(a.length, b.length); index++) {
+                const difference = (a[index] || 0) - (b[index] || 0);
+                if (difference) return difference < 0 ? -1 : 1;
+            }
+            return 0;
+        }
+
+        function isXdrRecord(item) {
+            return item && typeof item === "object" && typeof item.id === "string" && typeof item.xml === "string"
+                && typeof item.name === "string";
+        }
+
+        let xdrSchemas = readStoredJson(XDR_STORE_KEY, []).filter(isXdrRecord);
+        let activeXdrId = readStoredJson(XDR_ACTIVE_KEY, { id: "" }).id || "";
+        const parsedXdrCache = new Map();
+        const schemaResultCache = new WeakMap();
+
+        function saveXdrSchemas() {
+            try {
+                localStorage.setItem(XDR_STORE_KEY, JSON.stringify(xdrSchemas));
+                localStorage.setItem(XDR_ACTIVE_KEY, JSON.stringify({ id: activeXdrId }));
+                return true;
+            } catch (error) {
+                console.warn("Could not store the XDR schemas.", error);
+                return false;
+            }
+        }
+
+        // Eingebaute XDR (aus <script id="defaultXdr">) einmalig aufnehmen; sie bleibt immer verfuegbar.
+        (function ensureBuiltinXdr() {
+            const builtinXml = document.getElementById("defaultXdr")?.textContent.trim() || "";
+            if (builtinXml && !xdrSchemas.some(schema => schema.id === BUILTIN_XDR_ID)) {
+                xdrSchemas.unshift({
+                    id: BUILTIN_XDR_ID,
+                    name: "WELDSCHEDULE.XDR (built-in)",
+                    version: readXdrVersion(builtinXml),
+                    loadedAt: "",
+                    builtin: true,
+                    xml: builtinXml
+                });
+            }
+            if (!xdrSchemas.some(schema => schema.id === activeXdrId)) activeXdrId = xdrSchemas[0]?.id || "";
+            saveXdrSchemas();
+        })();
+
+        function getActiveXdr() {
+            return xdrSchemas.find(schema => schema.id === activeXdrId) || null;
+        }
+
+        // Baut aus der XDR ein Modell: je ElementType Kindelemente (min/max, Reihenfolge), Attribute, Datentyp.
+        function buildXdrModel(schema) {
+            if (parsedXdrCache.has(schema.id)) return parsedXdrCache.get(schema.id);
+            const { definitions } = parseViewerXdr(schema.xml, schema.name);
+            const schemaRoot = definitions.get("sched").ownerDocument.documentElement;
+            const childrenNamed = (node, name) => [...node.children].filter(child => child.localName === name);
+            const dtType = node => node.getAttribute("dt:type")
+                || node.getAttributeNS("urn:schemas-microsoft-com:datatypes", "type") || "";
+            const globalAttributeTypes = new Map(childrenNamed(schemaRoot, "AttributeType")
+                .map(node => [node.getAttribute("name"), node]));
+            const model = new Map();
+            definitions.forEach((definition, name) => {
+                const localAttributeTypes = new Map(childrenNamed(definition, "AttributeType")
+                    .map(node => [node.getAttribute("name"), node]));
+                const attributes = childrenNamed(definition, "attribute").map(node => {
+                    const typeName = node.getAttribute("type");
+                    const typeNode = localAttributeTypes.get(typeName) || globalAttributeTypes.get(typeName);
+                    const required = (node.getAttribute("required") || typeNode?.getAttribute("required") || "no") === "yes";
+                    return { name: typeName, required, dtType: (typeNode && dtType(typeNode)) || "string" };
+                });
+                const elements = childrenNamed(definition, "element").map(node => {
+                    const maxText = node.getAttribute("maxOccurs") ?? "1";
+                    return {
+                        name: node.getAttribute("type"),
+                        min: parseInt(node.getAttribute("minOccurs") ?? "1", 10) || 0,
+                        max: maxText === "*" ? Infinity : (parseInt(maxText, 10) || 1)
+                    };
+                });
+                model.set(name, {
+                    name,
+                    closed: (definition.getAttribute("model") || "closed") === "closed",
+                    content: definition.getAttribute("content") || (elements.length ? "eltOnly" : "textOnly"),
+                    order: definition.getAttribute("order") || "seq",
+                    dtType: dtType(definition),
+                    attributes,
+                    elements
+                });
+            });
+            const result = { model, version: schema.version || readXdrVersion(schema.xml) };
+            parsedXdrCache.set(schema.id, result);
+            return result;
+        }
+
+        const XDR_INTEGER_RANGES = {
+            ui1: [0, 255], ui2: [0, 65535], ui4: [0, 4294967295], ui8: [0, Number.MAX_SAFE_INTEGER],
+            i1: [-128, 127], i2: [-32768, 32767], i4: [-2147483648, 2147483647], int: [-2147483648, 2147483647],
+            i8: [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
+        };
+        // Liefert eine Fehlermeldung oder "" (gueltig) fuer einen Wert eines XDR-Datentyps.
+        function checkXdrValue(value, type) {
+            const text = String(value).trim();
+            const kind = String(type || "string").toLowerCase();
+            if (["", "string", "id", "idref", "char", "uri", "uuid"].includes(kind)) return "";
+            if (kind === "boolean") return /^[01]$/.test(text) ? "" : `expected boolean (0 or 1), found "${text}"`;
+            if (XDR_INTEGER_RANGES[kind]) {
+                if (!/^[-+]?\d+$/.test(text)) return `expected integer (${kind}), found "${text}"`;
+                const [min, max] = XDR_INTEGER_RANGES[kind];
+                const number = Number(text);
+                return number < min || number > max ? `${kind} must be between ${min} and ${max}, found ${text}` : "";
+            }
+            if (["float", "number", "r4", "r8"].includes(kind) || kind.startsWith("fixed")) {
+                return /^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/.test(text) ? "" : `expected number (${kind}), found "${text}"`;
+            }
+            return "";
+        }
+
+        // Prueft ein Schedule-Dokument gegen die XDR. Ergebnis: Liste von Befunden.
+        function validateAgainstXdr(xmlDocument, schema) {
+            const { model } = buildXdrModel(schema);
+            const findings = [];
+            const sectionNames = ["description", "global", "limits", "overrides"];
+            const add = (severity, element, message, key = "") => {
+                const segment = element.closest ? element.closest("segment") : null;
+                const top = [...(element.ownerDocument?.documentElement?.children || [])].find(child => child === element || child.contains(element));
+                const section = segment ? "segments" : top && sectionNames.includes(top.localName) ? top.localName : "";
+                findings.push({ severity, message, path: xmlPath(element) + (key ? `/${key}` : ""), section, key, segmentIndex: segment?.getAttribute("index") ?? null });
+            };
+            const xmlPath = element => {
+                const parts = [];
+                for (let node = element; node && node.nodeType === 1; node = node.parentElement) {
+                    parts.unshift(node.localName === "segment" && node.hasAttribute("index") ? `segment[${node.getAttribute("index")}]` : node.localName);
+                }
+                return parts.join("/");
+            };
+
+            const root = xmlDocument.documentElement;
+            if (!root || root.localName !== "sched") {
+                findings.push({ severity: "error", message: "Root element <sched> is missing.", path: root?.localName || "", section: "", key: "", segmentIndex: null });
+                return findings;
+            }
+
+            const visit = element => {
+                const definition = model.get(element.localName);
+                if (!definition) return;
+                definition.attributes.forEach(attribute => {
+                    if (!element.hasAttribute(attribute.name)) {
+                        if (attribute.required) add("error", element, `Required attribute "${attribute.name}" is missing on <${element.localName}>.`);
+                        return;
+                    }
+                    const problem = checkXdrValue(element.getAttribute(attribute.name), attribute.dtType);
+                    if (problem) add("error", element, `Attribute "${attribute.name}": ${problem}.`);
+                });
+
+                const children = [...element.children];
+                if (definition.content === "textOnly" || (!definition.elements.length && definition.content !== "eltOnly")) {
+                    if (children.length) add("error", element, `<${element.localName}> must contain a value, not elements.`);
+                    const text = element.textContent.trim();
+                    const fieldElement = element;
+                    const key = fieldElement.localName;
+                    const parent = fieldElement.parentElement || fieldElement;
+                    if (text === "") {
+                        if (checkXdrValue("x", definition.dtType) !== "") add("warning", parent, `Value of <${key}> is empty (expected ${definition.dtType}).`, key);
+                    } else {
+                        const problem = checkXdrValue(text, definition.dtType);
+                        if (problem) add("error", parent, `<${key}>: ${problem}.`, key);
+                    }
+                    return;
+                }
+
+                const declared = new Map(definition.elements.map((entry, index) => [entry.name, { ...entry, index }]));
+                const counts = new Map();
+                let lastIndex = -1;
+                let lastName = "";
+                let orderReported = false;
+                children.forEach(child => {
+                    const entry = declared.get(child.localName);
+                    if (!entry) {
+                        if (definition.closed) add("error", element, `Unknown element <${child.localName}> in <${element.localName}>.`, child.localName);
+                        return;
+                    }
+                    counts.set(child.localName, (counts.get(child.localName) || 0) + 1);
+                    if (definition.order === "seq" && !orderReported) {
+                        if (entry.index < lastIndex) {
+                            add("error", element, `Wrong order in <${element.localName}>: <${child.localName}> must come before <${lastName}>.`, child.localName);
+                            orderReported = true;
+                        } else {
+                            lastIndex = entry.index;
+                            lastName = child.localName;
+                        }
+                    }
+                });
+                definition.elements.forEach(entry => {
+                    const count = counts.get(entry.name) || 0;
+                    if (count < entry.min) add("error", element, `Required element <${entry.name}> is missing in <${element.localName}>.`, entry.name);
+                    if (count > entry.max) add("error", element, `<${entry.name}> occurs ${count}× in <${element.localName}> (allowed: ${entry.max}).`, entry.name);
+                });
+                children.forEach(child => { if (declared.has(child.localName)) visit(child); });
+            };
+            visit(root);
+            return findings;
+        }
+
+        function getFileVersion(file) {
+            const metadata = [...file.xml.documentElement.children].find(child => child.localName === "metadata");
+            const read = name => [...(metadata?.children || [])].find(child => child.localName === name)?.textContent.trim() || "";
+            const schemaVersion = read("schema_version");
+            return schemaVersion ? { version: schemaVersion, source: "schema_version" } : { version: read("config_version"), source: "config_version" };
+        }
+
+        // Ergebnis je Datei, zwischengespeichert bis sich XML oder aktive XDR aendern.
+        function getSchemaResult(file) {
+            const schema = getActiveXdr();
+            if (!file || !schema) return null;
+            const key = `${schema.id}|${serializeXml(file.xml)}`;
+            const cached = schemaResultCache.get(file);
+            if (cached && cached.key === key) return cached.result;
+            let findings;
+            try {
+                findings = validateAgainstXdr(file.xml, schema);
+            } catch (error) {
+                findings = [{ severity: "error", message: `Schema could not be used: ${error.message}`, path: "", section: "", key: "", segmentIndex: null }];
+            }
+            const fileVersion = getFileVersion(file);
+            const comparison = fileVersion.version && schema.version ? compareVersions(fileVersion.version, schema.version) : 0;
+            const result = {
+                schema,
+                findings,
+                errors: findings.filter(finding => finding.severity === "error").length,
+                warnings: findings.filter(finding => finding.severity === "warning").length,
+                fileVersion,
+                comparison,
+                matchingSchema: comparison !== 0 ? xdrSchemas.find(entry => entry.version && compareVersions(entry.version, fileVersion.version) === 0) || null : null
+            };
+            schemaResultCache.set(file, { key, result });
+            return result;
+        }
+
+        function schemaErrorFiles(files) {
+            return files.filter(file => (getSchemaResult(file)?.errors || 0) > 0);
+        }
+
+        function schemaLoadSummary(files) {
+            const withErrors = schemaErrorFiles(files).length;
+            return withErrors ? ` ${withErrors} file(s) do not match the schema (Tools › Schema Check).` : "";
+        }
+
+        // Vor dem Speichern: bei Schemafehlern Rueckfrage, sonst direkt speichern.
+        const schemaSaveModal = document.getElementById("schemaSaveModal");
+        let pendingSchemaSave = null;
+        function confirmSchemaBeforeSave(files, proceed) {
+            const failing = schemaErrorFiles(files.filter(Boolean));
+            if (!failing.length) { proceed(); return; }
+            const schema = getActiveXdr();
+            document.getElementById("schemaSaveText").textContent =
+                `${failing.length} file(s) do not match the schema ${schema?.version ? `v${schema.version}` : ""} (${schema?.name || "XDR"}). Save anyway?`;
+            const list = document.getElementById("schemaSaveList");
+            list.replaceChildren();
+            failing.slice(0, 5).forEach(file => {
+                const result = getSchemaResult(file);
+                const line = document.createElement("div");
+                line.className = "schema-save-line";
+                line.textContent = `${fileShortLabel(file)}: ${result.errors} error(s) – ${result.findings.find(finding => finding.severity === "error")?.message || ""}`;
+                list.appendChild(line);
+            });
+            if (failing.length > 5) {
+                const more = document.createElement("div");
+                more.className = "schema-save-line";
+                more.textContent = `… and ${failing.length - 5} more`;
+                list.appendChild(more);
+            }
+            pendingSchemaSave = proceed;
+            openModal(schemaSaveModal, document.getElementById("schemaSaveCancelBtn"));
+        }
+        document.getElementById("schemaSaveCancelBtn").onclick = () => {
+            pendingSchemaSave = null;
+            closeModal(schemaSaveModal);
+            document.getElementById("status").textContent = "Save cancelled: schema errors (Tools › Schema Check).";
+        };
+        document.getElementById("schemaSaveShowBtn").onclick = () => {
+            pendingSchemaSave = null;
+            closeModal(schemaSaveModal);
+            showSchemaCheck();
+        };
+        document.getElementById("schemaSaveConfirmBtn").onclick = () => {
+            const proceed = pendingSchemaSave;
+            pendingSchemaSave = null;
+            closeModal(schemaSaveModal);
+            if (proceed) proceed();
+        };
+
+        // Neue XDR-Version aus einer Datei aufnehmen.
+        async function importXdrFile(file) {
+            const status = document.getElementById("status");
+            try {
+                const xml = await file.text();
+                parseViewerXdr(xml, file.name);
+                const version = readXdrVersion(xml);
+                if (!version) throw new Error(`${file.name}: no version found (xmlns:version on <Schema>).`);
+                const existing = xdrSchemas.find(schema => !schema.builtin && schema.version === version);
+                if (existing && !window.confirm(`Schema version ${version} is already stored (${existing.name}). Replace it?`)) return;
+                const record = { id: existing?.id || `xdr-${Date.now()}`, name: file.name, version, loadedAt: new Date().toISOString(), xml };
+                const previous = xdrSchemas;
+                xdrSchemas = existing ? xdrSchemas.map(schema => schema.id === existing.id ? record : schema) : [...xdrSchemas, record];
+                const previousActive = activeXdrId;
+                activeXdrId = record.id;
+                parsedXdrCache.delete(record.id);
+                if (!saveXdrSchemas()) {
+                    xdrSchemas = previous;
+                    activeXdrId = previousActive;
+                    throw new Error("The browser storage is full. Delete an old schema version and try again.");
+                }
+                status.textContent = `Schema ${file.name} (v${version}) loaded and activated.`;
+            } catch (error) {
+                status.textContent = `XDR not loaded: ${error.message}`;
+                window.alert(`XDR not loaded:\n${error.message}`);
+            }
+            refreshSchemaViews();
+        }
+
+        function setActiveXdr(id) {
+            activeXdrId = id;
+            saveXdrSchemas();
+            refreshSchemaViews();
+            const schema = getActiveXdr();
+            document.getElementById("status").textContent = `Active schema: ${schema?.name} (v${schema?.version}).`;
+        }
+
+        function deleteXdr(id) {
+            const schema = xdrSchemas.find(entry => entry.id === id);
+            if (!schema || schema.builtin) return;
+            if (!window.confirm(`Delete schema ${schema.name} (v${schema.version})?`)) return;
+            xdrSchemas = xdrSchemas.filter(entry => entry.id !== id);
+            parsedXdrCache.delete(id);
+            if (activeXdrId === id) activeXdrId = xdrSchemas[0]?.id || "";
+            saveXdrSchemas();
+            refreshSchemaViews();
+        }
+
+        // Springt zum Feld eines Befunds (Bereich bzw. Segment oeffnen und Feld markieren).
+        function openSchemaFinding(fileIndex, finding) {
+            commitPendingEdit();
+            activeFile = fileIndex;
+            const file = loadedFiles[fileIndex];
+            const section = finding.section || "description";
+            if (section === "segments" && finding.segmentIndex !== null) {
+                const position = file.sections.segments.findIndex(segment => segment.getAttribute("index") === finding.segmentIndex);
+                if (position >= 0) selectedSegmentPosition = position;
+            }
+            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
+            renderFileList();
+            lastSelectedSection = section;
+            renderSidebar();
+            showSection(section);
+            if (!finding.key) return;
+            window.setTimeout(() => {
+                const field = document.querySelector(`#content [data-param-name="${CSS.escape(finding.key)}"]`);
+                const row = field?.closest("tr");
+                if (!row) {
+                    document.getElementById("status").textContent = `${finding.key}: ${finding.message}`;
+                    return;
+                }
+                row.scrollIntoView({ block: "center" });
+                row.classList.add("schema-flash");
+                window.setTimeout(() => row.classList.remove("schema-flash"), 2400);
+                document.getElementById("status").textContent = `${finding.key}: ${finding.message}`;
+            }, 30);
+        }
+
+        function formatXdrDate(iso) {
+            if (!iso) return "built-in";
+            const date = new Date(iso);
+            return Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
+        }
+
+        // XDR-Versionsverwaltung (im Settings-Dialog).
+        function renderXdrManager() {
+            const container = document.getElementById("xdrManager");
+            if (!container) return;
+            container.replaceChildren();
+            const make = (tag, className, text) => {
+                const element = document.createElement(tag);
+                if (className) element.className = className;
+                if (text !== undefined) element.textContent = text;
+                return element;
+            };
+            const table = make("table", "schema-version-table");
+            const headRow = make("tr");
+            ["", "Version", "File", "Loaded", ""].forEach(text => headRow.appendChild(make("th", "", text)));
+            table.appendChild(headRow);
+            [...xdrSchemas].sort((a, b) => compareVersions(b.version, a.version)).forEach(schema => {
+                const row = make("tr", schema.id === activeXdrId ? "is-active" : "");
+                row.append(make("td", "schema-state-cell", schema.id === activeXdrId ? "● Active" : ""),
+                    make("td", "schema-version-cell", schema.version ? `v${schema.version}` : "–"),
+                    make("td", "schema-name-cell", schema.name), make("td", "schema-date-cell", formatXdrDate(schema.loadedAt)));
+                const actions = make("td", "schema-actions-cell");
+                if (schema.id !== activeXdrId) {
+                    const use = make("button", "btn-secondary schema-small-btn", "Use");
+                    use.type = "button";
+                    use.onclick = () => setActiveXdr(schema.id);
+                    actions.appendChild(use);
+                }
+                if (!schema.builtin) {
+                    const remove = make("button", "btn-secondary schema-small-btn", "Delete");
+                    remove.type = "button";
+                    remove.onclick = () => deleteXdr(schema.id);
+                    actions.appendChild(remove);
+                }
+                row.appendChild(actions);
+                table.appendChild(row);
+            });
+            container.appendChild(table);
+
+            const drop = make("div", "schema-drop");
+            drop.appendChild(make("span", "", "Drop a new .XDR version here or"));
+            const loadButton = make("button", "schema-small-btn", "Load XDR…");
+            loadButton.type = "button";
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.accept = ".xdr,.XDR,.xml";
+            fileInput.hidden = true;
+            fileInput.onchange = () => { if (fileInput.files[0]) importXdrFile(fileInput.files[0]); };
+            loadButton.onclick = () => fileInput.click();
+            drop.ondragover = event => { event.preventDefault(); drop.classList.add("dragover"); };
+            drop.ondragleave = () => drop.classList.remove("dragover");
+            drop.ondrop = event => {
+                event.preventDefault();
+                drop.classList.remove("dragover");
+                const file = event.dataTransfer.files[0];
+                if (file) importXdrFile(file);
+            };
+            drop.append(loadButton, fileInput);
+            container.appendChild(drop);
+        }
+
+        // Nach Aenderungen an den XDR-Versionen: Dialog, Dateiliste und Schema-Check-Ansicht aktualisieren.
+        function refreshSchemaViews() {
+            renderXdrManager();
+            renderFileList();
+            if (document.getElementById("schemaCheckBtn").classList.contains("active")) showSchemaCheck();
+        }
+
+        function showSchemaCheck() {
+            commitPendingEdit();
+            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
+            document.getElementById("schemaCheckBtn").classList.add("active");
+            const content = document.getElementById("content");
+            content.innerHTML = "";
+            const make = (tag, className, text) => {
+                const element = document.createElement(tag);
+                if (className) element.className = className;
+                if (text !== undefined) element.textContent = text;
+                return element;
+            };
+
+            content.appendChild(make("h2", "", "Schema Check"));
+            const active = getActiveXdr();
+
+            // Aktive XDR (Verwaltung unter Settings)
+            const activeLine = make("div", "panel schema-active-line");
+            activeLine.appendChild(make("span", "", active ? `Active schema: ${active.name} · v${active.version || "?"}` : "No XDR schema active."));
+            const manage = make("button", "btn-secondary schema-small-btn", "Manage schemas…");
+            manage.type = "button";
+            manage.onclick = openSettings;
+            activeLine.appendChild(manage);
+            content.appendChild(activeLine);
+
+            // Ergebnisse je Datei
+            const resultsPanel = make("div", "panel schema-results-panel");
+            resultsPanel.appendChild(make("div", "panel-header", "Results"));
+            if (!loadedFiles.length || !active) {
+                resultsPanel.appendChild(make("p", "schema-empty", !active ? "No schema active. Load an XDR file." : "No files loaded."));
+            }
+            loadedFiles.forEach((file, fileIndex) => {
+                const result = getSchemaResult(file);
+                if (!result) return;
+                const block = make("details", "schema-file" + (result.errors ? " has-errors" : ""));
+                block.open = result.errors > 0 && loadedFiles.length <= 6;
+                const summary = make("summary", "schema-file-summary");
+                const status = make("span", "schema-status " + (result.errors ? "is-error" : result.warnings ? "is-warning" : "is-ok"),
+                    result.errors ? `! ${result.errors} error${result.errors === 1 ? "" : "s"}` : result.warnings ? `△ ${result.warnings} warning${result.warnings === 1 ? "" : "s"}` : "✓ Valid");
+                if (result.errors && result.warnings) status.textContent += ` · ${result.warnings} warning${result.warnings === 1 ? "" : "s"}`;
+                const label = make("span", "schema-file-label", fileShortLabel(file));
+                label.title = file.name;
+                const versionInfo = make("span", "schema-version-info");
+                const fileVersionText = result.fileVersion.version ? `file v${result.fileVersion.version}` : "file version unknown";
+                if (!result.fileVersion.version || !result.schema.version) versionInfo.textContent = fileVersionText;
+                else if (result.comparison === 0) versionInfo.textContent = `${fileVersionText} = schema ✓`;
+                else if (result.comparison < 0) versionInfo.textContent = `${fileVersionText} older than schema v${result.schema.version}`;
+                else {
+                    versionInfo.textContent = `${fileVersionText} newer than schema v${result.schema.version} – load a newer XDR`;
+                    versionInfo.classList.add("is-warning");
+                }
+                summary.append(label, status, versionInfo);
+                if (result.matchingSchema) {
+                    const useMatching = make("button", "btn-secondary schema-small-btn", `Use v${result.matchingSchema.version}`);
+                    useMatching.type = "button";
+                    useMatching.title = `Check against the stored schema ${result.matchingSchema.name}`;
+                    useMatching.onclick = event => { event.preventDefault(); setActiveXdr(result.matchingSchema.id); };
+                    summary.appendChild(useMatching);
+                }
+                block.appendChild(summary);
+                if (!result.findings.length) {
+                    block.appendChild(make("p", "schema-empty", "No findings – the file matches the schema."));
+                } else {
+                    const list = make("ul", "schema-findings");
+                    result.findings.forEach(finding => {
+                        const item = make("li", `schema-finding is-${finding.severity}`);
+                        item.appendChild(make("span", "schema-finding-severity", finding.severity === "error" ? "Error" : "Warning"));
+                        const text = make("span", "schema-finding-text");
+                        text.appendChild(make("span", "schema-finding-message", finding.message));
+                        text.appendChild(make("span", "schema-finding-path", finding.path));
+                        item.appendChild(text);
+                        if (finding.section) {
+                            const show = make("button", "btn-secondary schema-small-btn", "Show");
+                            show.type = "button";
+                            show.onclick = () => openSchemaFinding(fileIndex, finding);
+                            item.appendChild(show);
+                        }
+                        list.appendChild(item);
+                    });
+                    block.appendChild(list);
+                }
+                resultsPanel.appendChild(block);
+            });
+            content.appendChild(resultsPanel);
+        }
+
+        document.getElementById("schemaCheckBtn").onclick = showSchemaCheck;
 
         /* COMPARE & CONVERTER TOOLS */
         function collectComparisonEntries(file) {
@@ -7421,7 +8999,11 @@
             viewerWindow.focus();
             const schemaSelect = viewerWindow.document.getElementById("schemaSelect");
             const summary = viewerWindow.document.getElementById("missingSummary");
-            loadSavedXdrSchemas().then(schemas => {
+            const editorSchemas = xdrSchemas.map(schema => ({
+                id: `editor:${schema.id}`, name: `${schema.name} (editor)`, schemaVersion: schema.version,
+                xml: schema.xml, sourceFile: schema.name
+            }));
+            loadSavedXdrSchemas().catch(() => []).then(databaseSchemas => [...editorSchemas, ...databaseSchemas]).then(schemas => {
                 if (viewerWindow.closed) return;
                 schemaSelect.replaceChildren();
                 const prompt = viewerWindow.document.createElement("option");
@@ -7435,10 +9017,12 @@
                     option.textContent = `${schema.name}${schema.schemaVersion ? ` (${schema.schemaVersion})` : ""}`;
                     schemaSelect.appendChild(option);
                 });
-                if (schemas.length === 1) {
-                    schemaSelect.value = schemas[0].id;
+                // Vorauswahl: im Editor aktive XDR, sonst die einzige vorhandene.
+                const preferredSchema = schemas.find(schema => schema.id === `editor:${activeXdrId}`) || (schemas.length === 1 ? schemas[0] : null);
+                if (preferredSchema) {
+                    schemaSelect.value = preferredSchema.id;
                     try {
-                        renderXmlWithMissingValues(viewerWindow.document, file, schemas[0]);
+                        renderXmlWithMissingValues(viewerWindow.document, file, preferredSchema);
                     } catch (error) {
                         summary.textContent = error.message;
                         summary.classList.add("has-missing");
@@ -7632,7 +9216,9 @@
             "scheduleEditorSidebarState",
             "scheduleEditorBatchSave",
             "scheduleEditorHeatInputTarget",
-            "scheduleEditorParameterOrder"
+            "scheduleEditorParameterOrder",
+            "scheduleEditorXdrSchemas",
+            "scheduleEditorActiveXdr"
         ];
         const localStorageBackupModal = document.getElementById("localStorageBackupModal");
         const localStorageBackupStatus = document.getElementById("localStorageBackupStatus");
@@ -7667,17 +9253,22 @@
                     scheduleEditorBatchSave: isStringMap,
                     scheduleEditorHeatInputTarget: isStringMap,
                     scheduleEditorParameterOrder: isObject && Object.values(value).every(item =>
-                        Array.isArray(item) && item.every(entry => typeof entry === "string"))
+                        Array.isArray(item) && item.every(entry => typeof entry === "string")),
+                    scheduleEditorXdrSchemas: Array.isArray(value) && value.every(item => isXdrRecord(item)
+                        && /<Schema\b/.test(item.xml)),
+                    scheduleEditorActiveXdr: isObject && typeof value.id === "string"
                 }[key];
                 if (!validValue) throw new Error(`Invalid data for backup entry: ${key}`);
             }
             return backup.data;
         }
 
-        document.getElementById("localStorageBackupBtn").onclick = () => {
+        function openSettings() {
             localStorageBackupStatus.textContent = "";
-            openModal(localStorageBackupModal, document.getElementById("localStorageBackupExportBtn"));
-        };
+            renderXdrManager();
+            openModal(localStorageBackupModal, document.getElementById("localStorageBackupCloseBtn"));
+        }
+        document.getElementById("localStorageBackupBtn").onclick = openSettings;
         document.getElementById("localStorageBackupCloseBtn").onclick = () => closeModal(localStorageBackupModal);
         document.getElementById("localStorageBackupExportBtn").onclick = () => {
             try {
@@ -7762,7 +9353,7 @@
                 // Laufende Eingabe abschliessen (onblur schreibt und protokolliert den Wert).
                 if (isTextEntry && target !== searchBox) target.blur();
                 if (e.shiftKey) openSaveAsModal();
-                else saveActiveFile();
+                else saveActiveFileChecked();
                 return;
             }
             if (key === "f") {
