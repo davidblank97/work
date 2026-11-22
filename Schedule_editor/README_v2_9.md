@@ -110,6 +110,8 @@ Die Standardreihenfolge der Segmentfelder (solange keine eigene Reihenfolge per 
 
 Aenderungen werden direkt im geladenen XML-DOM gespeichert. Die urspruengliche Datei auf der Festplatte bleibt bis zum Download unveraendert.
 
+**Rohrgroesse:** Neben `outer_diameter` (Bereich `Description`) gibt es ein Auswahlfeld mit den Rohrgroessen G10 bis G38 (330, 381, 514, 565, 615, 666, 717, 768, 819, 920, 971, 1022 mm, wie im `batch_editor`). Die Auswahl schreibt den Durchmesser in Zoll (mm / 25,4, sechs Nachkommastellen) ins XML. Passt der aktuelle Wert zu einer Groesse (±0,5 mm), ist sie vorausgewaehlt, sonst steht dort `Custom`. Die Aenderung laesst sich rueckgaengig machen, wird wie andere Description-Werte auf markierte Dateien uebertragen und ist bei gesperrtem `outer_diameter` (🔒) deaktiviert.
+
 Beim Wechsel des Heads werden die Jog-Parameter fuer `NGRT + H-HEAD` (auch `NGRT-Head`) oder `H2-FV-100S` automatisch auf die jeweiligen Standardwerte gesetzt. Andere Head-Namen veraendern diese Parameter nicht.
 
 ## XML Viewer

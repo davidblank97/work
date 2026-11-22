@@ -2513,6 +2513,26 @@
             max-width: none;
         }
 
+        .param-table .input-container.has-preset {
+            width: 300px;
+        }
+
+        .diameter-select {
+            flex: 0 0 auto;
+            height: 28px;
+            padding: 0 6px;
+            border: 1px solid #805236;
+            border-radius: 6px;
+            background: var(--bg-input);
+            color: var(--text-main);
+            font-size: 12px;
+        }
+
+        .diameter-select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .param-table tr:has(textarea) .input-container {
             width: 100%;
         }
@@ -3545,6 +3565,15 @@
             }
         };
         let customHeads = readStoredJson("scheduleEditorCustomHeads", []);
+        // Rohr-Aussendurchmesser in mm (wie batch_editor); im XML steht outer_diameter in Zoll.
+        const OUTER_DIAMETERS = {
+            G10: 330, G12: 381, G18: 514, G20: 565, G22: 615, G24: 666,
+            G26: 717, G28: 768, G30: 819, G34: 920, G36: 971, G38: 1022
+        };
+        function matchOuterDiameter(inchValue) {
+            const mm = Number(inchValue) * 25.4;
+            return Object.keys(OUTER_DIAMETERS).find(name => Math.abs(OUTER_DIAMETERS[name] - mm) < 0.5) || "";
+        }
         // Manuelle Reihenfolge der Parameterzeilen je Bereich ({ global: [...], segments: [...] }).
         let parameterOrder = readStoredJson("scheduleEditorParameterOrder", {});
 
@@ -4854,8 +4883,49 @@
                 }
             };
 
+            // outer_diameter: Auswahl der Rohrgroesse (G10…G38) setzt den Wert in Zoll.
+            let diameterSelect = null;
+            if (key === "outer_diameter" && sectionName === "description") {
+                container.classList.add("has-preset");
+                diameterSelect = document.createElement("select");
+                diameterSelect.className = "diameter-select";
+                diameterSelect.title = "Pipe size (outer diameter in mm)";
+                diameterSelect.setAttribute("aria-label", "Pipe size for outer_diameter");
+                const customOption = document.createElement("option");
+                customOption.value = "";
+                customOption.textContent = "Custom";
+                diameterSelect.appendChild(customOption);
+                Object.entries(OUTER_DIAMETERS).forEach(([name, mm]) => {
+                    const option = document.createElement("option");
+                    option.value = name;
+                    option.textContent = `${name} · ${mm} mm`;
+                    diameterSelect.appendChild(option);
+                });
+                diameterSelect.disabled = isLocked(key);
+                diameterSelect.onchange = () => {
+                    const name = diameterSelect.value;
+                    if (!name || isLocked(key)) { updateDisplay(); return; }
+                    commitPendingEdit();
+                    const places = Math.max(originalPlaces, 6);
+                    currentInchValue = OUTER_DIAMETERS[name] / 25.4;
+                    child.textContent = currentInchValue.toFixed(places);
+                    registerChange(input, input.dataset.originalValue, child.textContent);
+                    propagateValueToSelectedFiles(sectionName, key, child.textContent);
+                    commitPendingEdit();
+                    updateDisplay();
+                    updateChangedMarker(input, child.textContent);
+                    document.getElementById("status").textContent = `outer_diameter set to ${name} (${OUTER_DIAMETERS[name]} mm = ${child.textContent} in).`;
+                };
+                const baseUpdateDisplay = updateDisplay;
+                updateDisplay = () => {
+                    if (document.activeElement !== input) currentInchValue = parseFloat(child.textContent) || 0;
+                    baseUpdateDisplay();
+                    diameterSelect.value = matchOuterDiameter(child.textContent);
+                };
+            }
+
             container.setAttribute("data-param-name", key);
-            container.updateDisplay = updateDisplay;
+            container.updateDisplay = () => updateDisplay();
 
             updateDisplay();
             updateChangedMarker(input, child.textContent);
@@ -4863,6 +4933,7 @@
 
             container.appendChild(input);
             if (!isTextField) container.appendChild(btn);
+            if (diameterSelect) container.appendChild(diameterSelect);
             return { container, input };
         }
 
