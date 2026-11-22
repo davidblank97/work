@@ -3067,6 +3067,47 @@
             color: #e4b363;
         }
 
+        .changelog-save-row.is-expandable {
+            cursor: pointer;
+        }
+
+        .changelog-save-row.is-expandable td:first-child::before {
+            content: "▸ ";
+        }
+
+        .changelog-save-row.is-expandable[aria-expanded="true"] td:first-child::before {
+            content: "▾ ";
+        }
+
+        .changelog-save-row.is-expandable:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        .changelog-detail-row td {
+            padding-top: 3px !important;
+            padding-bottom: 3px !important;
+            font-size: 12px;
+        }
+
+        .changelog-detail-row td:first-child {
+            padding-left: 26px !important;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .changelog-detail-row.is-added td:first-child {
+            color: var(--success);
+        }
+
+        .changelog-detail-row.is-removed td:first-child {
+            color: var(--danger);
+        }
+
+        .changelog-detail-row.is-changed td:first-child {
+            color: #e4b363;
+        }
+
         .changelog-save-row td {
             background: rgba(103, 198, 167, 0.08);
             color: var(--success);
@@ -6057,7 +6098,8 @@
                 const sameSection = entry.section === sectionName;
                 const sameKey = entry.key === key;
                 const sameSegment = (entry.segmentIndex || "") === (segmentIndex || "");
-                return sameIndex && sameSection && sameKey && sameSegment;
+                // Bereits gespeicherte Eintraege bleiben unveraendert; neue Aenderungen bekommen eigene Zeilen.
+                return !entry.savedIn && sameIndex && sameSection && sameKey && sameSegment;
             });
         }
 
@@ -6114,7 +6156,8 @@
             if (changeLog.length) {
                 const count = document.createElement("span");
                 count.className = "changelog-count";
-                count.textContent = `${changeLog.length} entr${changeLog.length === 1 ? "y" : "ies"}`;
+                const visible = changeLog.filter(entry => !entry.savedIn).length;
+                count.textContent = `${visible} entr${visible === 1 ? "y" : "ies"}`;
                 const clearButton = document.createElement("button");
                 clearButton.type = "button";
                 clearButton.className = "btn-secondary changelog-clear-btn";
@@ -6137,9 +6180,30 @@
             table.className = "diff-table";
             table.innerHTML = "<tr><th>Time</th><th>File</th><th>Section</th><th>Parameter</th><th>Old</th><th>New</th></tr>";
 
-            changeLog.forEach(entry => {
+            changeLog.filter(entry => !entry.savedIn).forEach(entry => {
                 const tr = document.createElement("tr");
-                if (entry.section === "save") tr.className = "changelog-save-row";
+                if (entry.section === "save") {
+                    tr.className = "changelog-save-row";
+                    const details = Array.isArray(entry.details) ? entry.details : [];
+                    if (details.length) {
+                        tr.classList.add("is-expandable");
+                        tr.tabIndex = 0;
+                        tr.setAttribute("role", "button");
+                        tr.setAttribute("aria-expanded", "false");
+                        tr.title = "Show the individual changes";
+                        const toggle = () => {
+                            const open = tr.getAttribute("aria-expanded") !== "true";
+                            tr.setAttribute("aria-expanded", String(open));
+                            let next = tr.nextElementSibling;
+                            while (next && next.classList.contains("changelog-detail-row")) {
+                                next.hidden = !open;
+                                next = next.nextElementSibling;
+                            }
+                        };
+                        tr.onclick = toggle;
+                        tr.onkeydown = event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle(); } };
+                    }
+                }
                 [
                     new Date(entry.timestamp).toLocaleString(),
                     entry.fileName,
@@ -6153,6 +6217,26 @@
                     tr.appendChild(td);
                 });
                 table.appendChild(tr);
+                if (entry.section === "save" && Array.isArray(entry.details)) {
+                    entry.details.forEach(change => {
+                        const detailRow = document.createElement("tr");
+                        detailRow.className = `changelog-detail-row is-${change.kind || "changed"}`;
+                        detailRow.hidden = true;
+                        [
+                            change.kind === "added" ? "+ added" : change.kind === "removed" ? "− removed" : "~ changed",
+                            "",
+                            change.section,
+                            change.segmentIndex !== "" && change.segmentIndex !== undefined ? `${change.key} (segment ${Number(change.segmentIndex) + 1})` : change.key,
+                            change.oldValue || "-",
+                            change.newValue || "-"
+                        ].forEach(value => {
+                            const td = document.createElement("td");
+                            td.textContent = String(value ?? "");
+                            detailRow.appendChild(td);
+                        });
+                        table.appendChild(detailRow);
+                    });
+                }
             });
 
             content.appendChild(table);
@@ -8426,10 +8510,52 @@
             return count;
         }
 
-        // Eintrag "Saved" im Change Log (eigene Zeile je Speichern).
+        // Einzelne Aenderungen seit dem letzten Speichern (Werte und Attribute, auch neue/entfernte Felder).
+        function collectSaveDetails(file) {
+            const before = indexXmlForDiff(file.originalXml);
+            const after = indexXmlForDiff(file.xml);
+            const describe = key => {
+                const parts = key.split("/").filter(Boolean).slice(1); // ohne "sched"
+                const segmentPart = parts.find(part => part.startsWith("segment["));
+                const segmentIndex = segmentPart ? segmentPart.slice(8, -1) : "";
+                const section = segmentPart ? "segments" : parts.length > 1 ? parts[0] : "sched";
+                const name = (parts[parts.length - 1] || "sched").replace(/#\d+$/, "");
+                return { section, key: name, segmentIndex };
+            };
+            const leaves = map => [...map.entries()].filter(([, element]) => !element.children.length);
+            const details = [];
+            leaves(after).forEach(([key, element]) => {
+                const old = before.get(key);
+                const value = element.textContent.trim();
+                if (!old) details.push({ ...describe(key), oldValue: "", newValue: value, kind: "added" });
+                else if (!old.children.length && old.textContent.trim() !== value) details.push({ ...describe(key), oldValue: old.textContent.trim(), newValue: value, kind: "changed" });
+            });
+            leaves(before).forEach(([key, element]) => {
+                if (!after.has(key)) details.push({ ...describe(key), oldValue: element.textContent.trim(), newValue: "", kind: "removed" });
+            });
+            after.forEach((element, key) => {
+                const old = before.get(key);
+                if (!old) return;
+                [...new Set([...element.getAttributeNames(), ...old.getAttributeNames()])].forEach(name => {
+                    if (element.getAttribute(name) !== old.getAttribute(name)) {
+                        details.push({ ...describe(key), key: `${describe(key).key} @${name}`, oldValue: old.getAttribute(name) ?? "", newValue: element.getAttribute(name) ?? "", kind: "changed" });
+                    }
+                });
+            });
+            return details;
+        }
+
+        // Eintrag "Saved" im Change Log (eigene Zeile je Speichern) mit den einzelnen Aenderungen zum Aufklappen.
+        // Die bisherigen Feld-Eintraege der Datei werden diesem Speichern zugeordnet (savedIn).
         function addSaveLogEntry(file, label, detail) {
+            const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+            const details = isFileDirty(file) ? collectSaveDetails(file) : [];
+            changeLog.forEach(entry => {
+                if (entry.fileId === file.id && entry.section !== "save" && !entry.savedIn) entry.savedIn = id;
+            });
             changeLog.unshift({
-                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                id,
+                details,
                 timestamp: new Date().toISOString(),
                 fileId: file.id,
                 fileIndex: loadedFiles.indexOf(file),

@@ -267,7 +267,7 @@ Sind mehrere Dateien geladen, kann jede Datei ueber eine Checkbox oberhalb des D
 
 Darunter steht eine gemeinsame Tabelle: je Datei eine Kopfzeile mit Name und Grenzwerten, darunter je Segment Heat Input (fett), Bereich Min – Max, Mittelstrom, Vorschub und ein Status (`✓ within limits`, `! outside limit`, `disabled` oder `! not calculable` mit Grund im Tooltip). Ein Klick auf eine Zeile oeffnet das Segment.
 - `Hidden Parameters`: Verwaltet ausgeblendete Parameter.
-- `Change Log`: Zeigt protokollierte Aenderungen. `Clear log` loescht alle Eintraege nach Rueckfrage; mit Undo lassen sie sich wiederherstellen.
+- `Change Log`: Zeigt protokollierte Aenderungen. Jedes `Saved` (bzw. `Downloaded`) laesst sich per Klick aufklappen und zeigt die einzelnen Aenderungen dieses Speicherns: `~ changed` mit altem und neuem Wert, `+ added` und `− removed` (z. B. nach einem Upgrade). Gespeicherte Feldaenderungen stehen nur noch dort; oben erscheinen ungespeicherte Aenderungen und die Speicher-Eintraege. `Clear log` loescht alle Eintraege nach Rueckfrage; mit Undo lassen sie sich wiederherstellen.
 - `XML Viewer`: Oeffnet den schreibgeschuetzten XML-Inhalt der aktiven Datei.
 - `Schema Check`: Prueft alle geladenen Dateien gegen das aktive XDR-Schema (siehe „Schema-Pruefung (XDR)“).
 - `Settings` (frueher `Local Storage Backup`): Verwaltet die XDR-Schema-Versionen und exportiert die lokalen Editor-Einstellungen als JSON-Datei oder importiert ein zuvor erstelltes JSON-Backup. Beim Import wird bestaetigt, dass die aktuellen Editor-Einstellungen ersetzt werden; anschliessend wird die Seite neu geladen. Nicht zum Schedule Editor gehoerende Local-Storage-Eintraege bleiben unberuehrt.
