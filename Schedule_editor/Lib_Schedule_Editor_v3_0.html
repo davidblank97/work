@@ -7836,18 +7836,27 @@
     <style>
         /* --- MODERN ENTERPRISE DARK THEME (same as Liburdi Schedule Editor) --- */
         :root {
-            --bg-main: #141416;
-            --bg-sidebar: #1b1b1f;
-            --bg-panel: #202024;
-            --bg-panel-header: #26262b;
-            --bg-input: #18181c;
-            --border-color: #2d2d34;
-            --text-main: #f3f3f5;
-            --text-muted: #8e8e93;
-            --accent: #ff9800;
-            --accent-hover: #e68900;
-            --success: #4caf50;
-            --danger: #ff5252;
+            /* Farbschema wie im Schedule Editor ("Dark orange workspace") */
+            --bg-main: #141210;
+            --bg-sidebar: #1b1816;
+            --bg-panel: #211d1a;
+            --bg-panel-header: #272220;
+            --bg-input: #161412;
+            --border-color: #342c27;
+            --border-strong: #805236;
+            --text-main: #f1ebe5;
+            --text-heading: #fff3e9;
+            --text-muted: #9d8f85;
+            --text-soft: #bda99b;
+            --accent: #f28a3d;
+            --accent-hover: #ff9d4f;
+            --accent-border: #ffab68;
+            --accent-ink: #24150d;
+            --accent-soft: #f4a069;
+            --success: #67c6a7;
+            --success-hover: #7fd6b9;
+            --danger: #f07878;
+            color-scheme: dark;
         }
 
         * {
@@ -7876,7 +7885,7 @@
         }
 
         #header strong {
-            color: #fff;
+            color: var(--text-heading);
             font-size: 16px;
             font-weight: 600;
         }
@@ -7902,7 +7911,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: none;
             overflow: hidden;
         }
 
@@ -7911,8 +7920,8 @@
             background: var(--bg-panel-header);
             border-bottom: 1px solid var(--border-color);
             font-size: 14px;
-            font-weight: 600;
-            color: #fff;
+            font-weight: 700;
+            color: var(--text-heading);
         }
 
         .panel-body {
@@ -7930,10 +7939,10 @@
         /* BUTTONS */
         button {
             background: var(--accent);
-            color: #000;
-            border: none;
+            color: var(--accent-ink);
+            border: 1px solid var(--accent-border);
             padding: 7px 16px;
-            border-radius: 6px;
+            border-radius: 7px;
             cursor: pointer;
             font-weight: 600;
             font-size: 13px;
@@ -7946,36 +7955,38 @@
         }
 
         button:disabled {
-            background: #2a2a30;
-            color: #555;
+            background: #2a2420;
+            color: #6f625a;
+            border-color: var(--border-color);
             cursor: not-allowed;
         }
 
         .btn-secondary {
-            background: transparent !important;
-            color: var(--accent) !important;
-            border: 1px solid rgba(255, 152, 0, 0.4) !important;
+            background: #28211d !important;
+            color: var(--accent-soft) !important;
+            border: 1px solid var(--border-strong) !important;
         }
 
         .btn-secondary:hover:not(:disabled) {
-            background: rgba(255, 152, 0, 0.08) !important;
+            background: #33291f !important;
             border-color: var(--accent) !important;
+            color: #ffc095 !important;
         }
 
         .btn-danger {
             background: transparent !important;
             color: var(--danger) !important;
-            border: 1px solid rgba(255, 82, 82, 0.3) !important;
+            border: 1px solid rgba(240, 120, 120, 0.4) !important;
         }
 
         .btn-danger:hover:not(:disabled) {
-            background: rgba(255, 82, 82, 0.08) !important;
+            background: rgba(240, 120, 120, 0.08) !important;
             border-color: var(--danger) !important;
         }
 
         /* DROP ZONE */
         .drop-zone {
-            border: 1px dashed rgba(255, 152, 0, 0.45);
+            border: 1px dashed #76513d;
             border-radius: 8px;
             padding: 28px 20px;
             text-align: center;
@@ -7986,7 +7997,7 @@
 
         .drop-zone:hover,
         .drop-zone.drag-over {
-            background: rgba(255, 152, 0, 0.05);
+            background: rgba(242, 138, 61, 0.06);
             border-color: var(--accent);
         }
 
@@ -8028,8 +8039,8 @@
 
         .file-item {
             padding: 7px 12px;
-            border-bottom: 1px solid #26262b;
-            color: #c5c5c9;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-soft);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -8107,11 +8118,12 @@
         .btn-download {
             width: 100%;
             background: var(--success);
+            border-color: var(--success);
             padding: 10px;
         }
 
         .btn-download:hover:not(:disabled) {
-            background: #43a047;
+            background: var(--success-hover);
         }
 
         .btn-convert {
