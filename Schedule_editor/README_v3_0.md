@@ -66,6 +66,8 @@ Angenommen werden nur gueltige XML-Dateien mit dem Wurzelelement `<sched>` und m
 
 ## Bearbeiten
 
+**Textfelder:** Felder, die laut Schema Text sind (z. B. `arc_type` mit `TOUCH`), werden als Text angezeigt und unveraendert gespeichert; Aenderungen gehen wie bei Zahlen auf markierte Dateien.
+
 **Ungueltige Werte:** Steht in der Datei in einem Zahlenfeld kein gueltiger Wert (z. B. `abc`), zeigt der Editor den Originaltext rot an und veraendert ihn nicht, auch nicht beim Anklicken. Erst eine gueltige Eingabe wird geschrieben, bei Kommazahlen mit sechs Nachkommastellen, bei Ganzzahl- und Ja/Nein-Feldern ohne.
 
 Die XML-Daten sind in folgende Bereiche gegliedert:

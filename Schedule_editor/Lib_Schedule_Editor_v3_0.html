@@ -6537,8 +6537,14 @@
             const container = document.createElement("div");
             container.className = "input-container";
 
-            const isTextField = key === "note" || key === "custom_search_tag";
-            const input = isTextField ? document.createElement("textarea") : document.createElement("input");
+            const isMultilineText = key === "note" || key === "custom_search_tag";
+            // Datentyp laut aktivem XDR-Schema (z. B. "float", "ui1", "string").
+            const schemaFieldType = (() => {
+                try { return String(buildXdrModel(getActiveXdr()).model.get(key)?.dtType || "").toLowerCase(); } catch (error) { return ""; }
+            })();
+            // Textfelder: mehrzeilig (note, custom_search_tag) oder laut Schema Text (z. B. arc_type = "TOUCH").
+            const isTextField = isMultilineText || schemaFieldType === "string";
+            const input = isMultilineText ? document.createElement("textarea") : document.createElement("input");
             input.dataset.fieldName = key;
             input.dataset.sectionName = sectionName;
             input.dataset.fileName = loadedFiles[activeFile] ? loadedFiles[activeFile].name : "";
@@ -6551,14 +6557,8 @@
             // Kein gueltiger Zahlenwert in der Datei (z. B. "abc"): Originaltext zeigen, nichts still auf 0 setzen.
             const isInvalidNumber = () => !isTextField && child.textContent.trim() !== "" && Number.isNaN(parseNumberInput(child.textContent));
             // Ungueltiger/leerer Dateiwert: Nachkommastellen nach XDR-Datentyp (float 6, Ganzzahl/boolean 0).
-            const placesForSchemaType = () => {
-                try {
-                    const type = String(buildXdrModel(getActiveXdr()).model.get(key)?.dtType || "").toLowerCase();
-                    return ["float", "number", "r4", "r8"].includes(type) || type.startsWith("fixed") ? 6 : 0;
-                } catch (error) {
-                    return 0;
-                }
-            };
+            const placesForSchemaType = () =>
+                ["float", "number", "r4", "r8"].includes(schemaFieldType) || schemaFieldType.startsWith("fixed") ? 6 : 0;
             const originalPlaces = Number.isNaN(parseNumberInput(child.textContent)) ? placesForSchemaType() : getDecimalPlaces(child.textContent);
 
             // Hilfsfunktionen für die Wolfram-Breite (Tungsten Width)
@@ -6669,8 +6669,10 @@
                 // Ungueltiger Dateiwert unveraendert gelassen bzw. erneut ungueltige Eingabe: nichts schreiben.
                 if (!isTextField && Number.isNaN(parseNumberInput(input.value))) { updateDisplay(); return; }
                 if (isTextField) {
-                    child.textContent = input.value;
-                    registerChange(input, input.dataset.originalValue);
+                    child.textContent = isMultilineText ? input.value : input.value.trim();
+                    registerChange(input, input.dataset.originalValue, child.textContent);
+                    // Einzeilige Textwerte (z. B. arc_type) wie Zahlen auf markierte Dateien uebertragen.
+                    if (!isMultilineText) propagateValueToSelectedFiles(sectionName, key, child.textContent);
                     commitPendingEdit();
                     return;
                 }
@@ -6717,8 +6719,8 @@
             input.oninput = () => {
                 if (isLocked(key)) { updateDisplay(); return; }
                 if (isTextField) {
-                    child.textContent = input.value;
-                    registerChange(input, input.dataset.originalValue);
+                    child.textContent = isMultilineText ? input.value : input.value.trim();
+                    registerChange(input, input.dataset.originalValue, child.textContent);
                     return;
                 }
                 let currentMode = parameterUnits[key] || 'none';
