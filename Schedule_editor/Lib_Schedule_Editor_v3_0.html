@@ -3039,6 +3039,30 @@
             white-space: nowrap;
         }
 
+        .changelog-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .changelog-top h2 {
+            margin: 0;
+        }
+
+        .changelog-count {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .changelog-clear-btn {
+            margin-left: auto;
+            min-height: 0 !important;
+            height: 28px;
+            padding: 0 12px !important;
+            font-size: 12px !important;
+        }
+
         .file-status.pending-download {
             color: #e4b363;
         }
@@ -5469,7 +5493,7 @@
                         overrides. A chart shows the min–max range and nominal value per segment, with the heat input limits
                         from &lt;limits&gt; as dashed lines. Enter a target Min/Max to draw red reference lines.</li>
                     <li><strong>Hidden Parameters:</strong> restore hidden parameters.</li>
-                    <li><strong>Change Log:</strong> show recorded changes.</li>
+                    <li><strong>Change Log:</strong> show recorded changes; <em>Clear log</em> deletes all entries (Undo restores them).</li>
                     <li><strong>XML Viewer:</strong> read-only XML of the active file; changes since the last save are highlighted (green added, red removed, yellow changed with the old value); with a saved XDR schema, missing
                         required values are marked in red.</li>
                     <li><strong>Schema Check:</strong> checks all loaded files against the active XDR schema (required and unknown
@@ -6068,9 +6092,38 @@
             updateChangeCounter();
         }
 
+        function clearChangeLog() {
+            if (!changeLog.length) return;
+            if (!window.confirm(`Delete all ${changeLog.length} change log entries? (Undo restores them.)`)) return;
+            recordHistoryAction("Clear change log", () => {
+                changeLog = [];
+                saveChangeLog();
+            });
+            document.getElementById("status").textContent = "Change log cleared.";
+            renderChangeLog();
+        }
+
         function renderChangeLog() {
             const content = document.getElementById("content");
-            content.innerHTML = "<h2>Change Log</h2>";
+            content.innerHTML = "";
+            const top = document.createElement("div");
+            top.className = "changelog-top";
+            const heading = document.createElement("h2");
+            heading.textContent = "Change Log";
+            top.appendChild(heading);
+            if (changeLog.length) {
+                const count = document.createElement("span");
+                count.className = "changelog-count";
+                count.textContent = `${changeLog.length} entr${changeLog.length === 1 ? "y" : "ies"}`;
+                const clearButton = document.createElement("button");
+                clearButton.type = "button";
+                clearButton.className = "btn-secondary changelog-clear-btn";
+                clearButton.textContent = "Clear log";
+                clearButton.title = "Delete all change log entries (can be undone)";
+                clearButton.onclick = clearChangeLog;
+                top.append(count, clearButton);
+            }
+            content.appendChild(top);
 
             if (!changeLog.length) {
                 const empty = document.createElement("p");
