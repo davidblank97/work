@@ -28,6 +28,7 @@ module.exports = [
             await frame.setInputFiles("#fileInput", [...OLD_FILES, REFERENCE].map(t.file));
             await page.waitForTimeout(600);
             const before = await snapshot(frame);
+            t.check("upgrade banner after loading", await frame.isVisible("#upgradeBanner") && (await frame.textContent("#upgradeBannerText")).includes("3 file(s)"), await frame.textContent("#upgradeBannerText"));
             await frame.click("#schemaCheckBtn");
             const upgradeAll = frame.locator(".schema-active-line button", { hasText: "Upgrade all" });
             t.check("Upgrade all offered for 3 files", (await upgradeAll.textContent()).includes("(3)"));
@@ -36,6 +37,7 @@ module.exports = [
             await frame.click("#upgradeConfirmBtn");
             await page.waitForTimeout(300);
             const errors = await frame.evaluate(() => Object.fromEntries(loadedFiles.map(x => [x.name, getSchemaResult(x).errors])));
+            t.check("banner hidden after upgrade", !(await frame.isVisible("#upgradeBanner")));
             t.check("all valid after upgrade", Object.values(errors).every(count => count === 0), JSON.stringify(errors));
             const after = await snapshot(frame);
             t.check("reference untouched", before["0402-Hotpass1.xml"].xml === after["0402-Hotpass1.xml"].xml);
@@ -76,6 +78,8 @@ module.exports = [
             fs.writeFileSync(ngFile, text);
             await frame.setInputFiles("#fileInput", [ngFile, t.file("Schedule_editor/schedule_beispiel.xml")]);
             await page.waitForTimeout(400);
+            await frame.click("#upgradeBannerDismissBtn");
+            t.check("banner can be dismissed", !(await frame.isVisible("#upgradeBanner")));
             const templates = await frame.evaluate(() => { upgradeFiles(loadedFiles.map(x => x.id)); return loadedFiles.map(x => x.lastUpgrade.template); });
             t.check("NG head uses 7777 template", templates.some(name => name.startsWith("7777")), templates.join(" | "));
             t.check("NGRT head uses 8888 template", templates.some(name => name.startsWith("8888")), templates.join(" | "));

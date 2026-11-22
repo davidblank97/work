@@ -16,7 +16,7 @@ Nach der Auswahl wird die Anwendung geoeffnet. Oben erscheint eine schmale Leist
 
 Einmal geoeffnete Anwendungen laufen weiter: Geladene XML-Dateien, Undo-Verlauf und Auswahl bleiben beim Wechsel erhalten, auf der Startseite sind sie mit `Open` markiert. Erst beim Schliessen oder Neuladen des Browser-Tabs gehen sie verloren (der Editor warnt bei ungespeicherten Aenderungen). Die Adresse merkt sich die gewaehlte Anwendung (`…v3_0.html#editor` bzw. `#wdr`); solche Links und die Zurueck-Taste des Browsers funktionieren.
 
-Der Schedule Editor ist eigenstaendig (CSS, JavaScript und JSZip eingebettet) und braucht kein Internet. Der WDR Converter laedt seine Bibliotheken (SheetJS, JSZip, FileSaver) aus dem Internet und braucht daher eine Verbindung.
+Beide Anwendungen sind eigenstaendig und brauchen **kein Internet**: Der Schedule Editor enthaelt CSS, JavaScript und JSZip, der WDR Converter enthaelt SheetJS 0.18.5 und JSZip 3.10.1.
 
 Empfohlen wird der Start ueber einen lokalen Webserver, damit `segments_sorting.json` geladen wird und der XML Viewer auf die Schemas der Schedule Database zugreifen kann:
 
@@ -65,6 +65,8 @@ Die Dateien werden im Browser geladen und dort bearbeitet. Es wird keine Datei a
 Angenommen werden nur gueltige XML-Dateien mit dem Wurzelelement `<sched>` und mindestens einem `<segment>`. Abgewiesene Dateien werden in der Statusleiste mit Grund aufgefuehrt. Nach dem Laden sind alle neuen Dateien markiert. Das Laden ist ein eigener Schritt im Zurueck-Verlauf.
 
 ## Bearbeiten
+
+**Ungueltige Werte:** Steht in der Datei in einem Zahlenfeld kein gueltiger Wert (z. B. `abc`), zeigt der Editor den Originaltext rot an und veraendert ihn nicht, auch nicht beim Anklicken. Erst eine gueltige Eingabe wird geschrieben, bei Kommazahlen mit sechs Nachkommastellen, bei Ganzzahl- und Ja/Nein-Feldern ohne.
 
 Die XML-Daten sind in folgende Bereiche gegliedert:
 
@@ -179,7 +181,7 @@ Geprueft werden:
 
 Ist eine passende Version gespeichert, bietet `Use v…` an, sie zu aktivieren.
 
-**Auf die neueste Version bringen (Upgrade):** Aeltere Schedules lassen sich direkt im Editor auf die Version des aktiven Schemas bringen, damit die Maschine sie ohne Fehlermeldung liest.
+**Auf die neueste Version bringen (Upgrade):** Aeltere Schedules lassen sich direkt im Editor auf die Version des aktiven Schemas bringen, damit die Maschine sie ohne Fehlermeldung liest. Werden solche Dateien geladen, erscheint oben ein Hinweis („n file(s) do not match schema v… Upgrade them?“) mit `Review & upgrade…` (oeffnet den Upgrade-Dialog) und `Dismiss`. Geaendert wird erst nach Bestaetigung.
 
 - `Tools > Schema Check` zeigt bei jeder Datei mit Schemafehlern oder aelterer Version `Upgrade to v…`.
 - Oben gibt es `Upgrade all to v… (n)` fuer alle betroffenen Dateien.
@@ -256,7 +258,7 @@ Vor dem Speichern oeffnet sich ein Dialog fuer einen optionalen **Revisions-Tag*
 
 ## Tools
 
-- `Comparison`: Vergleicht die geladenen Dateien und kann Werte auf andere Dateien uebertragen. `Show differences only` blendet gleiche Parameter aus; Zellen, die vom haeufigsten Wert der Zeile abweichen, sind rot markiert. Eine Zusammenfassung zeigt, wie viele Parameter sich unterscheiden.
+- `Comparison`: Vergleicht die geladenen Dateien und kann Werte auf andere Dateien uebertragen. Nur die Tabelle scrollt (waagerecht und senkrecht); Kopfzeile sowie die Spalten Status und Parameter bleiben dabei stehen. `Show differences only` blendet gleiche Parameter aus; Zellen, die vom haeufigsten Wert der Zeile abweichen, sind rot markiert. Eine Zusammenfassung zeigt, wie viele Parameter sich unterscheiden.
 - `Heat Input`: Zeigt nominalen Heat Input, Min und Max je aktivem Segment mit TIG-Wirkungsgrad η = 0,6 in kJ/mm. Grundwerte gelten waehrend `excursion`, Hauptwerte waehrend `indwell + outdwell`; Zeiten in Sekunden und IPM wird fuer die Wegberechnung in mm/s umgerechnet. Min/Max beruecksichtigen die in `<overrides>` angegebenen Grenzen als symmetrische ±%-Abweichungen: `avc_override_max` fuer beide Spannungen, `bkg_amp_max`/`pri_amp_max` fuer die Stroeme, `travel_max` fuer beide Vorschuebe, `dwell_max` fuer `indwell`/`outdwell` und `excursion_max` fuer `excursion`. Alle Grenzen werden gleichzeitig kombiniert; fehlende Werte gelten als 0%. `pulse_freq`, `pulse_width` und `*_rate` werden nicht zusaetzlich gewichtet. Alle geladenen XML-Dateien werden in **einem** Diagramm gezeigt: das Diagramm ist waagerecht angeordnet: Heat Input (kJ/mm) auf der x-Achse, je Segment eine Zeile, nach Datei gruppiert (Dateiname ueber der Gruppe). Ein waagerechter Balken zeigt die Bandbreite Min–Max, ein Punkt den Nominalwert. Jede Zeile ist mit Farbpunkt und Segmentname beschriftet; die Farben entsprechen dem Ring der Segment-Uebersicht. Die Hoehe waechst mit der Anzahl Segmente. Plausible Grenzwerte aus `<limits>` (`heat_input_fault_low`/`heat_input_fault_high` groesser 0 und kleiner 9999) erscheinen je Datei als senkrechte gestrichelte Linien ueber deren Gruppe; die Grenzwerte werden in kJ/mm angenommen. Ueberschreitungen sind rot umrandet und mit „! outside limit“ beschriftet. Die x-Achse hat ein Raster in 0,1-kJ/mm-Schritten (bei schmalem Fenster wird nur jeder zweite bzw. fuenfte Strich beschriftet).
 
 Ueber dem Diagramm stehen zwei Felder **Min** und **Max** (Target range, kJ/mm). Eingetragene Werte erscheinen als durchgezogene rote Linien ueber das gesamte Diagramm. Enter oder Verlassen des Feldes uebernimmt den Wert, Dezimal-Komma ist erlaubt, ein leeres Feld entfernt die Linie, `Clear` entfernt beide. Min muss kleiner als Max sein. Die Werte werden im Browser gespeichert (auch im Settings) und gelten fuer alle Dateien. Der Ziel-Bereich wird auch geprueft: Liegt die Bandbreite eines Segments (Min–Max) unter dem Ziel-Min oder ueber dem Ziel-Max, wird es im Diagramm rot umrandet und mit „! outside target“ beschriftet; die Statusspalte zeigt dasselbe (bei gleichzeitiger Grenzwertverletzung „! outside limit · ! outside target“). Liegt alles innerhalb, steht dort „✓ OK“.

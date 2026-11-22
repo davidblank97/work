@@ -9,6 +9,7 @@ module.exports = [
             let [viewer] = await Promise.all([context.waitForEvent("page"), frame.click("#xmlViewerBtn")]);
             await viewer.waitForTimeout(500);
             t.check("no changes before", (await viewer.textContent("#diffSummary")).includes("No changes"));
+            t.check("empty string fields are not reported missing", !(await viewer.textContent("#xmlContent")).includes("<custom_search_tag>[MISSING"));
             await viewer.close();
 
             await frame.evaluate(() => upgradeFiles([loadedFiles[0].id]));

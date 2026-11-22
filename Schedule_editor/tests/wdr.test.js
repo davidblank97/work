@@ -23,9 +23,13 @@ module.exports = [
         }
     },
     {
-        name: "convert CSV to xlsx",
+        name: "convert CSV to xlsx offline",
         async run(t) {
-            const { page, frame } = await t.openApp("wdr");
+            // Kein Internet: alle externen Anfragen blockieren.
+            const { page, frame } = await t.openApp("wdr", {
+                beforeLoad: page => page.route(url => !url.href.startsWith(t.baseUrl), route => route.abort())
+            });
+            t.check("libraries available offline", await frame.evaluate(() => typeof XLSX !== "undefined" && typeof JSZip !== "undefined"));
             t.check("template placeholder", (await frame.$$eval(".panel-header", headers => headers.map(h => h.textContent))).some(text => text.includes("Excel template")));
             await frame.evaluate(() => { window.showDirectoryPicker = undefined; });
             await frame.setInputFiles("#file-input", [smallCsv(t.tmpDir)]);
