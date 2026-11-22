@@ -2148,6 +2148,16 @@
             touch-action: none;
         }
 
+        .param-table tr.param-order-locked .param-name-cell,
+        .param-table tr.param-order-locked .param-drag-handle {
+            cursor: default;
+        }
+
+        .param-table tr.param-order-locked .param-drag-handle {
+            opacity: 0.2 !important;
+            color: var(--text-muted) !important;
+        }
+
         body.param-reordering,
         body.param-reordering * {
             cursor: grabbing !important;
@@ -3367,7 +3377,8 @@
                     on the name do the same.</p>
                 <p>Drag a parameter row by its name or handle (⠿) to reorder it; Alt+↑/↓ on the handle moves it by one row.
                     The order is stored per section (all segments share one order) and included in the Local Storage
-                    Backup. <strong>Reset order</strong> in the panel header restores the default order.</p>
+                    Backup. <strong>Reset order</strong> in the panel header restores the default order. Locked parameters (🔒)
+                    cannot be moved and keep their position.</p>
                 <p>In Segments, segments can be duplicated, moved and deleted. The selected segment stays open.</p>
 
                 <h4>Keyboard shortcuts</h4>
@@ -4056,10 +4067,19 @@
 
         function moveParameter(section, allKeys, key, targetKey, placeAfter, refresh) {
             if (key === targetKey) return false;
-            const order = orderedParameterKeys(section, allKeys).filter(entry => entry !== key);
-            const targetIndex = order.indexOf(targetKey);
+            if (isLocked(key)) {
+                document.getElementById("status").textContent = `${key} is locked and cannot be moved.`;
+                return false;
+            }
+            const current = orderedParameterKeys(section, allKeys);
+            const moved = current.filter(entry => entry !== key);
+            const targetIndex = moved.indexOf(targetKey);
             if (targetIndex < 0) return false;
-            order.splice(targetIndex + (placeAfter ? 1 : 0), 0, key);
+            moved.splice(targetIndex + (placeAfter ? 1 : 0), 0, key);
+            // Gesperrte Parameter bleiben an ihrer Position stehen.
+            const order = moved.filter(entry => !isLocked(entry));
+            current.forEach((entry, index) => { if (isLocked(entry)) order.splice(index, 0, entry); });
+            if (order.every((entry, index) => entry === current[index])) return false;
             recordHistoryAction("Move parameter", () => {
                 // Felder, die nur in anderen Dateien vorkommen, behalten ihren Eintrag am Ende.
                 const previous = Array.isArray(parameterOrder[section]) ? parameterOrder[section] : [];
@@ -4153,14 +4173,21 @@
             handle.title = "Drag (or drag the name) to reorder · Alt+↑/↓ moves the row";
             handle.setAttribute("aria-label", `Move ${key} (Alt+Arrow keys)`);
             handle.dataset.key = key;
+            if (isLocked(key)) {
+                tr.classList.add("param-order-locked");
+                handle.title = "Locked – cannot be moved (unlock with 🔒)";
+                handle.setAttribute("aria-label", `${key} is locked and cannot be moved`);
+            }
             handle.onclick = event => event.stopPropagation();
             handle.ondblclick = event => event.stopPropagation();
             handle.onkeydown = event => {
                 if (!event.altKey || (event.key !== "ArrowUp" && event.key !== "ArrowDown")) return;
                 event.preventDefault();
                 const up = event.key === "ArrowUp";
+                if (isLocked(key)) { document.getElementById("status").textContent = `${key} is locked and cannot be moved.`; return; }
                 let neighbor = up ? tr.previousElementSibling : tr.nextElementSibling;
-                while (neighbor && neighbor.style.display === "none") neighbor = up ? neighbor.previousElementSibling : neighbor.nextElementSibling;
+                // Ausgeblendete (Suche) und gesperrte Zeilen werden uebersprungen.
+                while (neighbor && (neighbor.style.display === "none" || isLocked(neighbor.dataset.paramKey))) neighbor = up ? neighbor.previousElementSibling : neighbor.nextElementSibling;
                 if (!neighbor?.dataset.paramKey) return;
                 if (moveParameter(section, allKeys, key, neighbor.dataset.paramKey, !up, refresh)) {
                     document.querySelector(`.param-drag-handle[data-key="${CSS.escape(key)}"]`)?.focus();
@@ -4169,6 +4196,7 @@
             // Name oder Griff starten das Ziehen; die Knoepfe ★/🔒/⊘ nicht.
             tdName.addEventListener("pointerdown", event => {
                 if (event.button !== 0 || event.target.closest(".param-action-btn")) return;
+                if (isLocked(key)) return;
                 if (event.pointerType === "mouse") event.preventDefault();
                 parameterDrag = { section, key, allKeys, refresh, row: tr, startX: event.clientX, startY: event.clientY, active: false };
             });
