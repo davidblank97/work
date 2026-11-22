@@ -2141,6 +2141,17 @@
 
         .param-table .param-name-cell {
             cursor: grab;
+            user-select: none;
+        }
+
+        .param-drag-handle {
+            touch-action: none;
+        }
+
+        body.param-reordering,
+        body.param-reordering * {
+            cursor: grabbing !important;
+            user-select: none;
         }
 
         .param-table .param-name-cell .param-action-btn {
@@ -4084,10 +4095,57 @@
             header.appendChild(button);
         }
 
-        // Zeile nur ueber den Griff ziehbar, damit Eingabefelder und Textauswahl normal funktionieren.
-        let draggedParameter = null;
+        // Eigenes Ziehen per Pointer-Events (statt HTML5-Drag & Drop): funktioniert in allen Browsern,
+        // auch auf Buttons, in eingebetteten Browsern und per Touch. Griff ist der Name oder ⠿.
+        let parameterDrag = null;
+        function clearParameterDropMarkers() {
+            document.querySelectorAll(".param-drop-before, .param-drop-after, .param-dragging")
+                .forEach(row => row.classList.remove("param-drop-before", "param-drop-after", "param-dragging"));
+            document.body.classList.remove("param-reordering");
+        }
+        function parameterDropTarget(event) {
+            const element = document.elementFromPoint(event.clientX, event.clientY);
+            const row = element?.closest("tr[data-param-key]");
+            if (!row || row === parameterDrag.row || row.dataset.paramSection !== parameterDrag.section) return null;
+            const rect = row.getBoundingClientRect();
+            return { row, after: event.clientY > rect.top + rect.height / 2 };
+        }
+        document.addEventListener("pointermove", event => {
+            if (!parameterDrag) return;
+            if (!parameterDrag.active) {
+                if (Math.hypot(event.clientX - parameterDrag.startX, event.clientY - parameterDrag.startY) < 5) return;
+                parameterDrag.active = true;
+                parameterDrag.row.classList.add("param-dragging");
+                document.body.classList.add("param-reordering");
+                window.getSelection()?.removeAllRanges();
+            }
+            event.preventDefault();
+            document.querySelectorAll(".param-drop-before, .param-drop-after")
+                .forEach(row => row.classList.remove("param-drop-before", "param-drop-after"));
+            const target = parameterDropTarget(event);
+            if (target) target.row.classList.add(target.after ? "param-drop-after" : "param-drop-before");
+        });
+        document.addEventListener("pointerup", event => {
+            if (!parameterDrag) return;
+            const drag = parameterDrag;
+            const target = drag.active ? parameterDropTarget(event) : null;
+            parameterDrag = null;
+            clearParameterDropMarkers();
+            if (!drag.active) return;
+            // Den folgenden click (z. B. auf ★) nach dem Ziehen unterdruecken.
+            const swallowClick = clickEvent => { clickEvent.stopPropagation(); clickEvent.preventDefault(); };
+            window.addEventListener("click", swallowClick, { capture: true, once: true });
+            window.setTimeout(() => window.removeEventListener("click", swallowClick, { capture: true }), 0);
+            if (target) moveParameter(drag.section, drag.allKeys, drag.key, target.row.dataset.paramKey, target.after, drag.refresh);
+        });
+        document.addEventListener("pointercancel", () => { parameterDrag = null; clearParameterDropMarkers(); });
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && parameterDrag) { parameterDrag = null; clearParameterDropMarkers(); }
+        });
+
         function attachParameterReorder(tr, tdName, section, key, allKeys, refresh) {
             tr.dataset.paramKey = key;
+            tr.dataset.paramSection = section;
             const handle = document.createElement("button");
             handle.type = "button";
             handle.className = "param-drag-handle";
@@ -4095,8 +4153,6 @@
             handle.title = "Drag (or drag the name) to reorder · Alt+↑/↓ moves the row";
             handle.setAttribute("aria-label", `Move ${key} (Alt+Arrow keys)`);
             handle.dataset.key = key;
-            handle.onmousedown = () => { tr.draggable = true; };
-            handle.onmouseup = () => { tr.draggable = false; };
             handle.onclick = event => event.stopPropagation();
             handle.ondblclick = event => event.stopPropagation();
             handle.onkeydown = event => {
@@ -4110,43 +4166,12 @@
                     document.querySelector(`.param-drag-handle[data-key="${CSS.escape(key)}"]`)?.focus();
                 }
             };
-            const clearMarkers = () => document.querySelectorAll(".param-drop-before, .param-drop-after")
-                .forEach(row => row.classList.remove("param-drop-before", "param-drop-after"));
-            // Auch der Parametername dient als Griff (nicht die Knoepfe ★/🔒/⊘).
-            tdName.addEventListener("mousedown", event => {
-                if (event.button === 0 && !event.target.closest(".param-action-btn")) tr.draggable = true;
+            // Name oder Griff starten das Ziehen; die Knoepfe ★/🔒/⊘ nicht.
+            tdName.addEventListener("pointerdown", event => {
+                if (event.button !== 0 || event.target.closest(".param-action-btn")) return;
+                if (event.pointerType === "mouse") event.preventDefault();
+                parameterDrag = { section, key, allKeys, refresh, row: tr, startX: event.clientX, startY: event.clientY, active: false };
             });
-            tdName.addEventListener("mouseup", () => { tr.draggable = false; });
-            tr.ondragstart = event => {
-                draggedParameter = { section, key };
-                tr.classList.add("param-dragging");
-                event.dataTransfer.effectAllowed = "move";
-                event.dataTransfer.setData("text/plain", key);
-            };
-            tr.ondragend = () => {
-                tr.draggable = false;
-                tr.classList.remove("param-dragging");
-                draggedParameter = null;
-                clearMarkers();
-            };
-            tr.ondragover = event => {
-                if (!draggedParameter || draggedParameter.section !== section || draggedParameter.key === key) return;
-                event.preventDefault();
-                event.dataTransfer.dropEffect = "move";
-                const rect = tr.getBoundingClientRect();
-                const after = event.clientY > rect.top + rect.height / 2;
-                clearMarkers();
-                tr.classList.add(after ? "param-drop-after" : "param-drop-before");
-            };
-            tr.ondrop = event => {
-                if (!draggedParameter || draggedParameter.section !== section) return;
-                event.preventDefault();
-                const after = tr.classList.contains("param-drop-after");
-                const movedKey = draggedParameter.key;
-                draggedParameter = null;
-                clearMarkers();
-                moveParameter(section, allKeys, movedKey, key, after, refresh);
-            };
             tdName.prepend(handle);
         }
 
