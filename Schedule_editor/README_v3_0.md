@@ -292,7 +292,11 @@ Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Ni
 
 ## Dateien
 
-- `Lib_Schedule_Editor_v2_9.html`: Editor-Anwendung (HTML, CSS, JavaScript und JSZip in einer Datei)
-- `segments_sorting.json`: Reihenfolge der Segmentfelder
-- `README_v2_9.md`: Diese Anleitung
-- `schedule_beispiel.xml`, `Test 2 Segmente.xml`: Beispiel-Schedules zum Testen
+- `Lib_Schedule_Editor_v3_0.html`: Liburdi Schedule Suite 3.0 mit Startseite, Schedule Editor und WDR Converter in einer Datei; alle Bibliotheken eingebettet.
+- `README_v3_0.md`: Diese Anleitung.
+- `WELDSCHEDULE.XDR`: Liburdi-Schema 1.8.3.7. Es ist auch im Editor eingebaut.
+- `segments_sorting.json`: Reihenfolge der Segmentfelder.
+- `schedule_beispiel.xml`, `Test 2 Segmente.xml`: Beispiel-Schedules aelterer Versionen zum Testen.
+- `04_HIC_PK_764_CS_NGRT_Rev1/`: Referenzprogramme in Version 1.8.3.7.
+- `tests/`: Browser-Tests (`npm test`, siehe AGENTS.md).
+- `archive/`: Fruehere Versionen (v2 bis v2.9) mit ihren Anleitungen, nur zum Nachschlagen.
