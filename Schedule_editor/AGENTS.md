@@ -27,7 +27,9 @@
 ## Validation and usage
 
 - Start a local server for the full feature set: `cd Schedule_editor && python3 -m http.server 8000`, then open `http://localhost:8000/Lib_Schedule_Editor_v3_0.html` (start page; `#editor` / `#wdr` open an app directly).
-- There is no build or test pipeline. For quick checks, drive the page with Playwright: the apps are `about:srcdoc` frames inside the suite page.
+- Browser tests live in `tests/` (Playwright, Chromium; they start their own static server):
+  `cd Schedule_editor/tests && npm install && npx playwright install chromium && npm test` (filter: `node run.js upgrade`).
+  Each `*.test.js` exports `[{ name, run(t) }]`; `t.openApp("editor"|"wdr")` returns `{ page, frame }` (the app is an `about:srcdoc` frame), `t.check(name, ok, detail)` records results. Add a test for every behavior change and keep `npm test` green.
 - Manually test with the sample XML files: load, edit, undo/redo, save, batch save, comparison, heat input.
 
 ## Safe change guidance

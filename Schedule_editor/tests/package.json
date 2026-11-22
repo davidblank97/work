@@ -1,0 +1,11 @@
+{
+  "name": "liburdi-schedule-suite-tests",
+  "private": true,
+  "description": "Browser tests for Lib_Schedule_Editor_v3_0.html (Playwright, Chromium)",
+  "scripts": {
+    "test": "node run.js"
+  },
+  "devDependencies": {
+    "playwright": "1.65.1"
+  }
+}
