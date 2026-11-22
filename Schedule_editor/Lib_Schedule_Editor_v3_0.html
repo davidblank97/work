@@ -5474,7 +5474,7 @@
                         from &lt;limits&gt; as dashed lines. Enter a target Min/Max to draw red reference lines.</li>
                     <li><strong>Hidden Parameters:</strong> restore hidden parameters.</li>
                     <li><strong>Change Log:</strong> show recorded changes.</li>
-                    <li><strong>XML Viewer:</strong> read-only XML of the active file; with a saved XDR schema, missing
+                    <li><strong>XML Viewer:</strong> read-only XML of the active file; changes since the last save are highlighted (green added, red removed, yellow changed with the old value); with a saved XDR schema, missing
                         required values are marked in red.</li>
                     <li><strong>Schema Check:</strong> checks all loaded files against the active XDR schema (required and unknown
                         elements, order, attributes, data types) and compares the file version with the schema version.
@@ -9856,25 +9856,77 @@
             return { definitions };
         }
 
-        function renderXmlWithMissingValues(viewerDocument, file, schema) {
+        // Schluessel je Element (Pfad mit Segment-Index und Vorkommen), fuer den Vergleich mit dem gespeicherten Stand.
+        function xmlElementKey(element, parentKey) {
+            const name = element.localName;
+            if (name === "segment" && element.hasAttribute("index")) return `${parentKey}/segment[${element.getAttribute("index")}]`;
+            const siblings = element.parentElement ? [...element.parentElement.children].filter(child => child.localName === name) : [element];
+            const occurrence = siblings.indexOf(element);
+            return `${parentKey}/${name}${occurrence > 0 ? `#${occurrence}` : ""}`;
+        }
+
+        function indexXmlForDiff(documentNode) {
+            const map = new Map();
+            const walk = (element, parentKey) => {
+                const key = xmlElementKey(element, parentKey);
+                map.set(key, element);
+                [...element.children].forEach(child => walk(child, key));
+            };
+            if (documentNode?.documentElement) walk(documentNode.documentElement, "");
+            return map;
+        }
+
+        function renderXmlWithMissingValues(viewerDocument, file, schema, options = {}) {
             const output = viewerDocument.getElementById("xmlContent");
             const summary = viewerDocument.getElementById("missingSummary");
             output.replaceChildren();
             let missingCount = 0;
+            // Aenderungen gegenueber dem zuletzt gespeicherten/geladenen Stand (file.originalXml).
+            const showChanges = options.showChanges !== false && Boolean(file.originalXml);
+            const changesOnly = showChanges && Boolean(options.changesOnly);
+            const baseline = showChanges ? indexXmlForDiff(file.originalXml) : new Map();
+            const seenKeys = new Set();
+            const diffCount = { added: 0, removed: 0, changed: 0 };
+            const escapeXmlText = text => String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             const schemaDetails = parseViewerXdr(schema.xml, schema.sourceFile || schema.name);
             const xmlDocument = new DOMParser().parseFromString(new XMLSerializer().serializeToString(file.xml), "application/xml");
             const parseError = xmlDocument.querySelector("parsererror");
             if (parseError) throw new Error(`${file.name}: XML could not be parsed for schema comparison.`);
 
-            function appendLine(parts, depth) {
-                output.appendChild(viewerDocument.createTextNode("  ".repeat(depth)));
+            function appendLine(parts, depth, diff = "") {
+                const line = viewerDocument.createElement("span");
+                line.className = "xml-line" + (diff ? ` diff-${diff}` : "");
+                if (showChanges) {
+                    const marker = viewerDocument.createElement("span");
+                    marker.className = "diff-marker";
+                    marker.textContent = diff === "added" ? "+" : diff === "removed" ? "−" : diff === "changed" ? "~" : " ";
+                    line.appendChild(marker);
+                }
+                line.appendChild(viewerDocument.createTextNode("  ".repeat(depth)));
                 parts.forEach(part => {
                     const span = viewerDocument.createElement("span");
                     if (part.missing) span.className = "missing-value";
+                    if (part.className) span.className = part.className;
                     span.textContent = part.text;
-                    output.appendChild(span);
+                    line.appendChild(span);
                 });
-                output.appendChild(viewerDocument.createTextNode("\n"));
+                line.appendChild(viewerDocument.createTextNode("\n"));
+                output.appendChild(line);
+            }
+
+            // Entfernte Elemente (nur im gespeicherten Stand) als rote Zeilen.
+            function renderRemovedElement(element, depth) {
+                diffCount.removed++;
+                const attributes = [...element.attributes].map(attribute => ` ${attribute.name}="${escapeXmlText(attribute.value)}"`).join("");
+                const children = [...element.children];
+                if (!children.length) {
+                    appendLine([{ text: `<${element.nodeName}${attributes}>${escapeXmlText(element.textContent)}</${element.nodeName}>` }], depth, "removed");
+                    return;
+                }
+                appendLine([{ text: `<${element.nodeName}${attributes}>` }], depth, "removed");
+                children.forEach(child => renderRemovedElement(child, depth + 1));
+                appendLine([{ text: `</${element.nodeName}>` }], depth, "removed");
+                diffCount.removed--; // Container zaehlt nicht doppelt
             }
 
             function rulesFor(definition) {
@@ -9921,10 +9973,15 @@
                 ], depth);
             }
 
-            function renderElement(element, depth) {
+            function renderElement(element, depth, parentKey = "") {
                 const name = element.localName;
                 const definition = schemaDetails.definitions.get(name);
                 const opening = [{ text: `<${element.nodeName}` }];
+                const key = xmlElementKey(element, parentKey);
+                const baselineElement = showChanges ? baseline.get(key) : null;
+                const isAdded = showChanges && !baselineElement;
+                if (showChanges) seenKeys.add(key);
+                let attributeChanged = false;
                 if (definition) {
                     const declaredAttributes = new Map(Array.from(definition.children)
                         .filter(child => child.localName === "AttributeType")
@@ -9941,9 +9998,14 @@
                             highlightedAttributes.add(attribute.localName);
                         }
                         const value = attribute.value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+                        const oldAttribute = baselineElement?.getAttribute(attribute.name);
+                        const changed = Boolean(baselineElement) && !missing && oldAttribute !== attribute.value;
+                        if (changed) attributeChanged = true;
                         opening.push({
-                            text: missing ? ` ${attribute.name}="[MISSING VALUE]"` : ` ${attribute.name}="${value}"`,
-                            missing
+                            text: missing ? ` ${attribute.name}="[MISSING VALUE]"`
+                                : changed ? ` ${attribute.name}="${value}"${oldAttribute === null ? " (new)" : ` (was "${escapeXmlText(oldAttribute)}")`}` : ` ${attribute.name}="${value}"`,
+                            missing,
+                            className: changed ? "diff-value" : ""
                         });
                     });
                     allowedAttributes.forEach(attributeName => {
@@ -9971,16 +10033,49 @@
                         appendLine([...opening, { text: ">" }, { text: "[MISSING VALUE]", missing: true }, { text: `</${element.nodeName}>` }], depth);
                     } else {
                         const escapedText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                        appendLine([...opening, { text: `>${escapedText}</${element.nodeName}>` }], depth);
+                        const oldText = baselineElement && !baselineElement.children.length ? baselineElement.textContent : null;
+                        const valueChanged = oldText !== null && oldText.trim() !== text.trim();
+                        if (isAdded) {
+                            diffCount.added++;
+                            appendLine([...opening, { text: `>${escapedText}</${element.nodeName}>` }], depth, "added");
+                        } else if (valueChanged || attributeChanged) {
+                            diffCount.changed++;
+                            appendLine([...opening, { text: ">" }, { text: escapedText, className: valueChanged ? "diff-value" : "" },
+                                { text: `</${element.nodeName}>` }, ...(valueChanged ? [{ text: `  was: ${escapeXmlText(oldText.trim())}`, className: "diff-old" }] : [])], depth, "changed");
+                        } else if (!changesOnly) {
+                            appendLine([...opening, { text: `>${escapedText}</${element.nodeName}>` }], depth);
+                        }
                     }
                     return;
                 }
 
                 if (!children.length && definition?.getAttribute("content") !== "eltOnly") {
-                    appendLine([...opening, { text: "/>" }], depth);
+                    if (isAdded) diffCount.added++;
+                    else if (attributeChanged) diffCount.changed++;
+                    if (isAdded || attributeChanged || !changesOnly) appendLine([...opening, { text: "/>" }], depth, isAdded ? "added" : attributeChanged ? "changed" : "");
                     return;
                 }
-                appendLine([...opening, { text: ">" }], depth);
+                if (isAdded) diffCount.added++;
+                else if (attributeChanged) diffCount.changed++;
+                appendLine([...opening, { text: ">" }], depth, isAdded ? "added" : attributeChanged ? "changed" : "");
+                // Entfernte Kinder an ihrer frueheren Position einordnen (vor dem naechsten noch vorhandenen Geschwister).
+                const removedBefore = new Map();
+                const removedAtEnd = [];
+                if (showChanges && baselineElement) {
+                    const currentKeys = new Set(children.map(child => xmlElementKey(child, key)));
+                    const baselineChildren = [...baselineElement.children];
+                    baselineChildren.forEach((oldChild, index) => {
+                        const oldKey = xmlElementKey(oldChild, key);
+                        if (currentKeys.has(oldKey)) return;
+                        const next = baselineChildren.slice(index + 1).map(child => xmlElementKey(child, key)).find(nextKey => currentKeys.has(nextKey));
+                        if (next) removedBefore.set(next, [...(removedBefore.get(next) || []), oldChild]);
+                        else removedAtEnd.push(oldChild);
+                    });
+                }
+                const renderChild = child => {
+                    (removedBefore.get(xmlElementKey(child, key)) || []).forEach(oldChild => renderRemovedElement(oldChild, depth + 1));
+                    renderElement(child, depth + 1, key);
+                };
                 if (definition?.getAttribute("content") === "eltOnly") {
                     const rules = rulesFor(definition);
                     const missingByPosition = new Map();
@@ -10005,12 +10100,13 @@
                     });
                     for (let index = 0; index <= children.length; index++) {
                         (missingByPosition.get(index) || []).forEach(missingName => renderMissingElement(missingName, depth + 1));
-                        if (index < children.length) renderElement(children[index], depth + 1);
+                        if (index < children.length) renderChild(children[index]);
                     }
                 } else {
-                    children.forEach(child => renderElement(child, depth + 1));
+                    children.forEach(renderChild);
                 }
-                appendLine([{ text: `</${element.nodeName}>` }], depth);
+                removedAtEnd.forEach(oldChild => renderRemovedElement(oldChild, depth + 1));
+                appendLine([{ text: `</${element.nodeName}>` }], depth, isAdded ? "added" : "");
             }
 
             renderElement(xmlDocument.documentElement, 0);
@@ -10018,6 +10114,22 @@
                 ? `${missingCount} missing required element(s) or value(s) are highlighted. This view does not change the XML.`
                 : "No missing required elements or values found. This view does not change the XML.";
             summary.classList.toggle("has-missing", missingCount > 0);
+            const diffSummary = viewerDocument.getElementById("diffSummary");
+            if (diffSummary) {
+                const total = diffCount.added + diffCount.removed + diffCount.changed;
+                diffSummary.replaceChildren();
+                if (!showChanges) {
+                    diffSummary.textContent = "";
+                } else if (!total) {
+                    diffSummary.textContent = "No changes since the last save.";
+                } else {
+                    const make = (className, text) => { const span = viewerDocument.createElement("span"); span.className = className; span.textContent = text; return span; };
+                    diffSummary.append("Changes since the last save: ",
+                        make("legend-added", `+ ${diffCount.added} added`), " · ",
+                        make("legend-removed", `− ${diffCount.removed} removed`), " · ",
+                        make("legend-changed", `~ ${diffCount.changed} changed`));
+                }
+            }
         }
 
         function openXmlViewer() {
@@ -10047,10 +10159,29 @@
                     #missingSummary.has-missing { color: #ff6464; font-weight: 700; }
                     pre { margin: 0; padding: 18px; background: #202024; border: 1px solid #2d2d34; border-radius: 6px; color: #f3f3f5; font: 13px/1.5 Consolas, "Courier New", monospace; white-space: pre-wrap; overflow: auto; }
                     .missing-value { color: #ff6464; font-weight: 700; }
+                    .toolbar input[type=checkbox] { accent-color: #f28a3d; }
+                    .toolbar .option { display: inline-flex; align-items: center; gap: 6px; color: #c5c5ca; }
+                    #diffSummary { margin: 0 0 12px; color: #b6b6bd; }
+                    .legend-added { color: #6fd3a8; font-weight: 700; }
+                    .legend-removed { color: #ff7a7a; font-weight: 700; }
+                    .legend-changed { color: #f0c065; font-weight: 700; }
+                    .xml-line { display: block; }
+                    .diff-marker { display: inline-block; width: 1.4em; color: #6b6b73; user-select: none; }
+                    .diff-added { background: rgba(80, 200, 150, 0.14); color: #a8f0cf; }
+                    .diff-added .diff-marker { color: #6fd3a8; font-weight: 700; }
+                    .diff-removed { background: rgba(255, 100, 100, 0.13); color: #ffb0b0; text-decoration: line-through; text-decoration-color: rgba(255, 140, 140, 0.6); }
+                    .diff-removed .diff-marker { color: #ff7a7a; font-weight: 700; text-decoration: none; }
+                    .diff-changed { background: rgba(240, 192, 101, 0.12); }
+                    .diff-changed .diff-marker { color: #f0c065; font-weight: 700; }
+                    .diff-value { color: #f0c065; font-weight: 700; }
+                    .diff-old { color: #a99a80; font-style: italic; }
                 </style></head>
                 <body><h1 id="viewerTitle"></h1>
-                    <div class="toolbar"><label for="schemaSelect">Saved XDR schema</label><select id="schemaSelect"><option value="">Loading schemas…</option></select></div>
+                    <div class="toolbar"><label for="schemaSelect">Saved XDR schema</label><select id="schemaSelect"><option value="">Loading schemas…</option></select>
+                        <label class="option"><input type="checkbox" id="showChanges" checked> Highlight changes since last save</label>
+                        <label class="option"><input type="checkbox" id="changesOnly"> Changes only</label></div>
                     <p id="missingSummary" role="status" aria-live="polite">Loading saved XDR schemas…</p>
+                    <p id="diffSummary" aria-live="polite"></p>
                     <pre id="xmlContent"></pre></html>`);
             viewerWindow.document.close();
             viewerWindow.document.title = `XML Viewer - ${file.name}`;
@@ -10058,6 +10189,22 @@
             viewerWindow.focus();
             const schemaSelect = viewerWindow.document.getElementById("schemaSelect");
             const summary = viewerWindow.document.getElementById("missingSummary");
+            const showChangesBox = viewerWindow.document.getElementById("showChanges");
+            const changesOnlyBox = viewerWindow.document.getElementById("changesOnly");
+            const viewerOptions = () => ({ showChanges: showChangesBox.checked, changesOnly: changesOnlyBox.checked });
+            let currentViewerSchema = null;
+            const rerenderViewer = () => {
+                changesOnlyBox.disabled = !showChangesBox.checked;
+                if (!currentViewerSchema) return;
+                try {
+                    renderXmlWithMissingValues(viewerWindow.document, file, currentViewerSchema, viewerOptions());
+                } catch (error) {
+                    summary.textContent = error.message;
+                    summary.classList.add("has-missing");
+                }
+            };
+            showChangesBox.addEventListener("change", rerenderViewer);
+            changesOnlyBox.addEventListener("change", rerenderViewer);
             const editorSchemas = xdrSchemas.map(schema => ({
                 id: `editor:${schema.id}`, name: `${schema.name} (editor)`, schemaVersion: schema.version,
                 xml: schema.xml, sourceFile: schema.name
@@ -10081,7 +10228,8 @@
                 if (preferredSchema) {
                     schemaSelect.value = preferredSchema.id;
                     try {
-                        renderXmlWithMissingValues(viewerWindow.document, file, preferredSchema);
+                        currentViewerSchema = preferredSchema;
+                        renderXmlWithMissingValues(viewerWindow.document, file, preferredSchema, viewerOptions());
                     } catch (error) {
                         summary.textContent = error.message;
                         summary.classList.add("has-missing");
@@ -10096,12 +10244,14 @@
                 schemaSelect.addEventListener("change", () => {
                     const selectedSchema = schemas.find(schema => schema.id === schemaSelect.value);
                     if (!selectedSchema) {
+                        currentViewerSchema = null;
                         summary.textContent = "Select an XDR schema to show missing required elements and values.";
                         viewerWindow.document.getElementById("xmlContent").textContent = new XMLSerializer().serializeToString(file.xml);
                         return;
                     }
                     try {
-                        renderXmlWithMissingValues(viewerWindow.document, file, selectedSchema);
+                        currentViewerSchema = selectedSchema;
+                        renderXmlWithMissingValues(viewerWindow.document, file, selectedSchema, viewerOptions());
                     } catch (error) {
                         summary.textContent = error.message;
                         summary.classList.add("has-missing");

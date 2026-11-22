@@ -139,6 +139,15 @@ Der Viewer zeigt:
 - den XML-Inhalt schreibgeschuetzt;
 - nach Auswahl eines XDR-Schemas (im Editor gespeichert oder aus der Schedule Database; das im Editor aktive ist vorausgewaehlt) fehlende erforderliche Elemente, Werte und Attribute als rote, rein visuelle Platzhalter an der passenden XML-Position.
 
+**Aenderungen anzeigen:** Mit `Highlight changes since last save` (standardmaessig an) zeigt der Viewer farbig, was sich gegenueber dem zuletzt gespeicherten bzw. geladenen Stand der Datei geaendert hat. Das ist z. B. nach einem Version-Upgrade praktisch:
+
+- **gruen `+`:** neu hinzugekommene Elemente, z. B. ergaenzte Felder oder neue Namen umbenannter Felder wie `pri_amp_max`.
+- **rot `−`, durchgestrichen:** entfernte Elemente mit ihrem alten Wert, an ihrer frueheren Position, z. B. `ahc_retract` oder `amp_max`.
+- **gelb `~`:** geaenderte Werte bzw. Attribute, dahinter der alte Wert (`was: …`), z. B. `config_version` 1.7.4.1 → 1.8.3.7.
+- **Nicht markiert:** Elemente, die nur ihre Position gewechselt haben.
+
+Ueber dem XML steht die Zusammenfassung (`+ n added · − n removed · ~ n changed`). `Changes only` blendet unveraenderte Werte aus, damit nur die Aenderungen und ihre Bereiche sichtbar bleiben. Nach dem Speichern gilt der gespeicherte Stand als neuer Vergleichsstand.
+
 Die Schemas werden aus derselben IndexedDB-Datenbank wie die Schedule Database gelesen. Beide Seiten muessen dazu im selben Browserprofil und unter demselben Ursprung (zum Beispiel demselben lokalen Webserver und Port) geoeffnet sein. Wenn kein Schema gespeichert ist, laden Sie es zuerst in der Schedule Database und oeffnen den Viewer erneut. Die Platzhalter aendern weder das XML im Editor noch gespeicherte Dateien.
 
 Wenn kein separates Fenster erscheint, muss der Popup-Blocker des Browsers fuer die HTML-Datei deaktiviert bzw. eine Ausnahme hinzugefuegt werden. Der Viewer aendert die XML-Datei nicht.
