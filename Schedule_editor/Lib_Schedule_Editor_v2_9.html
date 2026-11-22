@@ -2533,6 +2533,78 @@
             cursor: not-allowed;
         }
 
+        /* ---- Hidden Parameters ---- */
+        .hidden-manager-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .hidden-manager-top h2 {
+            margin: 0;
+        }
+
+        .hidden-manager-count {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .hidden-manager-top .panel-header-btn {
+            margin-left: auto;
+        }
+
+        .hidden-manager-empty {
+            color: var(--text-muted);
+        }
+
+        .hidden-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        }
+
+        .hidden-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            padding: 8px 12px;
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .hidden-item-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        .hidden-item-name {
+            overflow: hidden;
+            color: var(--text-main);
+            font-size: 13px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .hidden-item-value {
+            overflow: hidden;
+            color: var(--text-muted);
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 11.5px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .hidden-restore-btn {
+            flex: 0 0 auto;
+            min-height: 26px !important;
+            padding: 2px 10px !important;
+            font-size: 11.5px !important;
+        }
+
         .param-table tr:has(textarea) .input-container {
             width: 100%;
         }
@@ -3430,7 +3502,7 @@
                         during excursion, primary values during indwell/outdwell); min/max from the percentage
                         overrides. A chart shows the min–max range and nominal value per segment, with the heat input limits
                         from &lt;limits&gt; as dashed lines. Enter a target Min/Max to draw red reference lines.</li>
-                    <li><strong>Hidden Parameters:</strong> restore hidden parameters.</li>
+                    <li><strong>Hidden Parameters:</strong> hidden parameters grouped by section with their current value; restore one, a section or all.</li>
                     <li><strong>Change Log:</strong> show recorded changes.</li>
                     <li><strong>XML Viewer:</strong> read-only XML of the active file; with a saved XDR schema, missing
                         required values are marked in red.</li>
@@ -7202,23 +7274,122 @@
             renderChangeLog();
         };
 
-        function showHiddenManager() {
-            const content = document.getElementById("content"); content.innerHTML = "<h2>Hidden Parameters</h2>";
-            if (hiddenFields.size === 0) { content.innerHTML += "<p style='color: var(--text-muted);'>No parameters are hidden.</p>"; return; }
-            const table = document.createElement("table"); table.innerHTML = "<tr><th>Parameter</th><th>Action</th></tr>";
-            [...hiddenFields].sort().forEach(key => {
-                const tr = document.createElement("tr"); const tdName = document.createElement("td"); tdName.textContent = key;
-                const tdAction = document.createElement("td"); const btn = document.createElement("button"); btn.textContent = "Restore"; btn.className = "btn-primary"; btn.style.padding = "4px 12px"; btn.style.fontSize = "12px";
-                btn.onclick = () => {
-                    recordHistoryAction("Restore field", () => {
-                        hiddenFields.delete(key);
-                        saveHidden();
-                        showHiddenManager();
-                    });
-                };
-                tdAction.appendChild(btn); tr.appendChild(tdName); tr.appendChild(tdAction); table.appendChild(tr);
+        // Ausgeblendete Parameter nach Bereich gruppiert, mit aktuellem Wert der aktiven Datei.
+        const HIDDEN_SECTION_LABELS = { description: "Description", global: "Global", limits: "Limits", overrides: "Overrides", segments: "Segments" };
+        function hiddenParameterSection(key) {
+            const files = [loadedFiles[activeFile], ...loadedFiles].filter(Boolean);
+            for (const file of files) {
+                for (const section of ["description", "global", "limits", "overrides"]) {
+                    if (file.sections[section] && [...file.sections[section].children].some(child => child.tagName === key)) return section;
+                }
+                if (file.sections.segments.some(segment => [...segment.children].some(child => child.tagName === key))) return "segments";
+            }
+            return "other";
+        }
+
+        function hiddenParameterValue(key, section) {
+            const file = loadedFiles[activeFile];
+            if (!file) return "";
+            const directChild = node => node ? [...node.children].find(child => child.tagName === key) : null;
+            if (section === "segments") {
+                const values = file.sections.segments.map(segment => directChild(segment)?.textContent ?? null).filter(value => value !== null);
+                if (!values.length) return "";
+                const unique = [...new Set(values)];
+                return unique.length === 1
+                    ? formatComparisonValue(key, unique[0])
+                    : values.map((value, index) => `S${index + 1}: ${formatComparisonValue(key, value)}`).join(" · ");
+            }
+            const child = directChild(file.sections[section]);
+            return child ? formatComparisonValue(key, child.textContent) : "";
+        }
+
+        function restoreHiddenFields(keys, label) {
+            recordHistoryAction(label, () => {
+                keys.forEach(key => hiddenFields.delete(key));
+                saveHidden();
+                showHiddenManager();
             });
-            content.appendChild(table);
+            document.getElementById("status").textContent = keys.length === 1
+                ? `${keys[0]} restored.` : `${keys.length} parameters restored.`;
+        }
+
+        function showHiddenManager() {
+            const content = document.getElementById("content");
+            content.innerHTML = "";
+            const top = document.createElement("div");
+            top.className = "hidden-manager-top";
+            const heading = document.createElement("h2");
+            heading.textContent = "Hidden Parameters";
+            const count = document.createElement("span");
+            count.className = "hidden-manager-count";
+            count.textContent = hiddenFields.size ? `${hiddenFields.size} hidden` : "";
+            top.append(heading, count);
+            content.appendChild(top);
+            if (hiddenFields.size === 0) {
+                const empty = document.createElement("p");
+                empty.className = "hidden-manager-empty";
+                empty.textContent = "No parameters are hidden. Hide a parameter with ⊘ in its row.";
+                content.appendChild(empty);
+                return;
+            }
+            if (hiddenFields.size > 1) {
+                const restoreAll = document.createElement("button");
+                restoreAll.type = "button";
+                restoreAll.className = "btn-secondary panel-header-btn";
+                restoreAll.textContent = "Restore all";
+                restoreAll.onclick = () => restoreHiddenFields([...hiddenFields], "Restore all fields");
+                top.appendChild(restoreAll);
+            }
+
+            const groups = new Map([...Object.keys(HIDDEN_SECTION_LABELS), "other"].map(section => [section, []]));
+            [...hiddenFields].forEach(key => groups.get(hiddenParameterSection(key)).push(key));
+            groups.forEach((keys, section) => {
+                if (!keys.length) return;
+                keys.sort((a, b) => a.localeCompare(b));
+                const panel = document.createElement("div");
+                panel.className = "panel hidden-group";
+                const header = document.createElement("div");
+                header.className = "panel-header panel-header-with-action";
+                const title = document.createElement("span");
+                title.textContent = `${HIDDEN_SECTION_LABELS[section] || "Not in loaded files"} · ${keys.length}`;
+                header.appendChild(title);
+                if (keys.length > 1) {
+                    const restoreGroup = document.createElement("button");
+                    restoreGroup.type = "button";
+                    restoreGroup.className = "btn-secondary panel-header-btn";
+                    restoreGroup.textContent = "Restore section";
+                    restoreGroup.onclick = () => restoreHiddenFields(keys, "Restore fields");
+                    header.appendChild(restoreGroup);
+                }
+                const list = document.createElement("div");
+                list.className = "hidden-grid";
+                keys.forEach(key => {
+                    const item = document.createElement("div");
+                    item.className = "hidden-item";
+                    const text = document.createElement("div");
+                    text.className = "hidden-item-text";
+                    const name = document.createElement("span");
+                    name.className = "hidden-item-name";
+                    name.textContent = key;
+                    name.title = key;
+                    const value = document.createElement("span");
+                    value.className = "hidden-item-value";
+                    const valueText = section === "other" ? "" : hiddenParameterValue(key, section);
+                    value.textContent = valueText || "—";
+                    value.title = valueText;
+                    text.append(name, value);
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "btn-secondary hidden-restore-btn";
+                    button.textContent = "Restore";
+                    button.setAttribute("aria-label", `Restore ${key}`);
+                    button.onclick = () => restoreHiddenFields([key], "Restore field");
+                    item.append(text, button);
+                    list.appendChild(item);
+                });
+                panel.append(header, list);
+                content.appendChild(panel);
+            });
         }
 
         /* CHANGES */
