@@ -34,6 +34,6 @@
 
 - Prefer minimal, targeted edits; avoid broad refactors unless asked.
 - Preserve XML serialization behavior (`XMLSerializer`) and the number formatting of existing values.
-- Saving has no dialog and never rewrites `<note>`; `markFilesSaved` makes the saved state the new baseline.
+- Save (`saveActiveFile`) does not download: it logs a "Saved" change-log entry and makes the state the new baseline (`markFilesSaved`). Downloads only happen in Batch Save (`markFilesDownloaded`, tracks `file.exportedXmlString`; `needsDownload` drives "Saved ↓"). Save As was removed. Never rewrite `<note>`.
 - The UI (start page, editor, converter) is English. README_v3_0.md is German.
 - New versions: prefer Git history over copying the HTML file to a new version number.

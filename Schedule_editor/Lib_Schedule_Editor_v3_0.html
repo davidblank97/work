@@ -1729,8 +1729,7 @@
         }
 
         #selectAllBtn,
-        #clearSelectionBtn,
-        #saveAsBtn {
+        #clearSelectionBtn {
             padding-inline: 11px;
         }
 
@@ -3040,6 +3039,16 @@
             white-space: nowrap;
         }
 
+        .file-status.pending-download {
+            color: #e4b363;
+        }
+
+        .changelog-save-row td {
+            background: rgba(103, 198, 167, 0.08);
+            color: var(--success);
+            font-weight: 600;
+        }
+
         .upgrade-modal-box {
             width: min(640px, calc(100vw - 32px)) !important;
         }
@@ -3889,11 +3898,9 @@
                     <span class="badge" id="changeCounter">No changes</span>
                     <button id="resetChangesBtn" class="btn-secondary" type="button" disabled
                         title="Revert all loaded files to the last saved state">Revert</button>
-                    <button id="saveBtn" type="button" disabled title="Save the active file (Ctrl+S)">Save</button>
-                    <button id="saveAsBtn" class="btn-secondary" type="button" disabled
-                        title="Save the active file under a new name (Ctrl+Shift+S)">Save As…</button>
+                    <button id="saveBtn" type="button" disabled title="Save the active file in the editor and log it in the Change Log – no download (Ctrl+S)">Save</button>
                     <button id="batchSaveBtn" class="batch-save-btn" type="button" disabled
-                        title="Save selected files with an optional revision tag (ZIP for several files)">Batch Save…</button>
+                        title="Download the selected files, optionally with a revision tag (ZIP for several files)">Batch Save…</button>
                 </div>
             </div>
         </div>
@@ -3908,19 +3915,6 @@
         <div class="footer">
             <span id="status">Ready.</span>
             <span>Created by <b>David Blank, Bilfinger</b></span>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="saveAsModal">
-        <div class="modal-box">
-            <h3>Save File As</h3>
-            <label for="customFileName" style="font-size: 12px; color: var(--text-muted);">File name:</label>
-            <input type="text" id="customFileName" placeholder="filename.xml">
-            <div class="modal-actions">
-                <button id="modalCancelBtn" class="btn-secondary"
-                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
-                <button id="modalConfirmBtn" class="btn-primary">Save</button>
-            </div>
         </div>
     </div>
 
@@ -5445,7 +5439,7 @@
 
                 <h4>Keyboard shortcuts</h4>
                 <ul>
-                    <li><strong>Ctrl+S</strong> save, <strong>Ctrl+Shift+S</strong> save as</li>
+                    <li><strong>Ctrl+S</strong> save (in the editor, logged in the Change Log)</li>
                     <li><strong>Ctrl+Z</strong> undo, <strong>Ctrl+Y</strong> / <strong>Ctrl+Shift+Z</strong> redo
                         (inside an input field the browser's own undo applies)</li>
                     <li><strong>Ctrl+F</strong> or <strong>/</strong> search, <strong>Esc</strong> clear search or
@@ -5454,9 +5448,11 @@
 
                 <h4>Saving</h4>
                 <ul>
-                    <li><strong>Save:</strong> download the active file with its current name.</li>
-                    <li><strong>Save As…:</strong> download the active file under a new name; the file is renamed.</li>
-                    <li><strong>Batch Save:</strong> save the selected files (all files if none are selected).
+                    <li><strong>Save:</strong> saves the active file in the editor (new baseline for "changed" markers,
+                        Revert and the XML Viewer) and adds a "Saved" entry with the number of changes to the Change Log.
+                        Nothing is downloaded; saved files that were not downloaded show <em>Saved ↓</em>.
+                        To rename a file, edit the file name above the sections.</li>
+                    <li><strong>Batch Save:</strong> the only way to download: saves and downloads the selected files (all files if none are selected).
                         An optional revision tag (e.g. <code>Rev1</code>) is appended to every file name
                         (<code>Name_Rev1.xml</code>); an existing <code>_Rev…</code> suffix is replaced and the files
                         are renamed in the editor.
@@ -5831,10 +5827,17 @@
                     overrides: xml.querySelector("overrides"),
                     segments: [...xml.querySelectorAll("segment")]
                 },
+                // Stand der zuletzt heruntergeladenen Datei (Laden bzw. Batch Save); Save laedt nicht herunter.
+                exportedXmlString: originalXmlString,
                 // Feste Schweissnahtlaenge (Zoll) und von Hand gesetzte Segmente (Positionen).
                 seamLengthIn: sumSegmentTimeOf([...xml.querySelectorAll("segment")]),
                 manualSegments: new Set()
             };
+        }
+
+        // true, wenn der aktuelle Stand noch nicht ueber Batch Save heruntergeladen wurde.
+        function needsDownload(file) {
+            return Boolean(file) && serializeXml(file.xml) !== file.exportedXmlString;
         }
 
         function isFileDirty(file) {
@@ -5851,6 +5854,7 @@
                     xmlString: serializeXml(file.xml),
                     originalXml: file.originalXml,
                     originalXmlString: file.originalXmlString,
+                    exportedXmlString: file.exportedXmlString,
                     seamLengthIn: file.seamLengthIn,
                     manualSegments: [...file.manualSegments]
                 })),
@@ -5912,6 +5916,7 @@
                 );
                 if (Number.isFinite(file.seamLengthIn)) record.seamLengthIn = file.seamLengthIn;
                 record.manualSegments = new Set(file.manualSegments || []);
+                if (typeof file.exportedXmlString === "string") record.exportedXmlString = file.exportedXmlString;
                 return record;
             });
             selectedFiles = new Set(snapshot.selectedFiles);
@@ -6081,6 +6086,7 @@
 
             changeLog.forEach(entry => {
                 const tr = document.createElement("tr");
+                if (entry.section === "save") tr.className = "changelog-save-row";
                 [
                     new Date(entry.timestamp).toLocaleString(),
                     entry.fileName,
@@ -6419,7 +6425,6 @@
                 if (document.getElementById("heatInputBtn").classList.contains("active")) renderHeatInput();
                 else showSection(lastSelectedSection);
                 document.getElementById("saveBtn").disabled = false;
-                document.getElementById("saveAsBtn").disabled = false;
                 batchSaveBtn.disabled = false;
                 if (resetBtn) resetBtn.disabled = false;
                 updateUndoRedoButtons();
@@ -6428,7 +6433,6 @@
                 document.getElementById("fileList").innerHTML = "";
                 document.getElementById("sidebarItems").innerHTML = "";
                 document.getElementById("saveBtn").disabled = true;
-                document.getElementById("saveAsBtn").disabled = true;
                 batchSaveBtn.disabled = true;
                 if (resetBtn) resetBtn.disabled = true;
                 updateUndoRedoButtons();
@@ -6496,8 +6500,10 @@
                 const statusSpan = document.createElement("span");
                 const dirty = isFileDirty(f);
                 f.unsaved = dirty;
-                statusSpan.className = "file-status" + (dirty ? " changed" : "");
-                statusSpan.textContent = dirty ? "Unsaved" : "Saved";
+                const pendingDownload = !dirty && needsDownload(f);
+                statusSpan.className = "file-status" + (dirty ? " changed" : pendingDownload ? " pending-download" : "");
+                statusSpan.textContent = dirty ? "Unsaved" : pendingDownload ? "Saved ↓" : "Saved";
+                if (pendingDownload) statusSpan.title = "Saved in the editor, not downloaded yet – use Batch Save to download";
                 const delBtn = document.createElement("button");
                 delBtn.className = "delete-file-btn"; delBtn.innerHTML = "&times;";
                 delBtn.title = "Remove file from the editor";
@@ -6537,8 +6543,8 @@
 
         function removeFile(index) {
             const file = loadedFiles[index];
-            const dirty = isFileDirty(file);
-            if (dirty && !window.confirm(`"${file.name}" has unsaved changes. Remove it anyway?`)) return;
+            const dirty = isFileDirty(file) || needsDownload(file);
+            if (dirty && !window.confirm(`"${file.name}" has changes that were not downloaded (Batch Save). Remove it anyway?`)) return;
             recordHistoryAction("Remove file", () => {
                 loadedFiles.splice(index, 1);
                 normalizeSelectionIndexes();
@@ -8327,6 +8333,16 @@
         }
 
         // Der gespeicherte Stand wird zur neuen Vergleichsbasis ("Changed", Markierungen, Revert).
+        // Batch Save: Herunterladen = speichern + als heruntergeladen markieren; Eintrag im Change Log.
+        function markFilesDownloaded(files) {
+            files.forEach(file => {
+                const count = isFileDirty(file) ? countChangesSinceSave(file) : 0;
+                addSaveLogEntry(file, "Downloaded", `${ensureXmlExtension(file.name)}${count ? ` · ${count} change${count === 1 ? "" : "s"}` : ""}`);
+                file.exportedXmlString = serializeXml(file.xml);
+            });
+            markFilesSaved(files);
+        }
+
         function markFilesSaved(files) {
             files.forEach(file => {
                 file.originalXml = file.xml.cloneNode(true);
@@ -8342,14 +8358,56 @@
             if (document.querySelector("#content .file-title-container")) showSection(lastSelectedSection);
         }
 
+        // Zaehlt geaenderte, neue und entfernte Werte gegenueber dem gespeicherten Stand.
+        function countChangesSinceSave(file) {
+            const before = indexXmlForDiff(file.originalXml);
+            const after = indexXmlForDiff(file.xml);
+            let count = 0;
+            after.forEach((element, key) => {
+                const old = before.get(key);
+                if (!old) { count++; return; }
+                if (!element.children.length && !old.children.length && element.textContent.trim() !== old.textContent.trim()) count++;
+                else if ([...element.attributes].some(attribute => old.getAttribute(attribute.name) !== attribute.value)) count++;
+            });
+            before.forEach((_, key) => { if (!after.has(key)) count++; });
+            return count;
+        }
+
+        // Eintrag "Saved" im Change Log (eigene Zeile je Speichern).
+        function addSaveLogEntry(file, label, detail) {
+            changeLog.unshift({
+                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                timestamp: new Date().toISOString(),
+                fileId: file.id,
+                fileIndex: loadedFiles.indexOf(file),
+                fileName: file.name,
+                section: "save",
+                key: label,
+                segmentIndex: "",
+                oldValue: "",
+                newValue: detail
+            });
+            changeLog = changeLog.slice(0, 200);
+            saveChangeLog();
+        }
+
+        // Save laedt nicht mehr herunter: Stand wird im Editor gespeichert und im Change Log eingetragen.
+        // Herunterladen nur ueber Batch Save.
         function saveActiveFile() {
             commitPendingEdit();
             const file = loadedFiles[activeFile];
             if (!file) return;
-            const fileName = ensureXmlExtension(file.name);
-            exportXmlFile(fileName, file.xml);
+            const status = document.getElementById("status");
+            if (!isFileDirty(file)) {
+                status.textContent = needsDownload(file)
+                    ? `"${file.name}" is already saved – download it with Batch Save.`
+                    : `"${file.name}" has no changes.`;
+                return;
+            }
+            const count = countChangesSinceSave(file);
+            addSaveLogEntry(file, "Saved", `${count} change${count === 1 ? "" : "s"}`);
             markFilesSaved([file]);
-            document.getElementById("status").textContent = `Saved "${fileName}".`;
+            status.textContent = `Saved "${file.name}" (${count} change${count === 1 ? "" : "s"} logged). Download with Batch Save.`;
         }
 
         // Entfernt Zeichen, die in Dateinamen nicht erlaubt sind (und Leerzeichen).
@@ -8416,7 +8474,7 @@
                 zip.generateAsync({ type: "blob" }).then(blob => {
                     const zipName = `schedule_batch_export_${new Date().toISOString().replace(/[:.]/g, "-")}.zip`;
                     triggerDownload(zipName, blob);
-                    markFilesSaved(targetFiles);
+                    markFilesDownloaded(targetFiles);
                     document.getElementById("status").textContent = `${targetFiles.length} file(s) saved as ZIP archive.`;
                 }).catch(error => {
                     document.getElementById("status").textContent = `Batch save failed: ${error.message}`;
@@ -8425,7 +8483,7 @@
             }
 
             targetFiles.forEach(file => exportXmlFile(ensureXmlExtension(file.name), file.xml));
-            markFilesSaved(targetFiles);
+            markFilesDownloaded(targetFiles);
             document.getElementById("status").textContent = `${targetFiles.length} file(s) saved.`;
         }
 
@@ -8465,7 +8523,7 @@
             });
         }
 
-        const saveActiveFileChecked = () => { commitPendingEdit(); confirmSchemaBeforeSave([loadedFiles[activeFile]], saveActiveFile); };
+        const saveActiveFileChecked = () => saveActiveFile();
         document.getElementById("saveBtn").onclick = saveActiveFileChecked;
         /* BATCH SAVE DIALOG */
         const batchSaveModal = document.getElementById("batchSaveModal");
@@ -8579,40 +8637,6 @@
         };
         bindEnterToConfirm(headInput, document.getElementById("headConfirmBtn"));
 
-        const saveAsBtn = document.getElementById("saveAsBtn");
-        const saveAsModal = document.getElementById("saveAsModal");
-        const customFileNameInput = document.getElementById("customFileName");
-        const modalConfirmBtn = document.getElementById("modalConfirmBtn");
-
-        function openSaveAsModal() {
-            commitPendingEdit();
-            const file = loadedFiles[activeFile];
-            if (!file) return;
-            customFileNameInput.value = file.name;
-            openModal(saveAsModal, customFileNameInput);
-        }
-
-        saveAsBtn.onclick = openSaveAsModal;
-        document.getElementById("modalCancelBtn").onclick = () => closeModal(saveAsModal);
-        modalConfirmBtn.onclick = () => {
-            const file = loadedFiles[activeFile];
-            const rawName = customFileNameInput.value.trim();
-            if (!file || !rawName) {
-                customFileNameInput.focus();
-                return;
-            }
-            const name = ensureXmlExtension(rawName);
-            closeModal(saveAsModal);
-            confirmSchemaBeforeSave([file], () => saveFileAs(file, name));
-        };
-        function saveFileAs(file, name) {
-            // Save As benennt die Datei im Editor um, damit spaeteres "Save" den neuen Namen nutzt.
-            file.name = name;
-            exportXmlFile(name, file.xml);
-            markFilesSaved([file]);
-            document.getElementById("status").textContent = `Saved as "${name}".`;
-        }
-        bindEnterToConfirm(customFileNameInput, modalConfirmBtn);
 
         /* SCHEMA CHECK (XDR) */
         // XDR-Versionen liegen im localStorage; die eingebaute WELDSCHEDULE.XDR wird beim ersten Start uebernommen.
@@ -10313,8 +10337,11 @@
         function updateChangeCounter() {
             const unsaved = loadedFiles.filter(file => file.unsaved).length;
             const badge = document.getElementById("changeCounter");
-            badge.textContent = unsaved ? `${unsaved} unsaved file${unsaved === 1 ? "" : "s"}` : "No changes";
-            badge.classList.toggle("has-changes", unsaved > 0);
+            const notDownloaded = loadedFiles.filter(file => !file.unsaved && needsDownload(file)).length;
+            badge.textContent = unsaved ? `${unsaved} unsaved file${unsaved === 1 ? "" : "s"}`
+                : notDownloaded ? `${notDownloaded} not downloaded` : "No changes";
+            badge.title = notDownloaded ? "Saved files that were not downloaded yet – use Batch Save" : "";
+            badge.classList.toggle("has-changes", unsaved > 0 || notDownloaded > 0);
         }
 
         // storedValue: der tatsaechlich ins XML geschriebene Wert (bei Zahlenfeldern immer in XML-Einheit).
@@ -10393,7 +10420,7 @@
 
         window.addEventListener("beforeunload", e => {
             commitPendingEdit();
-            if (loadedFiles.some(isFileDirty)) { e.preventDefault(); e.returnValue = ""; }
+            if (loadedFiles.some(file => isFileDirty(file) || needsDownload(file))) { e.preventDefault(); e.returnValue = ""; }
         });
 
         /* ORIGINAL RESTORE INTEGRATION */
@@ -10564,8 +10591,7 @@
                 e.preventDefault();
                 // Laufende Eingabe abschliessen (onblur schreibt und protokolliert den Wert).
                 if (isTextEntry && target !== searchBox) target.blur();
-                if (e.shiftKey) openSaveAsModal();
-                else saveActiveFileChecked();
+                saveActiveFileChecked();
                 return;
             }
             if (key === "f") {

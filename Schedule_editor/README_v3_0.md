@@ -35,7 +35,7 @@ Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 
 - **Kopfzeile links:** `Open XML…`, Zurueck (↩), Wiederholen (↪), Hilfe (?)
 - **Kopfzeile Mitte:** Suche mit Trefferzahl
-- **Kopfzeile rechts:** Anzeige ungespeicherter Dateien, `Revert`, `Save`, `Save As…`, `Batch Save`
+- **Kopfzeile rechts:** Anzeige ungespeicherter bzw. noch nicht heruntergeladener Dateien, `Revert`, `Save`, `Batch Save`
 - **Sidebar:** Dateiliste mit `Select all` / `Clear` / `Invert`, Bereiche (`Description` … `Segments`) und Tools
 
 ## Tastenkuerzel
@@ -43,7 +43,6 @@ Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 | Kuerzel | Funktion |
 |---|---|
 | Strg+S | Aktive Datei speichern |
-| Strg+Umschalt+S | Save As |
 | Strg+Z | Zurueck |
 | Strg+Y / Strg+Umschalt+Z | Wiederholen |
 | Strg+F oder `/` | Suche fokussieren |
@@ -170,7 +169,7 @@ Geprueft werden:
 - Nach dem Laden nennt die Statuszeile die Anzahl abweichender Dateien.
 - `Tools > Schema Check` zeigt je Datei den Status (`✓ Valid`, `! n errors`, `△ n warnings`), die Version der Datei im Vergleich zur Schema-Version und die Liste der Befunde mit Pfad. `Show` springt zum betroffenen Bereich bzw. Segment und hebt die Zeile kurz hervor.
 
-**Speichern:** Hat eine zu speichernde Datei Schemafehler, fragt der Editor bei `Save`, `Save As…` und `Batch Save` nach (`Save anyway`, `Cancel` oder `Show details`). Warnungen allein loesen keine Rueckfrage aus.
+**Speichern:** Hat eine zu speichernde Datei Schemafehler, fragt der Editor bei `Batch Save` (Herunterladen) nach (`Save anyway`, `Cancel` oder `Show details`). Warnungen allein loesen keine Rueckfrage aus.
 
 **Versionskontrolle:** Die Version einer Datei wird aus `metadata/schema_version` gelesen, wenn gefuellt, sonst aus `metadata/config_version`, und mit der Version des aktiven Schemas (`xmlns:version` in der XDR) verglichen.
 
@@ -220,17 +219,26 @@ Die Versionen und eigene Layout-Muster liegen im `localStorage` (`scheduleEditor
 
 ### Save
 
-Speichert die aktive Datei sofort als XML-Datei mit ihrem aktuellen Namen (Strg+S). Es erscheint kein Dialog; die `<note>` in `<description>` bleibt unveraendert und kann bei Bedarf direkt im Bereich `Description` bearbeitet werden.
+`Save` (Strg+S) laedt **nichts herunter**. Der aktuelle Stand der aktiven Datei wird im Editor gespeichert und im Change Log eingetragen: eine gruen hervorgehobene Zeile `Saved` mit der Anzahl der Aenderungen seit dem letzten Speichern. Die einzelnen Feldaenderungen stehen wie bisher darunter.
 
-Nach dem Speichern gilt der gespeicherte Stand als neue Vergleichsbasis: Die Datei steht auf `Saved`, die gruenen Markierungen verschwinden, und `Revert` springt auf diesen Stand zurueck.
+Nach dem Speichern gilt der gespeicherte Stand als neue Vergleichsbasis:
 
-### Save As…
+- Die gruenen Markierungen verschwinden.
+- `Revert` und der XML Viewer vergleichen ab jetzt mit diesem Stand.
 
-Fragt nur den neuen Dateinamen ab (Enter bestaetigt, Esc bricht ab) und speichert. Die Datei wird im Editor umbenannt, sodass ein spaeteres `Save` den neuen Namen verwendet.
+Status einer Datei in der Dateiliste:
+
+- `Unsaved`: Aenderungen seit dem letzten Speichern.
+- `Saved ↓` (gelb): gespeichert, aber noch nicht heruntergeladen.
+- `Saved`: heruntergeladen bzw. unveraendert seit dem Laden.
+
+Die Kopfzeile zeigt z. B. `2 not downloaded`. Beim Schliessen des Tabs oder beim Entfernen einer Datei warnt der Editor, solange Aenderungen nicht heruntergeladen wurden.
+
+Umbenennen geht ueber das Dateinamen-Feld oben in der Dateikarte. `Save As…` gibt es nicht mehr.
 
 ### Batch Save
 
-Speichert die markierten Dateien. Wenn keine Datei markiert ist, werden alle geladenen Dateien verwendet.
+**Einziger Weg zum Herunterladen.** Speichert und laedt die markierten Dateien herunter; im Change Log entsteht je Datei eine Zeile `Downloaded`. Danach stehen die Dateien auf `Saved`. Wenn keine Datei markiert ist, werden alle geladenen Dateien verwendet.
 
 Vor dem Speichern oeffnet sich ein Dialog fuer einen optionalen **Revisions-Tag** (z. B. `Rev1`). Der Tag wird an jeden Dateinamen angehaengt:
 
