@@ -2121,6 +2121,60 @@
             }
         }
 
+        .param-drag-handle,
+        .param-drag-handle:hover:not(:disabled) {
+            min-height: 0;
+            height: 22px;
+            width: 18px;
+            margin-right: 4px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 20px;
+            cursor: grab;
+            opacity: 0.45;
+            flex: 0 0 auto;
+        }
+
+        tr:hover .param-drag-handle,
+        .param-drag-handle:focus-visible {
+            opacity: 1;
+            color: #ffc095;
+        }
+
+        .param-drag-handle:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        tr.param-dragging {
+            opacity: 0.4;
+        }
+
+        tr.param-drop-before > td {
+            box-shadow: inset 0 2px 0 var(--accent);
+        }
+
+        tr.param-drop-after > td {
+            box-shadow: inset 0 -2px 0 var(--accent);
+        }
+
+        .panel-header-with-action {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .panel-header-btn {
+            min-height: 24px !important;
+            padding: 2px 10px !important;
+            font-size: 11px !important;
+        }
+
         .comparison-diff-toggle {
             margin-left: 8px;
         }
@@ -3292,6 +3346,9 @@
                     files.</p>
                 <p>Hover a parameter row to mark it as important (★) or hide it (⊘). Double-click and right-click
                     on the name do the same.</p>
+                <p>Drag a parameter row by its handle (⠿) to reorder it; Alt+↑/↓ on the handle moves it by one row.
+                    The order is stored per section (all segments share one order) and included in the Local Storage
+                    Backup. <strong>Reset order</strong> in the panel header restores the default order.</p>
                 <p>In Segments, segments can be duplicated, moved and deleted. The selected segment stays open.</p>
 
                 <h4>Keyboard shortcuts</h4>
@@ -3458,6 +3515,8 @@
             }
         };
         let customHeads = readStoredJson("scheduleEditorCustomHeads", []);
+        // Manuelle Reihenfolge der Parameterzeilen je Bereich ({ global: [...], segments: [...] }).
+        let parameterOrder = readStoredJson("scheduleEditorParameterOrder", {});
 
         /* HELPERS */
         function saveHidden() { localStorage.setItem("hiddenFields", JSON.stringify([...hiddenFields])); }
@@ -3467,6 +3526,7 @@
         function saveParameterUnits() { localStorage.setItem("parameterUnits", JSON.stringify(parameterUnits)); }
         function saveChangeLog() { localStorage.setItem("scheduleEditorChangeLog", JSON.stringify(changeLog.slice(0, 200))); }
         function saveCustomHeads() { localStorage.setItem("scheduleEditorCustomHeads", JSON.stringify(customHeads)); }
+        function saveParameterOrder() { localStorage.setItem("scheduleEditorParameterOrder", JSON.stringify(parameterOrder)); }
         function getHeadOptions(currentHead = "") {
             return [...new Set([...DEFAULT_HEADS, ...customHeads, currentHead].filter(Boolean))];
         }
@@ -3685,6 +3745,7 @@
                 hiddenFields: [...hiddenFields],
                 lockedFields: [...lockedFields],
                 importantFields: [...importantFields],
+                parameterOrder: JSON.parse(JSON.stringify(parameterOrder)),
                 parameterUnits: { ...parameterUnits },
                 customHeads: [...customHeads],
                 changeLog: JSON.parse(JSON.stringify(changeLog))
@@ -3700,6 +3761,7 @@
                 hiddenFields: snapshot.hiddenFields,
                 lockedFields: snapshot.lockedFields,
                 importantFields: snapshot.importantFields,
+                parameterOrder: snapshot.parameterOrder,
                 parameterUnits: snapshot.parameterUnits,
                 customHeads: snapshot.customHeads,
                 changeLog: snapshot.changeLog
@@ -3744,6 +3806,8 @@
             lockedFields = new Set(snapshot.lockedFields || []);
             saveLocked();
             importantFields = new Set(snapshot.importantFields);
+            parameterOrder = JSON.parse(JSON.stringify(snapshot.parameterOrder || {}));
+            saveParameterOrder();
             parameterUnits = { ...snapshot.parameterUnits };
             customHeads = [...snapshot.customHeads];
             changeLog = JSON.parse(JSON.stringify(snapshot.changeLog));
@@ -3950,12 +4014,127 @@
             });
         }
 
-        function sortParams(a, b) {
-            const aImp = importantFields.has(a); const bImp = importantFields.has(b);
-            const aHid = hiddenFields.has(a); const bHid = hiddenFields.has(b);
-            if (aImp && !bImp) return -1; if (!aImp && bImp) return 1;
-            if (!aHid && bHid) return -1; if (aHid && !bHid) return 1;
-            return a.localeCompare(b);
+        // Standardreihenfolge: XML-Reihenfolge; bei Segmenten zuerst die Felder aus segments_sorting.json.
+        function defaultParameterOrder(section, keys) {
+            if (section !== "segments") return keys;
+            const priority = new Map(segmentPriorityOrder.map((key, index) => [key, index]));
+            return keys.map((key, index) => ({ key, index }))
+                .sort((a, b) => (priority.get(a.key) ?? Infinity) - (priority.get(b.key) ?? Infinity) || a.index - b.index)
+                .map(entry => entry.key);
+        }
+
+        // Gespeicherte (per Drag & Drop festgelegte) Reihenfolge zuerst, unbekannte Felder danach.
+        function orderedParameterKeys(section, keys) {
+            const unique = [...new Set(keys)];
+            const base = defaultParameterOrder(section, unique);
+            const stored = Array.isArray(parameterOrder[section]) ? parameterOrder[section] : null;
+            if (!stored) return base;
+            const present = new Set(unique);
+            const head = stored.filter(key => present.has(key));
+            const headSet = new Set(head);
+            return [...head, ...base.filter(key => !headSet.has(key))];
+        }
+
+        function moveParameter(section, allKeys, key, targetKey, placeAfter, refresh) {
+            if (key === targetKey) return false;
+            const order = orderedParameterKeys(section, allKeys).filter(entry => entry !== key);
+            const targetIndex = order.indexOf(targetKey);
+            if (targetIndex < 0) return false;
+            order.splice(targetIndex + (placeAfter ? 1 : 0), 0, key);
+            recordHistoryAction("Move parameter", () => {
+                // Felder, die nur in anderen Dateien vorkommen, behalten ihren Eintrag am Ende.
+                const previous = Array.isArray(parameterOrder[section]) ? parameterOrder[section] : [];
+                const inOrder = new Set(order);
+                parameterOrder = { ...parameterOrder, [section]: [...order, ...previous.filter(entry => !inOrder.has(entry))] };
+                saveParameterOrder();
+                refresh();
+            });
+            document.getElementById("status").textContent = `${key} moved.`;
+            return true;
+        }
+
+        function resetParameterOrder(section, refresh) {
+            recordHistoryAction("Reset parameter order", () => {
+                const next = { ...parameterOrder };
+                delete next[section];
+                parameterOrder = next;
+                saveParameterOrder();
+                refresh();
+            });
+            document.getElementById("status").textContent = "Parameter order reset.";
+        }
+
+        function addResetOrderButton(header, section, refresh) {
+            if (!Array.isArray(parameterOrder[section])) return;
+            header.classList.add("panel-header-with-action");
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "btn-secondary panel-header-btn";
+            button.textContent = "Reset order";
+            button.title = "Restore the default parameter order for this section";
+            button.onclick = () => resetParameterOrder(section, refresh);
+            header.appendChild(button);
+        }
+
+        // Zeile nur ueber den Griff ziehbar, damit Eingabefelder und Textauswahl normal funktionieren.
+        let draggedParameter = null;
+        function attachParameterReorder(tr, tdName, section, key, allKeys, refresh) {
+            tr.dataset.paramKey = key;
+            const handle = document.createElement("button");
+            handle.type = "button";
+            handle.className = "param-drag-handle";
+            handle.textContent = "⠿";
+            handle.title = "Drag to reorder · Alt+↑/↓ moves the row";
+            handle.setAttribute("aria-label", `Move ${key} (Alt+Arrow keys)`);
+            handle.dataset.key = key;
+            handle.onmousedown = () => { tr.draggable = true; };
+            handle.onmouseup = () => { tr.draggable = false; };
+            handle.onclick = event => event.stopPropagation();
+            handle.ondblclick = event => event.stopPropagation();
+            handle.onkeydown = event => {
+                if (!event.altKey || (event.key !== "ArrowUp" && event.key !== "ArrowDown")) return;
+                event.preventDefault();
+                const up = event.key === "ArrowUp";
+                let neighbor = up ? tr.previousElementSibling : tr.nextElementSibling;
+                while (neighbor && neighbor.style.display === "none") neighbor = up ? neighbor.previousElementSibling : neighbor.nextElementSibling;
+                if (!neighbor?.dataset.paramKey) return;
+                if (moveParameter(section, allKeys, key, neighbor.dataset.paramKey, !up, refresh)) {
+                    document.querySelector(`.param-drag-handle[data-key="${CSS.escape(key)}"]`)?.focus();
+                }
+            };
+            const clearMarkers = () => document.querySelectorAll(".param-drop-before, .param-drop-after")
+                .forEach(row => row.classList.remove("param-drop-before", "param-drop-after"));
+            tr.ondragstart = event => {
+                draggedParameter = { section, key };
+                tr.classList.add("param-dragging");
+                event.dataTransfer.effectAllowed = "move";
+                event.dataTransfer.setData("text/plain", key);
+            };
+            tr.ondragend = () => {
+                tr.draggable = false;
+                tr.classList.remove("param-dragging");
+                draggedParameter = null;
+                clearMarkers();
+            };
+            tr.ondragover = event => {
+                if (!draggedParameter || draggedParameter.section !== section || draggedParameter.key === key) return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+                const rect = tr.getBoundingClientRect();
+                const after = event.clientY > rect.top + rect.height / 2;
+                clearMarkers();
+                tr.classList.add(after ? "param-drop-after" : "param-drop-before");
+            };
+            tr.ondrop = event => {
+                if (!draggedParameter || draggedParameter.section !== section) return;
+                event.preventDefault();
+                const after = tr.classList.contains("param-drop-after");
+                const movedKey = draggedParameter.key;
+                draggedParameter = null;
+                clearMarkers();
+                moveParameter(section, allKeys, movedKey, key, after, refresh);
+            };
+            tdName.prepend(handle);
         }
 
         // Laedt segments_sorting.json, wenn der Editor ueber einen Webserver laeuft.
@@ -4628,14 +4807,19 @@
             const body = document.createElement("div"); body.className = "panel-content open";
             const table = document.createElement("table"); table.className = "param-table"; const tbody = document.createElement("tbody");
 
-            const keys = [...xmlNode.children].map(c => c.tagName).sort(sortParams);
+            const section = title.toLowerCase();
+            const refresh = () => showSection(section);
+            const allKeys = [...xmlNode.children].map(c => c.tagName);
+            const keys = orderedParameterKeys(section, allKeys);
+            addResetOrderButton(header, section, refresh);
 
             keys.forEach(key => {
                 if (hiddenFields.has(key)) return;
                 const child = xmlNode.querySelector(key);
                 const tr = document.createElement("tr");
 
-                const tdName = buildParamNameCell(key, () => showSection(title.toLowerCase()));
+                const tdName = buildParamNameCell(key, refresh);
+                attachParameterReorder(tr, tdName, section, key, allKeys, refresh);
 
                 const tdVal = document.createElement("td");
                 const fieldObj = createInputField(child, key);
@@ -5309,19 +5493,18 @@
             const body = document.createElement("div"); body.className = "panel-content open";
             const table = document.createElement("table"); table.className = "param-table"; const tbody = document.createElement("tbody");
 
-            const segmentPriorityIndex = new Map(segmentPriorityOrder.map((key, index) => [key, index]));
-            const keys = [...seg.children].map(child => child.tagName).sort((a, b) => {
-                const aPriority = segmentPriorityIndex.get(a) ?? Infinity;
-                const bPriority = segmentPriorityIndex.get(b) ?? Infinity;
-                return aPriority === bPriority ? sortParams(a, b) : aPriority - bPriority;
-            });
+            const refresh = () => renderSegment(seg);
+            const allKeys = [...seg.children].map(child => child.tagName);
+            const keys = orderedParameterKeys("segments", allKeys);
+            addResetOrderButton(header, "segments", refresh);
 
             keys.forEach(key => {
                 if (hiddenFields.has(key)) return;
                 const child = seg.querySelector(key);
                 const tr = document.createElement("tr");
 
-                const tdName = buildParamNameCell(key, () => renderSegment(seg));
+                const tdName = buildParamNameCell(key, refresh);
+                attachParameterReorder(tr, tdName, "segments", key, allKeys, refresh);
 
                 const tdVal = document.createElement("td");
                 const fieldObj = createInputField(child, key, "segments", seg.getAttribute("index") || "");
@@ -7017,7 +7200,8 @@
             "scheduleEditorCustomHeads",
             "scheduleEditorSidebarState",
             "scheduleEditorBatchSave",
-            "scheduleEditorHeatInputTarget"
+            "scheduleEditorHeatInputTarget",
+            "scheduleEditorParameterOrder"
         ];
         const localStorageBackupModal = document.getElementById("localStorageBackupModal");
         const localStorageBackupStatus = document.getElementById("localStorageBackupStatus");
@@ -7050,7 +7234,9 @@
                     scheduleEditorCustomHeads: isStringArray,
                     scheduleEditorSidebarState: isBooleanMap,
                     scheduleEditorBatchSave: isStringMap,
-                    scheduleEditorHeatInputTarget: isStringMap
+                    scheduleEditorHeatInputTarget: isStringMap,
+                    scheduleEditorParameterOrder: isObject && Object.values(value).every(item =>
+                        Array.isArray(item) && item.every(entry => typeof entry === "string"))
                 }[key];
                 if (!validValue) throw new Error(`Invalid data for backup entry: ${key}`);
             }

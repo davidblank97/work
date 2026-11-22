@@ -67,7 +67,9 @@ Ist die aktive Datei markiert, werden Aenderungen in `Description`, `Global`, `L
 
 Werte, die vom zuletzt gespeicherten (bzw. geladenen) Stand abweichen, bleiben gruen markiert, auch nach einem Bereichswechsel. Beim Ueberfahren mit der Maus zeigt ein Tooltip den gespeicherten Wert (`Last saved: …`).
 
-Beim Ueberfahren einer Parameterzeile erscheinen drei Knoepfe: ★ markiert den Parameter als wichtig (wichtige Parameter stehen oben), 🔒 sperrt ihn gegen Aenderungen, ⊘ blendet ihn aus.
+Beim Ueberfahren einer Parameterzeile erscheinen drei Knoepfe: ★ markiert den Parameter als wichtig (farbig hervorgehoben), 🔒 sperrt ihn gegen Aenderungen, ⊘ blendet ihn aus.
+
+**Reihenfolge:** Die Parameterzeilen werden nicht mehr automatisch sortiert. Am Griff ⠿ links vom Namen laesst sich eine Zeile per Drag & Drop verschieben; mit `Alt+↑` / `Alt+↓` auf dem Griff rueckt sie um eine Position. Die Reihenfolge gilt je Bereich (`Description`, `Global`, `Limits`, `Overrides`; alle Segmente teilen sich eine Reihenfolge) fuer alle Dateien, laesst sich mit Undo zuruecknehmen und wird im `localStorage` gespeichert (Schluessel `scheduleEditorParameterOrder`, auch im Local Storage Backup enthalten). `Reset order` im Panel-Kopf stellt die Standardreihenfolge wieder her: XML-Reihenfolge bzw. bei Segmenten die Vorgabe aus `segments_sorting.json`. Neue Felder, die in der gespeicherten Reihenfolge fehlen, erscheinen am Ende.
 
 **Sperren:** Ein gesperrter Parameter (🔒 bleibt sichtbar, Feld gestrichelt und schreibgeschuetzt) kann nicht versehentlich geaendert werden. Die Sperre gilt je Parametername fuer alle Dateien und bleibt im Browser gespeichert (auch im Local Storage Backup). Sie schuetzt auch vor indirekten Aenderungen: Uebertragung auf markierte Dateien, Comparison (Bearbeiten und `Apply to all`), Kopf-Presets beim Wechsel des Heads sowie – bei gesperrtem `segment_time` – Nahtlaenge, editierbare Segment-Tabelle und die Neuverteilung beim Hinzufuegen/Duplizieren/Loeschen. Zurueck (Undo) und `Revert` bleiben moeglich. Ein erneuter Klick auf 🔒 entsperrt. Doppelklick bzw. Rechtsklick auf den Namen funktionieren weiterhin. Ausgeblendete Parameter werden unter `Tools > Hidden Parameters` wiederhergestellt.
 
@@ -104,7 +106,7 @@ Segmente werden im Editor ab 1 nummeriert (Segment 1, 2, …). Im XML bleibt das
 
 Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten. Das geoeffnete Segment ist in der Liste hervorgehoben und bleibt nach Duplizieren, Verschieben, Undo/Redo und Bereichswechsel ausgewaehlt; nach dem Duplizieren ist die Kopie gewaehlt.
 
-Die Reihenfolge der hervorgehobenen Segmentfelder wird ueber `segments_sorting.json` (im selben Ordner) gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Die Datei wird nur geladen, wenn der Editor ueber einen Webserver laeuft. Beim direkten Oeffnen der HTML-Datei oder bei einer fehlerhaften JSON-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
+Die Standardreihenfolge der Segmentfelder (solange keine eigene Reihenfolge per Drag & Drop gespeichert ist) wird ueber `segments_sorting.json` (im selben Ordner) gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Die Datei wird nur geladen, wenn der Editor ueber einen Webserver laeuft. Beim direkten Oeffnen der HTML-Datei oder bei einer fehlerhaften JSON-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
 
 Aenderungen werden direkt im geladenen XML-DOM gespeichert. Die urspruengliche Datei auf der Festplatte bleibt bis zum Download unveraendert.
 
@@ -184,7 +186,7 @@ Die Anzeige in der Kopfzeile nennt die Zahl ungespeicherter Dateien. Beim Schlie
 
 ## Lokale Einstellungen
 
-Ausgeblendete Parameter, wichtige Parameter, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll (`Tools > Change Log`) bleibt ueber Sitzungen erhalten. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
+Ausgeblendete, wichtige und gesperrte Parameter, die Parameter-Reihenfolge, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll (`Tools > Change Log`) bleibt ueber Sitzungen erhalten. Mit `Tools > Local Storage Backup` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
 
 Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Nicht passende oder fehlerhafte XML-Dateien werden beim Laden abgewiesen.
 
