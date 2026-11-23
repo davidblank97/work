@@ -49,14 +49,21 @@ function createContext(browser, baseUrl, results, testName) {
         page.on("pageerror", error => errors.push(error.message));
         return page;
     };
+    const contexts = [];
     return {
         file,
         errors,
+        contexts,
+        // Schliesst alle Browser-Kontexte des Tests (Speicher; sonst stuerzen grosse WDR-Tests am Ende der Suite ab).
+        async closeAll() {
+            await Promise.all(contexts.splice(0).map(context => context.close().catch(() => {})));
+        },
         check(name, ok, detail = "") {
             results.push({ test: testName, name, ok: Boolean(ok), detail: ok ? "" : String(detail) });
         },
         async newPage(options = {}) {
             const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, acceptDownloads: true, ...options });
+            contexts.push(context);
             context.on("page", watch);
             const page = watch(await context.newPage());
             return { context, page };

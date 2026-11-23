@@ -22,6 +22,11 @@
 - Edits in non-segment sections are propagated to other selected files by `propagateValueToSelectedFiles` and must stay logged (change log + undo).
 - Numbers are parsed with `parseNumberInput` (accepts decimal comma) and stored with the original number of decimals.
 - localStorage is read through `readStoredJson` (tolerates corrupt values).
+- WDR heat input evaluation (in `<template id="app-wdr">`, separate `<script>` before the main script):
+  - `parseLiburdiLog` reads log versions 2 and 3; `evaluateHeatInput` mirrors the "Data" sheet of the old Excel template (row r = sample r−4).
+  - `buildEvaluationWorkbook` and `buildSummaryWorkbook` write xlsx files through the small `XlSheet`/`xlBuildWorkbook` writer: JSZip with inline strings, formulas with cached values and scatter charts. SheetJS is not used for these files, because it cannot write charts.
+  - Settings are stored in localStorage `wdrEvaluationSettings`; target ranges are read from the editor's `scheduleEditorHeatInputTargets`.
+  - `tests/wdr-evaluation.test.js` compares the results with the template when `WDR_converter/template_metric_Short.xlsx` exists locally. That file is 60 MB and is not committed.
 
 ## Validation and usage
 

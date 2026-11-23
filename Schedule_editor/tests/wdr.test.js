@@ -30,7 +30,7 @@ module.exports = [
                 beforeLoad: page => page.route(url => !url.href.startsWith(t.baseUrl), route => route.abort())
             });
             t.check("libraries available offline", await frame.evaluate(() => typeof XLSX !== "undefined" && typeof JSZip !== "undefined"));
-            t.check("template placeholder", (await frame.$$eval(".panel-header", headers => headers.map(h => h.textContent))).some(text => text.includes("Excel template")));
+            t.check("heat input evaluation panel", (await frame.$$eval(".panel-header", headers => headers.map(h => h.textContent))).some(text => text.includes("Heat input evaluation")));
             await frame.evaluate(() => { window.showDirectoryPicker = undefined; });
             await frame.setInputFiles("#file-input", [smallCsv(t.tmpDir)]);
             const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), frame.click("#convert-btn")]);

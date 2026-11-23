@@ -11490,63 +11490,52 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             color: var(--text-muted);
         }
     
-        /* TEMPLATE (Platzhalter) */
-        .template-panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
+        /* HEAT INPUT EVALUATION */
+        .eval-panel.is-inactive .panel-body {
+            opacity: 0.5;
         }
 
-        .optional-tag {
-            margin-left: 6px;
-            color: var(--text-muted);
-            font-size: 12px;
-            font-weight: 500;
+        .eval-grid {
+            display: grid;
+            gap: 16px;
         }
 
-        .soon-badge {
-            padding: 2px 9px;
-            border: 1px solid var(--border-strong);
-            border-radius: 999px;
-            color: var(--accent-soft);
-            font-size: 11px;
+        .eval-group {
+            display: grid;
+            gap: 8px;
+        }
+
+        .eval-title {
+            color: var(--text-heading);
+            font-size: 12.5px;
             font-weight: 650;
         }
 
-        .template-drop {
-            padding: 22px 20px;
-            border: 1px dashed var(--border-color);
-            border-radius: 8px;
-            background: var(--bg-input);
-            text-align: center;
-            opacity: 0.7;
+        .eval-group .hint {
+            margin-top: 0;
         }
 
-        .template-drop p {
-            margin: 0 0 12px 0;
+        .radio-label input.eval-number {
+            width: 76px;
+            height: auto;
+            padding: 4px 7px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-input);
             color: var(--text-main);
-            font-size: 14px;
+            font: inherit;
+            font-size: 13px;
+            accent-color: auto;
         }
 
-        .template-state {
-            display: block;
-            margin-top: 12px;
-            color: var(--text-muted);
-            font-size: 12px;
+        .radio-label input.eval-number:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
         }
 
-        .template-panel .hint code {
-            padding: 0 4px;
-            border-radius: 4px;
-            background: var(--bg-input);
-            color: var(--accent-soft);
-            font-size: 11.5px;
-        }
-
-        .btn-secondary:disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
+        .radio-stack {
+            display: grid;
+            gap: 10px;
         }
     </style>
 
@@ -11578,35 +11567,62 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             </div>
         </div>
 
-        <!-- Platzhalter: Excel-Vorlage (Funktion folgt, siehe WDR_converter/PLAN_Excel_Vorlage.md) -->
-        <div class="panel template-panel">
-            <div class="panel-header template-panel-header">
-                <span>2. Excel template <span class="optional-tag">optional</span></span>
-                <span class="soon-badge">Coming soon</span>
-            </div>
-            <div class="panel-body">
-                <div class="template-drop" aria-disabled="true">
-                    <p>Drop an .xlsx template here</p>
-                    <div class="selection-options">
-                        <button type="button" class="btn-secondary" disabled title="Template support is not available yet">Load template (.xlsx)...</button>
-                    </div>
-                    <span class="template-state">No template loaded – the data is written to a new workbook.</span>
+        <!-- Heat-Input-Auswertung (ersetzt die Excel-Vorlage template_metric_Short.xlsx, siehe WDR_converter/PLAN_Excel_Vorlage.md) -->
+        <div class="panel eval-panel" id="evaluation-panel">
+            <div class="panel-header">2. Heat input evaluation</div>
+            <div class="panel-body eval-grid">
+                <div class="eval-group">
+                    <label class="radio-label">Process factor k
+                        <input type="number" class="eval-number" id="eval-factor" min="0.1" max="1.5" step="0.05" value="0.6">
+                    </label>
+                    <span class="hint">0.6 = heat input for TIG (EN ISO 1011-1), as used by the machine and the Schedule Editor;
+                        1 = arc energy.</span>
                 </div>
-                <span class="hint">Later: the converter fills a copy of your template for every CSV file. The raw data goes into the
-                    sheet <code>Data</code> (from cell A1); placeholders such as <code>{{SCHEDULE}}</code> or
-                    <code>{{DATE}}</code> on other sheets are replaced with the values from the CSV header.</span>
+                <div class="eval-group">
+                    <span class="eval-title">Evaluation range</span>
+                    <label class="radio-label">
+                        <input type="radio" name="eval-range" value="template" checked> Data rows
+                        <input type="number" class="eval-number" id="eval-from" min="4" step="1" value="1000"> to
+                        <input type="number" class="eval-number" id="eval-to" min="4" step="1" value="121000"> (as in the template)
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="eval-range" value="auto"> Automatic: steady state from the set points (without up- and down-slope)
+                    </label>
+                    <span class="hint">The range never reaches into the down-slope. Logs shorter than the first row use the steady state.</span>
+                </div>
+                <div class="eval-group">
+                    <span class="eval-title">Rolling averages "per period" / "per 10 periods"</span>
+                    <label class="radio-label">
+                        <input type="radio" name="eval-window" value="rows" checked> 104 / 996 data rows (as in the template)
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="eval-window" value="time"> Oscillation period from the log (In-Dwell + Out-Dwell + 2 × Excursion), otherwise
+                        <input type="number" class="eval-number" id="eval-period" min="0.1" step="0.1" value="1.0"> s
+                    </label>
+                </div>
+                <div class="eval-group">
+                    <label class="radio-label"><input type="checkbox" id="eval-summary" checked> Summary workbook of all beads (Heat_input_summary_&lt;date&gt;.xlsx)</label>
+                    <label class="radio-label"><input type="checkbox" id="eval-raw"> Add the sheet "Raw data" with all log columns (about twice the file size)</label>
+                    <label class="radio-label"><input type="checkbox" id="eval-targets" checked> Check against the heat input target ranges of the Schedule Editor</label>
+                    <span class="hint" id="eval-targets-info"></span>
+                </div>
             </div>
         </div>
 
         <div class="panel">
             <div class="panel-header">3. Output format</div>
             <div class="panel-body">
-                <label class="radio-label">
-                    <input type="radio" name="format" value="Excel" checked> Excel (.xlsx) for CSV files
-                </label>
+                <div class="radio-stack">
+                    <label class="radio-label">
+                        <input type="radio" name="format" value="evaluation" checked> Heat input evaluation: Excel per CSV file (data, charts, limits) + summary
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="format" value="Excel"> Raw data only: Excel (.xlsx) per CSV file
+                    </label>
+                </div>
                 <span class="hint">On start you will be asked for a target folder (Chrome/Edge). The Excel files are
                     saved there directly. Other browsers download a ZIP archive (split into several parts for large
-                    batches). XML files are copied unchanged.</span>
+                    batches). XML files are copied unchanged. CSV files that are not Liburdi data logs are written as raw data.</span>
             </div>
         </div>
 
@@ -11636,6 +11652,824 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     </div>
 
     <script>
+        /* ================================================================
+           HEAT INPUT EVALUATION
+           Liburdi-Log (CSV) -> Auswertung wie template_metric_Short.xlsx (Blatt "Data"),
+           korrigiert (Zeitachse, Diagrammbereiche, Datenende, Einheiten) und ohne Power Query.
+           Siehe WDR_converter/PLAN_Excel_Vorlage.md (Befunde zur Vorlage).
+           ================================================================ */
+
+        function wdrSplitLine(line, delimiter) {
+            const result = [];
+            let current = "";
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
+                    else inQuotes = !inQuotes;
+                } else if (char === delimiter && !inQuotes) {
+                    result.push(current.trim());
+                    current = "";
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        function wdrTrimCells(cells) {
+            const copy = cells.slice();
+            while (copy.length && copy[copy.length - 1] === "") copy.pop();
+            return copy;
+        }
+
+        const WDR_NUMBER = /^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/;
+        function wdrNumber(text, decimalComma) {
+            if (text === undefined || text === null) return NaN;
+            let value = String(text).trim();
+            if (decimalComma) value = value.replace(",", ".");
+            return WDR_NUMBER.test(value) ? Number(value) : NaN;
+        }
+
+        // Zerlegt ein Liburdi-Log (Version 2 und 3) in Kopf, LIMITS und die Bloecke DATA,
+        // SEGMENT_AVERAGE und SETPOINT. Trennzeichen "," (Standard) oder ";" mit Dezimalkomma.
+        function parseLiburdiLog(text) {
+            const lines = text.split(/\r?\n/);
+            const sample = lines.slice(0, 40).join("\n");
+            const delimiter = (sample.match(/;/g) || []).length > (sample.match(/,/g) || []).length ? ";" : ",";
+            const decimalComma = delimiter === ";";
+            const log = { delimiter, decimalComma, header: {}, version: "", limits: null, blocks: {} };
+            const isMarker = cells => /_TAGS$/.test(cells[0]) || /^STOP TIME$/i.test(cells[0]);
+            let i = 0;
+            while (i < lines.length) {
+                const line = lines[i];
+                if (line.trim() === "") { i++; continue; }
+                const cells = wdrSplitLine(line, delimiter);
+                const key = cells[0];
+                const tagMatch = key.match(/^([A-Z0-9_ ]+)_TAGS$/);
+                if (tagMatch) {
+                    const name = tagMatch[1];
+                    const tags = wdrTrimCells(wdrSplitLine(lines[i + 1] || "", delimiter));
+                    i += 2;
+                    let uom = [];
+                    if ((wdrSplitLine(lines[i] || "", delimiter)[0] || "") === `${name}_UOM`) {
+                        uom = wdrSplitLine(lines[i + 1] || "", delimiter);
+                        i += 2;
+                    }
+                    if (name === "LIMITS") {
+                        const values = wdrSplitLine(lines[i] || "", delimiter);
+                        log.limits = { tags, values: tags.map((_, index) => wdrNumber(values[index], decimalComma)) };
+                        i += 1;
+                        continue;
+                    }
+                    const rows = [];
+                    while (i < lines.length) {
+                        const rowLine = lines[i];
+                        if (rowLine.trim() === "") { i++; continue; }
+                        const rowCells = wdrSplitLine(rowLine, delimiter);
+                        if (isMarker(rowCells) || Number.isNaN(wdrNumber(rowCells[0], decimalComma))) break;
+                        rows.push(rowCells);
+                        i++;
+                    }
+                    log.blocks[name] = { tags, uom, rows };
+                    continue;
+                }
+                if (key && cells.length >= 2) {
+                    const value = [...cells].reverse().find(cell => cell !== "") || "";
+                    log.header[key.toUpperCase()] = value;
+                    if (/^LIBURDI DATA LOG$/i.test(key)) log.version = value;
+                }
+                i++;
+            }
+            return log;
+        }
+
+        // Spalte ueber den Namen (ohne Gross-/Kleinschreibung und Leerzeichen).
+        function wdrColumn(block, name) {
+            const wanted = name.toLowerCase().replace(/\s+/g, "");
+            return block.tags.findIndex(tag => tag.toLowerCase().replace(/\s+/g, "") === wanted);
+        }
+
+        // Umrechnung auf cm/min, kJ/mm bzw. mm.
+        function wdrTravelFactor(unit) {
+            const u = String(unit || "").trim().toLowerCase();
+            if (u === "ipm" || u === "in/min") return 2.54;
+            if (u === "mm/min") return 0.1;
+            return 1;
+        }
+        function wdrHeatFactor(unit) {
+            const u = String(unit || "").trim().toLowerCase();
+            if (u === "j/in") return 1 / 25400;
+            if (u === "j/mm") return 1 / 1000;
+            if (u === "kj/in") return 1 / 25.4;
+            return 1;
+        }
+        function wdrLengthFactor(unit) {
+            const u = String(unit || "").trim().toLowerCase();
+            if (u === "mm") return 1;
+            if (u === "cm") return 10;
+            return 25.4; // "in"; Version 2 schreibt faelschlich "deg", die Werte sind Zoll
+        }
+
+        // Dauerbetrieb aus den Sollwerten: ab wann Strom und Vorschub ihren Dauerwert haben und
+        // wann der Downslope beginnt. Version 3 liefert ausserdem die Pendelperiode.
+        function wdrSetpointInfo(log) {
+            const block = log.blocks.SETPOINT;
+            if (!block || block.rows.length < 2) return null;
+            const time = wdrColumn(block, "Time");
+            const columns = ["Pri Amps", "Bkg Amps", "Pri Travel", "Bkg Travel"].map(name => wdrColumn(block, name)).filter(index => index >= 0);
+            if (time < 0 || !columns.length) return null;
+            const rows = block.rows.map(cells => cells.map(cell => wdrNumber(cell, log.decimalComma)));
+            const lastTime = rows[rows.length - 1][time];
+            const steady = columns.map(column => {
+                const durations = new Map();
+                rows.forEach((row, index) => {
+                    const next = index + 1 < rows.length ? rows[index + 1][time] : lastTime;
+                    durations.set(row[column], (durations.get(row[column]) || 0) + (next - row[time]));
+                });
+                return [...durations.entries()].sort((a, b) => b[1] - a[1])[0][0];
+            });
+            const atSteady = row => columns.every((column, index) => row[column] === steady[index]);
+            const startIndex = rows.findIndex(atSteady);
+            if (startIndex < 0) return null;
+            let endIndex = rows.length;
+            for (let index = startIndex + 1; index < rows.length; index++) {
+                if (!atSteady(rows[index])) { endIndex = index; break; }
+            }
+            const info = { start: rows[startIndex][time], end: endIndex < rows.length ? rows[endIndex][time] : Infinity, period: null };
+            const indwell = wdrColumn(block, "In-Dwell");
+            const outdwell = wdrColumn(block, "Out-Dwell");
+            const excursion = wdrColumn(block, "Excursion");
+            if (indwell >= 0 && outdwell >= 0 && excursion >= 0) {
+                const row = rows[startIndex];
+                // volle Pendelperiode: In-Dwell + Excursion + Out-Dwell + Excursion
+                const period = row[indwell] + row[outdwell] + 2 * row[excursion];
+                if (period > 0) info.period = period;
+            }
+            return info;
+        }
+
+        const WDR_DEFAULT_SETTINGS = {
+            processFactor: 0.6,
+            rangeMode: "template",      // "template": Data-Zeilen fromRow..toRow | "auto": Dauerbetrieb laut Sollwerten
+            fromRow: 1000,
+            toRow: 121000,
+            windowMode: "rows",         // "rows": 104/996 Zeilen wie Vorlage | "time": Pendelperiode
+            periodRows: 104,
+            tenPeriodRows: 996,
+            periodSeconds: 1.0,
+            summary: true,
+            useTargets: true,
+            rawSheet: false             // Blatt "Raw data" mit allen Logspalten (Datei etwa doppelt so gross)
+        };
+
+        // Berechnung wie Blatt "Data" der Vorlage; Data-Zeile r entspricht Messpunkt r-4.
+        function evaluateHeatInput(log, userSettings = {}) {
+            const settings = { ...WDR_DEFAULT_SETTINGS, ...userSettings };
+            const data = log.blocks.DATA;
+            if (!data || !data.rows.length) throw new Error("No DATA block in the log.");
+            const column = name => wdrColumn(data, name);
+            const indexes = {
+                time: column("Time"), pulse: column("PulseState"), amps: column("Amps"), volts: column("Volts"),
+                travel: column("Travel"), wire: column("Wire"), heat: column("Heat Input")
+            };
+            ["time", "amps", "volts", "travel"].forEach(key => {
+                if (indexes[key] < 0) throw new Error(`Column "${key}" missing in DATA_TAGS.`);
+            });
+            const travelFactor = wdrTravelFactor(data.uom[indexes.travel]);
+            const wireFactor = indexes.wire >= 0 ? wdrTravelFactor(data.uom[indexes.wire]) : 1;
+            const heatFactor = indexes.heat >= 0 ? wdrHeatFactor(data.uom[indexes.heat]) : 1;
+            const n = data.rows.length;
+            const make = () => new Float64Array(n).fill(NaN);
+            const col = { time: make(), pulse: make(), amps: make(), volts: make(), travel: make(), wire: make(), heat: make() };
+            const dc = log.decimalComma;
+            for (let i = 0; i < n; i++) {
+                const row = data.rows[i];
+                col.time[i] = wdrNumber(row[indexes.time], dc);
+                if (indexes.pulse >= 0) col.pulse[i] = wdrNumber(row[indexes.pulse], dc);
+                col.amps[i] = wdrNumber(row[indexes.amps], dc);
+                col.volts[i] = wdrNumber(row[indexes.volts], dc);
+                col.travel[i] = wdrNumber(row[indexes.travel], dc) * travelFactor;
+                if (indexes.wire >= 0) col.wire[i] = wdrNumber(row[indexes.wire], dc) * wireFactor;
+                if (indexes.heat >= 0) col.heat[i] = wdrNumber(row[indexes.heat], dc) * heatFactor;
+            }
+            const k = settings.processFactor;
+            const H = col.heat;                                     // Methode C (Maschine)
+            const I = col.travel.map(value => value * 10);          // mm/min
+            const J = col.time.map(value => value / 1000);          // s
+            const K = J.map(value => value / 60);                   // min (Vorlage: (J+J_naechste)/60)
+            const L = make();                                       // Methode A je Messpunkt
+            for (let i = 0; i < n; i++) {
+                const value = col.amps[i] * col.volts[i] / I[i] * 0.06 * k;
+                if (I[i] > 0 && Number.isFinite(value)) L[i] = value;
+            }
+            const M = make();
+            const N = make();
+            for (let i = 0; i < n; i++) {
+                if (col.pulse[i] === 0) M[i] = L[i];
+                else if (col.pulse[i] === 1) N[i] = L[i];
+            }
+            // Gleitende Mittel (vorwaerts, wie AVERAGE(Lr:Lr+103)) – nur vollstaendige Fenster mit gueltigen Werten,
+            // die nicht in den Downslope reichen.
+            const prefix = new Float64Array(n + 1);
+            const valid = new Int32Array(n + 1);
+            for (let i = 0; i < n; i++) {
+                const ok = Number.isFinite(L[i]);
+                prefix[i + 1] = prefix[i] + (ok ? L[i] : 0);
+                valid[i + 1] = valid[i] + (ok ? 1 : 0);
+            }
+            const setpoints = wdrSetpointInfo(log);
+            // letzter Messpunkt vor dem Downslope (ohne Sollwerte: letzter Messpunkt)
+            const downslopeIndex = (() => {
+                if (!setpoints || !Number.isFinite(setpoints.end)) return n - 1;
+                let index = n - 1;
+                while (index > 0 && col.time[index] >= setpoints.end) index--;
+                return index;
+            })();
+            const lastBeforeDownslope = () => downslopeIndex;
+            const periodSeconds = settings.windowMode === "time" ? (setpoints?.period || settings.periodSeconds) : null;
+            const rolling = (rowsWindow, seconds) => {
+                const out = make();
+                if (seconds > 0) {
+                    let end = 0;
+                    for (let i = 0; i < n; i++) {
+                        if (end < i) end = i;
+                        while (end < n && J[end] < J[i] + seconds) end++;
+                        if (end >= n || end > downslopeIndex + 1) break; // Fenster vollstaendig und vor dem Downslope
+                        const count = end - i;
+                        if (count > 0 && valid[end] - valid[i] === count) out[i] = (prefix[end] - prefix[i]) / count;
+                    }
+                    return out;
+                }
+                for (let i = 0; i + rowsWindow <= downslopeIndex + 1; i++) {
+                    const j = i + rowsWindow;
+                    if (valid[j] - valid[i] === rowsWindow) out[i] = (prefix[j] - prefix[i]) / rowsWindow;
+                }
+                return out;
+            };
+            const O = rolling(settings.periodRows, periodSeconds);
+            const P = rolling(settings.tenPeriodRows, periodSeconds ? periodSeconds * 10 : null);
+
+            // Auswertebereich: Indizes a..b. Nie ueber den Beginn des Downslope hinaus.
+            let a;
+            let b;
+            let rangeNote;
+            const automaticRange = () => {
+                a = 0;
+                while (a < n && col.time[a] < setpoints.start) a++;
+                b = lastBeforeDownslope();
+            };
+            if (settings.rangeMode === "auto" && setpoints) {
+                automaticRange();
+                rangeNote = "automatic: steady state from the set points (after up-slope, before down-slope)";
+            } else {
+                a = Math.max(0, Math.round(settings.fromRow) - 4);
+                b = Math.min(Math.round(settings.toRow) - 4, lastBeforeDownslope());
+                rangeNote = `data rows ${settings.fromRow}–${settings.toRow} (template)` + (b < settings.toRow - 4 ? ", limited by the end of the weld" : "");
+                if (settings.rangeMode === "auto") rangeNote += " – no set points in the log, automatic range not possible";
+                if (b < a) {
+                    // Log kuerzer als die Startzeile: Dauerbetrieb laut Sollwerten, sonst das ganze Log.
+                    if (setpoints) {
+                        automaticRange();
+                        rangeNote = `log shorter than data row ${settings.fromRow}: steady state from the set points used`;
+                    } else {
+                        a = 0;
+                        b = lastBeforeDownslope();
+                        rangeNote = `log shorter than data row ${settings.fromRow}: whole log used`;
+                    }
+                }
+            }
+            if (!(b >= a)) throw new Error(`The evaluation range is empty (log has ${n} data rows, range starts at row ${a + 4}).`);
+            const stats = values => {
+                let min = Infinity; let max = -Infinity; let sum = 0; let count = 0;
+                for (let i = a; i <= b; i++) {
+                    const value = values[i];
+                    if (!Number.isFinite(value)) continue;
+                    if (value < min) min = value;
+                    if (value > max) max = value;
+                    sum += value; count++;
+                }
+                return count ? { min, max, avg: sum / count, count } : { min: NaN, max: NaN, avg: NaN, count: 0 };
+            };
+            const result = { sleeked: stats(P), perPeriod: stats(O), perPeak: stats(L), methodC: stats(H) };
+            result.ratioAC = result.perPeak.avg / result.methodC.avg;
+            // Energie/Weg ueber den Bereich (Summe U*I*dt / Summe v*dt) – unempfindlich gegen v ~ 0.
+            let energy = 0;
+            let distance = 0;
+            for (let i = a; i < b; i++) {
+                const dt = J[i + 1] - J[i];
+                if (!(dt > 0) || !Number.isFinite(col.amps[i]) || !Number.isFinite(col.volts[i]) || !Number.isFinite(I[i])) continue;
+                energy += col.amps[i] * col.volts[i] * dt;
+                distance += Math.max(0, I[i]) / 60 * dt;
+            }
+            result.energyPerDistance = distance > 0 ? k * energy / distance / 1000 : NaN;
+            result.machine = wdrMachineAverages(log, k);
+            return {
+                settings, n, a, b, rangeNote, periodSeconds, setpoints,
+                units: { travel: data.uom[indexes.travel] || "", heat: indexes.heat >= 0 ? (data.uom[indexes.heat] || "") : "", wire: indexes.wire >= 0 ? (data.uom[indexes.wire] || "") : "" },
+                columns: { time: col.time, pulse: col.pulse, amps: col.amps, volts: col.volts, travel: col.travel, wire: col.wire, H, I, J, K, L, M, N, O, P },
+                result
+            };
+        }
+
+        // Segment-Mittelwerte der Maschine: Energie/Weg je Segment (Distance in Zoll).
+        function wdrMachineAverages(log, factor) {
+            const block = log.blocks.SEGMENT_AVERAGE;
+            if (!block || !block.rows.length) return null;
+            const energy = wdrColumn(block, "Energy");
+            const distance = wdrColumn(block, "Distance");
+            const heat = wdrColumn(block, "Heat Input");
+            const segment = wdrColumn(block, "Segment Number");
+            if (energy < 0 || distance < 0) return null;
+            const lengthFactor = wdrLengthFactor(block.uom[distance]);
+            const heatFactor = heat >= 0 ? wdrHeatFactor(block.uom[heat]) : null;
+            let totalEnergy = 0;
+            let totalDistance = 0;
+            const segments = block.rows.map(cells => {
+                const e = wdrNumber(cells[energy], log.decimalComma);
+                const d = wdrNumber(cells[distance], log.decimalComma) * lengthFactor;
+                if (Number.isFinite(e) && Number.isFinite(d)) { totalEnergy += e; totalDistance += d; }
+                const logged = heat >= 0 ? wdrNumber(cells[heat], log.decimalComma) * heatFactor : NaN;
+                return { segment: segment >= 0 ? cells[segment] : "", energy: e, distanceMm: d, arcEnergy: e / d / 1000, loggedHeatInput: logged };
+            });
+            if (!(totalDistance > 0)) return null;
+            return {
+                segments,
+                arcEnergy: totalEnergy / totalDistance / 1000,
+                heatInput: factor * totalEnergy / totalDistance / 1000,
+                loggedHeatInput: segments.length === 1 ? segments[0].loggedHeatInput : NaN
+            };
+        }
+
+        /* ---- Zuordnung: Lage, Raupe, Ziel-Bereiche aus dem Schedule Editor ---- */
+        const WDR_PASS_ORDER = ["Root", "Hot pass", "Fill", "Cap", "Other"];
+        function wdrPassType(text) {
+            const value = String(text || "").toLowerCase();
+            if (/root/.test(value)) return "Root";
+            if (/(^|[^a-z])hp([^a-z]|$)|hot[ _-]?pass/.test(value)) return "Hot pass";
+            if (/(^|[^a-z])f-?(out|in|mid)([^a-z]|$)|fill|(^|[^a-z])comp/.test(value)) return "Fill";
+            if (/cap|wing/.test(value)) return "Cap";
+            return "Other";
+        }
+
+        // "…_L21_B42…" oder "Layer 7 Bead 12" -> { label, layer, bead }
+        function wdrBeadId(...texts) {
+            for (const text of texts) {
+                const value = String(text || "");
+                let match = value.match(/L(\d+)_B(\d+)(-\d+)?/i);
+                if (match) return { label: `L${match[1]}_B${match[2]}${match[3] || ""}`, layer: +match[1], bead: +match[2], suffix: match[3] || "" };
+                match = value.match(/Layer\s*(\d+)\s*Bead\s*(\d+)(-\d+)?/i);
+                if (match) return { label: `L${match[1]}_B${match[2]}${match[3] || ""}`, layer: +match[1], bead: +match[2], suffix: match[3] || "" };
+            }
+            return { label: "", layer: Infinity, bead: Infinity, suffix: "" };
+        }
+
+        // Ziel-Bereiche des Schedule Editors (gleiche Herkunft, localStorage), Zuordnung ueber die
+        // 4-stellige Schedule-Nummer aus dem Log-Kopf. Mehrere passende Bereiche: Schnittmenge.
+        function wdrTargetsForSchedule(scheduleName) {
+            let stored = [];
+            try { stored = JSON.parse(localStorage.getItem("scheduleEditorHeatInputTargets") || "[]"); } catch (error) { stored = []; }
+            if (!Array.isArray(stored)) return null;
+            const key = (String(scheduleName || "").match(/^\d{4}/) || [null])[0];
+            const parse = value => {
+                const number = Number(String(value ?? "").replace(",", "."));
+                return String(value ?? "").trim() !== "" && Number.isFinite(number) ? number : null;
+            };
+            const matching = stored.filter(item => item && typeof item === "object")
+                .map(item => ({ name: String(item.name || "Target"), min: parse(item.min), max: parse(item.max), files: Array.isArray(item.files) ? item.files : null }))
+                .filter(item => (item.min !== null || item.max !== null) && (item.files === null || (key && item.files.includes(key))));
+            if (!matching.length) return null;
+            const mins = matching.map(item => item.min).filter(value => value !== null);
+            const maxs = matching.map(item => item.max).filter(value => value !== null);
+            return {
+                name: matching.map(item => item.name).join(" + "),
+                min: mins.length ? Math.max(...mins) : null,
+                max: maxs.length ? Math.min(...maxs) : null
+            };
+        }
+
+        function wdrTargetStatus(evaluation, target) {
+            if (!target) return { ok: null, text: "no target range" };
+            const r = evaluation.result.perPeriod;
+            const problems = [];
+            if (target.min !== null && r.min < target.min) problems.push(`per period min ${r.min.toFixed(3)} < ${target.min}`);
+            if (target.max !== null && r.max > target.max) problems.push(`per period max ${r.max.toFixed(3)} > ${target.max}`);
+            return problems.length ? { ok: false, text: `outside ${target.name}: ${problems.join(", ")}` } : { ok: true, text: `within ${target.name}` };
+        }
+
+        /* ---- Minimaler XLSX-Schreiber (Werte, Formeln, Stile, Diagramme) ---- */
+        const XL_MAIN_NS = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
+        const XL_STYLE = { normal: 0, bold: 1, header: 2, number: 3, stat: 4, flag: 5, note: 6, flagNumber: 7, ok: 8 };
+
+        function xlEscape(text) {
+            return String(text)
+                .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        function xlColumnName(index) {
+            let name = "";
+            let value = index + 1;
+            while (value > 0) {
+                const rest = (value - 1) % 26;
+                name = String.fromCharCode(65 + rest) + name;
+                value = Math.floor((value - 1) / 26);
+            }
+            return name;
+        }
+
+        function xlNumberText(value) {
+            if (!Number.isFinite(value)) return null;
+            return Number.isInteger(value) ? String(value) : String(Number(value.toPrecision(12)));
+        }
+
+        // Ein Arbeitsblatt, zeilenweise geschrieben; der XML-Text wird in Bloecken zu Blobs zusammengefasst.
+        class XlSheet {
+            constructor(name, options = {}) {
+                this.name = name.replace(/[\[\]:*?/\\]/g, " ").slice(0, 31);
+                this.options = options;
+                this.parts = [];
+                this.chunk = [];
+                this.chunkLength = 0;
+            }
+            // ref: ' r="B7"' oder "" (Zelle direkt nach der vorigen – spart bei grossen Blaettern ein Viertel der Datei)
+            cellXml(ref, cell) {
+                if (cell === null || cell === undefined || cell === "") return "";
+                if (typeof cell === "number") {
+                    const text = xlNumberText(cell);
+                    return text === null ? "" : `<c${ref}><v>${text}</v></c>`;
+                }
+                if (typeof cell === "string") {
+                    return `<c${ref} t="inlineStr"><is><t xml:space="preserve">${xlEscape(cell)}</t></is></c>`;
+                }
+                const style = cell.s ? ` s="${cell.s}"` : "";
+                if (cell.f) {
+                    const cached = typeof cell.v === "number" ? xlNumberText(cell.v) : null;
+                    if (typeof cell.v === "string") return `<c${ref}${style} t="str"><f>${xlEscape(cell.f)}</f><v>${xlEscape(cell.v)}</v></c>`;
+                    return `<c${ref}${style}><f>${xlEscape(cell.f)}</f>${cached === null ? "" : `<v>${cached}</v>`}</c>`;
+                }
+                if (typeof cell.v === "number") {
+                    const text = xlNumberText(cell.v);
+                    return text === null ? (style ? `<c${ref}${style}/>` : "") : `<c${ref}${style}><v>${text}</v></c>`;
+                }
+                if (cell.v === undefined || cell.v === null || cell.v === "") return style ? `<c${ref}${style}/>` : "";
+                return `<c${ref}${style} t="inlineStr"><is><t xml:space="preserve">${xlEscape(cell.v)}</t></is></c>`;
+            }
+            row(rowNumber, cells, height) {
+                let xml = `<row r="${rowNumber}"${height ? ` ht="${height}" customHeight="1"` : ""}>`;
+                let previous = -1;
+                for (let index = 0; index < cells.length; index++) {
+                    const ref = index === previous + 1 ? "" : ` r="${xlColumnName(index)}${rowNumber}"`;
+                    const cellXml = this.cellXml(ref, cells[index]);
+                    if (cellXml) {
+                        xml += cellXml;
+                        previous = index;
+                    }
+                }
+                xml += "</row>";
+                this.chunk.push(xml);
+                this.chunkLength += xml.length;
+                if (this.chunkLength > 2000000) this.flush();
+            }
+            flush() {
+                if (!this.chunk.length) return;
+                this.parts.push(new Blob([this.chunk.join("")]));
+                this.chunk = [];
+                this.chunkLength = 0;
+            }
+            toBlob() {
+                this.flush();
+                const options = this.options;
+                let head = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet ${XL_MAIN_NS}>`;
+                head += `<sheetViews><sheetView workbookViewId="0"${options.selected ? ' tabSelected="1"' : ""}${options.zoom ? ` zoomScale="${options.zoom}"` : ""}>`;
+                if (options.freezeRows) {
+                    head += `<pane ySplit="${options.freezeRows}" topLeftCell="A${options.freezeRows + 1}" activePane="bottomLeft" state="frozen"/>`;
+                }
+                head += "</sheetView></sheetViews><sheetFormatPr defaultRowHeight=\"15\"/>";
+                if (options.widths && options.widths.length) {
+                    head += "<cols>" + options.widths.map((width, index) => width ? `<col min="${index + 1}" max="${index + 1}" width="${width}" customWidth="1"/>` : "").join("") + "</cols>";
+                }
+                head += "<sheetData>";
+                const foot = "</sheetData>" + (options.drawing ? '<drawing r:id="rId1"/>' : "") + "</worksheet>";
+                return new Blob([head, ...this.parts, foot], { type: "application/xml" });
+            }
+        }
+
+        const XL_STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="0.000"/></numFmts><fonts count="5"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FFC00000"/><name val="Calibri"/><family val="2"/></font><font><i/><sz val="10"/><color rgb="FF6E6259"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FF2E7D32"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFCE4D6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="9"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="1" fillId="2" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="2" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+
+        // Streudiagramm (x: Zeit in min) mit Linien ohne Marker.
+        function xlScatterChartXml({ title, xTitle, yTitle, series }) {
+            const rich = (text, size, bold) => `<c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p><a:pPr><a:defRPr sz="${size}" b="${bold ? 1 : 0}"/></a:pPr><a:r><a:rPr lang="en-US" sz="${size}" b="${bold ? 1 : 0}"/><a:t>${xlEscape(text)}</a:t></a:r></a:p></c:rich></c:tx>`;
+            const axis = (id, crossId, position, axisTitle, gridlines) => `<c:valAx><c:axId val="${id}"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="${position}"/>${gridlines ? '<c:majorGridlines><c:spPr><a:ln w="6350"><a:solidFill><a:srgbClr val="E3D9CF"/></a:solidFill></a:ln></c:spPr></c:majorGridlines>' : ""}<c:title>${rich(axisTitle, 1000, false)}<c:overlay val="0"/></c:title><c:numFmt formatCode="General" sourceLinked="0"/><c:majorTickMark val="out"/><c:minorTickMark val="none"/><c:tickLblPos val="low"/><c:crossAx val="${crossId}"/><c:crosses val="autoZero"/><c:crossBetween val="midCat"/></c:valAx>`;
+            const seriesXml = series.map((item, index) => `<c:ser><c:idx val="${index}"/><c:order val="${index}"/><c:tx><c:v>${xlEscape(item.name)}</c:v></c:tx><c:spPr><a:ln w="${item.width || 9525}"><a:solidFill><a:srgbClr val="${item.color}"/></a:solidFill>${item.dash ? `<a:prstDash val="${item.dash}"/>` : ""}</a:ln></c:spPr><c:marker><c:symbol val="none"/></c:marker><c:xVal><c:numRef><c:f>${xlEscape(item.x)}</c:f></c:numRef></c:xVal><c:yVal><c:numRef><c:f>${xlEscape(item.y)}</c:f></c:numRef></c:yVal><c:smooth val="0"/></c:ser>`).join("");
+            return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><c:roundedCorners val="0"/><c:chart><c:title>${rich(title, 1200, true)}<c:overlay val="0"/></c:title><c:autoTitleDeleted val="0"/><c:plotArea><c:layout/><c:scatterChart><c:scatterStyle val="lineMarker"/><c:varyColors val="0"/>${seriesXml}<c:axId val="5001"/><c:axId val="5002"/></c:scatterChart>${axis(5001, 5002, "b", xTitle, false)}${axis(5002, 5001, "l", yTitle, true)}</c:plotArea><c:legend><c:legendPos val="b"/><c:overlay val="0"/></c:legend><c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart></c:chartSpace>`;
+        }
+
+        // Baut die xlsx-Datei. sheets: [{ sheet: XlSheet, charts?: [{ xml, from: [col,row], to: [col,row] }] }]
+        async function xlBuildWorkbook(sheets) {
+            const zip = new JSZip();
+            const addPart = (name, data) => zip.file(name, data, { createFolders: false }); // ohne Ordnereintraege
+            const contentTypes = ['<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>', '<Default Extension="xml" ContentType="application/xml"/>',
+                '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>',
+                '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'];
+            const workbookRels = [];
+            const sheetEntries = [];
+            let chartNumber = 0;
+            let drawingNumber = 0;
+            sheets.forEach((entry, index) => {
+                const number = index + 1;
+                contentTypes.push(`<Override PartName="/xl/worksheets/sheet${number}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`);
+                workbookRels.push(`<Relationship Id="rId${number}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${number}.xml"/>`);
+                sheetEntries.push(`<sheet name="${xlEscape(entry.sheet.name)}" sheetId="${number}" r:id="rId${number}"/>`);
+                if (entry.charts && entry.charts.length) {
+                    entry.sheet.options.drawing = true;
+                    drawingNumber++;
+                    addPart(`xl/worksheets/_rels/sheet${number}.xml.rels`, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing${drawingNumber}.xml"/></Relationships>`);
+                    contentTypes.push(`<Override PartName="/xl/drawings/drawing${drawingNumber}.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>`);
+                    const anchors = [];
+                    const drawingRels = [];
+                    entry.charts.forEach((chart, chartIndex) => {
+                        chartNumber++;
+                        addPart(`xl/charts/chart${chartNumber}.xml`, chart.xml);
+                        contentTypes.push(`<Override PartName="/xl/charts/chart${chartNumber}.xml" ContentType="application/vnd.openxmlformats-officedocument.drawingml.chart+xml"/>`);
+                        drawingRels.push(`<Relationship Id="rId${chartIndex + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart" Target="../charts/chart${chartNumber}.xml"/>`);
+                        anchors.push(`<xdr:twoCellAnchor editAs="oneCell"><xdr:from><xdr:col>${chart.from[0]}</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>${chart.from[1]}</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:from><xdr:to><xdr:col>${chart.to[0]}</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>${chart.to[1]}</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:to><xdr:graphicFrame macro=""><xdr:nvGraphicFramePr><xdr:cNvPr id="${chartIndex + 2}" name="Chart ${chartIndex + 1}"/><xdr:cNvGraphicFramePr/></xdr:nvGraphicFramePr><xdr:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/></xdr:xfrm><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart"><c:chart xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" r:id="rId${chartIndex + 1}"/></a:graphicData></a:graphic></xdr:graphicFrame><xdr:clientData/></xdr:twoCellAnchor>`);
+                    });
+                    addPart(`xl/drawings/drawing${drawingNumber}.xml`, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">${anchors.join("")}</xdr:wsDr>`);
+                    addPart(`xl/drawings/_rels/drawing${drawingNumber}.xml.rels`, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${drawingRels.join("")}</Relationships>`);
+                }
+                addPart(`xl/worksheets/sheet${number}.xml`, entry.sheet.toBlob());
+            });
+            workbookRels.push(`<Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>`);
+            addPart("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">${contentTypes.join("")}</Types>`);
+            addPart("_rels/.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
+            addPart("xl/workbook.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook ${XL_MAIN_NS}><bookViews><workbookView activeTab="0"/></bookViews><sheets>${sheetEntries.join("")}</sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>`);
+            addPart("xl/_rels/workbook.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${workbookRels.join("")}</Relationships>`);
+            addPart("xl/styles.xml", XL_STYLES);
+            return zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 5 }, mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+        }
+
+        // Ausduennen fuer Diagramme: je Abschnitt Minimum und Maximum (Spitzen bleiben sichtbar).
+        function wdrDecimate(x, y, from, to, buckets = 1500) {
+            const points = [];
+            const span = to - from + 1;
+            if (span <= buckets * 2) {
+                for (let i = from; i <= to; i++) if (Number.isFinite(x[i]) && Number.isFinite(y[i])) points.push([x[i], y[i]]);
+                return points;
+            }
+            const size = span / buckets;
+            for (let bucket = 0; bucket < buckets; bucket++) {
+                const start = from + Math.floor(bucket * size);
+                const end = Math.min(to, from + Math.floor((bucket + 1) * size) - 1);
+                let minIndex = -1;
+                let maxIndex = -1;
+                for (let i = start; i <= end; i++) {
+                    if (!Number.isFinite(y[i]) || !Number.isFinite(x[i])) continue;
+                    if (minIndex < 0 || y[i] < y[minIndex]) minIndex = i;
+                    if (maxIndex < 0 || y[i] > y[maxIndex]) maxIndex = i;
+                }
+                if (minIndex < 0) continue;
+                if (minIndex === maxIndex) points.push([x[minIndex], y[minIndex]]);
+                else if (minIndex < maxIndex) points.push([x[minIndex], y[minIndex]], [x[maxIndex], y[maxIndex]]);
+                else points.push([x[maxIndex], y[maxIndex]], [x[minIndex], y[minIndex]]);
+            }
+            return points;
+        }
+
+        const WDR_STAT_COLUMNS = [
+            // [Spalte Data, Ueberschrift, Quelle, Kennwert]
+            ["Q", "Heat Input sleeked\nMIN (per 10 periods)", "P", "min"],
+            ["R", "Heat Input sleeked\nMAX (per 10 periods)", "P", "max"],
+            ["S", "Heat Input average\nper 10 periods\nMethod A", "P", "avg"],
+            ["T", "Heat Input per period\nMIN", "O", "min"],
+            ["U", "Heat Input per period\nMAX", "O", "max"],
+            ["V", "Heat Input average\nper period\nMethod A", "O", "avg"],
+            ["W", "Heat Input per peak\nMIN (instantaneous)\nMethod A", "L", "min"],
+            ["X", "Heat Input per peak\nMAX (instantaneous)\nMethod A", "L", "max"],
+            ["Y", "Heat Input average\nof instantaneous values\nMethod A", "L", "avg"],
+            ["Z", "Heat Input\nMIN\nMethod C (machine)", "H", "min"],
+            ["AA", "Heat Input\nMAX\nMethod C (machine)", "H", "max"],
+            ["AB", "Heat Input average\nMethod C (machine)", "H", "avg"]
+        ];
+        const WDR_STAT_SOURCE = { P: "sleeked", O: "perPeriod", L: "perPeak", H: "methodC" };
+
+        // Auswertungs-Excel einer CSV.
+        async function buildEvaluationWorkbook(fileName, text, log, evaluation, target, onStep = () => {}) {
+            const { columns: c, a, b, n, settings, result } = evaluation;
+            const firstRow = a + 4;
+            const lastRow = b + 4;
+            const schedule = log.header.SCHEDULE || "";
+            const statusInfo = wdrTargetStatus(evaluation, target);
+            // Spalten A–G wie im Log (Log-Einheiten), H und I umgerechnet auf kJ/mm bzw. mm/min
+            const travelFactor = wdrTravelFactor(evaluation.units.travel);
+            const wireFactor = wdrTravelFactor(evaluation.units.wire);
+            const heatFactor = wdrHeatFactor(evaluation.units.heat);
+
+            /* Data */
+            const data = new XlSheet("Data", { selected: true, freezeRows: 3, widths: [10, 8, 10, 10, 10, 10, 11, 12, 10, 10, 10, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 14, 13, 13, 13, 10, 15, 15, 15] });
+            data.row(1, [{ v: `Heat input evaluation – ${schedule || fileName}`, s: XL_STYLE.bold }, null, null, null, null, null,
+                { v: `Process factor ${settings.processFactor} · ${evaluation.rangeNote} · statistics over rows ${firstRow}–${lastRow} (${c.J[a].toFixed(1)}–${c.J[b].toFixed(1)} s) · windows ${evaluation.periodSeconds ? `${evaluation.periodSeconds} s / ${evaluation.periodSeconds * 10} s` : `${settings.periodRows} / ${settings.tenPeriodRows} rows`}`, s: XL_STYLE.note }]);
+            const headers = ["Time", "PulseState", "Amps", "Volts", "Travel", "Wire", "Heat Input\n(log)", "Heat Input\nMethod C\n(machine)", "Travel", "Time", "Time", "Heat Input\ninstantaneous\nMethod A", "Heat Input\nBackground\nMethod A", "Heat Input\nPulse\nMethod A", "Heat Input\nrolling average\nper period\nMethod A", "Heat Input\nrolling average\nper 10 periods\nMethod A",
+                ...WDR_STAT_COLUMNS.map(item => item[1]), "Ratio\nMethod A / C", "Energy / distance\nk·ΣU·I·Δt / Σv·Δt", "Machine segment average\nk·Energy / Distance", "Machine heat input\n(logged)"];
+            data.row(2, headers.map(text => ({ v: text, s: XL_STYLE.header })), 75);
+            const units = ["ms", "", "A", "V", evaluation.units.travel, evaluation.units.wire, evaluation.units.heat, "kJ/mm", "mm/min", "s", "min", "kJ/mm", "kJ/mm", "kJ/mm", "kJ/mm", "kJ/mm", ...WDR_STAT_COLUMNS.map(() => "kJ/mm"), "", "kJ/mm", "kJ/mm", "kJ/mm"];
+            data.row(3, units.map(text => ({ v: text, s: XL_STYLE.header })));
+            const statCells = WDR_STAT_COLUMNS.map(([, , source, kind]) => {
+                const value = result[WDR_STAT_SOURCE[source]][kind];
+                const fn = { min: "MIN", max: "MAX", avg: "AVERAGE" }[kind];
+                return Number.isFinite(value) ? { f: `${fn}(${source}${firstRow}:${source}${lastRow})`, v: value, s: XL_STYLE.stat } : { v: "n/a", s: XL_STYLE.stat };
+            });
+            const ratio = Number.isFinite(result.ratioAC) ? { f: "Y4/AB4", v: result.ratioAC, s: XL_STYLE.stat } : { v: "n/a", s: XL_STYLE.stat };
+            const numberCell = value => Number.isFinite(value) ? { v: value, s: XL_STYLE.stat } : { v: "n/a", s: XL_STYLE.stat };
+            const extra = [ratio, numberCell(result.energyPerDistance), numberCell(result.machine?.heatInput), numberCell(result.machine?.loggedHeatInput)];
+            for (let i = 0; i < n; i++) {
+                const cells = [c.time[i], c.pulse[i], c.amps[i], c.volts[i], c.travel[i] / travelFactor, c.wire[i] / wireFactor, c.H[i] / heatFactor, c.H[i], c.I[i], c.J[i], c.K[i], c.L[i], c.M[i], c.N[i], c.O[i], c.P[i]];
+                if (i === 0) cells.push(...statCells, ...extra);
+                data.row(i + 4, cells);
+                if (i % 20000 === 19999) await onStep(`Writing data row ${i + 1} of ${n}…`);
+            }
+
+            /* Chart data (ausgeduennt) + Diagramme */
+            const chartData = new XlSheet("Chart data", { freezeRows: 1, widths: Array(18).fill(11) });
+            const seriesDefs = [
+                ["L", "Method A instantaneous", c.L], ["O", "Method A per period", c.O], ["H", "Method C (machine)", c.H],
+                ["P", "Method A per 10 periods", c.P], ["C", "Amps", c.amps], ["D", "Volts", c.volts], ["I", "Travel (mm/min)", c.I]
+            ];
+            const decimated = seriesDefs.map(([, , values]) => wdrDecimate(c.K, values, a, b));
+            const maxLength = Math.max(...decimated.map(points => points.length), 2);
+            const limitColumns = [];
+            const x0 = c.K[a];
+            const x1 = c.K[b];
+            if (target && target.min !== null) limitColumns.push(["Target min", [[x0, target.min], [x1, target.min]]]);
+            if (target && target.max !== null) limitColumns.push(["Target max", [[x0, target.max], [x1, target.max]]]);
+            const allSeries = [...seriesDefs.map(([, name], index) => [name, decimated[index]]), ...limitColumns];
+            chartData.row(1, allSeries.flatMap(([name]) => [{ v: `${name} – time (min)`, s: XL_STYLE.header }, { v: name, s: XL_STYLE.header }]));
+            for (let row = 0; row < maxLength; row++) {
+                chartData.row(row + 2, allSeries.flatMap(([, points]) => points[row] ? [points[row][0], points[row][1]] : [null, null]));
+            }
+            const ref = (seriesIndex, axis) => {
+                const columnIndex = seriesIndex * 2 + (axis === "y" ? 1 : 0);
+                const length = allSeries[seriesIndex][1].length;
+                const columnName = xlColumnName(columnIndex);
+                return `'Chart data'!$${columnName}$2:$${columnName}$${length + 1}`;
+            };
+            const serie = (index, color, width) => ({ name: allSeries[index][0], x: ref(index, "x"), y: ref(index, "y"), color, width });
+            const limitSeries = limitColumns.map((_, offset) => ({ ...serie(seriesDefs.length + offset, "C00000", 19050), dash: "dash" }));
+            const chartSpecs = [
+                { title: "Heat input instantaneous – Method A", yTitle: "kJ/mm", series: [serie(0, "F28A3D")] },
+                { title: "Heat input rolling average per period – Method A", yTitle: "kJ/mm", series: [serie(1, "D9702C", 12700), ...limitSeries] },
+                { title: "Heat input instantaneous – Method A vs. Method C (machine)", yTitle: "kJ/mm", series: [serie(0, "F28A3D"), serie(2, "477BD1")] },
+                { title: "Heat input rolling average per 10 periods (sleeked) – Method A", yTitle: "kJ/mm", series: [serie(3, "D9702C", 15875), ...limitSeries] },
+                { title: "Amps, Volts, Travel", yTitle: "A · V · mm/min", series: [serie(4, "D9702C"), serie(5, "477BD1"), serie(6, "16A085")] }
+            ];
+            const charts = chartSpecs.map((spec, index) => ({
+                xml: xlScatterChartXml({ ...spec, xTitle: "Time (min)" }),
+                from: [0, 1 + index * 24], to: [16, 1 + index * 24 + 22]
+            }));
+            const chartSheet = new XlSheet("Charts", {});
+            chartSheet.row(1, [{ v: `Charts of rows ${firstRow}–${lastRow} (thinned for display: minimum and maximum of each section; statistics use all data)`, s: XL_STYLE.note }]);
+
+            /* Factors and limits */
+            const factors = new XlSheet("Factors and limits", { widths: [34, 22, 70] });
+            let row = 1;
+            const put = (label, value, note, style) => factors.row(row++, [{ v: label, s: XL_STYLE.bold }, typeof value === "number" ? value : { v: value ?? "", s: style || 0 }, note ? { v: note, s: XL_STYLE.note } : null]);
+            factors.row(row++, [{ v: "Settings of this evaluation", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }]);
+            put("Process factor k", settings.processFactor, "0.6 = heat input for TIG (EN ISO 1011-1, also used by the machine and the Schedule Editor); 1 = arc energy");
+            put("Evaluation range", evaluation.rangeNote, `Data rows ${firstRow}–${lastRow}, ${c.J[a].toFixed(2)}–${c.J[b].toFixed(2)} s`);
+            put("Window per period", evaluation.periodSeconds ? `${evaluation.periodSeconds} s` : `${settings.periodRows} rows`, evaluation.periodSeconds ? (evaluation.setpoints?.period ? "oscillation period from the set points: In-Dwell + Out-Dwell + 2 × Excursion" : "set value (no oscillation set points in the log)") : "as in the template (AVERAGE over 104 rows)");
+            put("Window per 10 periods", evaluation.periodSeconds ? `${evaluation.periodSeconds * 10} s` : `${settings.tenPeriodRows} rows`, evaluation.periodSeconds ? "" : "as in the template (AVERAGE over 996 rows)");
+            put("Units in the log", `travel ${evaluation.units.travel || "?"}, heat input ${evaluation.units.heat || "?"}`, "Data columns A–G as in the log; H (kJ/mm) and I (mm/min) converted");
+            put("Formula Method A", "U · I / v · 0.06 · k", "v in mm/min → kJ/mm; per measuring point");
+            put("Formula Energy / distance", "k · Σ U·I·Δt / Σ v·Δt", "over the evaluation range; robust against travel ≈ 0");
+            row++;
+            factors.row(row++, [{ v: "Log", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }]);
+            put("File", fileName);
+            put("Log version", log.version || "?");
+            ["SCHEDULE", "POWER SUPPLY", "WELD HEAD", "TRACK DIAMETER", "USER", "DATE", "START TIME", "STOP TIME"].forEach(key => {
+                if (log.header[key] !== undefined) put(key.charAt(0) + key.slice(1).toLowerCase(), log.header[key]);
+            });
+            put("Data rows", n);
+            if (evaluation.setpoints) put("Steady state (set points)", `${(evaluation.setpoints.start / 1000).toFixed(2)} s – ${Number.isFinite(evaluation.setpoints.end) ? (evaluation.setpoints.end / 1000).toFixed(2) + " s" : "end"}`, "after up-slope, before down-slope");
+            row++;
+            factors.row(row++, [{ v: "Heat input limits", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }]);
+            if (target) {
+                put("Target range", target.name, "from the Schedule Editor (Tools › Heat Input), matched by the schedule number");
+                put("Min (kJ/mm)", target.min ?? "–");
+                put("Max (kJ/mm)", target.max ?? "–");
+            } else {
+                put("Target range", "none", "set target ranges in the Schedule Editor (Heat Input) to check the beads");
+            }
+            put("Result (per period min/max)", statusInfo.text, "", statusInfo.ok === false ? XL_STYLE.flag : statusInfo.ok ? XL_STYLE.ok : 0);
+            if (log.limits) {
+                row++;
+                factors.row(row++, [{ v: "Machine limits (LIMITS_TAGS)", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }]);
+                log.limits.tags.forEach((tag, index) => put(tag, Number.isFinite(log.limits.values[index]) ? log.limits.values[index] : ""));
+            }
+
+            /* Machine averages + set points */
+            const machine = new XlSheet("Machine averages", { widths: Array(17).fill(12) });
+            row = 1;
+            const writeBlock = (title, block, extraHeader, extraValues) => {
+                machine.row(row++, [{ v: title, s: XL_STYLE.bold }]);
+                machine.row(row++, [...block.tags, ...(extraHeader || [])].map(text => ({ v: text, s: XL_STYLE.header })));
+                machine.row(row++, [...block.tags.map((_, index) => block.uom[index] || ""), ...(extraHeader ? extraHeader.map(() => "kJ/mm") : [])].map(text => ({ v: text, s: XL_STYLE.header })));
+                block.rows.forEach((cells, rowIndex) => {
+                    machine.row(row++, [...block.tags.map((_, index) => {
+                        const value = wdrNumber(cells[index], log.decimalComma);
+                        return Number.isFinite(value) ? value : (cells[index] || "");
+                    }), ...(extraValues ? extraValues(rowIndex) : [])]);
+                });
+                row++;
+            };
+            if (log.blocks.SEGMENT_AVERAGE && result.machine) {
+                writeBlock("Segment averages (machine)", log.blocks.SEGMENT_AVERAGE, ["Arc energy\nEnergy / Distance", `Heat input\n× k = ${settings.processFactor}`],
+                    index => [result.machine.segments[index].arcEnergy, result.machine.segments[index].arcEnergy * settings.processFactor]);
+            } else {
+                machine.row(row++, [{ v: "No segment averages in the log.", s: XL_STYLE.note }]);
+                row++;
+            }
+            if (log.blocks.SETPOINT) writeBlock("Set points", log.blocks.SETPOINT);
+
+            const sheets = [{ sheet: data }, { sheet: chartSheet, charts }, { sheet: chartData }, { sheet: factors }, { sheet: machine }];
+
+            /* Raw data (optional): komplette CSV mit allen Logspalten */
+            if (settings.rawSheet) {
+                const raw = new XlSheet("Raw data", { widths: Array(16).fill(12) });
+                const lines = text.split(/\r?\n/);
+                let rawRow = 1;
+                for (let index = 0; index < lines.length; index++) {
+                    if (lines[index].trim() === "") continue;
+                    const cells = wdrSplitLine(lines[index], log.delimiter).map(cell => {
+                        const value = wdrNumber(cell, log.decimalComma);
+                        return Number.isFinite(value) && !/^[-+]?0\d/.test(cell) ? value : cell;
+                    });
+                    raw.row(rawRow++, cells);
+                    if (index % 30000 === 29999) await onStep(`Writing raw data line ${index + 1}…`);
+                }
+                sheets.push({ sheet: raw });
+            }
+
+            await onStep("Compressing workbook…");
+            return xlBuildWorkbook(sheets);
+        }
+
+        // Sammeltabelle aller Raupen (Aufbau wie WPQ_…_Heat-input.xlsx, korrigierte Ueberschriften).
+        async function buildSummaryWorkbook(entries, settings) {
+            const sheet = new XlSheet("Heat input", { selected: true, freezeRows: 2, widths: [11, 11, 9, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 16, 34, 30, 40, 12, 4, 12, 12, 12, 12] });
+            const statHeaders = WDR_STAT_COLUMNS.map(item => item[1]);
+            sheet.row(1, ["Pass", "Bead", "Preheat", ...statHeaders, "Energy / distance\nk·ΣU·I·Δt / Σv·Δt", "Machine segment\naverage", "Target range", "Status (per period min/max)", "Schedule", "File", "Date"].map(text => ({ v: text, s: XL_STYLE.header })), 75);
+            sheet.row(2, ["", "", "°C", ...statHeaders.map(() => "kJ/mm"), "kJ/mm", "kJ/mm", "kJ/mm", "", "", "", ""].map(text => ({ v: text, s: XL_STYLE.header })));
+            const sorted = [...entries].sort((x, y) => WDR_PASS_ORDER.indexOf(x.pass) - WDR_PASS_ORDER.indexOf(y.pass)
+                || x.bead.layer - y.bead.layer || x.bead.bead - y.bead.bead || x.bead.suffix.localeCompare(y.bead.suffix) || x.fileName.localeCompare(y.fileName));
+            const groups = new Map();
+            sorted.forEach((entry, index) => {
+                const rowNumber = index + 3;
+                const r = entry.evaluation.result;
+                const values = WDR_STAT_COLUMNS.map(([, , source, kind]) => r[WDR_STAT_SOURCE[source]][kind]);
+                const status = wdrTargetStatus(entry.evaluation, entry.target);
+                const statusStyle = status.ok === false ? XL_STYLE.flag : status.ok ? XL_STYLE.ok : XL_STYLE.note;
+                const rangeStyle = index => {
+                    if (!entry.target || status.ok !== false) return XL_STYLE.number;
+                    if (index === 3 && entry.target.min !== null && values[3] < entry.target.min) return XL_STYLE.flagNumber;
+                    if (index === 4 && entry.target.max !== null && values[4] > entry.target.max) return XL_STYLE.flagNumber;
+                    return XL_STYLE.number;
+                };
+                sheet.row(rowNumber, [
+                    entry.pass, entry.bead.label || "–", null,
+                    ...values.map((value, valueIndex) => Number.isFinite(value) ? { v: value, s: rangeStyle(valueIndex) } : "n/a"),
+                    Number.isFinite(r.energyPerDistance) ? { v: r.energyPerDistance, s: XL_STYLE.number } : "n/a",
+                    Number.isFinite(r.machine?.heatInput) ? { v: r.machine.heatInput, s: XL_STYLE.number } : "n/a",
+                    entry.target ? `${entry.target.name} ${entry.target.min ?? "–"} – ${entry.target.max ?? "–"}` : "–",
+                    { v: status.text, s: statusStyle },
+                    entry.schedule, entry.fileName, entry.date
+                ]);
+                if (!groups.has(entry.pass)) groups.set(entry.pass, { first: rowNumber, last: rowNumber });
+                groups.get(entry.pass).last = rowNumber;
+            });
+            // Gruppenblock: Mittel je Lage (Spalte I = average per period, wie in der WPQ-Datei)
+            const lastDataRow = sorted.length + 2;
+            const blockRow = lastDataRow + 3;
+            sheet.row(blockRow, ["Per pass (average per period, column I)", null, null, "MIN", "MAX", "AVERAGE", "Beads"].map((text, index) => text === null ? null : { v: text, s: index === 0 ? XL_STYLE.bold : XL_STYLE.header }));
+            let groupRow = blockRow + 1;
+            groups.forEach((range, pass) => {
+                const ref = `I${range.first}:I${range.last}`;
+                const values = sorted.slice(range.first - 3, range.last - 2).map(entry => entry.evaluation.result.perPeriod.avg).filter(Number.isFinite);
+                sheet.row(groupRow++, [{ v: pass, s: XL_STYLE.bold }, null, null,
+                    values.length ? { f: `MIN(${ref})`, v: Math.min(...values), s: XL_STYLE.number } : "n/a",
+                    values.length ? { f: `MAX(${ref})`, v: Math.max(...values), s: XL_STYLE.number } : "n/a",
+                    values.length ? { f: `AVERAGE(${ref})`, v: values.reduce((sum, value) => sum + value, 0) / values.length, s: XL_STYLE.number } : "n/a",
+                    range.last - range.first + 1]);
+            });
+            sheet.row(groupRow + 1, [{ v: `Process factor k = ${settings.processFactor}. Columns D–O correspond to row 4 (Q–AB) of each evaluation workbook; headers corrected (W–Y: instantaneous Method A, Z–AB: Method C). Bead from the file name (L…_B… or "Layer … Bead …"), pass from the schedule name.`, s: XL_STYLE.note }]);
+            return xlBuildWorkbook([{ sheet }]);
+        }
+    </script>
+
+    <script>
         let wdrSelectedFiles = [];
 
         const dropZone = document.getElementById('drop-zone');
@@ -11656,6 +12490,71 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         const downloadContainer = document.getElementById('download-container');
         const downloadBtn = document.getElementById('download-btn');
         const downloadInfo = document.getElementById('download-info');
+
+        /* Einstellungen der Heat-Input-Auswertung (bleiben im Browser gespeichert) */
+        const WDR_SETTINGS_KEY = 'wdrEvaluationSettings';
+        const evaluationPanel = document.getElementById('evaluation-panel');
+        const evalInput = id => document.getElementById(id);
+
+        function readEvaluationSettings() {
+            const number = (id, fallback) => {
+                const value = Number(String(evalInput(id).value).replace(',', '.'));
+                return Number.isFinite(value) && value > 0 ? value : fallback;
+            };
+            const fromRow = Math.max(4, Math.round(number('eval-from', WDR_DEFAULT_SETTINGS.fromRow)));
+            return {
+                processFactor: number('eval-factor', WDR_DEFAULT_SETTINGS.processFactor),
+                rangeMode: document.querySelector('input[name="eval-range"]:checked')?.value || 'template',
+                fromRow,
+                toRow: Math.max(fromRow, Math.round(number('eval-to', WDR_DEFAULT_SETTINGS.toRow))),
+                windowMode: document.querySelector('input[name="eval-window"]:checked')?.value || 'rows',
+                periodSeconds: number('eval-period', WDR_DEFAULT_SETTINGS.periodSeconds),
+                summary: evalInput('eval-summary').checked,
+                useTargets: evalInput('eval-targets').checked,
+                rawSheet: evalInput('eval-raw').checked
+            };
+        }
+
+        function applyEvaluationSettings(settings) {
+            evalInput('eval-factor').value = settings.processFactor;
+            evalInput('eval-from').value = settings.fromRow;
+            evalInput('eval-to').value = settings.toRow;
+            evalInput('eval-period').value = settings.periodSeconds;
+            evalInput('eval-summary').checked = settings.summary !== false;
+            evalInput('eval-targets').checked = settings.useTargets !== false;
+            evalInput('eval-raw').checked = settings.rawSheet === true;
+            const range = document.querySelector(`input[name="eval-range"][value="${settings.rangeMode}"]`);
+            if (range) range.checked = true;
+            const windowMode = document.querySelector(`input[name="eval-window"][value="${settings.windowMode}"]`);
+            if (windowMode) windowMode.checked = true;
+        }
+
+        function selectedFormat() {
+            return document.querySelector('input[name="format"]:checked')?.value || 'evaluation';
+        }
+
+        function updateEvaluationPanel() {
+            evaluationPanel.classList.toggle('is-inactive', selectedFormat() !== 'evaluation');
+            let targets = [];
+            try { targets = JSON.parse(localStorage.getItem('scheduleEditorHeatInputTargets') || '[]'); } catch (error) { targets = []; }
+            const count = Array.isArray(targets) ? targets.filter(item => item && (String(item.min ?? '').trim() !== '' || String(item.max ?? '').trim() !== '')).length : 0;
+            evalInput('eval-targets-info').textContent = count
+                ? `${count} target range${count === 1 ? '' : 's'} found in the Schedule Editor (Tools › Heat Input). Ranges are matched by the 4-digit schedule number; the per-period MIN/MAX is checked.`
+                : 'No target ranges set in the Schedule Editor (Tools › Heat Input) – the beads are not checked.';
+        }
+
+        try {
+            const stored = JSON.parse(localStorage.getItem(WDR_SETTINGS_KEY) || 'null');
+            if (stored && typeof stored === 'object') applyEvaluationSettings({ ...WDR_DEFAULT_SETTINGS, ...stored });
+        } catch (error) { /* gespeicherte Einstellungen ignorieren */ }
+        document.querySelectorAll('#evaluation-panel input, input[name="format"]').forEach(input => {
+            input.addEventListener('change', () => {
+                try { localStorage.setItem(WDR_SETTINGS_KEY, JSON.stringify(readEvaluationSettings())); } catch (error) { /* ohne Speicher weiter */ }
+                updateEvaluationPanel();
+            });
+        });
+        window.addEventListener('focus', updateEvaluationPanel);
+        updateEvaluationPanel();
 
         const zipFileOptions = { compression: "STORE" };
         // Fallback without folder access: the ZIP is split into parts of max. ~400 MB
@@ -11978,10 +12877,29 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
             const total = wdrSelectedFiles.length;
             const failed = [];
+            const notEvaluated = [];
+            const outOfRange = [];
+            const summaryEntries = [];
+            const evaluate = selectedFormat() === 'evaluation';
+            const settings = evaluate ? readEvaluationSettings() : null;
             let successCount = 0;
             let zip = null;
             let zipBytes = 0;
             let zipPart = 0;
+
+            const storeOutput = async (outPath, data) => {
+                const size = data.size ?? data.byteLength ?? 0;
+                if (targetDir) {
+                    await writeToDirectory(targetDir, outPath, data);
+                    return;
+                }
+                if (zip && zipBytes + size > MAX_ZIP_BYTES) {
+                    await flushZip();
+                }
+                if (!zip) zip = new JSZip();
+                zip.file(outPath, data, zipFileOptions);
+                zipBytes += size;
+            };
 
             const flushZip = async () => {
                 if (!zip || zipBytes === 0) return;
@@ -12005,12 +12923,46 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     await nextFrame(); // let the progress display repaint
 
                     try {
-                        const outPath = getOutputPath(file);
+                        let outPath = getOutputPath(file);
                         let data;
 
                         if (isXmlFile(file.name)) {
                             // XML files are copied unchanged
                             data = new Uint8Array(await file.arrayBuffer());
+                        } else if (evaluate) {
+                            const text = await file.text();
+                            let log = null;
+                            let evaluation = null;
+                            try {
+                                log = parseLiburdiLog(text);
+                                evaluation = evaluateHeatInput(log, settings);
+                            } catch (error) {
+                                notEvaluated.push(`${file.name}: ${error.message}`);
+                            }
+                            if (evaluation) {
+                                const schedule = log.header.SCHEDULE || '';
+                                const target = settings.useTargets ? wdrTargetsForSchedule(schedule) : null;
+                                data = await buildEvaluationWorkbook(file.name, text, log, evaluation, target, async message => {
+                                    progressStatus.textContent = `File ${i + 1} of ${total}: ${file.name} – ${message}`;
+                                    await nextFrame();
+                                });
+                                outPath = outPath.replace(/\.xlsx$/i, '_heat-input.xlsx');
+                                const entry = {
+                                    fileName: file.name, schedule, date: log.header.DATE || '',
+                                    pass: wdrPassType(schedule) !== 'Other' ? wdrPassType(schedule) : wdrPassType(file.name),
+                                    bead: wdrBeadId(file.name, schedule),
+                                    evaluation: { result: evaluation.result }, // ohne Spalten (Speicher)
+                                    target
+                                };
+                                summaryEntries.push(entry);
+                                if (wdrTargetStatus(entry.evaluation, target).ok === false) outOfRange.push(file.name);
+                            } else {
+                                data = convertCsvToXlsx(text); // kein Liburdi-Log: Rohdaten wie bisher
+                            }
+                            if (!data) {
+                                failed.push(file.name);
+                                continue;
+                            }
                         } else {
                             data = convertCsvToXlsx(await file.text());
                             if (!data) {
@@ -12019,16 +12971,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             }
                         }
 
-                        if (targetDir) {
-                            await writeToDirectory(targetDir, outPath, data);
-                        } else {
-                            if (zip && zipBytes + data.byteLength > MAX_ZIP_BYTES) {
-                                await flushZip();
-                            }
-                            if (!zip) zip = new JSZip();
-                            zip.file(outPath, data, zipFileOptions);
-                            zipBytes += data.byteLength;
-                        }
+                        await storeOutput(outPath, data);
                         successCount++;
                     } catch (err) {
                         console.error(`Error in file ${file.name}:`, err);
@@ -12036,12 +12979,30 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     }
                 }
 
+                let summaryName = '';
+                if (evaluate && settings.summary && summaryEntries.length) {
+                    progressStatus.textContent = 'Creating summary workbook...';
+                    await nextFrame();
+                    try {
+                        summaryName = `Heat_input_summary_${new Date().toISOString().slice(0, 10)}.xlsx`;
+                        await storeOutput(summaryName, await buildSummaryWorkbook(summaryEntries, settings));
+                    } catch (err) {
+                        console.error('Error in summary workbook:', err);
+                        failed.push(`Summary workbook: ${err.message}`);
+                        summaryName = '';
+                    }
+                }
+
                 if (!targetDir) await flushZip();
 
                 updateProgressBar(total, total);
-                const failedText = failed.length
-                    ? `\n\nFailed (${failed.length}):\n${failed.slice(0, 15).join('\n')}${failed.length > 15 ? '\n...' : ''}`
+                const listText = (title, items) => items.length
+                    ? `\n\n${title} (${items.length}):\n${items.slice(0, 15).join('\n')}${items.length > 15 ? '\n...' : ''}`
                     : '';
+                const failedText = listText('Failed', failed)
+                    + listText('Heat input evaluation not possible, raw data written', notEvaluated)
+                    + listText('Heat input outside the target range', outOfRange)
+                    + (summaryName ? `\n\nSummary: ${summaryName}` : '');
 
                 if (successCount === 0) {
                     progressStatus.textContent = "Conversion failed.";

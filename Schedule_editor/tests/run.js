@@ -25,6 +25,7 @@ const { startServer, createContext, chromium } = require("./lib");
             } catch (error) {
                 results.push({ test: label, name: "exception", ok: false, detail: error.stack || error.message });
             }
+            await ctx.closeAll();
             const own = results.filter(result => result.test === label);
             const failed = own.filter(result => !result.ok);
             console.log(`${failed.length ? "✗" : "✓"} ${label} (${own.length} checks, ${Date.now() - started} ms)`);

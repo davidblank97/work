@@ -7,7 +7,7 @@ Version 3.0 fasst den **Schedule Editor**, den **WDR Converter** (Welddata Conve
 `Lib_Schedule_Editor_v3_0.html` in einem aktuellen Browser oeffnen. Es erscheint eine **Startseite** mit zwei Karten:
 
 - **Schedule Editor:** Liburdi-Schedule-XML-Dateien bearbeiten, vergleichen und speichern (Beschreibung ab „Aufbau der Oberflaeche“).
-- **WDR Converter:** Schweissdaten-Aufzeichnungen (CSV/XML) in Excel-Dateien (.xlsx) umwandeln. Chrome/Edge fragen beim Start nach einem Zielordner und schreiben die Dateien direkt dorthin; andere Browser laden ein ZIP herunter. XML-Dateien werden unveraendert kopiert.
+- **WDR Converter:** Schweissdaten-Aufzeichnungen (Liburdi Data Logs, CSV) auswerten: je CSV eine Heat-Input-Auswertung als Excel-Datei plus eine Sammeltabelle aller Raupen (siehe „WDR Converter: Heat-Input-Auswertung“), oder wie bisher nur die Rohdaten als .xlsx. Chrome/Edge fragen beim Start nach einem Zielordner und schreiben die Dateien direkt dorthin; andere Browser laden ein ZIP herunter. XML-Dateien werden unveraendert kopiert.
 
 - **Pendant Layout:** Tastenbelegung des Handbediengeraets (Pendant) bearbeiten und als `key_layout_<Suffix>.xml` oder PDF-Vorschau ausgeben (siehe „Pendant Layout“ unten).
 
@@ -32,6 +32,27 @@ Danach `http://localhost:8000/Schedule_editor/Lib_Schedule_Editor_v3_0.html` oef
 Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 
 **Aufbau der Datei:** Startseite und Umschaltung stehen am Anfang und Ende der Datei. Die beiden Anwendungen liegen unveraendert in `<template id="app-editor">` bzw. `<template id="app-wdr">` und werden beim Oeffnen jeweils als eigenes Dokument (iframe) gestartet, damit sich CSS und JavaScript nicht gegenseitig stoeren. Aenderungen am Editor oder Converter werden direkt im jeweiligen Template vorgenommen. Einstellungen im `localStorage` (ausgeblendete/gesperrte Parameter, Reihenfolge usw.) sind dieselben wie bei der Einzeldatei, solange sie ueber dieselbe Adresse geoeffnet wird.
+
+## WDR Converter: Heat-Input-Auswertung
+
+Ersetzt die Excel-Vorlage `template_metric_Short.xlsx` (gleiche Kennwerte, aber ohne deren Fehler; Befunde in `WDR_converter/PLAN_Excel_Vorlage.md`). Ausgabeformat „Heat input evaluation“ (Standard):
+
+- **Je CSV `<Name>_heat-input.xlsx`:**
+  - `Data`: Spalten A–P wie in der Vorlage. A–G sind die Logwerte in Log-Einheiten, H ist Methode C (Maschine) in kJ/mm, I der Vorschub in mm/min, J/K die Zeit in s/min (K = J/60, die Vorlage rechnete die Zeit doppelt), L Methode A je Messpunkt (U·I/v·0,06·k), M/N nach Grund-/Pulsstrom getrennt, O/P gleitende Mittel „per period“ bzw. „per 10 periods“.
+  - Zeile 4 enthaelt die Kennwerte Q–AB (Min/Max/Mittel) als **Formeln ueber den tatsaechlichen Bereich**. Dazu kommen AC (Verhaeltnis A/C), AD (Energie/Weg k·ΣU·I·Δt / Σv·Δt), AE (Segment-Mittel der Maschine) und AF (Heat Input laut Log). Die Ueberschriften sind korrigiert.
+  - `Charts`: 5 Diagramme mit der Zeit in Minuten auf der x-Achse. Sie verweisen auf das ausgeduennte Blatt `Chart data` (Minimum und Maximum je Abschnitt). Bei bekanntem Zielbereich sind Grenzlinien eingezeichnet.
+  - `Factors and limits`: verwendete Einstellungen, Log-Kopf, Zielbereich mit Ergebnis, Maschinengrenzen (LIMITS).
+  - `Machine averages`: Segment-Mittelwerte und Sollwerte aus dem Log.
+  - Optional `Raw data` mit allen Logspalten (etwa doppelte Dateigroesse).
+- **`Heat_input_summary_<Datum>.xlsx`:** je Raupe eine Zeile, Spalten wie die WPQ-Sammeltabelle.
+  - Die Lage (Root/Hot pass/Fill/Cap) kommt aus dem Schedule-Namen, die Raupe aus dem Dateinamen (`L21_B42` oder `Layer 7 Bead 12`).
+  - Dazu kommen Zielbereich und Status sowie je Lage MIN/MAX/AVERAGE als Formeln.
+- **Einstellungen** (Panel 2, im Browser gespeichert):
+  - **Process factor k:** Standard 0,6 wie Maschine und Editor; 1 = Lichtbogenenergie.
+  - **Auswertebereich:** Datenzeilen 1000–121000 wie in der Vorlage, oder automatisch der Dauerbetrieb laut Sollwerten. Der Bereich reicht nie in den Downslope; kuerzere Logs nutzen automatisch den Dauerbetrieb.
+  - **Fenster der gleitenden Mittel:** 104/996 Zeilen wie in der Vorlage, oder zeitbasiert ueber die Pendelperiode aus dem Log (In-Dwell + Out-Dwell + 2 × Excursion).
+  - **Pruefung:** gegen die Heat-Input-Zielbereiche des Schedule Editors, zugeordnet ueber die 4-stellige Schedule-Nummer. Geprueft wird per period MIN/MAX; Abweichungen erscheinen rot und in der Abschlussmeldung.
+- Log-Versionen 2 (metrisch) und 3 (imperial: IPM, J/in) werden erkannt und umgerechnet, ebenso `;` als Trennzeichen mit Dezimalkomma. CSVs, die keine Liburdi-Logs sind, werden als Rohdaten geschrieben.
 
 ## Pendant Layout
 
