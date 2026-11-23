@@ -308,10 +308,10 @@ Darunter steht eine gemeinsame Tabelle: je Datei eine Kopfzeile mit Name und Gre
 - `XML Viewer`: Oeffnet den schreibgeschuetzten XML-Inhalt der aktiven Datei.
 - `Program Overview (PDF)`: Oeffnet eine Druckansicht (A4 quer), die alle geladenen Dateien zusammenfasst. Mit `Print / Save as PDF` wird daraus ueber den Druckdialog eine PDF-Datei („Als PDF speichern“). Die Seiten enthalten:
   1. eine Dateiliste mit Nummer, Name, Head, Anzahl Segmente, Version, Schema-Status und Speicherstand;
-  2. die hervorgehobenen (★) Werte aus `Global`, je Datei eine Spalte;
-  3. die Hauptwerte der Segmente, je Datei und Segment eine Spalte. Die Reihenfolge entspricht den Gruppen der Segmentansicht: `pri_amp`/`bkg_amp`, `pri_ahc`/`bkg_ahc`, `pri_travel`/`bkg_travel`, `pri_wire`/`bkg_wire`, `indwell`/`excursion`/`outdwell` usw. stehen untereinander. Danach folgen weitere mit ★ markierte Segmentwerte. Eine eigene, per Ziehen festgelegte Reihenfolge gilt hier nicht. Zeilen mit unterschiedlichen Werten sind schattiert;
-  4. das Heat-Input-Diagramm (inklusive Ziel-Bereich und Grenzen) mit Tabelle (Nominal, Bereich, Mittelstrom, Vorschub, Status);
-  5. die Overrides, die in die Heat-Input-Berechnung eingehen (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `travel_max`, `dwell_max`, `excursion_max`), je Datei eine Spalte.
+  2. die Hauptwerte der Segmente, je Datei und Segment eine Spalte. Die Reihenfolge entspricht den Gruppen der Segmentansicht: `pri_amp`/`bkg_amp`, `pri_ahc`/`bkg_ahc`, `pri_travel`/`bkg_travel`, `pri_wire`/`bkg_wire`, `indwell`/`excursion`/`outdwell` usw. stehen untereinander. Danach folgen weitere mit ★ markierte Segmentwerte. Eine eigene, per Ziehen festgelegte Reihenfolge gilt hier nicht. Zeilen mit unterschiedlichen Werten sind schattiert;
+  3. die hervorgehobenen (★) Werte aus `Global`, je Datei eine Spalte;
+  4. die Overrides, die in die Heat-Input-Berechnung eingehen (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `travel_max`, `dwell_max`, `excursion_max`), je Datei eine Spalte;
+  5. das Heat-Input-Diagramm (inklusive Ziel-Bereich und Grenzen) mit Tabelle (Nominal, Bereich, Mittelstrom, Vorschub, Status). Dieser Teil beginnt auf einer neuen Seite.
 
   Welche Global-Werte und zusaetzlichen Segmentwerte erscheinen, steuert die Markierung mit ★; Einheiten werden wie im Editor eingestellt angezeigt. Bei vielen Dateien werden die Tabellen in Bloecke zu acht (Overrides: zehn) Spalten aufgeteilt.
 - `Schema Check`: Prueft alle geladenen Dateien gegen das aktive XDR-Schema (siehe „Schema-Pruefung (XDR)“).

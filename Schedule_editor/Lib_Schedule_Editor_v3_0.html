@@ -9689,7 +9689,7 @@
     <div class="toolbar"><button class="primary" onclick="window.print()">Print / Save as PDF</button><button onclick="window.close()">Close</button></div>
     <header>
         <div><h1>Program overview <span>· ${files.length} file(s)</span></h1>
-            <div class="muted">Highlighted Global values (★), main Segment values, heat input with the overrides it uses</div></div>
+            <div class="muted">Segments, Global (★), overrides for the heat input, heat input</div></div>
         <div class="meta">${escapeHtml(now.toLocaleString())}<br>${schema ? `Schema v${escapeHtml(schema.version)}` : ""}</div>
     </header>
 
@@ -9697,20 +9697,20 @@
     <table><thead><tr><th>No.</th><th>File</th><th>Head</th><th class="num">Segments</th><th>Version</th><th>Schema</th><th>State</th></tr></thead>
     <tbody>${fileList}</tbody></table>
 
-    <h2>Global – highlighted values</h2>
-    ${overviewMatrix(globalKeys, fileColumns, (column, key) => directChildValue(column.file.sections.global, key))}
-
     <h2>Segments – main values</h2>
     ${overviewMatrix(segmentKeys, segmentColumnsList, (column, key) => directChildValue(column.segment, key))}
     <p class="legend">Rows with different values are shaded.</p>
+
+    <h2>Global – highlighted values</h2>
+    ${overviewMatrix(globalKeys, fileColumns, (column, key) => directChildValue(column.file.sections.global, key))}
+
+    <h2>Overrides used for the heat input</h2>
+    ${overviewMatrix(overrideKeys, fileColumns, (column, key) => directChildValue(column.file.sections.overrides, key), 10)}
 
     <h2 class="page-break">Heat input</h2>
     <div class="muted">Bar: min–max from the overrides, dot: nominal. ${escapeHtml(targetText)}.</div>
     <div class="chart">${buildOverviewHeatChart(entriesByFile)}</div>
     ${buildOverviewHeatTable(entriesByFile, target)}
-
-    <h2>Overrides used for the heat input</h2>
-    ${overviewMatrix(overrideKeys, fileColumns, (column, key) => directChildValue(column.file.sections.overrides, key), 10)}
 </body></html>`;
         }
 

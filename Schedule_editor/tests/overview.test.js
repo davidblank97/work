@@ -12,6 +12,7 @@ module.exports = [
             overview.on("pageerror", error => t.errors.push(`overview: ${error.message}`));
             await overview.waitForLoadState();
             const headings = await overview.$$eval("h2", items => items.map(item => item.textContent));
+            t.check("section order", JSON.stringify(headings) === JSON.stringify(["Files", "Segments – main values", "Global – highlighted values", "Overrides used for the heat input", "Heat input"]), headings.join(" | "));
             t.check("sections", ["Files", "Global – highlighted values", "Segments – main values", "Heat input", "Overrides used for the heat input"].every(h => headings.includes(h)), headings.join(" | "));
             t.check("three files listed", await overview.locator("h2:text('Files') + table tbody tr").count() === 3);
             const segmentHeader = await overview.locator("h2:text('Segments – main values') + table thead").innerText();
