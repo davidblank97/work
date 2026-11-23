@@ -64,8 +64,8 @@
                     html += `<tr class="${entry.outside ? "outside" : ""}">`
                         + `<td>${index === 0 ? `<strong>${escapeHtml(fileShortLabel(group.file))}</strong>${limits}` : ""}</td>`
                         + `<td><span class="swatch" style="background:${color}"></span>Segment ${escapeHtml(segmentDisplayNumber(segment, entry.segmentIndex))}</td>`
-                        + `<td class="num"><strong>${valid ? result.heatInput.toFixed(3) : "–"}</strong></td>`
-                        + `<td class="num">${valid ? `${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)}` : "–"}</td>`
+                        + `<td class="num"><strong>${valid ? result.heatInput.toFixed(DISPLAY_DECIMALS) : "–"}</strong></td>`
+                        + `<td class="num">${valid ? `${result.minHeatInput.toFixed(DISPLAY_DECIMALS)} – ${result.maxHeatInput.toFixed(DISPLAY_DECIMALS)}` : "–"}</td>`
                         + `<td class="num">${valid ? result.averageAmps.toFixed(1) : "–"}</td>`
                         + `<td class="num">${valid ? result.averageTravelMmPerMinute.toFixed(1) : "–"}</td>`
                         + `<td class="status">${escapeHtml(status)}</td></tr>`;

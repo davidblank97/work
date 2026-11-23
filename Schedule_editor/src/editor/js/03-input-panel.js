@@ -64,11 +64,11 @@
                         btn.textContent = "°";
                         btn.className = "unit-toggle-btn mode-static";
                     } else if (currentMode === 'none') {
-                        input.value = currentInchValue.toFixed(originalPlaces);
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces));
                         btn.textContent = "—";
                         btn.className = "unit-toggle-btn";
                     } else if (currentMode === 'in') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " in";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " in";
                         btn.textContent = "IN";
                         btn.className = "unit-toggle-btn mode-in";
                     } else if (currentMode === 'mm') {
@@ -82,19 +82,19 @@
                         btn.textContent = "CM/MIN";
                         btn.className = "unit-toggle-btn mode-cmmin";
                     } else if (currentMode === 'ampere') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " A";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " A";
                         btn.textContent = "A";
                         btn.className = "unit-toggle-btn mode-static";
                     } else if (currentMode === 'volt') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " V";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " V";
                         btn.textContent = "V";
                         btn.className = "unit-toggle-btn mode-static";
                     } else if (currentMode === 'seconds') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " s";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " s";
                         btn.textContent = "S";
                         btn.className = "unit-toggle-btn mode-static";
                     } else if (currentMode === 'degree') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " °";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " °";
                         btn.textContent = "°";
                         btn.className = "unit-toggle-btn mode-static";
                     }
@@ -108,7 +108,15 @@
             }
             input.dataset.originalValue = child.textContent;
             input.dataset.valueAtFocus = child.textContent;
-            input.addEventListener("focus", () => { input.dataset.valueAtFocus = child.textContent; });
+            // Nur echte Eingaben schreiben: Fokus + Verlassen ohne Tippen laesst den Dateiwert unveraendert
+            // (die Anzeige ist auf 2 Nachkommastellen gerundet, die Datei behaelt ihre Genauigkeit).
+            let typedSinceFocus = false;
+            let displayAtFocus = "";
+            input.addEventListener("focus", () => {
+                input.dataset.valueAtFocus = child.textContent;
+                typedSinceFocus = false;
+                displayAtFocus = input.value;
+            });
             const savedValue = getSavedValue(sectionName, segmentIndex, key);
             input.dataset.hasSavedValue = savedValue === null ? "0" : "1";
             input.dataset.savedValue = savedValue ?? "";
@@ -132,6 +140,19 @@
 
             input.onblur = () => {
                 if (isLocked(key)) { updateDisplay(); return; }
+                if (!isTextField && !typedSinceFocus) { updateDisplay(); return; }
+                if (!isTextField && input.value === displayAtFocus) {
+                    // Getippt, aber wieder auf den Ausgangstext gebracht: Dateiwert von vor dem Fokus zurueck.
+                    child.textContent = input.dataset.valueAtFocus;
+                    currentInchValue = parseFloat(child.textContent) || 0;
+                    registerChange(input, input.dataset.originalValue, child.textContent);
+                    propagateValueToSelectedFiles(sectionName, key, child.textContent);
+                    commitPendingEdit();
+                    typedSinceFocus = false;
+                    updateDisplay();
+                    return;
+                }
+                typedSinceFocus = false;
                 // Ungueltiger Dateiwert unveraendert gelassen bzw. erneut ungueltige Eingabe: nichts schreiben.
                 if (!isTextField && Number.isNaN(parseNumberInput(input.value))) { updateDisplay(); return; }
                 if (isTextField) {
@@ -184,6 +205,7 @@
 
             input.oninput = () => {
                 if (isLocked(key)) { updateDisplay(); return; }
+                typedSinceFocus = true;
                 if (isTextField) {
                     child.textContent = isMultilineText ? input.value : input.value.trim();
                     registerChange(input, input.dataset.originalValue, child.textContent);

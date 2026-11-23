@@ -20,7 +20,7 @@ module.exports = [
             await openBatch(frame);
             t.check("error dialog shown", await frame.locator("#heatSaveModal.show").count() === 1);
             const text = await frame.textContent("#heatSaveList");
-            t.check("names segment and target", /0402 · Segment 1: .* kJ\/mm \(Target max 0\.100\)/.test(text), text);
+            t.check("names segment and target", /0402 · Segment 1: .* kJ\/mm \(Target max 0\.10\)/.test(text), text);
             await frame.click("#heatSaveCancelBtn");
             await page.waitForTimeout(200);
             t.check("cancel: no download", downloads === 0);
@@ -45,7 +45,7 @@ module.exports = [
             await page.waitForTimeout(300);
             await openBatch(frame);
             const text = await frame.textContent("#heatSaveList");
-            t.check("file limit reported", /0499 · Segment 1: .*limit max 0\.050/.test(text) && !text.includes("0402"), text);
+            t.check("file limit reported", /0499 · Segment 1: .*limit max 0\.05/.test(text) && !text.includes("0402"), text);
             await frame.click("#heatSaveCancelBtn");
             await frame.evaluate(() => { selectedFiles = new Set([loadedFiles.findIndex(f => f.name === "0402-Hotpass1.xml")]); renderFileList(); });
             const [download] = await Promise.all([page.waitForEvent("download"), openBatch(frame)]);

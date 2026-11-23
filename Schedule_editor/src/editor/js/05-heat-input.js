@@ -107,7 +107,7 @@
         const heatSaveModal = document.getElementById("heatSaveModal");
         let pendingHeatSave = null;
         function confirmHeatInputBeforeSave(files, proceed) {
-            const format = value => value.toFixed(3);
+            const format = value => value.toFixed(DISPLAY_DECIMALS);
             const problems = [];
             files.filter(Boolean).forEach(file => {
                 const check = heatInputCheck(file);
@@ -386,7 +386,7 @@
                 make("line", { x1: x(value), x2: x(value), y1: margin.top, y2: axisY, class: i === 0 ? "heat-axis" : labelled ? "heat-grid" : "heat-grid heat-grid-minor" });
                 if (labelled) {
                     const label = make("text", { x: x(value), y: axisY + 16, class: "heat-tick", "text-anchor": "middle" });
-                    label.textContent = Number(value.toFixed(3)).toString();
+                    label.textContent = Number(value.toFixed(DISPLAY_DECIMALS)).toString();
                 }
             }
             const axisTitle = make("text", { x: width - margin.right, y: axisY + 28, class: "heat-tick", "text-anchor": "end" });
@@ -489,7 +489,7 @@
                     const hit = make("rect", { x: 0, y: cy - rowHeight / 2, width, height: rowHeight, class: "heat-hit" }, rowGroup);
                     const lines = result.disabled ? ["Segment disabled"]
                         : result.error ? [result.error]
-                            : [`Nominal: ${result.heatInput.toFixed(3)} kJ/mm`, `Range: ${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)} kJ/mm`,
+                            : [`Nominal: ${result.heatInput.toFixed(DISPLAY_DECIMALS)} kJ/mm`, `Range: ${result.minHeatInput.toFixed(DISPLAY_DECIMALS)} – ${result.maxHeatInput.toFixed(DISPLAY_DECIMALS)} kJ/mm`,
                                 `Avg. current: ${result.averageAmps.toFixed(1)} A`];
                     hit.addEventListener("mouseenter", () => {
                         rowGroup.classList.add("is-hover");
@@ -695,8 +695,8 @@
 
                     const valid = !result.disabled && !result.error;
                     [
-                        valid ? result.heatInput.toFixed(3) : "–",
-                        valid ? `${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)}` : "–",
+                        valid ? result.heatInput.toFixed(DISPLAY_DECIMALS) : "–",
+                        valid ? `${result.minHeatInput.toFixed(DISPLAY_DECIMALS)} – ${result.maxHeatInput.toFixed(DISPLAY_DECIMALS)}` : "–",
                         valid ? result.averageAmps.toFixed(1) : "–",
                         valid ? result.averageTravelMmPerMinute.toFixed(1) : "–"
                     ].forEach((text, index) => {

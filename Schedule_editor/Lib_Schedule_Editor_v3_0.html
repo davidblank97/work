@@ -6220,6 +6220,13 @@
             else input.classList.remove("zero");
         }
 
+        // Anzeige: hoechstens 2 Nachkommastellen. Gespeichert wird weiter mit den Stellen der Datei
+        // (z. B. 180.000000); geschrieben wird nur, wenn der Nutzer tatsaechlich etwas eingibt.
+        const DISPLAY_DECIMALS = 2;
+        function displayPlaces(places) {
+            return Math.min(Number.isFinite(places) ? places : DISPLAY_DECIMALS, DISPLAY_DECIMALS);
+        }
+
         // Wandelt eine Eingabe wie "12,5 mm" oder "0.125" in eine Zahl um.
         // Akzeptiert Dezimal-Komma; teilweise ungueltige Eingaben (z. B. "12abc") ergeben NaN.
         function parseNumberInput(text) {
@@ -6953,11 +6960,11 @@
                         btn.textContent = "°";
                         btn.className = "unit-toggle-btn mode-static";
                     } else if (currentMode === 'none') {
-                        input.value = currentInchValue.toFixed(originalPlaces);
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces));
                         btn.textContent = "—";
                         btn.className = "unit-toggle-btn";
                     } else if (currentMode === 'in') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " in";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " in";
                         btn.textContent = "IN";
                         btn.className = "unit-toggle-btn mode-in";
                     } else if (currentMode === 'mm') {
@@ -6971,19 +6978,19 @@
                         btn.textContent = "CM/MIN";
                         btn.className = "unit-toggle-btn mode-cmmin";
                     } else if (currentMode === 'ampere') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " A";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " A";
                         btn.textContent = "A";
                         btn.className = "unit-toggle-btn mode-static";
                     } else if (currentMode === 'volt') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " V";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " V";
                         btn.textContent = "V";
                         btn.className = "unit-toggle-btn mode-static";
                     } else if (currentMode === 'seconds') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " s";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " s";
                         btn.textContent = "S";
                         btn.className = "unit-toggle-btn mode-static";
                     } else if (currentMode === 'degree') {
-                        input.value = currentInchValue.toFixed(originalPlaces) + " °";
+                        input.value = currentInchValue.toFixed(displayPlaces(originalPlaces)) + " °";
                         btn.textContent = "°";
                         btn.className = "unit-toggle-btn mode-static";
                     }
@@ -6997,7 +7004,15 @@
             }
             input.dataset.originalValue = child.textContent;
             input.dataset.valueAtFocus = child.textContent;
-            input.addEventListener("focus", () => { input.dataset.valueAtFocus = child.textContent; });
+            // Nur echte Eingaben schreiben: Fokus + Verlassen ohne Tippen laesst den Dateiwert unveraendert
+            // (die Anzeige ist auf 2 Nachkommastellen gerundet, die Datei behaelt ihre Genauigkeit).
+            let typedSinceFocus = false;
+            let displayAtFocus = "";
+            input.addEventListener("focus", () => {
+                input.dataset.valueAtFocus = child.textContent;
+                typedSinceFocus = false;
+                displayAtFocus = input.value;
+            });
             const savedValue = getSavedValue(sectionName, segmentIndex, key);
             input.dataset.hasSavedValue = savedValue === null ? "0" : "1";
             input.dataset.savedValue = savedValue ?? "";
@@ -7021,6 +7036,19 @@
 
             input.onblur = () => {
                 if (isLocked(key)) { updateDisplay(); return; }
+                if (!isTextField && !typedSinceFocus) { updateDisplay(); return; }
+                if (!isTextField && input.value === displayAtFocus) {
+                    // Getippt, aber wieder auf den Ausgangstext gebracht: Dateiwert von vor dem Fokus zurueck.
+                    child.textContent = input.dataset.valueAtFocus;
+                    currentInchValue = parseFloat(child.textContent) || 0;
+                    registerChange(input, input.dataset.originalValue, child.textContent);
+                    propagateValueToSelectedFiles(sectionName, key, child.textContent);
+                    commitPendingEdit();
+                    typedSinceFocus = false;
+                    updateDisplay();
+                    return;
+                }
+                typedSinceFocus = false;
                 // Ungueltiger Dateiwert unveraendert gelassen bzw. erneut ungueltige Eingabe: nichts schreiben.
                 if (!isTextField && Number.isNaN(parseNumberInput(input.value))) { updateDisplay(); return; }
                 if (isTextField) {
@@ -7073,6 +7101,7 @@
 
             input.oninput = () => {
                 if (isLocked(key)) { updateDisplay(); return; }
+                typedSinceFocus = true;
                 if (isTextField) {
                     child.textContent = isMultilineText ? input.value : input.value.trim();
                     registerChange(input, input.dataset.originalValue, child.textContent);
@@ -8021,7 +8050,7 @@
         const heatSaveModal = document.getElementById("heatSaveModal");
         let pendingHeatSave = null;
         function confirmHeatInputBeforeSave(files, proceed) {
-            const format = value => value.toFixed(3);
+            const format = value => value.toFixed(DISPLAY_DECIMALS);
             const problems = [];
             files.filter(Boolean).forEach(file => {
                 const check = heatInputCheck(file);
@@ -8300,7 +8329,7 @@
                 make("line", { x1: x(value), x2: x(value), y1: margin.top, y2: axisY, class: i === 0 ? "heat-axis" : labelled ? "heat-grid" : "heat-grid heat-grid-minor" });
                 if (labelled) {
                     const label = make("text", { x: x(value), y: axisY + 16, class: "heat-tick", "text-anchor": "middle" });
-                    label.textContent = Number(value.toFixed(3)).toString();
+                    label.textContent = Number(value.toFixed(DISPLAY_DECIMALS)).toString();
                 }
             }
             const axisTitle = make("text", { x: width - margin.right, y: axisY + 28, class: "heat-tick", "text-anchor": "end" });
@@ -8403,7 +8432,7 @@
                     const hit = make("rect", { x: 0, y: cy - rowHeight / 2, width, height: rowHeight, class: "heat-hit" }, rowGroup);
                     const lines = result.disabled ? ["Segment disabled"]
                         : result.error ? [result.error]
-                            : [`Nominal: ${result.heatInput.toFixed(3)} kJ/mm`, `Range: ${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)} kJ/mm`,
+                            : [`Nominal: ${result.heatInput.toFixed(DISPLAY_DECIMALS)} kJ/mm`, `Range: ${result.minHeatInput.toFixed(DISPLAY_DECIMALS)} – ${result.maxHeatInput.toFixed(DISPLAY_DECIMALS)} kJ/mm`,
                                 `Avg. current: ${result.averageAmps.toFixed(1)} A`];
                     hit.addEventListener("mouseenter", () => {
                         rowGroup.classList.add("is-hover");
@@ -8609,8 +8638,8 @@
 
                     const valid = !result.disabled && !result.error;
                     [
-                        valid ? result.heatInput.toFixed(3) : "–",
-                        valid ? `${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)}` : "–",
+                        valid ? result.heatInput.toFixed(DISPLAY_DECIMALS) : "–",
+                        valid ? `${result.minHeatInput.toFixed(DISPLAY_DECIMALS)} – ${result.maxHeatInput.toFixed(DISPLAY_DECIMALS)}` : "–",
                         valid ? result.averageAmps.toFixed(1) : "–",
                         valid ? result.averageTravelMmPerMinute.toFixed(1) : "–"
                     ].forEach((text, index) => {
@@ -10016,8 +10045,8 @@
                     html += `<tr class="${entry.outside ? "outside" : ""}">`
                         + `<td>${index === 0 ? `<strong>${escapeHtml(fileShortLabel(group.file))}</strong>${limits}` : ""}</td>`
                         + `<td><span class="swatch" style="background:${color}"></span>Segment ${escapeHtml(segmentDisplayNumber(segment, entry.segmentIndex))}</td>`
-                        + `<td class="num"><strong>${valid ? result.heatInput.toFixed(3) : "–"}</strong></td>`
-                        + `<td class="num">${valid ? `${result.minHeatInput.toFixed(3)} – ${result.maxHeatInput.toFixed(3)}` : "–"}</td>`
+                        + `<td class="num"><strong>${valid ? result.heatInput.toFixed(DISPLAY_DECIMALS) : "–"}</strong></td>`
+                        + `<td class="num">${valid ? `${result.minHeatInput.toFixed(DISPLAY_DECIMALS)} – ${result.maxHeatInput.toFixed(DISPLAY_DECIMALS)}` : "–"}</td>`
                         + `<td class="num">${valid ? result.averageAmps.toFixed(1) : "–"}</td>`
                         + `<td class="num">${valid ? result.averageTravelMmPerMinute.toFixed(1) : "–"}</td>`
                         + `<td class="status">${escapeHtml(status)}</td></tr>`;
@@ -10208,7 +10237,7 @@
         function formatComparisonValue(parameter, value) {
             const number = parseFloat(value);
             if (!Number.isFinite(number)) return value || "-";
-            const places = getDecimalPlaces(value);
+            const places = displayPlaces(getDecimalPlaces(value));
             const mode = parameterUnits[parameter] || "none";
 
             if (parameter === "tungsten_width" && mode === "degree") {
@@ -11704,8 +11733,7 @@
 
         function formatWpsNumber(value, field) {
             if (value === null || !Number.isFinite(value)) return "–";
-            const digits = field === "heat" ? 3 : field === "wire" ? 2 : field === "travel" ? 0 : 1;
-            return Number(value.toFixed(digits)).toString();
+            return Number(value.toFixed(DISPLAY_DECIMALS)).toString();
         }
 
         function describeWpsRange(range, field) {

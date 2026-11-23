@@ -12,7 +12,8 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
   - Structural changes go through `recordHistoryAction(label, fn)` (snapshots).
   - Field edits go through `registerChange` → `pendingEdit` → `commitPendingEdit`.
 - **Propagation** (06): An edit outside the segments is copied to the other selected files by `propagateValueToSelectedFiles`. It must stay logged in the change log and in undo.
-- **Numbers:** `parseNumberInput` accepts a decimal comma. Values are stored with the original number of decimals. Preserve the `XMLSerializer` output and never rewrite `<note>`.
+- **Numbers:** `parseNumberInput` accepts a decimal comma. Values are stored with the original number of decimals. Display: at most 2 decimals (`DISPLAY_DECIMALS`, `displayPlaces` in 02).
+  - Input fields write back only after real typing (`typedSinceFocus` in 03). Focus and blur, or typing back to the shown text, keep the file value. This avoids losing precision through the rounded display. Preserve the `XMLSerializer` output and never rewrite `<note>`.
 - **Save:**
   - Save (`saveActiveFile`) does not download. It makes the current state the new baseline (`markFilesSaved`).
   - Downloads happen only in Batch Save (`markFilesDownloaded`, `needsDownload` → "Saved ↓").

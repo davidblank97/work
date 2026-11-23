@@ -50,7 +50,7 @@
         function formatComparisonValue(parameter, value) {
             const number = parseFloat(value);
             if (!Number.isFinite(number)) return value || "-";
-            const places = getDecimalPlaces(value);
+            const places = displayPlaces(getDecimalPlaces(value));
             const mode = parameterUnits[parameter] || "none";
 
             if (parameter === "tungsten_width" && mode === "degree") {

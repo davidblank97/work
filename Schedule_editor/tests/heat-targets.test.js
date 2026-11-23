@@ -59,7 +59,7 @@ module.exports = [
             // Batch Save nennt die Range
             await frame.click("#batchSaveBtn");
             await frame.click("#batchSaveConfirmBtn");
-            t.check("batch save names range", (await frame.textContent("#heatSaveList")).includes("0403 · Segment 1") && (await frame.textContent("#heatSaveList")).includes("Hot pass max 0.900"));
+            t.check("batch save names range", (await frame.textContent("#heatSaveList")).includes("0403 · Segment 1") && (await frame.textContent("#heatSaveList")).includes("Hot pass max 0.90"));
             await frame.click("#heatSaveCancelBtn");
 
             // Neu laden: bleibt erhalten; Entfernen

@@ -145,6 +145,8 @@ Die XML-Daten sind in folgende Bereiche gegliedert:
 
 Werte koennen direkt in den Eingabefeldern geaendert werden. Dezimalzahlen duerfen mit Punkt oder Komma eingegeben werden (`12,5` = `12.5`); Eingaben wie `12abc` werden nicht uebernommen. Gespeichert wird immer mit der Anzahl Nachkommastellen, die der Wert in der Datei hat. Wird dabei gerundet, erscheint ein Hinweis in der Statusleiste.
 
+**Anzeige mit 2 Nachkommastellen:** Alle Zahlen werden im Editor mit hoechstens zwei Nachkommastellen angezeigt (z. B. `10.00` statt `10.000000`), auch im Vergleich, beim Heat Input und in der WPS-Pruefung. In der Datei bleibt die volle Genauigkeit erhalten: Nur Anklicken und Verlassen eines Feldes aendert nichts, auch nicht in den umgerechneten Einheiten (mm, cm/min). Eine eingetippte Zahl wird mit der Stellenzahl der Datei gespeichert (`3,1234567` → `3.123457`, angezeigt `3.12`).
+
 Ist die aktive Datei markiert, werden Aenderungen in `Description`, `Global`, `Limits` und `Overrides` auch in alle anderen markierten Dateien uebernommen. Diese Aenderungen erscheinen im Change Log und lassen sich gemeinsam rueckgaengig machen. Segmentwerte gelten immer nur fuer die aktive Datei.
 
 Werte, die vom zuletzt gespeicherten (bzw. geladenen) Stand abweichen, bleiben gruen markiert, auch nach einem Bereichswechsel. Beim Ueberfahren mit der Maus zeigt ein Tooltip den gespeicherten Wert (`Last saved: …`).

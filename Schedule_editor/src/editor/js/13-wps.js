@@ -385,8 +385,7 @@
 
         function formatWpsNumber(value, field) {
             if (value === null || !Number.isFinite(value)) return "–";
-            const digits = field === "heat" ? 3 : field === "wire" ? 2 : field === "travel" ? 0 : 1;
-            return Number(value.toFixed(digits)).toString();
+            return Number(value.toFixed(DISPLAY_DECIMALS)).toString();
         }
 
         function describeWpsRange(range, field) {

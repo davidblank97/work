@@ -1,3 +1,10 @@
+        // Anzeige: hoechstens 2 Nachkommastellen. Gespeichert wird weiter mit den Stellen der Datei
+        // (z. B. 180.000000); geschrieben wird nur, wenn der Nutzer tatsaechlich etwas eingibt.
+        const DISPLAY_DECIMALS = 2;
+        function displayPlaces(places) {
+            return Math.min(Number.isFinite(places) ? places : DISPLAY_DECIMALS, DISPLAY_DECIMALS);
+        }
+
         // Wandelt eine Eingabe wie "12,5 mm" oder "0.125" in eine Zahl um.
         // Akzeptiert Dezimal-Komma; teilweise ungueltige Eingaben (z. B. "12abc") ergeben NaN.
         function parseNumberInput(text) {
