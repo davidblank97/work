@@ -55,17 +55,16 @@
 - Die Berechnung entspricht dem Blatt „Data“, mit folgenden Korrekturen:
   - Die Zeit wird korrekt berechnet (K = J/60).
   - Process factor ist einstellbar, Standard 0,6.
-  - Der Auswertebereich endet vor dem Downslope. Optional wird er automatisch aus den Sollwerten bestimmt.
-  - Die Fenster sind optional zeitbasiert über die Pendelperiode (In-Dwell + Out-Dwell + 2 × Excursion).
+  - Der Auswertebereich ist immer der Dauerbetrieb laut Sollwerten (ohne Up- und Downslope). Die festen Zeilen 1000–121000 der Vorlage werden nicht mehr verwendet.
+  - Die Fenster sind immer zeitbasiert über die Pendelperiode (In-Dwell + Out-Dwell + 2 × Excursion), bei Logs ohne Pendelzeiten der eingestellte Wert. Die festen 104/996 Zeilen werden nicht mehr verwendet.
+  - Alle Werte sind metrisch und werden mit zwei Nachkommastellen angezeigt.
   - Zusätzliche Kennwerte: Energie/Weg sowie die Segment-Mittel der Maschine.
 - **Ausgabe:**
   - Die Kennwerte stehen als Formeln über den tatsächlichen Bereich.
   - Die Diagramme sind Streudiagramme über ausgedünnte Daten.
   - Eine Datei ist etwa 11 MB groß bei 138.000 Messzeilen.
   - Die Sammeltabelle prüft gegen die Heat-Input-Zielbereiche des Schedule Editors.
-- **Abgleich** (`Schedule_editor/tests/wdr-evaluation.test.js`, läuft nur, wenn die Vorlage lokal vorhanden ist):
-  - Mit Faktor 1 stimmen die Werte mit Zeile 4 der Vorlage überein, außer dem veralteten T4.
-  - Mit Faktor 0,6 stimmen sie mit der Zeile L21_B42 der Sammeltabelle überein.
+- **Abgleich:** Mit den Einstellungen der Vorlage (Zeilen 1000–121000, Fenster 104/996 Zeilen) ergab die Berechnung die Werte aus Zeile 4 der Vorlage (Faktor 1, außer dem veralteten T4) und aus der Zeile L21_B42 der Sammeltabelle (Faktor 0,6). Diese Modi sind inzwischen entfernt. Der Test `Schedule_editor/tests/wdr-evaluation.test.js` liest die Rohdaten der Vorlage, wenn sie lokal vorhanden ist. Er prüft Methode A je Messpunkt und Methode C gegen die Vorlage und die Dauerbetriebs-Werte gegen Referenzwerte.
 
 ## Offen / Ideen
 - Vorwärmtemperatur (Spalte „Preheat“ der Sammeltabelle) wird nicht geloggt und bleibt leer.

@@ -5,7 +5,8 @@ const path = require("path");
 const near = (actual, expected, tolerance = 1e-6) => typeof actual === "number" && Math.abs(actual - expected) <= tolerance;
 
 // Synthetisches Log Version 2 (metrisch): Pulsstrom 150/50 A, 10 V, 10 cm/min -> Methode A 0.54 / 0.18 kJ/mm (k = 0.6),
-// Mittel 0.36. Ab 28 s Downslope mit 20 A (darf nicht in die Kennwerte eingehen).
+// Mittel 0.36. Dauerbetrieb laut Sollwerten ab 0.2 s; ab 28 s Downslope mit 20 A (darf nicht in die Kennwerte eingehen).
+// Keine Pendel-Sollwerte (wie Version 2) -> Fenster aus der Einstellung im Converter.
 function syntheticV2Log() {
     const lines = [
         "LIBURDI DATA LOG,2",
@@ -78,6 +79,7 @@ function inspectOutputs(frame) {
                 if (!name.endsWith(".xlsx")) continue;
                 const inner = await JSZip.loadAsync(buffer);
                 const chartNames = Object.keys(inner.files).filter(item => /^xl\/charts\/chart\d+\.xml$/.test(item)).sort();
+                info.styles = inner.file("xl/styles.xml") ? await inner.file("xl/styles.xml").async("string") : "";
                 info.charts = await Promise.all(chartNames.map(item => inner.file(item).async("string")));
                 const workbook = XLSX.read(buffer, { type: "array", cellFormula: true, sheets: ["Data", "Factors and limits", "Machine averages", "Heat input", "Chart data"] });
                 info.sheetNames = workbook.SheetNames;
@@ -88,6 +90,8 @@ function inspectOutputs(frame) {
                     info.row4 = Object.fromEntries(columns.map(column => [column, cell(data, `${column}4`)]));
                     info.rows = [5, 6, 1003, 2803, 2804].map(row => Object.fromEntries(columns.slice(0, 16).map(column => [column, cell(data, `${column}${row}`)])));
                     info.headers = columns.map(column => cell(data, `${column}2`)?.v || "");
+                    info.title = cell(data, "A1")?.v || "";
+                    info.row1Others = columns.slice(1).filter(column => cell(data, `${column}1`)).length;
                     info.units = columns.map(column => cell(data, `${column}3`)?.v || "");
                     let errors = 0;
                     let kMismatch = 0;
@@ -123,6 +127,8 @@ module.exports = [
             const { frame } = await t.openApp("wdr");
             t.check("evaluation panel", (await frame.$$eval(".panel-header", headers => headers.map(h => h.textContent))).some(text => text.includes("Heat input evaluation")));
             t.check("evaluation is the default format", await frame.$eval('input[name="format"]:checked', input => input.value) === "evaluation");
+            t.check("no template row/window options", await frame.$$eval('input[name="eval-range"], input[name="eval-window"], #eval-from, #eval-to', inputs => inputs.length) === 0);
+            await frame.fill("#eval-period", "0.995"); // 99,5 Messpunkte zu 10 ms -> 100 Zeilen je Periode
             // Ziel-Bereich aus dem Schedule Editor (gleiche Herkunft): 0408 soll 0.40–0.60 haben -> per period MIN 0.36 liegt darunter.
             await frame.evaluate(() => {
                 localStorage.setItem("scheduleEditorHeatInputTargets", JSON.stringify([
@@ -158,16 +164,21 @@ module.exports = [
             t.check("time axis K = time / 60000 (template: (J + J_next) / 60)", book.kMismatch === 0, book.kMismatch);
             const r4 = book.row4;
             // Bereich: Zeile 1000 bis zum letzten Messpunkt vor dem Downslope (Index 2799 -> Zeile 2803).
-            t.check("formula over the actual range", r4.Q.f === "MIN(P1000:P2803)" && r4.W.f === "MIN(L1000:L2803)" && r4.AB.f === "AVERAGE(H1000:H2803)", JSON.stringify([r4.Q, r4.W, r4.AB]));
-            t.check("per 10 periods", near(r4.Q.v, 0.36) && near(r4.R.v, 0.36) && near(r4.S.v, 0.36), JSON.stringify([r4.Q, r4.R, r4.S]));
+            // Bereich: Dauerbetrieb ab 0.2 s (Index 20 -> Zeile 24) bis zum letzten Messpunkt vor dem Downslope (Index 2799 -> Zeile 2803).
+            t.check("formula over the steady state", r4.Q.f === "MIN(P24:P2803)" && r4.W.f === "MIN(L24:L2803)" && r4.AB.f === "AVERAGE(H24:H2803)", JSON.stringify([r4.Q, r4.W, r4.AB]));
+            // 9.95 s = 995 Zeilen (ungerade) -> 0.36 ± 0.00018
+            t.check("per 10 periods", near(r4.Q.v, 0.36, 2e-4) && near(r4.R.v, 0.36, 2e-4) && near(r4.S.v, 0.36, 2e-4), JSON.stringify([r4.Q, r4.R, r4.S]));
             t.check("per period", near(r4.T.v, 0.36) && near(r4.U.v, 0.36) && near(r4.V.v, 0.36), JSON.stringify([r4.T, r4.U, r4.V]));
             t.check("instantaneous without down-slope", near(r4.W.v, 0.18) && near(r4.X.v, 0.54) && near(r4.Y.v, 0.36, 1e-3), JSON.stringify([r4.W, r4.X, r4.Y]));
             t.check("method C", near(r4.Z.v, 0.36) && near(r4.AA.v, 0.36) && near(r4.AB.v, 0.36), JSON.stringify([r4.Z, r4.AA, r4.AB]));
             t.check("ratio A/C formula", r4.AC.f === "Y4/AB4" && near(r4.AC.v, 1, 3e-3), JSON.stringify(r4.AC));
             t.check("energy / distance", near(r4.AD.v, 0.36, 2e-3), JSON.stringify(r4.AD));
             t.check("machine segment average", near(r4.AE.v, 0.36, 1e-4), JSON.stringify(r4.AE));
+            t.check("row 1 on one line", book.title.startsWith("Heat input evaluation – 0408-WPQ") && book.title.includes("windows 0.995 s / 9.95 s") && book.row1Others === 0, `${book.title} | ${book.row1Others}`);
+            t.check("two decimals", book.styles.includes('formatCode="0.00"') && !book.styles.includes('formatCode="0.000"'));
+            t.check("metric units", book.units.slice(2, 16).join("|") === "A|V|cm/min|cm/min|kJ/mm|kJ/mm|mm/min|s|min|kJ/mm|kJ/mm|kJ/mm|kJ/mm|kJ/mm", book.units.join("|"));
             const row5 = book.rows[0];
-            t.check("data columns", row5.A.v === 10 && row5.C.v === 150 && near(row5.I.v, 100) && near(row5.J.v, 0.01) && near(row5.L.v, 0.54) && row5.M === null && near(row5.N.v, 0.54), JSON.stringify(row5));
+            t.check("data columns", row5.A.v === 10 && row5.C.v === 150 && near(row5.E.v, 10) && near(row5.I.v, 100) && near(row5.J.v, 0.01) && near(row5.L.v, 0.54) && row5.M === null && near(row5.N.v, 0.54), JSON.stringify(row5));
             const lastRow = book.rows[4];
             t.check("rolling averages do not reach into the down-slope", lastRow.O === null && lastRow.P === null && near(lastRow.L.v, 0.072), JSON.stringify(lastRow));
             t.check("corrected headers", book.headers[24].includes("instantaneous") && book.headers[25].includes("Method C"), book.headers.slice(16, 28).join(" / "));
@@ -197,11 +208,9 @@ module.exports = [
         name: "imperial log (version 3): units, automatic range, oscillation period",
         async run(t) {
             const { frame } = await t.openApp("wdr");
-            await frame.check('input[name="eval-range"][value="auto"]');
-            await frame.check('input[name="eval-window"][value="time"]');
             await frame.uncheck("#eval-summary");
             const stored = await frame.evaluate(() => JSON.parse(localStorage.getItem("wdrEvaluationSettings") || "null"));
-            t.check("settings stored", stored && stored.rangeMode === "auto" && stored.windowMode === "time" && stored.summary === false, JSON.stringify(stored));
+            t.check("settings stored", stored && stored.summary === false && stored.processFactor === 0.6, JSON.stringify(stored));
             const csvPath = t.file("WDR_converter/DL_2026-11-10_14-16-55_Layer 7 Bead 12 Out _764.000_712.000_0.csv");
             const csvLines = fs.readFileSync(csvPath, "utf8").split(/\r?\n/);
             const rawRow5 = csvLines[csvLines.indexOf("DATA_UOM") + 3].split(",").map(Number); // zweite Datenzeile
@@ -220,10 +229,12 @@ module.exports = [
             const row5 = book.rows[0];
             // Rohwert Travel in IPM, Heat Input in J/in -> cm/min bzw. kJ/mm
             t.check("raw values", row5.A.v === rawRow5[0] && near(row5.C.v, rawRow5[2], 1e-9), JSON.stringify([row5.A, row5.C, rawRow5]));
-            // A–G wie im Log (IPM, J/in), H und I umgerechnet
-            t.check("travel IPM -> mm/min", near(row5.E.v, rawRow5[4], 1e-9) && near(row5.I.v, rawRow5[4] * 25.4, 1e-9), JSON.stringify([row5.E, row5.I, rawRow5[4]]));
-            t.check("heat input J/in -> kJ/mm", near(row5.G.v, rawRow5[9], 1e-6) && near(row5.H.v, rawRow5[9] / 25400, 1e-9), JSON.stringify([row5.G, row5.H, rawRow5[9]]));
-            t.check("units row", book.units[4] === "IPM" && book.units[6] === "J/in" && book.units[7] === "kJ/mm" && book.units[8] === "mm/min", book.units.slice(0, 16).join("|"));
+            // Immer metrisch: IPM -> cm/min (E, F) bzw. mm/min (I), J/in -> kJ/mm (G, H)
+            t.check("travel IPM -> cm/min", near(row5.E.v, rawRow5[4] * 2.54, 1e-9) && near(row5.I.v, rawRow5[4] * 25.4, 1e-9), JSON.stringify([row5.E, row5.I, rawRow5[4]]));
+            t.check("heat input J/in -> kJ/mm", near(row5.G.v, rawRow5[9] / 25400, 1e-9) && near(row5.H.v, rawRow5[9] / 25400, 1e-9), JSON.stringify([row5.G, row5.H, rawRow5[9]]));
+            t.check("units row metric", book.units[4] === "cm/min" && book.units[6] === "kJ/mm" && book.units[7] === "kJ/mm" && book.units[8] === "mm/min", book.units.slice(0, 16).join("|"));
+            const machineText = JSON.stringify(book["Machine averages"]);
+            t.check("machine averages metric", !/IPM|J\/in|"in"/.test(machineText) && machineText.includes("cm/min") && machineText.includes("kJ/mm"), machineText.slice(0, 600));
             const r4 = book.row4;
             // automatischer Bereich: Dauerbetrieb laut Sollwerten (Index 196..138178 -> Zeilen 200..138182)
             t.check("automatic range", r4.Z.f === "MIN(H200:H138182)", JSON.stringify(r4.Z));
@@ -234,6 +245,7 @@ module.exports = [
             t.check("factors: window from oscillation", factorValue(factors, "Window per period") === "1.6 s", JSON.stringify(factors));
             t.check("factors: log header", factorValue(factors, "Power supply") === "GT7-254201" && factorValue(factors, "Log version") === "3");
             t.check("factors: no target range", factorValue(factors, "Target range") === "none");
+            t.check("factors: travel limit in cm/min", near(factorValue(factors, "Travel Error (cm/min)"), 25.4, 1e-9), JSON.stringify(factors.slice(-12)));
             t.check("no target lines", book.charts.every(xml => !xml.includes("Target")));
         }
     },
@@ -253,9 +265,10 @@ module.exports = [
         }
     },
     {
-        // Abgleich mit der Excel-Vorlage (60 MB, nicht im Repository): Rohdaten aus Blatt 1 der Vorlage
-        // (Text mit Dezimalkomma), Kennwerte wie in Zeile 4 von "Data" bzw. Zeile L21_B42 der WPQ-Sammeltabelle.
-        name: "same values as the Excel template (optional)",
+        // Rohdaten aus der Excel-Vorlage (60 MB, nicht im Repository; Text mit Dezimalkomma).
+        // Methode A je Messpunkt und Methode C ergeben dieselben Min/Max wie Zeile 4 der Vorlage;
+        // Bereich (Dauerbetrieb) und Fenster (1 s, das Log hat keine Pendel-Sollwerte) weichen bewusst von der Vorlage ab.
+        name: "raw data of the Excel template (optional)",
         async run(t) {
             const templatePath = "WDR_converter/template_metric_Short.xlsx";
             if (!fs.existsSync(t.file(templatePath))) {
@@ -297,16 +310,15 @@ module.exports = [
             }, `${t.baseUrl}/${templatePath}`);
             t.check("raw data from the template (decimal comma)", values.decimalComma && values.rows === 126662, JSON.stringify([values.decimalComma, values.rows]));
             const f1 = values.factor1;
-            t.check("range rows 1000–121000", f1.range[0] === 1000 && f1.range[1] === 121000, f1.range);
-            // Zeile 4 der Vorlage (Faktor 1). T4 (per period MIN 0.999283) ist in der Vorlage ein veralteter Cache-Wert.
-            const expected1 = [["sleeked", "min", 1.159930], ["sleeked", "max", 1.189174], ["sleeked", "avg", 1.173225], ["perPeriod", "max", 1.243791], ["perPeriod", "avg", 1.173220],
-                ["perPeak", "min", 0.734405], ["perPeak", "max", 2.471318], ["perPeak", "avg", 1.173217], ["methodC", "min", 0.321496], ["methodC", "max", 2.137905], ["methodC", "avg", 0.695846]];
-            expected1.forEach(([group, kind, value]) => t.check(`template ${group} ${kind}`, near(f1[group][kind], value, 2e-5), `${f1[group][kind]} vs ${value}`));
-            t.check("template ratio A/C", near(f1.ratioAC, 1.686031, 2e-6), f1.ratioAC);
-            // Sammeltabelle WPQ_O01-EXT_PK_Heat-input.xlsx, Zeile L21_B42 (Faktor 0.6). G (0.59957) ist dort veraltet.
+            t.check("steady state rows 182–126154", f1.range[0] === 182 && f1.range[1] === 126154, f1.range);
+            // gleiche Formeln wie die Vorlage (Zeile 4, Faktor 1): Methode A je Messpunkt und Methode C
+            [["perPeak", "min", 0.734405], ["perPeak", "max", 2.471318], ["methodC", "min", 0.321496], ["methodC", "max", 2.137905]]
+                .forEach(([group, kind, value]) => t.check(`template ${group} ${kind}`, near(f1[group][kind], value, 2e-6), `${f1[group][kind]} vs ${value}`));
+            // Referenzwerte Faktor 0.6 (Dauerbetrieb, Fenster 1 s / 10 s)
             const f6 = values.factor06;
-            const expected6 = [["sleeked", "min", 0.69595], ["perPeriod", "max", 0.74627], ["perPeriod", "avg", 0.70393], ["perPeak", "min", 0.44064], ["perPeak", "max", 1.48279], ["perPeak", "avg", 0.70393], ["methodC", "avg", 0.69584]];
-            expected6.forEach(([group, kind, value]) => t.check(`summary ${group} ${kind}`, near(f6[group][kind], value, 1e-5), `${f6[group][kind]} vs ${value}`));
+            [["sleeked", "min", 0.695940], ["sleeked", "max", 0.714061], ["perPeriod", "min", 0.675355], ["perPeriod", "max", 0.747342], ["perPeriod", "avg", 0.703800],
+                ["perPeak", "avg", 0.703790], ["methodC", "avg", 0.695702]]
+                .forEach(([group, kind, value]) => t.check(`steady state ${group} ${kind}`, near(f6[group][kind], value, 2e-6), `${f6[group][kind]} vs ${value}`));
         }
     }
 ];

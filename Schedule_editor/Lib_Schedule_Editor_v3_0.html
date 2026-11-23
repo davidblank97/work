@@ -11579,24 +11579,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                         1 = arc energy.</span>
                 </div>
                 <div class="eval-group">
-                    <span class="eval-title">Evaluation range</span>
-                    <label class="radio-label">
-                        <input type="radio" name="eval-range" value="template" checked> Data rows
-                        <input type="number" class="eval-number" id="eval-from" min="4" step="1" value="1000"> to
-                        <input type="number" class="eval-number" id="eval-to" min="4" step="1" value="121000"> (as in the template)
-                    </label>
-                    <label class="radio-label">
-                        <input type="radio" name="eval-range" value="auto"> Automatic: steady state from the set points (without up- and down-slope)
-                    </label>
-                    <span class="hint">The range never reaches into the down-slope. Logs shorter than the first row use the steady state.</span>
-                </div>
-                <div class="eval-group">
-                    <span class="eval-title">Rolling averages "per period" / "per 10 periods"</span>
-                    <label class="radio-label">
-                        <input type="radio" name="eval-window" value="rows" checked> 104 / 996 data rows (as in the template)
-                    </label>
-                    <label class="radio-label">
-                        <input type="radio" name="eval-window" value="time"> Oscillation period from the log (In-Dwell + Out-Dwell + 2 × Excursion), otherwise
+                    <span class="eval-title">Evaluation range and rolling averages</span>
+                    <span class="hint">Statistics cover the steady state from the set points of the log (without up- and down-slope).
+                        The rolling averages "per period" / "per 10 periods" use the oscillation period from the log
+                        (In-Dwell + Out-Dwell + 2 × Excursion). All values are converted to metric units.</span>
+                    <label class="radio-label">Oscillation period if the log has none
                         <input type="number" class="eval-number" id="eval-period" min="0.1" step="0.1" value="1.0"> s
                     </label>
                 </div>
@@ -11773,6 +11760,16 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             return 25.4; // "in"; Version 2 schreibt faelschlich "deg", die Werte sind Zoll
         }
 
+        // Metrische Einheit fuer eine Spalte der Bloecke SEGMENT_AVERAGE/SETPOINT: { factor, unit }.
+        function wdrMetricUnit(unit, tag) {
+            const u = String(unit || "").trim().toLowerCase();
+            if (/distance/i.test(tag || "")) return { factor: wdrLengthFactor(unit), unit: "mm" };
+            if (u === "ipm" || u === "in/min") return { factor: 2.54, unit: "cm/min" };
+            if (u === "in") return { factor: 25.4, unit: "mm" };
+            if (u === "j/in" || u === "j/mm" || u === "kj/in") return { factor: wdrHeatFactor(unit), unit: "kJ/mm" };
+            return { factor: 1, unit: unit || "" };
+        }
+
         // Dauerbetrieb aus den Sollwerten: ab wann Strom und Vorschub ihren Dauerwert haben und
         // wann der Downslope beginnt. Version 3 liefert ausserdem die Pendelperiode.
         function wdrSetpointInfo(log) {
@@ -11811,14 +11808,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             return info;
         }
 
+        // Auswertebereich: immer der Dauerbetrieb laut Sollwerten (ohne Up-/Downslope);
+        // Fenster: immer die Pendelperiode aus dem Log (periodSeconds nur, wenn das Log keine enthaelt).
         const WDR_DEFAULT_SETTINGS = {
             processFactor: 0.6,
-            rangeMode: "template",      // "template": Data-Zeilen fromRow..toRow | "auto": Dauerbetrieb laut Sollwerten
-            fromRow: 1000,
-            toRow: 121000,
-            windowMode: "rows",         // "rows": 104/996 Zeilen wie Vorlage | "time": Pendelperiode
-            periodRows: 104,
-            tenPeriodRows: 996,
             periodSeconds: 1.0,
             summary: true,
             useTargets: true,
@@ -11888,60 +11881,32 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 while (index > 0 && col.time[index] >= setpoints.end) index--;
                 return index;
             })();
-            const lastBeforeDownslope = () => downslopeIndex;
-            const periodSeconds = settings.windowMode === "time" ? (setpoints?.period || settings.periodSeconds) : null;
-            const rolling = (rowsWindow, seconds) => {
+            const periodSeconds = setpoints?.period || settings.periodSeconds;
+            // Vorwaerts-Mittel ueber ein Zeitfenster: nur vollstaendige Fenster mit gueltigen Werten vor dem Downslope.
+            const rolling = seconds => {
                 const out = make();
-                if (seconds > 0) {
-                    let end = 0;
-                    for (let i = 0; i < n; i++) {
-                        if (end < i) end = i;
-                        while (end < n && J[end] < J[i] + seconds) end++;
-                        if (end >= n || end > downslopeIndex + 1) break; // Fenster vollstaendig und vor dem Downslope
-                        const count = end - i;
-                        if (count > 0 && valid[end] - valid[i] === count) out[i] = (prefix[end] - prefix[i]) / count;
-                    }
-                    return out;
-                }
-                for (let i = 0; i + rowsWindow <= downslopeIndex + 1; i++) {
-                    const j = i + rowsWindow;
-                    if (valid[j] - valid[i] === rowsWindow) out[i] = (prefix[j] - prefix[i]) / rowsWindow;
+                let end = 0;
+                for (let i = 0; i < n; i++) {
+                    if (end < i) end = i;
+                    while (end < n && J[end] < J[i] + seconds) end++;
+                    if (end >= n || end > downslopeIndex + 1) break;
+                    const count = end - i;
+                    if (count > 0 && valid[end] - valid[i] === count) out[i] = (prefix[end] - prefix[i]) / count;
                 }
                 return out;
             };
-            const O = rolling(settings.periodRows, periodSeconds);
-            const P = rolling(settings.tenPeriodRows, periodSeconds ? periodSeconds * 10 : null);
+            const O = rolling(periodSeconds);
+            const P = rolling(periodSeconds * 10);
 
-            // Auswertebereich: Indizes a..b. Nie ueber den Beginn des Downslope hinaus.
-            let a;
-            let b;
-            let rangeNote;
-            const automaticRange = () => {
-                a = 0;
+            // Auswertebereich a..b: Dauerbetrieb laut Sollwerten; ohne Sollwerte das ganze Log.
+            let a = 0;
+            const b = downslopeIndex;
+            let rangeNote = "whole log (no set points in the log)";
+            if (setpoints) {
                 while (a < n && col.time[a] < setpoints.start) a++;
-                b = lastBeforeDownslope();
-            };
-            if (settings.rangeMode === "auto" && setpoints) {
-                automaticRange();
-                rangeNote = "automatic: steady state from the set points (after up-slope, before down-slope)";
-            } else {
-                a = Math.max(0, Math.round(settings.fromRow) - 4);
-                b = Math.min(Math.round(settings.toRow) - 4, lastBeforeDownslope());
-                rangeNote = `data rows ${settings.fromRow}–${settings.toRow} (template)` + (b < settings.toRow - 4 ? ", limited by the end of the weld" : "");
-                if (settings.rangeMode === "auto") rangeNote += " – no set points in the log, automatic range not possible";
-                if (b < a) {
-                    // Log kuerzer als die Startzeile: Dauerbetrieb laut Sollwerten, sonst das ganze Log.
-                    if (setpoints) {
-                        automaticRange();
-                        rangeNote = `log shorter than data row ${settings.fromRow}: steady state from the set points used`;
-                    } else {
-                        a = 0;
-                        b = lastBeforeDownslope();
-                        rangeNote = `log shorter than data row ${settings.fromRow}: whole log used`;
-                    }
-                }
+                rangeNote = "steady state from the set points (after up-slope, before down-slope)";
             }
-            if (!(b >= a)) throw new Error(`The evaluation range is empty (log has ${n} data rows, range starts at row ${a + 4}).`);
+            if (!(b >= a)) throw new Error(`The evaluation range is empty (log has ${n} data rows).`);
             const stats = values => {
                 let min = Infinity; let max = -Infinity; let sum = 0; let count = 0;
                 for (let i = a; i <= b; i++) {
@@ -12152,18 +12117,20 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     head += "<cols>" + options.widths.map((width, index) => width ? `<col min="${index + 1}" max="${index + 1}" width="${width}" customWidth="1"/>` : "").join("") + "</cols>";
                 }
                 head += "<sheetData>";
-                const foot = "</sheetData>" + (options.drawing ? '<drawing r:id="rId1"/>' : "") + "</worksheet>";
+                const foot = "</sheetData>"
+                    + (options.ignoreFormulaRange ? `<ignoredErrors><ignoredError sqref="${options.ignoreFormulaRange}" formulaRange="1"/></ignoredErrors>` : "")
+                    + (options.drawing ? '<drawing r:id="rId1"/>' : "") + "</worksheet>";
                 return new Blob([head, ...this.parts, foot], { type: "application/xml" });
             }
         }
 
         const XL_STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="0.000"/></numFmts><fonts count="5"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FFC00000"/><name val="Calibri"/><family val="2"/></font><font><i/><sz val="10"/><color rgb="FF6E6259"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FF2E7D32"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFCE4D6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="9"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="1" fillId="2" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="2" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="0.00"/></numFmts><fonts count="5"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FFC00000"/><name val="Calibri"/><family val="2"/></font><font><i/><sz val="10"/><color rgb="FF6E6259"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FF2E7D32"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFCE4D6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="9"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="1" fillId="2" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="2" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
 
         // Streudiagramm (x: Zeit in min) mit Linien ohne Marker.
         function xlScatterChartXml({ title, xTitle, yTitle, series }) {
             const rich = (text, size, bold) => `<c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p><a:pPr><a:defRPr sz="${size}" b="${bold ? 1 : 0}"/></a:pPr><a:r><a:rPr lang="en-US" sz="${size}" b="${bold ? 1 : 0}"/><a:t>${xlEscape(text)}</a:t></a:r></a:p></c:rich></c:tx>`;
-            const axis = (id, crossId, position, axisTitle, gridlines) => `<c:valAx><c:axId val="${id}"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="${position}"/>${gridlines ? '<c:majorGridlines><c:spPr><a:ln w="6350"><a:solidFill><a:srgbClr val="E3D9CF"/></a:solidFill></a:ln></c:spPr></c:majorGridlines>' : ""}<c:title>${rich(axisTitle, 1000, false)}<c:overlay val="0"/></c:title><c:numFmt formatCode="General" sourceLinked="0"/><c:majorTickMark val="out"/><c:minorTickMark val="none"/><c:tickLblPos val="low"/><c:crossAx val="${crossId}"/><c:crosses val="autoZero"/><c:crossBetween val="midCat"/></c:valAx>`;
+            const axis = (id, crossId, position, axisTitle, gridlines) => `<c:valAx><c:axId val="${id}"/><c:scaling><c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="${position}"/>${gridlines ? '<c:majorGridlines><c:spPr><a:ln w="6350"><a:solidFill><a:srgbClr val="E3D9CF"/></a:solidFill></a:ln></c:spPr></c:majorGridlines>' : ""}<c:title>${rich(axisTitle, 1000, false)}<c:overlay val="0"/></c:title><c:numFmt formatCode="${position === "b" ? "0.0" : "0.00"}" sourceLinked="0"/><c:majorTickMark val="out"/><c:minorTickMark val="none"/><c:tickLblPos val="low"/><c:crossAx val="${crossId}"/><c:crosses val="autoZero"/><c:crossBetween val="midCat"/></c:valAx>`;
             const seriesXml = series.map((item, index) => `<c:ser><c:idx val="${index}"/><c:order val="${index}"/><c:tx><c:v>${xlEscape(item.name)}</c:v></c:tx><c:spPr><a:ln w="${item.width || 9525}"><a:solidFill><a:srgbClr val="${item.color}"/></a:solidFill>${item.dash ? `<a:prstDash val="${item.dash}"/>` : ""}</a:ln></c:spPr><c:marker><c:symbol val="none"/></c:marker><c:xVal><c:numRef><c:f>${xlEscape(item.x)}</c:f></c:numRef></c:xVal><c:yVal><c:numRef><c:f>${xlEscape(item.y)}</c:f></c:numRef></c:yVal><c:smooth val="0"/></c:ser>`).join("");
             return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><c:roundedCorners val="0"/><c:chart><c:title>${rich(title, 1200, true)}<c:overlay val="0"/></c:title><c:autoTitleDeleted val="0"/><c:plotArea><c:layout/><c:scatterChart><c:scatterStyle val="lineMarker"/><c:varyColors val="0"/>${seriesXml}<c:axId val="5001"/><c:axId val="5002"/></c:scatterChart>${axis(5001, 5002, "b", xTitle, false)}${axis(5002, 5001, "l", yTitle, true)}</c:plotArea><c:legend><c:legendPos val="b"/><c:overlay val="0"/></c:legend><c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart></c:chartSpace>`;
@@ -12264,19 +12231,16 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             const lastRow = b + 4;
             const schedule = log.header.SCHEDULE || "";
             const statusInfo = wdrTargetStatus(evaluation, target);
-            // Spalten A–G wie im Log (Log-Einheiten), H und I umgerechnet auf kJ/mm bzw. mm/min
-            const travelFactor = wdrTravelFactor(evaluation.units.travel);
-            const wireFactor = wdrTravelFactor(evaluation.units.wire);
-            const heatFactor = wdrHeatFactor(evaluation.units.heat);
+            const num = value => Number.isFinite(value) ? { v: value, s: XL_STYLE.number } : null;
 
             /* Data */
-            const data = new XlSheet("Data", { selected: true, freezeRows: 3, widths: [10, 8, 10, 10, 10, 10, 11, 12, 10, 10, 10, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 14, 13, 13, 13, 10, 15, 15, 15] });
-            data.row(1, [{ v: `Heat input evaluation – ${schedule || fileName}`, s: XL_STYLE.bold }, null, null, null, null, null,
-                { v: `Process factor ${settings.processFactor} · ${evaluation.rangeNote} · statistics over rows ${firstRow}–${lastRow} (${c.J[a].toFixed(1)}–${c.J[b].toFixed(1)} s) · windows ${evaluation.periodSeconds ? `${evaluation.periodSeconds} s / ${evaluation.periodSeconds * 10} s` : `${settings.periodRows} / ${settings.tenPeriodRows} rows`}`, s: XL_STYLE.note }]);
+            const data = new XlSheet("Data", { selected: true, freezeRows: 3, ignoreFormulaRange: "Q4:AF4", widths: [10, 11, 10, 10, 10, 10, 11, 12, 10, 10, 10, 14, 14, 14, 14, 14, ...Array(12).fill(14), 10, 16, 16, 16] });
+            // Zeile 1: eine Zeile ohne Umbruch (laeuft ueber die leeren Nachbarzellen)
+            data.row(1, [{ v: `Heat input evaluation – ${schedule || fileName} · process factor ${settings.processFactor} · ${evaluation.rangeNote} · statistics over rows ${firstRow}–${lastRow} (${c.J[a].toFixed(1)}–${c.J[b].toFixed(1)} s) · windows ${evaluation.periodSeconds} s / ${evaluation.periodSeconds * 10} s`, s: XL_STYLE.bold }]);
             const headers = ["Time", "PulseState", "Amps", "Volts", "Travel", "Wire", "Heat Input\n(log)", "Heat Input\nMethod C\n(machine)", "Travel", "Time", "Time", "Heat Input\ninstantaneous\nMethod A", "Heat Input\nBackground\nMethod A", "Heat Input\nPulse\nMethod A", "Heat Input\nrolling average\nper period\nMethod A", "Heat Input\nrolling average\nper 10 periods\nMethod A",
                 ...WDR_STAT_COLUMNS.map(item => item[1]), "Ratio\nMethod A / C", "Energy / distance\nk·ΣU·I·Δt / Σv·Δt", "Machine segment average\nk·Energy / Distance", "Machine heat input\n(logged)"];
             data.row(2, headers.map(text => ({ v: text, s: XL_STYLE.header })), 75);
-            const units = ["ms", "", "A", "V", evaluation.units.travel, evaluation.units.wire, evaluation.units.heat, "kJ/mm", "mm/min", "s", "min", "kJ/mm", "kJ/mm", "kJ/mm", "kJ/mm", "kJ/mm", ...WDR_STAT_COLUMNS.map(() => "kJ/mm"), "", "kJ/mm", "kJ/mm", "kJ/mm"];
+            const units = ["ms", "", "A", "V", "cm/min", "cm/min", "kJ/mm", "kJ/mm", "mm/min", "s", "min", "kJ/mm", "kJ/mm", "kJ/mm", "kJ/mm", "kJ/mm", ...WDR_STAT_COLUMNS.map(() => "kJ/mm"), "", "kJ/mm", "kJ/mm", "kJ/mm"];
             data.row(3, units.map(text => ({ v: text, s: XL_STYLE.header })));
             const statCells = WDR_STAT_COLUMNS.map(([, , source, kind]) => {
                 const value = result[WDR_STAT_SOURCE[source]][kind];
@@ -12287,7 +12251,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             const numberCell = value => Number.isFinite(value) ? { v: value, s: XL_STYLE.stat } : { v: "n/a", s: XL_STYLE.stat };
             const extra = [ratio, numberCell(result.energyPerDistance), numberCell(result.machine?.heatInput), numberCell(result.machine?.loggedHeatInput)];
             for (let i = 0; i < n; i++) {
-                const cells = [c.time[i], c.pulse[i], c.amps[i], c.volts[i], c.travel[i] / travelFactor, c.wire[i] / wireFactor, c.H[i] / heatFactor, c.H[i], c.I[i], c.J[i], c.K[i], c.L[i], c.M[i], c.N[i], c.O[i], c.P[i]];
+                // A, B unformatiert; C–P metrisch mit zwei Nachkommastellen (volle Genauigkeit bleibt in der Zelle)
+                const cells = [c.time[i], c.pulse[i], num(c.amps[i]), num(c.volts[i]), num(c.travel[i]), num(c.wire[i]), num(c.H[i]), num(c.H[i]), num(c.I[i]), num(c.J[i]), num(c.K[i]), num(c.L[i]), num(c.M[i]), num(c.N[i]), num(c.O[i]), num(c.P[i])];
                 if (i === 0) cells.push(...statCells, ...extra);
                 data.row(i + 4, cells);
                 if (i % 20000 === 19999) await onStep(`Writing data row ${i + 1} of ${n}…`);
@@ -12336,13 +12301,15 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             /* Factors and limits */
             const factors = new XlSheet("Factors and limits", { widths: [34, 22, 70] });
             let row = 1;
-            const put = (label, value, note, style) => factors.row(row++, [{ v: label, s: XL_STYLE.bold }, typeof value === "number" ? value : { v: value ?? "", s: style || 0 }, note ? { v: note, s: XL_STYLE.note } : null]);
+            const put = (label, value, note, style) => factors.row(row++, [{ v: label, s: XL_STYLE.bold },
+                typeof value === "number" ? (Number.isInteger(value) ? value : { v: value, s: XL_STYLE.number }) : { v: value ?? "", s: style || 0 },
+                note ? { v: note, s: XL_STYLE.note } : null]);
             factors.row(row++, [{ v: "Settings of this evaluation", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }]);
             put("Process factor k", settings.processFactor, "0.6 = heat input for TIG (EN ISO 1011-1, also used by the machine and the Schedule Editor); 1 = arc energy");
             put("Evaluation range", evaluation.rangeNote, `Data rows ${firstRow}–${lastRow}, ${c.J[a].toFixed(2)}–${c.J[b].toFixed(2)} s`);
-            put("Window per period", evaluation.periodSeconds ? `${evaluation.periodSeconds} s` : `${settings.periodRows} rows`, evaluation.periodSeconds ? (evaluation.setpoints?.period ? "oscillation period from the set points: In-Dwell + Out-Dwell + 2 × Excursion" : "set value (no oscillation set points in the log)") : "as in the template (AVERAGE over 104 rows)");
-            put("Window per 10 periods", evaluation.periodSeconds ? `${evaluation.periodSeconds * 10} s` : `${settings.tenPeriodRows} rows`, evaluation.periodSeconds ? "" : "as in the template (AVERAGE over 996 rows)");
-            put("Units in the log", `travel ${evaluation.units.travel || "?"}, heat input ${evaluation.units.heat || "?"}`, "Data columns A–G as in the log; H (kJ/mm) and I (mm/min) converted");
+            put("Window per period", `${evaluation.periodSeconds} s`, evaluation.setpoints?.period ? "oscillation period from the set points: In-Dwell + Out-Dwell + 2 × Excursion" : "set value in the converter (no oscillation set points in the log)");
+            put("Window per 10 periods", `${evaluation.periodSeconds * 10} s`);
+            put("Units in the log", `travel ${evaluation.units.travel || "?"}, heat input ${evaluation.units.heat || "?"}`, "all values in this workbook are metric: cm/min, mm/min, mm, kJ/mm");
             put("Formula Method A", "U · I / v · 0.06 · k", "v in mm/min → kJ/mm; per measuring point");
             put("Formula Energy / distance", "k · Σ U·I·Δt / Σ v·Δt", "over the evaluation range; robust against travel ≈ 0");
             row++;
@@ -12367,21 +12334,29 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             if (log.limits) {
                 row++;
                 factors.row(row++, [{ v: "Machine limits (LIMITS_TAGS)", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }]);
-                log.limits.tags.forEach((tag, index) => put(tag, Number.isFinite(log.limits.values[index]) ? log.limits.values[index] : ""));
+                // Travel/Wire-Grenzen stehen in der Einheit des Vorschubs im Log -> cm/min
+                const travelFactor = wdrTravelFactor(evaluation.units.travel);
+                log.limits.tags.forEach((tag, index) => {
+                    const value = log.limits.values[index];
+                    const isSpeed = /travel|wire/i.test(tag);
+                    put(isSpeed ? `${tag} (cm/min)` : tag, Number.isFinite(value) ? (isSpeed ? value * travelFactor : value) : "");
+                });
             }
 
             /* Machine averages + set points */
             const machine = new XlSheet("Machine averages", { widths: Array(17).fill(12) });
             row = 1;
             const writeBlock = (title, block, extraHeader, extraValues) => {
+                const metric = block.tags.map((tag, index) => wdrMetricUnit(block.uom[index], tag));
+                const format = value => Number.isInteger(value) ? value : { v: value, s: XL_STYLE.number };
                 machine.row(row++, [{ v: title, s: XL_STYLE.bold }]);
                 machine.row(row++, [...block.tags, ...(extraHeader || [])].map(text => ({ v: text, s: XL_STYLE.header })));
-                machine.row(row++, [...block.tags.map((_, index) => block.uom[index] || ""), ...(extraHeader ? extraHeader.map(() => "kJ/mm") : [])].map(text => ({ v: text, s: XL_STYLE.header })));
+                machine.row(row++, [...metric.map(item => item.unit), ...(extraHeader ? extraHeader.map(() => "kJ/mm") : [])].map(text => ({ v: text, s: XL_STYLE.header })));
                 block.rows.forEach((cells, rowIndex) => {
                     machine.row(row++, [...block.tags.map((_, index) => {
                         const value = wdrNumber(cells[index], log.decimalComma);
-                        return Number.isFinite(value) ? value : (cells[index] || "");
-                    }), ...(extraValues ? extraValues(rowIndex) : [])]);
+                        return Number.isFinite(value) ? format(value * metric[index].factor) : (cells[index] || "");
+                    }), ...(extraValues ? extraValues(rowIndex).map(value => Number.isFinite(value) ? format(value) : "") : [])]);
                 });
                 row++;
             };
@@ -12501,13 +12476,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 const value = Number(String(evalInput(id).value).replace(',', '.'));
                 return Number.isFinite(value) && value > 0 ? value : fallback;
             };
-            const fromRow = Math.max(4, Math.round(number('eval-from', WDR_DEFAULT_SETTINGS.fromRow)));
             return {
                 processFactor: number('eval-factor', WDR_DEFAULT_SETTINGS.processFactor),
-                rangeMode: document.querySelector('input[name="eval-range"]:checked')?.value || 'template',
-                fromRow,
-                toRow: Math.max(fromRow, Math.round(number('eval-to', WDR_DEFAULT_SETTINGS.toRow))),
-                windowMode: document.querySelector('input[name="eval-window"]:checked')?.value || 'rows',
                 periodSeconds: number('eval-period', WDR_DEFAULT_SETTINGS.periodSeconds),
                 summary: evalInput('eval-summary').checked,
                 useTargets: evalInput('eval-targets').checked,
@@ -12517,16 +12487,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
         function applyEvaluationSettings(settings) {
             evalInput('eval-factor').value = settings.processFactor;
-            evalInput('eval-from').value = settings.fromRow;
-            evalInput('eval-to').value = settings.toRow;
             evalInput('eval-period').value = settings.periodSeconds;
             evalInput('eval-summary').checked = settings.summary !== false;
             evalInput('eval-targets').checked = settings.useTargets !== false;
             evalInput('eval-raw').checked = settings.rawSheet === true;
-            const range = document.querySelector(`input[name="eval-range"][value="${settings.rangeMode}"]`);
-            if (range) range.checked = true;
-            const windowMode = document.querySelector(`input[name="eval-window"][value="${settings.windowMode}"]`);
-            if (windowMode) windowMode.checked = true;
         }
 
         function selectedFormat() {

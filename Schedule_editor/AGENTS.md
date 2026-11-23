@@ -26,7 +26,8 @@
   - `parseLiburdiLog` reads log versions 2 and 3; `evaluateHeatInput` mirrors the "Data" sheet of the old Excel template (row r = sample r−4).
   - `buildEvaluationWorkbook` and `buildSummaryWorkbook` write xlsx files through the small `XlSheet`/`xlBuildWorkbook` writer: JSZip with inline strings, formulas with cached values and scatter charts. SheetJS is not used for these files, because it cannot write charts.
   - Settings are stored in localStorage `wdrEvaluationSettings`; target ranges are read from the editor's `scheduleEditorHeatInputTargets`.
-  - `tests/wdr-evaluation.test.js` compares the results with the template when `WDR_converter/template_metric_Short.xlsx` exists locally. That file is 60 MB and is not committed.
+  - The evaluation range is always the steady state from the set points, and the windows always follow the oscillation period. The template's fixed rows and windows (1000–121000, 104/996) were removed at the user's request. Output is always metric, with the number format `0.00`.
+  - `tests/wdr-evaluation.test.js` reads the raw data of `WDR_converter/template_metric_Short.xlsx` when it exists locally. That file is 60 MB and is not committed.
 
 ## Validation and usage
 

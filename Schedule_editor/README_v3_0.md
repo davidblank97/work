@@ -38,19 +38,19 @@ Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 Ersetzt die Excel-Vorlage `template_metric_Short.xlsx` (gleiche Kennwerte, aber ohne deren Fehler; Befunde in `WDR_converter/PLAN_Excel_Vorlage.md`). Ausgabeformat „Heat input evaluation“ (Standard):
 
 - **Je CSV `<Name>_heat-input.xlsx`:**
-  - `Data`: Spalten A–P wie in der Vorlage. A–G sind die Logwerte in Log-Einheiten, H ist Methode C (Maschine) in kJ/mm, I der Vorschub in mm/min, J/K die Zeit in s/min (K = J/60, die Vorlage rechnete die Zeit doppelt), L Methode A je Messpunkt (U·I/v·0,06·k), M/N nach Grund-/Pulsstrom getrennt, O/P gleitende Mittel „per period“ bzw. „per 10 periods“.
+  - `Data`: Spalten A–P wie in der Vorlage, **immer metrisch** (cm/min, mm/min, kJ/mm; imperiale Logs werden umgerechnet) und mit zwei Nachkommastellen angezeigt (gerechnet wird mit voller Genauigkeit). A–G sind die Logwerte, H ist Methode C (Maschine), I der Vorschub in mm/min, J/K die Zeit in s/min (K = J/60, die Vorlage rechnete die Zeit doppelt), L Methode A je Messpunkt (U·I/v·0,06·k), M/N nach Grund-/Pulsstrom getrennt, O/P gleitende Mittel „per period“ bzw. „per 10 periods“.
   - Zeile 4 enthaelt die Kennwerte Q–AB (Min/Max/Mittel) als **Formeln ueber den tatsaechlichen Bereich**. Dazu kommen AC (Verhaeltnis A/C), AD (Energie/Weg k·ΣU·I·Δt / Σv·Δt), AE (Segment-Mittel der Maschine) und AF (Heat Input laut Log). Die Ueberschriften sind korrigiert.
   - `Charts`: 5 Diagramme mit der Zeit in Minuten auf der x-Achse. Sie verweisen auf das ausgeduennte Blatt `Chart data` (Minimum und Maximum je Abschnitt). Bei bekanntem Zielbereich sind Grenzlinien eingezeichnet.
   - `Factors and limits`: verwendete Einstellungen, Log-Kopf, Zielbereich mit Ergebnis, Maschinengrenzen (LIMITS).
-  - `Machine averages`: Segment-Mittelwerte und Sollwerte aus dem Log.
+  - `Machine averages`: Segment-Mittelwerte und Sollwerte aus dem Log, metrisch umgerechnet.
   - Optional `Raw data` mit allen Logspalten (etwa doppelte Dateigroesse).
 - **`Heat_input_summary_<Datum>.xlsx`:** je Raupe eine Zeile, Spalten wie die WPQ-Sammeltabelle.
   - Die Lage (Root/Hot pass/Fill/Cap) kommt aus dem Schedule-Namen, die Raupe aus dem Dateinamen (`L21_B42` oder `Layer 7 Bead 12`).
   - Dazu kommen Zielbereich und Status sowie je Lage MIN/MAX/AVERAGE als Formeln.
 - **Einstellungen** (Panel 2, im Browser gespeichert):
   - **Process factor k:** Standard 0,6 wie Maschine und Editor; 1 = Lichtbogenenergie.
-  - **Auswertebereich:** Datenzeilen 1000–121000 wie in der Vorlage, oder automatisch der Dauerbetrieb laut Sollwerten. Der Bereich reicht nie in den Downslope; kuerzere Logs nutzen automatisch den Dauerbetrieb.
-  - **Fenster der gleitenden Mittel:** 104/996 Zeilen wie in der Vorlage, oder zeitbasiert ueber die Pendelperiode aus dem Log (In-Dwell + Out-Dwell + 2 × Excursion).
+  - **Auswertebereich:** immer der Dauerbetrieb laut Sollwerten des Logs (ohne Up- und Downslope); ohne Sollwerte das ganze Log. Die festen Zeilen 1000–121000 der Vorlage gibt es nicht mehr.
+  - **Fenster der gleitenden Mittel:** immer die Pendelperiode aus dem Log (In-Dwell + Out-Dwell + 2 × Excursion) bzw. das Zehnfache; enthaelt das Log keine Pendelzeiten (Version 2), gilt der eingestellte Wert (Standard 1,0 s). Die festen 104/996 Zeilen der Vorlage gibt es nicht mehr.
   - **Pruefung:** gegen die Heat-Input-Zielbereiche des Schedule Editors, zugeordnet ueber die 4-stellige Schedule-Nummer. Geprueft wird per period MIN/MAX; Abweichungen erscheinen rot und in der Abschlussmeldung.
 - Log-Versionen 2 (metrisch) und 3 (imperial: IPM, J/in) werden erkannt und umgerechnet, ebenso `;` als Trennzeichen mit Dezimalkomma. CSVs, die keine Liburdi-Logs sind, werden als Rohdaten geschrieben.
 
