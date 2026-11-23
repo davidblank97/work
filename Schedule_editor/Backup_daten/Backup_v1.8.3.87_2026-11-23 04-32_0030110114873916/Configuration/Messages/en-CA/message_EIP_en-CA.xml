@@ -1,0 +1,72 @@
+<language fileType="EIP" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:18</date>
+	</metadata>
+	<str id="1">
+		<text>EIP client failed to initialize communication.</text>
+		<desc>EIP was not initialized</desc>
+	</str>
+	<str id="2">
+		<text>EIP client failed to receive response for registersession.</text>
+		<desc>EIP was not initialized</desc>
+	</str>
+	<str id="3">
+		<text>EIP Unregister send failed.</text>
+		<desc>Error unregister.</desc>
+	</str>
+	<str id="4">
+		<text>EIP Forward Open send failed.</text>
+		<desc>Error Forward Open send.</desc>
+	</str>
+	<str id="5">
+		<text>EIP Forward Open receive failed.</text>
+		<desc>Error Forward Open receive.</desc>
+	</str>
+	<str id="6">
+		<text>Forward Close send failed.</text>
+		<desc>Error Forward Close. send</desc>
+	</str>
+	<str id="7">
+		<text>Forward Close receive failed.</text>
+		<desc>Error Forward Close receive.</desc>
+	</str>
+	<str id="8">
+		<text>Single request send failed.</text>
+		<desc>Error Single request send.</desc>
+	</str>
+	<str id="9">
+		<text>Single request read receive failed.</text>
+		<desc>Error Single request read receive.</desc>
+	</str>
+	<str id="10">
+		<text>Single request write received failed.</text>
+		<desc>Error Single request write receive.</desc>
+	</str>
+	<str id="11">
+		<text>Tag request send failed.</text>
+		<desc>Error Tag request send.</desc>
+	</str>
+	<str id="12">
+		<text>Tag requestr read received failed.</text>
+		<desc>Error Tag request read receive.</desc>
+	</str>
+	<str id="13">
+		<text>Tag request write received failed.</text>
+		<desc>Error Tag request write receive.</desc>
+	</str>
+	<str id="14">
+		<text>IO received failed.</text>
+		<desc>Error IO receieve.</desc>
+	</str>
+	<str id="15">
+		<text>Send all send failed.</text>
+		<desc>Error send all send .</desc>
+	</str>
+	<str id="16">
+		<text>Send all receive failed.</text>
+		<desc>Error send all receive .</desc>
+	</str>
+</language>

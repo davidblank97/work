@@ -1,0 +1,64 @@
+<energymeter>
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>07/27/2022</date>
+</metadata>
+	<input_voltage value="400">
+		<pulse_a_register_offset>348</pulse_a_register_offset>
+		<pulse_a_trigger_type>1</pulse_a_trigger_type>
+		<pulse_a_upper_bound>2147483647</pulse_a_upper_bound>
+		<pulse_a_lower_bound>34000</pulse_a_lower_bound>
+		<pulse_a_min_duration>250</pulse_a_min_duration>
+		<pulse_a_active_mode>1</pulse_a_active_mode>
+		<pulse_b_register_offset>350</pulse_b_register_offset>
+		<pulse_b_trigger_type>1</pulse_b_trigger_type>
+		<pulse_b_upper_bound>46000</pulse_b_upper_bound>
+		<pulse_b_lower_bound>-2147483647</pulse_b_lower_bound>
+		<pulse_b_min_duration>250</pulse_b_min_duration>
+		<pulse_b_active_mode>1</pulse_b_active_mode>
+	</input_voltage>
+	<input_voltage value="440">
+		<pulse_a_register_offset>348</pulse_a_register_offset>
+		<pulse_a_trigger_type>1</pulse_a_trigger_type>
+		<pulse_a_upper_bound>2147483647</pulse_a_upper_bound>
+		<pulse_a_lower_bound>37400</pulse_a_lower_bound>
+		<pulse_a_min_duration>250</pulse_a_min_duration>
+		<pulse_a_active_mode>1</pulse_a_active_mode>
+		<pulse_b_register_offset>350</pulse_b_register_offset>
+		<pulse_b_trigger_type>1</pulse_b_trigger_type>
+		<pulse_b_upper_bound>50600</pulse_b_upper_bound>
+		<pulse_b_lower_bound>-2147483647</pulse_b_lower_bound>
+		<pulse_b_min_duration>250</pulse_b_min_duration>
+		<pulse_b_active_mode>1</pulse_b_active_mode>
+	</input_voltage>
+	<input_voltage value="480">
+		<pulse_a_register_offset>348</pulse_a_register_offset>
+		<pulse_a_trigger_type>1</pulse_a_trigger_type>
+		<pulse_a_upper_bound>2147483647</pulse_a_upper_bound>
+		<pulse_a_lower_bound>40800</pulse_a_lower_bound>
+		<pulse_a_min_duration>250</pulse_a_min_duration>
+		<pulse_a_active_mode>1</pulse_a_active_mode>
+		<pulse_b_register_offset>350</pulse_b_register_offset>
+		<pulse_b_trigger_type>1</pulse_b_trigger_type>
+		<pulse_b_upper_bound>55200</pulse_b_upper_bound>
+		<pulse_b_lower_bound>-2147483647</pulse_b_lower_bound>
+		<pulse_b_min_duration>250</pulse_b_min_duration>
+		<pulse_b_active_mode>1</pulse_b_active_mode>
+	</input_voltage>
+	<input_voltage value="600">
+		<pulse_a_register_offset>348</pulse_a_register_offset>
+		<pulse_a_trigger_type>1</pulse_a_trigger_type>
+		<pulse_a_upper_bound>2147483647</pulse_a_upper_bound>
+		<pulse_a_lower_bound>51000</pulse_a_lower_bound>
+		<pulse_a_min_duration>250</pulse_a_min_duration>
+		<pulse_a_active_mode>1</pulse_a_active_mode>
+		<pulse_b_register_offset>350</pulse_b_register_offset>
+		<pulse_b_trigger_type>1</pulse_b_trigger_type>
+		<pulse_b_upper_bound>69000</pulse_b_upper_bound>
+		<pulse_b_lower_bound>-2147483647</pulse_b_lower_bound>
+		<pulse_b_min_duration>250</pulse_b_min_duration>
+		<pulse_b_active_mode>1</pulse_b_active_mode>
+	</input_voltage>
+</energymeter>

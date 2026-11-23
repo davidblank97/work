@@ -1,0 +1,123 @@
+<head model="MSIV WELDBORE">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.1</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:39</date>
+		<signature/>
+	</metadata>
+	<properties>
+		<arc_start>0</arc_start>
+		<avc_sense>1</avc_sense>
+		<max_amps>300.0000</max_amps>
+		<trail_fault>0</trail_fault>
+		<cool_flow>3.6</cool_flow>
+		<cool_fault>1</cool_fault>
+		<gas_fault>1</gas_fault>
+		<avc_max>1</avc_max>
+		<step_max>1</step_max>
+		<IPM_convert>0</IPM_convert>
+		<estop_mode_switch>0</estop_mode_switch>
+		<service_motor_period>0.1</service_motor_period>
+		<jog_toggle_switch>0</jog_toggle_switch>
+		<seq_control>0</seq_control>
+		<wire_toggle>0</wire_toggle>
+		<tuning_revision>1</tuning_revision>
+	</properties>
+	<axis name="travel" optional_name="THETA" type="12" com_index="5" degrees="1">
+		<max_speed>39.574</max_speed>
+		<units_rpm>1</units_rpm>
+		<acceleration>900.0</acceleration>
+		<hard_limits>0</hard_limits>
+		<pos type="1" degrees="0">
+			<cpi>4933</cpi>
+			<fwd_counts>0</fwd_counts>
+			<rev_counts>0</rev_counts>
+		</pos>
+		<pulse>1</pulse>
+		<must_be_zeroed>0</must_be_zeroed>
+		<diameter_inch>18.5</diameter_inch>
+		<smart_address>11</smart_address>
+		<hasBrake>0</hasBrake>
+		<bump_sense>1</bump_sense>
+		<rem_emf>0</rem_emf>
+	</axis>
+	<axis name="aux0" optional_name="Z" type="13" com_index="5" degrees="0">
+		<max_speed>20</max_speed>
+		<acceleration>900.0</acceleration>
+		<hard_limits>0</hard_limits>
+		<pos type="1" degrees="0">
+			<cpi>200000</cpi>
+			<fwd_counts>0</fwd_counts>
+			<rev_counts>0</rev_counts>
+		</pos>
+		<pulse>1</pulse>
+		<must_be_zeroed>1</must_be_zeroed>
+		<smart_address>13</smart_address>
+		<hasBrake>0</hasBrake>
+		<bump_sense>1</bump_sense>
+		<rem_emf>0</rem_emf>
+	</axis>
+	<axis name="wire" type="3" io_index="1">
+		<max_speed>100</max_speed>
+		<acceleration>0</acceleration>
+		<hard_limits>0</hard_limits>
+		<curr_limit>1.0</curr_limit>
+		<peak_current>1.5</peak_current>
+		<peak_current_time>0.1</peak_current_time>
+		<vlp>1200</vlp>
+		<vli>8</vli>
+		<clp>410</clp>
+		<cli>8</cli>
+		<back_emf_current_component>0</back_emf_current_component>
+		<pulse>1</pulse>
+		<bump_sense>0</bump_sense>
+	</axis>
+	<axis name="avc" type="3" io_index="2">
+		<max_speed>60</max_speed>
+		<acceleration>0</acceleration>
+		<hard_limits>0</hard_limits>
+		<curr_limit>1.0</curr_limit>
+		<peak_current>1.5</peak_current>
+		<peak_current_time>0.1</peak_current_time>
+		<vlp>800</vlp>
+		<vli>8</vli>
+		<clp>410</clp>
+		<cli>8</cli>
+		<back_emf_current_component>0</back_emf_current_component>
+		<pulse>1</pulse>
+		<bump_sense>1</bump_sense>
+	</axis>
+	<axis name="wm-inout" type="3" io_index="4">
+		<max_speed>100</max_speed>
+		<acceleration>0</acceleration>
+		<hard_limits>1</hard_limits>
+		<curr_limit>0.5</curr_limit>
+		<peak_current>1.0</peak_current>
+		<peak_current_time>0.25</peak_current_time>
+		<vlp>2000</vlp>
+		<vli>10</vli>
+		<clp>410</clp>
+		<cli>8</cli>
+		<back_emf_current_component>0</back_emf_current_component>
+		<pulse>0</pulse>
+		<bump_sense>0</bump_sense>
+		<direction>1</direction>
+	</axis>
+	<axis name="wm-updown" type="3" io_index="5">
+		<max_speed>100</max_speed>
+		<acceleration>0</acceleration>
+		<hard_limits>1</hard_limits>
+		<curr_limit>0.5</curr_limit>
+		<peak_current>1.0</peak_current>
+		<peak_current_time>0.25</peak_current_time>
+		<vlp>2000</vlp>
+		<vli>10</vli>
+		<clp>410</clp>
+		<cli>8</cli>
+		<back_emf_current_component>0</back_emf_current_component>
+		<pulse>0</pulse>
+		<bump_sense>0</bump_sense>
+		<direction>1</direction>
+	</axis>
+</head>

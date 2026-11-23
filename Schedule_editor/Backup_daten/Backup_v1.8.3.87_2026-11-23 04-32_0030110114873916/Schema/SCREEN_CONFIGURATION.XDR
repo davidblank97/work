@@ -1,0 +1,43 @@
+<Schema name="ScreenConfiguration" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.6.15.0">
+
+  <ElementType name="screen_configuration" model="closed" content="eltOnly" order="seq">
+    <AttributeType name="name" required="yes" dt:type="string" />
+    <attribute type="name" />
+    <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="module" minOccurs="1" maxOccurs="*" />
+  </ElementType>
+
+    <!--DECLARE ALL ELEMENTS (METADATA)-->
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+    <element type="last_loaded" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <!--DEFINE ELEMENTS (METADATA)-->
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="last_loaded" model="closed"  dt:type="string" content="textOnly" />
+  
+  <ElementType name="module" model="closed" content="eltOnly" order="seq">
+    <AttributeType name="index" required="yes" dt:type="ui2" />
+    <attribute type="index" />
+    <element type="control" minOccurs="1" maxOccurs="*" />
+  </ElementType>
+  
+  <ElementType name="control" model="closed" content="empty" order="seq">
+    <AttributeType name="index" required="yes" dt:type="ui2" />
+    <AttributeType name="type" required="yes" dt:type="ui2" />
+	<AttributeType name="size" required="yes" dt:type="ui2" />
+	<AttributeType name="id" required="yes" dt:type="ui8" />
+    <attribute type="index" />
+    <attribute type="type" />
+	<attribute type="size"/>
+	<attribute type="id" />
+  </ElementType>
+
+</Schema>

@@ -1,0 +1,24 @@
+<language fileType="DAT" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>Limit Error: %1</text>
+		<desc>Parameter telemetry deviated more than the weld schedule limit threshold to log it. %1 = Parameter name</desc>
+	</str>
+	<str id="2">
+		<text>Limit Fault: %1</text>
+		<desc>Parameter telemetry deviated more than the weld schedule limit threshold to stop the weld. %1 = Parameter name</desc>
+	</str>
+	<str id="3">
+		<text>An error occurred when updating an axis' telemetry. %1</text>
+		<desc>An error occurred when sampling the telemetry of an axis. %1 = Error that occurred.</desc>
+	</str>
+	<str id="4">
+		<text>An error occurred when starting datasampler</text>
+		<desc>An error occurred when starting datasampler.</desc>
+	</str>
+</language>

@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="SCH" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>No schedules have a diameter of %1.</text>
+		<desc>%1 = diameter</desc>
+	</str>
+	<str id="2">
+		<text>No schedules have a groove depth of %1.</text>
+		<desc>%1 = groove depth</desc>
+	</str>
+	<str id="3">
+		<text>No schedules have a diameter of %1 and a groove depth of %2.</text>
+		<desc>%1 = diameter. %2 = groove depth</desc>
+	</str>
+	<str id="4">
+		<text>A groove width of %1 is within the range of multiple schedules that have a diameter of %2 and a groove depth of %3.</text>
+		<desc>%1 = groove width. %2 = diameter. %3 = groove depth</desc>
+	</str>
+	<str id="5">
+		<text>A groove width of %1 is not within the range of any schedules with the given diameter and groove depth.</text>
+		<desc>%1 = groove width</desc>
+	</str>
+	<str id="6">
+		<text>Loaded schedule %1.</text>
+		<desc>%1 = schedule name</desc>
+	</str>
+	<str id="7">
+		<text>Cannot delete the last segment in a schedule.</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="8">
+		<text>Saved schedule %1.</text>
+		<desc>%1 = schedule name</desc>
+	</str>
+	<str id="9">
+		<text>Restart weld at segment %1, from stopped travel position %2 and with %3 remaining?</text>
+		<desc>%1 = segment index, %2 = stopped travel position, %3 = remaining duration</desc>
+	</str>
+	<str id="10">
+		<text>The configuration file for head '%1' does not exist on the system.</text>
+		<desc>%1 = weld head name</desc>
+	</str>
+	<str id="11">
+		<text>Schedule failed to load. No valid arc types are available for the selected weld head.</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="12">
+		<text>Schedule failed to load. Invalid arc type '%1'.</text>
+		<desc>%1 = arc start type</desc>
+	</str>
+	<str id="13">
+		<text>No schedule loaded.</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="14">
+		<text>The loaded schedule has been modified. Would you like to save changes?</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="15">
+		<text>MAX</text>
+		<desc>n/a</desc>
+	</str>
+	<str id="16">
+		<text>MIN</text>
+		<desc>n/a</desc>
+	</str>
+	<str id="17">
+		<text>Purge duration is less than the minimum gas sensing time of %1 s.</text>
+		<desc>%1 = minimum sensing time of the gas sensor</desc>
+	</str>
+	<str id="18">
+		<text>Parameter(s) in schedule '%1' are out of range.|%2</text>
+		<desc>%1 = schedule name. %2 = details.</desc>
+	</str>
+	<str id="19">
+		<text>A schedule with an ID %1 already exists. Do you want to overwrite the existing schedule?</text>
+		<desc>%1 = schedule ID.</desc>
+	</str>
+	<str id="20">
+		<text>No schedule with ID %1 exists.</text>
+		<desc>%1 = schedule ID.</desc>
+	</str>
+	<str id="21">
+		<text>There are %1 data logs associated with schedule (%2) which will all be deleted. Do you want to proceed with deleting all associated data logs?</text>
+		<desc>%1 = number of associated data logs. %2 = schedule ID.</desc>
+	</str>
+	<str id="22">
+		<text>There are %1 data logs associated with schedule (%2). Do you want to migrate or delete the associated data logs?</text>
+		<desc>%1 = number of associated data logs. %2 = schedule ID.</desc>
+	</str>
+	<str id="23">
+		<text>The schedule '%1' failed to load. Reason: |%2</text>
+		<desc>%1 = schedule name. %2 reason.</desc>
+	</str>
+	<str id="24">
+		<text>The mode selected is not valid for the selected weld head.</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="25">
+		<text>The following changes will be saved to the schedule. |%1</text>
+		<desc>%1 = details on bounded parameters</desc>
+	</str>
+	<str id="26">
+		<text>Failed to load weld head %1.</text>
+		<desc>%1 = weld head</desc>
+	</str>
+	<str id="27">
+		<text>Invalid schedule file name %1. File name is missing an ID or in the incorrect format.</text>
+		<desc>%1 = file name</desc>
+	</str>
+	<str id="28">
+		<text>No schedules have %1 of %2.</text>
+		<desc>%1 = custom search tag name. %2 = custom search tag value</desc>
+	</str>
+	<str id="29">
+		<text>No schedules have a diameter of %1, a groove depth of %2 and %3 of %4.</text>
+		<desc>%1 = diameter. %2 = groove depth. %3 = custom search tag name. %4 = custom search tag value</desc>
+	</str>
+	<str id="30">
+		<text>Do you want to clear all warnings and start the weld sequence?</text>
+		<desc>n/a</desc>
+	</str>
+	<str id="31">
+		<text>An empty note cannot be added to this schedule. Please add some content to the note.</text>
+		<desc>n/a</desc>
+	</str>
+	<str id="32">
+		<text>The content of the note is too long. Please shorten the note to %1 characters.</text>
+		<desc>%1 = maximum characters count</desc>
+	</str>
+	<str id="33">
+		<text>There are too many notes added to this schedule. Please delete a note before adding another one.</text>
+		<desc>n/a</desc>
+	</str>
+	<str id="34">
+		<text>A schedule with an ID %1 already exists. Please choose a unique ID to import this schedule.</text>
+		<desc>%1 = schedule ID.</desc>
+	</str>
+	<str id="35">
+		<text>The schedule %1 is referenced %2 times by chainsets. By deleting this schedule all references to it will also be deleted from the chainsets.</text>
+		<desc>%1 = schedule ID. %2 = number of schedule references.</desc>
+	</str>
+	<str id="36">
+		<text>The schedule %1 is included in Auto Schedule Selection. By deleting this schedule it will also be removed from Auto Schedule Selection.</text>
+		<desc>%1 = schedule ID.</desc>
+	</str>
+	<str id="37">
+		<text>Do you want to proceed in deleting all references of the schedule %1?</text>
+		<desc>%1 = schedule ID.</desc>
+	</str>
+	<str id="38">
+		<text>There are references to schedules that no longer exist and have been removed from Auto Schedule Selection. References that were removed: |%1</text>
+		<desc>%1 = details on which schedules were removed.</desc>
+	</str>
+	<str id="39">
+		<text>There are %1 schedules that have a groove depth of %2. Do you want to set the height to measure at to %3 for all %1 schedules?</text>
+		<desc>%1 = number of schedules %2 = groove depth %3 = height to measure at.</desc>
+	</str>
+	<str id="40">
+		<text>Segment number %1 has Groove Tracking Play Back mode enabled without any previous segments using Real Time mode or any schedule-file id selected for real time corrections. </text>
+		<desc>%1 = segment index</desc>
+	</str>
+	<str id="41">
+		<text>Segment number %1 has Groove Tracking enabled and a zero value for the sensitivity.</text>
+		<desc>%1 = segment index</desc>
+	</str>
+	<str id="42">
+		<text>Segment number %1 has Groove Tracking enabled and a zero value for the max correction.</text>
+		<desc>%1 = segment index</desc>
+	</str>
+	<str id="43">
+		<text>The %1 head is not currently active. Choose an active weld head or mark the %1 head as active from the administrative settings.</text>
+		<desc>%1 = head model</desc>
+	</str>
+	<str id="44">
+		<text>There are no weld heads marked as active. Please select at least one active weld head using the administrative settings.</text>
+		<desc>There is no weld heads marked as active. The user must mark at least one weld head as active before a schedule can be created.</desc>
+	</str>
+	<str id="45">
+		<text>The head has a hot wire feeder but the power supply does not have support for it.</text>
+		<desc>The weld head configuration file indicates that it has a hot wire feeder. But the power supply configuration file indicated that there is no support for hotwire.</desc>
+	</str>
+	<str id="46">
+		<text>The schedule %1 has invalid content. Reason: %2</text>
+		<desc>%1 = Schedule Name %2 = Reason why schedule contents is invalid. A schedule was loaded and contained invalid content.</desc>
+	</str>
+	<str id="47">
+		<text>The calculated average heat input telemetry (%1) went outside of the acceptable range of %2 to %3 for segment number %4. To view and adjust the acceptable ranges, use the LIMITS screen.</text>
+		<desc>%1 =  parameter telemetry. %2 = fault threshold lower limit. %3 =  fault threshold upper limit. %4 = segment index</desc>
+	</str>
+	<str id="48">
+		<text>One or more axes must be calibrated before starting a weld.|%1</text>
+		<desc>%1 = Information on axes that are not calibrated</desc>
+	</str>
+	<str id="49">
+		<text>The head will have to be manually positioned to restart the weld. Restart weld at segment %1 with %2 remaining?</text>
+		<desc>%1 = segment index, %2 = remaining duration</desc>
+	</str>
+	<str id="50">
+		<text>The weld path limits of %1 are %2 and %3 are %4.</text>
+		<desc>Limit information for a closed weld path.</desc>
+	</str>
+	<str id="51">
+		<text>The angle of %1 must be within tolerance (+/-%2) of one of the linear portions of the part in order to start a weld.</text>
+		<desc>%1 = name of axis. %2 = tolerance</desc>
+	</str>
+	<str id="52">
+		<text>The distance from the torch to the radiused corner (%1) is not enough to do the pass overlap of %2.</text>
+		<desc>%1 = distance to corner. %2 = pass overlap distance.</desc>
+	</str>
+	<str id="53">
+		<text>The schedule must have at least one segment per linear side of the part.</text>
+		<desc>Not able to start a weld due to the weld head being in a position not specified by the weld path.</desc>
+	</str>
+	<str id="54">
+		<text>The segments for the radiused corner should have a total distance of 90 degrees.</text>
+		<desc>Not able to start a weld due to the weld head being in a position not specified by the weld path.</desc>
+	</str>
+	<str id="55">
+		<text>Unable to determine the weld overlap. Segment 1 of the schedule must be programmed such that it starts at the mid-point of the linear side in question. The last segment of the schedule must be extended to do the overlap.</text>
+		<desc>Not able to start a weld due to the weld head being in a position not specified by the weld path.</desc>
+	</str>
+	<str id="56">
+		<text>Unable to determine the weld overlap. The duration of the last segment (%1) of the schedule cannot be less than the overlap duration of %2.</text>
+		<desc>%1 = duration of last segment. %2 = overlap duration.</desc>
+	</str>
+	<str id="57">
+		<text>Position %1 to be within %2 and %3 (+/-%4 of the weld path limit %5) to start a weld on this side.</text>
+		<desc>%1 = axis name. %2 = minimum value. %3 = maximimum value. %4 = tolerance. %5 = weld path limit.</desc>
+	</str>
+	<str id="58">
+		<text>The position of %1 (%2) is not within the limits determined by the auto center routine. Position %1 between %3 and %4 to start a weld.</text>
+		<desc>%1 = axis name. %2 = position of axis. %3 = minimum limit. %4 = maximum limit.</desc>
+	</str>
+</language>

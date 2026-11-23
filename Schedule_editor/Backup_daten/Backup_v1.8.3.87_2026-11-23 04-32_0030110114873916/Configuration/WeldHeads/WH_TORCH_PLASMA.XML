@@ -1,0 +1,41 @@
+<head model="PLASMA TORCH">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.1</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:41</date>
+		<signature/>
+	</metadata>
+	<properties>
+		<arc_start>3</arc_start>
+		<avc_sense>0</avc_sense>
+		<plasma>1</plasma>
+		<max_amps>500.0000</max_amps>
+		<trail_fault>0</trail_fault>
+		<cool_flow>3.6</cool_flow>
+		<cool_fault>0</cool_fault>
+		<gas_fault>0</gas_fault>
+		<avc_max>1</avc_max>
+		<step_max>1</step_max>
+		<IPM_convert>0</IPM_convert>
+		<plasma_gas>1</plasma_gas>
+		<estop_mode_switch>0</estop_mode_switch>
+		<service_motor_period>0.1</service_motor_period>
+		<purge_fault_delay>10.0</purge_fault_delay>
+		<tuning_revision>1</tuning_revision>
+	</properties>
+	<axis name="travel" type="3" io_index="0" degrees="0">
+		<max_speed>10</max_speed>
+		<acceleration>0</acceleration>
+		<hard_limits>0</hard_limits>
+		<curr_limit>1.0</curr_limit>
+		<vlp>90</vlp>
+		<vli>1</vli>
+		<clp>0</clp>
+		<cli>40</cli>
+		<back_emf_current_component>0</back_emf_current_component>
+		<pulse>1</pulse>
+		<diameter_inch>0</diameter_inch>
+		<bump_sense>0</bump_sense>
+	</axis>
+</head>

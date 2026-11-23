@@ -1,0 +1,62 @@
+<Schema name="SYSTEM_STATES" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.6.3.0">
+	<ElementType name="system_states" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (system_states)-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="last_loaded_schedule" minOccurs="1" maxOccurs="1" />
+		<element type="last_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="last_input_voltage_rating" minOccurs="1" maxOccurs="1" />
+		<element type="auto_schedule_selection_enable" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="mig_cv_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="mig_dip_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="critical_fault_type" minOccurs="1" maxOccurs="1" />
+		<element type="critical_fault_telemetry" minOccurs="1" maxOccurs="1" />
+		<element type="critical_fault_setpoint" minOccurs="1" maxOccurs="1" />
+		<element type="total_system_arc_time" minOccurs="1" maxOccurs="1" />
+		<element type="last_logged_in_user_name" minOccurs="1" maxOccurs="1" />
+		<element type="tig_sync_disabled_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="tig_arc_sync_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="tig_no_sync_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="tig_osc_sync_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="plasma_sync_disabled_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="plasma_arc_sync_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="plasma_no_sync_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+		<element type="plasma_osc_sync_run_screen_configuration" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (ALL)-->
+	<ElementType name="last_loaded_schedule" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="last_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="last_input_voltage_rating" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="auto_schedule_selection_enable" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="mig_pulse_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="mig_cv_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="mig_dip_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="critical_fault_type" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="critical_fault_telemetry" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="critical_fault_setpoint" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="total_system_arc_time" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="last_logged_in_user_name" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tig_sync_disabled_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tig_arc_sync_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tig_no_sync_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tig_osc_sync_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="plasma_sync_disabled_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="plasma_arc_sync_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="plasma_no_sync_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="plasma_osc_sync_run_screen_configuration" model="closed"  dt:type="string" content="textOnly" />
+</Schema>

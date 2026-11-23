@@ -1,0 +1,70 @@
+<config model="GT7">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<system>
+		<locale_id>en-CA</locale_id>
+		<display_tungs_info>0</display_tungs_info>
+		<is_estop_user_clearable>1</is_estop_user_clearable>
+	</system>
+	<power type="TIG">
+		<amps>400</amps> 
+		<avg_amps>300</avg_amps>
+		<volts>50</volts> 
+		<amps_cmd_volts>10</amps_cmd_volts>
+		<amps_telem_volts>10</amps_telem_volts> 
+		<volt_telem_volts>10</volt_telem_volts>
+		<plasma_timeout>1.0</plasma_timeout>
+		<scratch_timeout>15.0</scratch_timeout>
+		<high_freq_timeout>5.0</high_freq_timeout>
+		<critical_fault>1</critical_fault>
+		<allowable_critical_fault_count>6</allowable_critical_fault_count>
+		<allowable_telemetry_deviation_percent>25</allowable_telemetry_deviation_percent>
+		<open_circuit_volts>45</open_circuit_volts>
+		<short_circuit_volts>4.5</short_circuit_volts>
+		<check_short_circuit_volts>0</check_short_circuit_volts>
+		<freq>1000</freq>
+		<has_hf_arc_starter>1</has_hf_arc_starter>
+		<arc_start_retries>0</arc_start_retries>
+		<operating_amps min="50" max="400"/>
+		<operating_volts min="17" max="27"/>
+		<allowed_arc_out_counts>3</allowed_arc_out_counts>
+	</power>
+	<power type="MIG">
+		<amps>400</amps>
+		<avg_amps>300</avg_amps>
+		<volts>50</volts> 
+		<amps_cmd_volts>10</amps_cmd_volts>
+		<amps_telem_volts>10</amps_telem_volts> 
+		<volt_telem_volts>10</volt_telem_volts>
+		<mig_timeout>2.0</mig_timeout>
+		<critical_fault>0</critical_fault>
+		<allowable_critical_fault_count>3</allowable_critical_fault_count>
+		<allowable_telemetry_deviation_percent>25</allowable_telemetry_deviation_percent>
+		<open_circuit_volts>45</open_circuit_volts>
+		<short_circuit_volts>6</short_circuit_volts>
+		<freq>1000</freq>
+		<has_hf_arc_starter>0</has_hf_arc_starter>
+		<mig_sensitivity>30</mig_sensitivity>
+		<operating_amps min="50" max="400"/>
+		<operating_volts min="17" max="27"/>
+		<open_circuit_amps>10.0</open_circuit_amps>
+		<allowed_arc_out_counts>50</allowed_arc_out_counts>
+	</power>
+	<groovetrack>
+		<smoothing>0.5</smoothing>
+		<logs_enabled>0</logs_enabled>
+	</groovetrack>
+	<avc>
+		<chargevolts>5.0</chargevolts>
+		<touchspeed>5.0</touchspeed>
+		<touchvolts>2.0</touchvolts>
+		<liftspeed>50.0</liftspeed>	
+		<touchsense>1</touchsense>
+		<smoothing>0.5</smoothing>
+		<should_wiggle_electrode>0</should_wiggle_electrode>
+	</avc>
+</config>

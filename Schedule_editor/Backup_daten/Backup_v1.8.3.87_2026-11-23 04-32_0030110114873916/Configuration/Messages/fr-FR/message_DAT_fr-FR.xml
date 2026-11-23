@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="DAT" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Erreur de valeur limite : %1</text>
+		<desc>Parameter telemetry deviated more than the weld schedule limit threshold to log it. %1 = Parameter name</desc>
+	</str>
+	<str id="2">
+		<text>Défaut de valeur limite : %1</text>
+		<desc>Parameter telemetry deviated more than the weld schedule limit threshold to stop the weld. %1 = Parameter name</desc>
+	</str>
+	<str id="3">
+		<text>Une erreur s&apos;est produite lors de la mise à jour de la télémétrie d&apos;un axe. %1</text>
+		<desc>An error occurred when sampling the telemetry of an axis. %1 = Error that occurred.</desc>
+	</str>
+</language>

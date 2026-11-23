@@ -1,0 +1,32 @@
+<Schema name="USER_PREFERENCES" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.6.0.0">
+  
+  <ElementType name="value" model="closed" dt:type="string" content="textOnly" />
+    
+  <ElementType name="preference" model="closed" content="mixed">
+    <AttributeType name="tag" required="yes" dt:type="string" />
+    <AttributeType name="value" required="no" dt:type="string" />
+    <attribute type="tag" />
+    <attribute type="value" />
+    <element type="value" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="user_preferences" model="closed" content="eltOnly" order="seq">
+    <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="preference" minOccurs="1" maxOccurs="*" />
+  </ElementType>
+  
+    <!--DECLARE ALL ELEMENTS (METADATA)-->
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+	<element type="author" minOccurs="1" maxOccurs="1" />
+	<element type="date" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+  
+  <!--DEFINE ELEMENTS (METADATA)-->
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

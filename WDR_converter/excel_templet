@@ -1,0 +1,20 @@
+1. ziel ist beim konvertieren direkt ein templat einzufügt. 
+/workspaces/work/WDR_converter/template_metric_Short.xlsx ist ein besipiel, wie es ungefähr sein sollte 
+
+2. alle geladenen und konvertierten dateien werden in einem seperaten excel sheet zusammen gefasst, indem overall werte berechnet werden.
+/workspaces/work/WDR_converter/WPQ_O01-EXT_PK_Heat-input.xlsx ist das besipiel für das overall sheet für die gesammte naht.
+
+für den kontext: die geladenen csv dateien sind sensor daten der schweißmaschine. jede datei ist eine runde um das rohr. L oder Layer = die lage und besteht möglicherweise aus mehreren B oder Bead =einzelne raupen.
+die Schweißprogramme bestehen aus schedules die immer mit einer vierstelligen nummer beginnen zb. 0401.
+die naht ist meisten so aufgebaut: 
+xx01 wurzel (root)
+xx02 hotpass1 (stutzlage)
+xx01 hotpass2 (stützlage2)
+xx03 fillpass Out (fülllage aussen)
+xx04 fillpass In ( fülllage innen)
+in out bedutet das eine raupe links und die andere rechts geschweißt wird
+xx05 compensation (ausgleichslage), ist um vor der decklage unregelmäsigkeiten auszugleichen, kann auch öffter an und abgesetzt werden
+xx06 cap (decklage)
+xx06 cap low ( decklage mit weniger draht) gibt es nur manchmal
+
+wenn eine raupe unterbrochen werden muss wird meisten "1,2,n" beim namen angehängt je nach dem wie oft abgesetzt wurde

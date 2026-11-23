@@ -1,0 +1,938 @@
+<screens>
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.6.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<screen index='0'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'>    LIBURDI AUTOMATION    </row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='1'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>   JOG AXIS:</row>
+		<row index='3'>      SPEED:</row>
+		<row index='4'>        POS:</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='2'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>  STEP AXIS:</row>
+		<row index='3'>   STEP INC:</row>
+		<row index='4'>        POS:</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='3'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>   OVERRIDE:</row>
+		<row index='3'>   SETPOINT:</row>
+		<row index='4'>       RATE:</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='4'>
+		<row index='0'>PROCESS TYPE</row>
+		<row index='1' weldTableIndex='1' >1.Self Sh. Flux Cored</row>
+		<row index='2' weldTableIndex='3' >2.GasMetal:pulsed,sh.circ.</row>
+		<row index='3' weldTableIndex='8' >3.FluxCored:self,gas sh.</row>
+		<row index='4' weldTableIndex='9' >4.GasShielded FluxCored</row>
+		<row index='5' weldTableIndex='11'>5.Pulsed Gas Metal</row>
+		<row index='6'> Current Mode:</row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='5'>
+		<row index='0'>WIRE TYPE</row>
+		<row index='1' weldTableIndex='2'>1. Steel</row>
+		<row index='2' weldTableIndex='3'>2. Stainless</row>
+		<row index='3' weldTableIndex='5'>3. CrNi Alloy</row>
+		<row index='4' weldTableIndex='6'>4. Ni Alloy</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='6'>
+		<row index='0'>WIRE SIZE</row>
+		<row index='1' weldTableIndex='4'>1. 0.035</row>
+		<row index='2' weldTableIndex='5'>2. 0.045</row>
+		<row index="3" weldTableIndex='8'>3. 1/16</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='7'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>No mode is available </row>
+		<row index='3'>for the selection.</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Press CLEAR to continue</row>
+	</screen>
+	<screen index='8'>
+		<row index='0'>TRAVEL DIRECTION</row>
+		<row index='1'>1. Positive</row>
+		<row index='2'>2. Negative</row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='9'>
+		<row index='0'>TRAVEL AXIS</row>
+		<row index='1'>1. Track</row>
+		<row index='2'>2. Boom</row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='10'>
+		<row index='0'>TRAVEL DIRECTION</row>
+		<row index='1'>1. Alternate</row>
+		<row index='2'>2. Same</row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='11'>
+		<row index='0'></row>
+		<row index='1'>          LOG IN</row>
+		<row index='2'></row>
+		<row index='3'>  USER ID:</row>
+		<row index="4"> PASSWORD:</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='12'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>         EXIT</row>
+		<row index="3"></row>
+		<row index="4"> PASSWORD:</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='13'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>Please enter number of</row>
+		<row index="3">passes and Enter:</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='14'>
+		<row index='0'>SCHEDULE:</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='15'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>Please enter distance(in)</row>
+		<row index="3">   and press Enter:</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'>    VALUE:</row>
+		<row index='7'></row>
+	</screen>
+	<screen index='16'>
+		<row index='0'>STEP DIRECTION</row>
+		<row index='1'>1. Positive</row>
+		<row index='2'>2. Negative</row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='17'>
+		<row index="0">Calibrate Limits For:</row>
+		<row index='1'></row>
+		<row index='2'>Jog to centre (zero) and</row>
+		<row index='3'>press ENTER</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'>        POS:</row>
+		<row index='7'> STOP to abort</row>
+	</screen>
+	<screen index='18'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Enter to accept or Clear</row>
+	</screen>
+	<screen index='19'>
+		<row index="0">No program is loaded</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'>Use CTRL+LOAD to load</row>
+		<row index='4'>a weld.</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> </row>
+	</screen>
+	<screen index='20'>
+		<row index="0">EDIT SCHEDULE</row>
+		<row index='1'></row>
+		<row index='2'>Select parameter and edit</row>
+		<row index='3'>CTRL+SAVE -save schedule</row>
+		<row index='4'>CTRL+CLEAR-exit EDIT mode</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> </row>
+	</screen>
+	<screen index='21'>
+		<row index="0">EDIT SEGMENT PARAMETER</row>
+		<row index='1'>      SEG:</row>
+		<row index='2'>PARAMETER:</row>
+		<row index='3'>     UNIT:</row>
+		<row index='4'>      MIN:</row>
+		<row index='5'>      MAX:</row>
+		<row index='6'>    VALUE:</row>
+		<row index='7'> </row>
+	</screen>
+	<screen index='22'>
+		<row index='0'>MODE</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='23'>
+		<row index='0'>    Schedule:</row>
+		<row index='1'></row>
+		<row index='2'>    was saved </row>
+		<row index='3'>   successfully </row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Press CLEAR to continue</row>
+	</screen>
+	<screen index='24'>
+		<row index="0">SETTINGS</row>
+		<row index='1'>1. User Security</row>
+		<row index='2'>2. Export Files</row>
+		<row index='3'>3. Logging</row>
+		<row index='4'>4. Calibrate Limits</row>
+		<row index='5'>5. Program Preferences</row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='25'>
+		<row index="0">USER SECURITY</row>
+		<row index='1'>1. Create User</row>
+		<row index='2'>2. Delete User</row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='26'>
+		<row index="0">EXPORT FILES</row>
+		<row index='1'>1. Schedules</row>
+		<row index='2'>2. Trace Logs</row>
+		<row index='3'>3. Data Logs</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='27'>
+		<row index="0">LOGGING</row>
+		<row index='1'>1. Data Logs</row>
+		<row index='2'>2. Trace Logs</row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='28'>
+		<row index="0">       ADD USER</row>
+		<row index='1'></row>
+		<row index='2'>    NAME:</row>
+		<row index='3'>PASSWORD:</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='29'>
+		<row index="0"></row>
+		<row index='1'>New User:</row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'>Added To Group:</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Press CLEAR to continue</row>
+	</screen>
+	<screen index='30'>
+		<row index="0">GROUP FOR NEW USER</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='31'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Enter to accept or Clear</row>
+	</screen>
+	<screen index='32'>
+		<row index='0'>SCHEDULE:</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='33'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>FILES TRANSFERED</row>
+		<row index="3">SUCCESSFULLY</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'>Press CLEAR to continue</row>
+	</screen>
+	<screen index='34'>
+		<row index='0'>Delete System copy?</row>
+		<row index='1'>1. YES</row>
+		<row index='2'>2. NO</row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='35'>
+		<row index='0'>    LIBURDI AUTOMATION    </row>
+		<row index='1'>           LOG IN</row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index="4"></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='36'>
+		<row index="0">AUTO RUN</row>
+		<row index='1'>1. Enabled</row>
+		<row index='2'>2. Disabled</row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='37'>
+		<row index="0">SCHEDULE</row>
+		<row index='1'>1. Edit</row>
+		<row index='2'>2. Create</row>
+		<row index='3'>3. Delete</row>
+		<row index='4'>4. Copy</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='38'>
+		<row index="0">IO TEST</row>
+		<row index='1'>1. Digital Inputs</row>
+		<row index='2'>2. Digital Outputs</row>
+		<row index='3'>3. Analog Inputs</row>
+		<row index='4'>4. Analog Outputs</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='39'>
+		<row index="0">DIGITAL INPUTS</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='40'>
+		<row index="0">DIGITAL OUTPUTS</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='41'>
+		<row index="0">ANALOG INPUTS</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='42'>
+		<row index="0">ANALOG OUTPUTS</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='43'>
+		<row index='0'>SCHEDULE TO DELETE</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='44'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>FILE DELETED SUCCESSFULLY</row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Press CLEAR to continue</row>
+	</screen>
+	<screen index='45'>
+		<row index='0'>TEST MENU</row>
+		<row index='1'>1. IO Test</row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='46'>
+		<row index='0'>MOTOR TEST</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='47'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>CALIBRATION IN PROGRESS</row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Press STOP to stop</row>
+	</screen>
+	<screen index='48'>
+		<row index='0'>GLOBAL PARAMETERS</row>
+		<row index='1'>1. Axis Auto Positioning</row>
+		<row index='2'>2. Axis Delay</row>
+		<row index='3'>3. Jog Speed</row>
+		<row index='4'>4. Step Distance</row>
+		<row index='5'>5. AVC / Prox Settings</row>
+		<row index='6'>6. Overrides</row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='49'>
+		<row index='0'>EDIT OVERRIDE</row>
+		<row index='1'></row>
+		<row index='2'>  PARAMETER: </row>
+		<row index='3'>        MAX: </row>
+		<row index='4'>       RATE: </row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='50'>
+		<row index="0">EDIT PURGE</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'>  PREPURGE: </row>
+		<row index='4'> POSTPURGE: </row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='51'>
+		<row index="0">AVC / PROX SETTINGS</row>
+		<row index='1'></row>
+		<row index='2'> DEAD BAND: </row>
+		<row index='3'> SLOW BAND: </row>
+		<row index='4'> LOW SENSE: </row>
+		<row index='5'>HIGH SENSE: </row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='52'>
+		<row index="0"></row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'> MODE SELECTED: </row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Press CLEAR to continue</row>
+	</screen>
+	<screen index='53'>
+		<row index="0">DELETE USER</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='54'>
+		<row index="0"></row>
+		<row index='1'>User:</row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'>Deleted successfully</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Press CLEAR to continue</row>
+	</screen>
+	<screen index='55'>
+		<row index="0"></row>
+		<row index='1'></row>
+		<row index='2'>TRAVEL ORIENTATION SET TO:</row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Press CLEAR to continue</row>
+	</screen>
+	<screen index='56'>
+		<row index="0">Calibrate Limits For:</row>
+		<row index='1'></row>
+		<row index='2'>Jog to limit and press</row>
+		<row index='3'>ENTER</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'>        POS:</row>
+		<row index='7'> STOP to abort</row>
+	</screen>
+	<screen index='57'>
+		<row index="0">Calibrate Limits For:</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'>Jog to opposite limit </row>
+		<row index='4'>and press ENTER</row>
+		<row index='5'></row>
+		<row index='6'>        POS:</row>
+		<row index='7'> STOP to abort</row>
+	</screen>
+	<screen index='58'>
+		<row index="0">Calibration Results:</row>
+		<row index='1'>     AXIS: </row>
+		<row index='2'>     UNIT: </row>
+		<row index='3'>POS LIMIT: </row>
+		<row index='4'>NEG LIMIT: </row>
+		<row index='5'></row>
+		<row index='6'> ENTER to accept</row>
+		<row index='7'> CLEAR to reject</row>
+	</screen>
+	<screen index='59'>
+		<row index='0'></row>
+		<row index='1'>Select axis to calibrate</row>
+		<row index='2'>      limits for</row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> STOP to abort</row>
+	</screen>
+	<screen index='60'>
+		<row index="0">MEASURED DISTANCE</row>
+		<row index='1'></row>
+		<row index='2'>     UNIT:</row>
+		<row index='3'>      MIN:</row>
+		<row index='4'>      MAX:</row>
+		<row index='5'>    VALUE:</row>
+		<row index='6'></row>
+		<row index='7'> ENTER to confirm</row>
+	</screen>
+	<screen index='61'>
+		<row index="0">Calibrate Limits For:</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'>Jog to HOME position</row>
+		<row index='4'>and press ZERO</row>
+		<row index='5'></row>
+		<row index='6'>        POS:</row>
+		<row index='7'></row>
+	</screen>
+	<screen index='62'>
+		<row index='0'>SCHEDULE TO COPY</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='63'>
+		<row index='0'>NEW TRAVEL DIRECTION</row>
+		<row index='1'>1. Vertical Up</row>
+		<row index='2'>2. Vertical Down</row>
+		<row index="3">3. Horizontal In</row>
+		<row index='4'>4. Horizontal Out</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='64'>
+		<row index="0">SCHEDULE Loaded:</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'>CTRL+SAVE -save schedule</row>
+		<row index='4'>CTRL+LOAD -load schedule</row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> </row>
+	</screen>
+	<screen index='65'>
+		<row index='0'>POINT SELECTED</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='66'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>Path Points Reset</row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='67'>
+		<row index='0'>POINT SUMMARY</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='68'>
+		<row index='0'>LOAD SCHEDULE METHOD</row>
+		<row index='1'>1. Manual</row>
+		<row index='2'>2. Automatic</row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='69'>
+		<row index='0'>DIAMETER (in)</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='70'>
+		<row index='0'>GROOVE DEPTH (in)</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='71'>
+		<row index="0">FIRST SPEED SETPOINT</row>
+		<row index='1'></row>
+		<row index='2'>     UNIT:</row>
+		<row index='3'>      MIN:</row>
+		<row index='4'>      MAX:</row>
+		<row index='5'>    VALUE:</row>
+		<row index='6'></row>
+		<row index='7'> ENTER to confirm</row>
+	</screen>
+	<screen index='72'>
+		<row index="0">DISTANCE</row>
+		<row index='1'></row>
+		<row index='2'>     UNIT:</row>
+		<row index='3'>      MIN:</row>
+		<row index='4'>      MAX:</row>
+		<row index='5'>    VALUE:</row>
+		<row index='6'></row>
+		<row index='7'> ENTER to confirm</row>
+	</screen>
+	<screen index='73'>
+		<row index="0">FIRST MEASURED VALUE</row>
+		<row index='1'></row>
+		<row index='2'>     UNIT:</row>
+		<row index='3'>      MIN:</row>
+		<row index='4'>      MAX:</row>
+		<row index='5'>    VALUE:</row>
+		<row index='6'></row>
+		<row index='7'> ENTER to confirm</row>
+	</screen>
+	<screen index='74'>
+		<row index="0">SECOND SPEED SETPOINT</row>
+		<row index='1'></row>
+		<row index='2'>     UNIT:</row>
+		<row index='3'>      MIN:</row>
+		<row index='4'>      MAX:</row>
+		<row index='5'>    VALUE:</row>
+		<row index='6'></row>
+		<row index='7'> ENTER to confirm</row>
+	</screen>
+	<screen index='75'>
+		<row index="0">DISTANCE</row>
+		<row index='1'></row>
+		<row index='2'>     UNIT:</row>
+		<row index='3'>      MIN:</row>
+		<row index='4'>      MAX:</row>
+		<row index='5'>    VALUE:</row>
+		<row index='6'></row>
+		<row index='7'> ENTER to confirm</row>
+	</screen>
+	<screen index='76'>
+		<row index="0">SECOND MEASURED VALUE</row>
+		<row index='1'></row>
+		<row index='2'>     UNIT:</row>
+		<row index='3'>      MIN:</row>
+		<row index='4'>      MAX:</row>
+		<row index='5'>    VALUE:</row>
+		<row index='6'></row>
+		<row index='7'> ENTER to confirm</row>
+	</screen>
+	<screen index='77'>
+		<row index="0">RESULTS</row>
+		<row index='1'>      GAIN: </row>
+		<row index='2'>    OFFSET: </row>
+		<row index='3'>  TEL GAIN: </row>
+		<row index='4'>TEL OFFSET: </row>
+		<row index='5'></row>
+		<row index='6'> ENTER to accept</row>
+		<row index='7'> CLEAR to reject</row>
+	</screen>
+	<screen index='78'>
+		<row index="0">CALIBRATION COMPLETE</row>
+		<row index='1'></row>
+		<row index='2'>Press ENTER to verify</row>
+		<row index="3">from the main screen</row>
+		<row index='4'></row>
+		<row index='5'>Press STOP to exit</row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='79'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'> WIRE MANIPULATOR</row>
+		<row index='3'>		UP / DOWN</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='80'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'> WIRE MANIPULATOR</row>
+		<row index='3'>		OUT / IN</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='81'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'>  NO WELD HEAD</row>
+		<row index='3'>		LOADED</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'></row>
+	</screen>
+	<screen index='82'>
+		<row index='0'></row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> Select and press ENTER:</row>
+	</screen>
+	<screen index='83'>
+		<row index="0">ENTER SEGMENT INDEX</row>
+		<row index='1'></row>
+		<row index='2'>      MIN:</row>
+		<row index='3'>      MAX:</row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'>    VALUE:</row>
+		<row index='7'> </row>
+	</screen>
+	<screen index='84'>
+		<row index='0'>VIEW     SEGMENT:</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index="3"></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> UP/DOWN or CTRL+CLEAR</row>
+	</screen>
+	<screen index='85'>
+		<row index='0'>VIEW OVERRIDES</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> UP/DOWN or CTRL+CLEAR</row>
+	</screen>
+	<screen index='86'>
+		<row index='0'>AXIS AUTO POSITIONING</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> UP/DOWN or CTRL+CLEAR</row>
+	</screen>
+	<screen index='87'>
+		<row index='0'>AXIS DELAY</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> UP/DOWN or CTRL+CLEAR</row>
+	</screen>
+	<screen index='88'>
+		<row index='0'>JOG SPEED</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> UP/DOWN or CTRL+CLEAR</row>
+	</screen>
+	<screen index='89'>
+		<row index='0'>STEP DISTANCE</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> UP/DOWN or CTRL+CLEAR</row>
+	</screen>
+	<screen index='90'>
+		<row index='0'>ACC SETTINGS</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> UP/DOWN or CTRL+CLEAR</row>
+	</screen>
+	<screen index='91'>
+		<row index='0'>AVC SETTINGS</row>
+		<row index='1'></row>
+		<row index='2'></row>
+		<row index='3'></row>
+		<row index='4'></row>
+		<row index='5'></row>
+		<row index='6'></row>
+		<row index='7'> UP/DOWN or CTRL+CLEAR</row>
+	</screen>
+	<screen index='92'>
+		<row index="0">EDIT GLOBAL PARAMETER</row>
+		<row index='1'></row>
+		<row index='2'>PARAMETER:</row>
+		<row index='3'>     UNIT:</row>
+		<row index='4'>      MIN:</row>
+		<row index='5'>      MAX:</row>
+		<row index='6'>    VALUE:</row>
+		<row index='7'> </row>
+	</screen>
+</screens>

@@ -1,0 +1,809 @@
+<!--  
+	FILE : IOmap.XML
+	******description needs to be modified********
+	The purpose of the IO map configuration file is to configure IO point used by different part of the system such as motion, power supply,
+	gas controller, cooler etc.
+	
+	NOTES : 
+	
+-->
+<!-- IO type
+6 types:
+		NONE = 0,
+		DAYTONA = 2,
+		TRIPOLI = 4,
+		JASPER = 8,
+		ADAM = 16,
+		GRYPHON = 32
+-->
+<iomap>
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<firmware_version>
+		<control_board>2.30.0</control_board>
+		<servo_board>0.0.0</servo_board>
+		<stepper_board>0.0.0</stepper_board>
+	</firmware_version>
+	<system>
+		<io module="JASPER">
+			<properties>
+				<channel>1</channel>
+				<read_input_period_ms>10</read_input_period_ms>
+				<count>
+					<digital_out>16</digital_out>
+					<digital_in>8</digital_in>
+					<analog_out>2</analog_out>
+					<analog_in>2</analog_in>
+				</count>
+				<limit>
+					<input>
+						<digital_high>0</digital_high>
+						<digital_low>65535</digital_low>
+						<analog_high>10</analog_high>
+						<analog_low>-10</analog_low>
+					</input>
+					<output>
+						<digital_high>0</digital_high>
+						<digital_low>65535</digital_low>
+						<analog_high>10</analog_high>
+						<analog_low>-10</analog_low>
+					</output>
+				</limit>
+				<enabled_pins>
+					<!-- {111,113,115,117,119,121,123,125,110,112,114,116,118,120,122,124,188,149,151,153,155,157,159,161,163,165,167,169,171,173,175,177,179, 38, 36, 32, 34, 89, 91, 126, 128, 107, 106, 105, 130, 132, 152, -1}; -->
+					<pin>111</pin>
+					<pin>113</pin>
+					<pin>115</pin>
+					<pin>117</pin>
+					<pin>119</pin>
+					<pin>121</pin>
+					<pin>123</pin>
+					<pin>125</pin>
+					<pin>110</pin>
+					<pin>112</pin>
+					<pin>114</pin>
+					<pin>116</pin>
+					<pin>118</pin>
+					<pin>120</pin>
+					<pin>122</pin>
+					<pin>124</pin>
+					<pin>188</pin>
+					<pin>149</pin>
+					<pin>151</pin>
+					<pin>153</pin>
+					<pin>155</pin>
+					<pin>157</pin>
+					<pin>159</pin>
+					<pin>161</pin>
+					<pin>163</pin>
+					<pin>165</pin>
+					<pin>167</pin>
+					<pin>169</pin>
+					<pin>171</pin>
+					<pin>173</pin>
+					<pin>175</pin>
+					<pin>177</pin>
+					<pin>179</pin>
+					<pin>89</pin>
+					<pin>91</pin>
+					<pin>126</pin>
+					<pin>128</pin>
+					<pin>107</pin>
+					<pin>106</pin>
+					<pin>105</pin>
+					<pin>130</pin>
+					<pin>132</pin>
+					<pin>152</pin>
+					<gpio>169</gpio>
+					<gpio>189</gpio>
+					<gpio>187</gpio>
+					<gpio>98</gpio>
+					<gpio>186</gpio>
+					<gpio>99</gpio>
+					<gpio>185</gpio>
+					<gpio>100</gpio>
+					<gpio>184</gpio>
+					<gpio>101</gpio>
+					<gpio>5</gpio>
+					<gpio>102</gpio>
+					<gpio>4</gpio>
+					<gpio>103</gpio>
+					<gpio>32</gpio>
+					<gpio>36</gpio>
+					<gpio>38</gpio>
+					<gpio>76</gpio>
+					<gpio>126</gpio>
+					<gpio>125</gpio>
+					<gpio>124</gpio>
+					<gpio>166</gpio>
+					<gpio>10188</gpio>
+					<gpio>10003</gpio>
+					<gpio>10002</gpio>
+					<gpio>10127</gpio>
+				</enabled_pins>
+			</properties>
+			<camera_light_enable offset="38" bit="5" />
+			<power_enable offset="37" bit="5" />
+			<fan_enable offset="37" bit="6" />
+			<wire_stuck_check_enable offset="37" bit="14" />
+			<wire_stuck_check_status offset="39" bit="15" />
+			<avc_sense_select offset="37" bit="13"/>
+			<beeper offset="37" bit="10" />
+			<watchdog offset="42" />
+			<estop offset="39" bit="2" checkType='0' />
+			<lockout_mode offset="40" bit="4" checkType='0' />
+			<work_detect offset="39" bit="12" checkType='1'/>
+			<foot_pedal_enable offset="9999" bit="101" checkType='0'/>
+			<foot_pedal_control offset="25" analog_high="10" analog_low="0" digital_high="0" digital_low="2047" />
+			<critical_fault_circuit offset="39" bit="13" />
+			<hotwire_plasma_contactor offset="37" bit="15" />
+			<cs300_temperature_fault offset="39" bit="10" checkType='0'/>
+			<control_board_firmware_version offset="51"/>
+			<servo_board_firmware_version offset="98"/>
+			<stepper_board_firmware_version offset="99"/>
+			<control_board_firmware_revision offset="113"/>
+			<servo_board_firmware_revision offset="114"/>
+			<stepper_board_firmware_revision offset="115"/>
+			<camera_sync_trigger_mode offset="109" mask="0x0000" digital_high="4095" digital_low="0"/>
+			<camera_sync_trigger_period offset="123" digital_high="65535" digital_low="0"/>
+			<camera_sync_trigger_transition_delay offset="128" digital_high="65535" digital_low="0"/>
+			<camera_sync_trigger_multiplier offset="124" digital_high="65535" digital_low="0"/>
+			<beeper_external offset="38" bit="7" />
+			<camera_frames_per_pulse offset="109" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<camera_frames_per_second_remainder offset="109" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<camera_frame_grab_period offset="125" digital_high="65535" digital_low="0"/>
+			<camera_frame_grab_period_multiplier offset="126" digital_high="65535" digital_low="0"/>
+			<camera_frame_grab_on_time offset="127" digital_high="65535" digital_low="0"/>
+			<camera_arc_on offset="38" bit="2" />
+			<pipe_head_lights offset="9999" bit="3" />
+			<servo_velocity_smoothing_constant offset="43" mask="0xA000" digital_high="4095" digital_low="0" />
+			<power_monitoring_fault offset="39" bit="5" checkType="1"/>
+			<servo_velocity_rise_time_smoothing_constant offset="44" mask="0xA000" digital_high="4095" digital_low="0" />
+			<software_estop_reset offset="9999" bit="2" />
+		</io>
+	</system>
+	<power>
+		<io module="JASPER">
+			<touch_sense_enable offset="37" bit="7" />
+			<vp_enable offset="37" bit="0" />
+			<arc_starter_enable offset="37" bit="1" />
+			<arc_enable offset="37" bit="4" />
+			<avc_sense_connector_select offset="37" bit="12" />
+			<mig_relay_switch offset="37" bit="11" />
+			<arc_on offset="39" bit="0" />
+			<amperage_primary_setpoint offset="1" />
+			<amperage_background_setpoint offset="2" />
+			<amperage_setpoint offset="0" />
+			<amperage_primary_telemetry offset="11" />
+			<amperage_background_telemetry offset="12" />
+			<amperage_telemetry offset="10" />
+			<voltage_primary_telemetry offset="17" />
+			<voltage_background_telemetry offset="18" />
+			<voltage_telemetry offset="16" />
+			<voltage_setpoint offset="84" mask="0x0000" digital_high="4095" digital_low="0"/>
+			<voltage_deadband offset="84" mask="0xD000" analog_high="50" analog_low="0" digital_high="4095" digital_low="0"/>
+			<voltage_square_wave_period offset="84" mask="0x1000" digital_high="2047" digital_low="0"/>
+			<voltage_square_wave_period_multiplier offset="84" mask="0x2000" digital_high="127" digital_low="0"/>
+			<mig_pulse_settings offset="84" mask="0x3000" digital_high="4095" digital_low="0"/>
+			<voltage_p_term offset="84" mask="0x4000" digital_high="128" digital_low="0"/>
+			<open_loop_on_time offset="84" mask="0x5000" digital_high="2047" digital_low="0"/>
+			<open_loop_on_time_multiplier offset="84" mask="0x6000" digital_high="127" digital_low="0"/>
+			<min_on_time offset="84" mask="0x7000" digital_high="4095" digital_low="0"/>
+			<max_on_time offset="84" mask="0x8000" digital_high="4095" digital_low="0"/>
+			<mig_process_select offset="84" mask="0x9000" digital_high="4095" digital_low="0"/>
+			<dt_current offset="86" digital_high="65535" digital_low="0" />
+			<pulse_average_voltage_telemetry offset="112"/>
+			<detect_short_voltage offset="84" mask="0xE000" analog_high="50" analog_low="0" digital_high="4095" digital_low="0"/>
+			<clear_short_voltage offset="84" mask="0xF000" analog_high="50" analog_low="0" digital_high="4095" digital_low="0"/>
+			<clear_short_ramp_rate offset="84" mask="0xA000" digital_high="4095" digital_low="0"/>
+			<mig_pulse_exponential_decay_factor offset="85" digital_high="32767" digital_low="0"/>
+			<dynamics_threshold_voltage offset="108" mask="0x0000" analog_high="50" analog_low="0" digital_high="4095" digital_low="0"/>
+			<dynamics_wetting_amps offset="108" mask="0x1000" digital_high="4095" digital_low="0"/>
+			<dynamics_wetting_time offset="108" mask="0x2000" digital_high="4095" digital_low="0"/>
+			<dynamics_wetting_ramp_rate offset="108" mask="0x3000" digital_high="4095" digital_low="0"/>
+			<mig_arc_start_mode offset="84" mask="0xC000" digital_high="4095" digital_low="0"/>
+			<mig_arc_start_initial_amps offset="108" mask="0x4000" digital_high="4095" digital_low="0"/>
+			<mig_arc_start_initial_amps_time offset="108" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<mig_arc_start_initial_amps_multiplier offset="108" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<mig_process_enabled offset="97" bit="0"/>
+			<mig_dynamics_short_status offset="110"/>
+			<mig_dynamics_start_delay offset="108" mask="0x7000" digital_high="4095" digital_low="0"/>
+			<mig_dynamics_max_current offset="108" mask="0x8000" digital_high="4095" digital_low="0"/>
+			<mig_dip_detachment_current offset="108" mask="0xA000" digital_high="4095" digital_low="0"/>
+			<mig_dip_burnback_current offset="108" mask="0xC000" digital_high="4095" digital_low="0"/>
+			<mig_dip_detachment_wetting_time offset="108" mask="0x9000" digital_high="4095" digital_low="0"/>
+			<mig_dip_min_burnback_time offset="108" mask="0xD000" digital_high="4095" digital_low="0"/>
+			<mig_dip_detachment_ramp_rate offset="108" mask="0xB000" digital_high="4095" digital_low="0"/>
+			<pulse_average_current_telemetry offset="111"/>
+			<pulse_is_telemetry_valid offset="116"/>
+			<mig_open_circuit_current offset="84" mask="B000" digital_high="4095" digital_low="0"/>
+			<mig_dip_blast_ramp_rate offset="108" mask="0xE000" digital_high="4095" digital_low="0"/>
+			<mig_dip_burnback_ramp_rate offset="108" mask="0xF000" digital_high="4095" digital_low="0"/>
+			<software_arc_pulse_state offset="97" bit="0"/>
+			<mig_dip_pre_detachment_ramp_rate offset="118" mask="0x2000" digital_high="4095" digital_low="0"/>
+			<mig_dip_energy_setpoint offset="119" digital_high="65535" digital_low="0" />
+			<mig_dip_energy_telemetry offset="119" digital_high="65535" digital_low="0" />
+			<mig_cv_average_period offset="121" digital_high="65535" digital_low="0" />
+			<mig_dip_detachment_wait_time offset="118" mask="0x4000" digital_high="4095" digital_low="0"/>
+			<exponential_decay_period offset="129" digital_high="65535" digital_low="0" />
+			<power_telemetry_1 offset="130" digital_high="65535" digital_low="0"/>
+			<power_telemetry_2 offset="131" digital_high="65535" digital_low="0"/>
+			<power_telemetry_3 offset="132" digital_high="65535" digital_low="0"/>
+			<power_telemetry_4 offset="133" digital_high="65535" digital_low="0"/>
+			<voltage_telemetry_gain offset="134" digital_high="4095" digital_low="0"/>
+			<voltage_telemetry_offset offset="135" digital_high="65535" digital_low="0"/>
+			<current_telemetry_gain offset="136" digital_high="4095" digital_low="0"/>
+			<current_telemetry_offset offset="137" digital_high="65535" digital_low="0"/>
+		</io>
+	</power>
+	<auxiliary_power index='0'>
+		<io module="JASPER">
+			<enable offset="37" bit="2" />
+			<overtemp offset="39" bit="3" />
+			<amperage_primary_setpoint offset="4" analog_high="10" analog_low="0" digital_high="65535" digital_low="0"  />
+			<amperage_background_setpoint offset="5" analog_high="10" analog_low="0" digital_high="65535" digital_low="0"  />
+			<amperage_setpoint offset="3" analog_high="10" analog_low="0" digital_high="65535" digital_low="0"  />
+			<amperage_primary_telemetry offset="14" />
+			<amperage_background_telemetry offset="15" />
+			<amperage_telemetry offset="13" />
+			<contactor_status offset="39" bit="9" />
+		</io>
+	</auxiliary_power>
+	<!-- Check type
+		2 types:
+		ENABLE_SENSE = 0,
+		FAULT = 1,
+		-->
+	<gas_controller>
+		<io module="JASPER">
+			<shield_enable offset="37" bit="8" />
+			<shield_flow_rate offset="27" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"  />
+			<shield_flow_in offset="39" bit="5" checkType='1'/>
+			<trail_enable offset="37" bit="8" />
+			<trail_flow_rate offset="29" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"  />
+			<trail_flow_in offset="39" bit="6" checkType='1'/>
+			<plasma_enable offset="37" bit="8" />
+			<plasma_flow_rate offset="28" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"  />
+			<plasma_flow_in offset="39" bit="4" checkType='1'/>
+			<backup_enable offset="37" bit="8" />
+		</io>
+	</gas_controller>
+	<coolant>
+		<io module="JASPER">
+			<cooler_enable offset="37" bit="9" />
+			<water_flow_sense offset="41" checkType='1' />
+		</io>
+	</coolant>
+	<wire_manipulator>
+		<io module="JASPER">
+			<enable_up_down offset="52" bit="0" />
+			<direction_up_down offset="52" bit="1" />
+			<enable_in_out offset="52" bit="2" />
+			<direction_in_out offset="52" bit="3" />
+			<side_switch offset="52" bit="4" />
+			<servo_side_switch offset="38" bit="6" />
+		</io>
+	</wire_manipulator>
+	<weldhead>
+		<io module="JASPER">
+			<steering_control offset="20" analog_high="10" analog_low="-10" digital_high="4095" digital_low="0" />
+		</io>
+	</weldhead>
+	<pendant>
+		<io module="JASPER">
+			<start offset="9999" bit="102" />
+			<stop offset="9999" bit="103" />
+			<home offset="39" bit="4" />
+			<interlock offset="39" bit="8" />
+			<jog offset="9999" bit="125" />
+			<gas offset="9999" bit="126" />
+			<osc offset="9999" bit="100" />
+			<led offset="9999" bit="188" />
+		</io>
+	</pendant>
+	<!-- timer IO -->
+	<timer index='0'>
+		<io module="JASPER">
+			<on offset="30" />
+			<off offset="31" />
+			<multiplier_telemetry offset="32" />
+			<multiplier_setpoint offset="32" />
+			<control_telemetry  offset="36" />
+			<control_setpoint offset="36" />
+		</io>
+	</timer>
+	<home_switch index="0">
+		<io module="JASPER">
+			<home_switch_input offset="39" bit="14"/>
+		</io>
+	</home_switch>
+	<home_switch index="1">
+		<io module="JASPER">
+			<home_switch_input offset="40" bit="0"/>
+		</io>
+	</home_switch>
+	<home_switch index="2">
+		<io module="JASPER">
+			<home_switch_input offset="40" bit="1"/>
+		</io>
+	</home_switch>
+	<wire_spool>
+		<io module="JASPER">
+			<enable_solenoid offset="38" bit="4" />
+		</io>
+	</wire_spool>
+
+	<!--SERVOS-->
+	<digital_servo index="0">
+		<!-- digital servo travel-->
+		<io module="JASPER">
+			<velocity_primary_setpoint offset="43" mask="0x0000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<velocity_background_setpoint offset="43" mask="0x1000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<current_limit offset="43" mask="0x2000" digital_high="4000" digital_low="0" />
+			<enable offset="43" bit="0" mask="0x3000"/>
+			<feedback_select offset="43" bit="1" mask="0x3000"/>
+			<pulse_enable offset="43" bit="2" mask="0x3000"/>
+			<velocity_p_term offset="43" mask="0x4000" digital_high="4095" digital_low="0" />
+			<velocity_i_term offset="43" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<current_i_term offset="43" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<velocity_telemetry offset="43" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095"/>
+			<capacitor_select offset="43" bit="3" mask="0x3000"/>
+			<current_telemetry offset="100" digital_high="4000" digital_low="0" analog_high="4" analog_low="-4"/>
+			<open_loop_duty offset="43" mask="0x7000" digital_high="1400" digital_low="0" analog_high="100" analog_low="0"/>
+			<open_loop_enable offset="43" bit="0" mask="0x8000"/>
+			<open_loop_direction offset="43" bit="1" mask="0x8000"/>
+			<current_p_term offset="43" mask="0x9000" digital_high="4095" digital_low="0" />
+			<brake_relay offset="43" bit="4" mask="0x3000"/>
+			<reverse_velocity_telemetry offset="43" bit="5" mask="0x3000"/>
+			<current_component offset="43" mask="0xB000" digital_high="4095" digital_low="0" />
+			<brake_active offset="43" bit="6" mask="0x3000" checkType='0'/>
+			<current_p_multiplier offset="43" mask="0xD000" digital_high="32" digital_low="0" />
+		</io>
+	</digital_servo>
+	<digital_servo index="1">
+		<!-- digital servo wire-->
+		<io module="JASPER">
+			<velocity_primary_setpoint offset="44" mask="0x0000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<velocity_background_setpoint offset="44" mask="0x1000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<current_limit offset="44" mask="0x2000" digital_high="4000" digital_low="0" />
+			<enable offset="44" bit="0" mask="0x3000"/>
+			<feedback_select offset="44" bit="1" mask="0x3000"/>
+			<pulse_enable offset="44" bit="2" mask="0x3000"/>
+			<velocity_p_term offset="44" mask="0x4000" digital_high="4095" digital_low="0" />
+			<velocity_i_term offset="44" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<current_i_term offset="44" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<velocity_telemetry offset="44" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095"/>
+			<capacitor_select offset="44" bit="3" mask="0x3000"/>
+			<current_telemetry offset="101" digital_high="4000" digital_low="0" analog_high="4" analog_low="-4"/>
+			<open_loop_duty offset="44" mask="0x7000" digital_high="1400" digital_low="0" analog_high="100" analog_low="0"/>
+			<open_loop_enable offset="44" bit="0" mask="0x8000"/>
+			<open_loop_direction offset="44" bit="1" mask="0x8000"/>
+			<current_p_term offset="44" mask="0x9000" digital_high="4095" digital_low="0" />
+			<brake_relay offset="44" bit="4" mask="0x3000"/>
+			<reverse_velocity_telemetry offset="44" bit="5" mask="0x3000"/>
+			<current_component offset="44" mask="0xB000" digital_high="4095" digital_low="0" />
+			<brake_active offset="44" bit="6" mask="0x3000" checkType='0'/>
+			<current_p_multiplier offset="44" mask="0xD000" digital_high="32" digital_low="0" />
+		</io>
+	</digital_servo>
+	<digital_servo index="2">
+		<!-- digital servo avc-->
+		<io module="JASPER">
+			<velocity_primary_setpoint offset="45" mask="0x0000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<velocity_background_setpoint offset="45" mask="0x1000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<current_limit offset="45" mask="0x2000" digital_high="4000" digital_low="0" />
+			<enable offset="45" bit="0" mask="0x3000"/>
+			<feedback_select offset="45" bit="1" mask="0x3000"/>
+			<pulse_enable offset="45" bit="2" mask="0x3000"/>
+			<velocity_p_term offset="45" mask="0x4000" digital_high="4095" digital_low="0" />
+			<velocity_i_term offset="45" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<current_i_term offset="45" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<velocity_telemetry offset="45" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095"/>
+			<capacitor_select offset="45" bit="3" mask="0x3000"/>
+			<current_telemetry offset="102" digital_high="4000" digital_low="0" analog_high="4" analog_low="-4"/>
+			<open_loop_duty offset="45" mask="0x7000" digital_high="1400" digital_low="0" analog_high="100" analog_low="0"/>
+			<open_loop_enable offset="45" bit="0" mask="0x8000"/>
+			<open_loop_direction offset="45" bit="1" mask="0x8000"/>
+			<current_p_term offset="45" mask="0x9000" digital_high="4095" digital_low="0" />
+			<brake_relay offset="45" bit="4" mask="0x3000"/>
+			<reverse_velocity_telemetry offset="45" bit="5" mask="0x3000"/>
+			<current_component offset="45" mask="0xB000" digital_high="4095" digital_low="0" />
+			<brake_active offset="45" bit="6" mask="0x3000" checkType='0'/>
+			<current_p_multiplier offset="45" mask="0xD000" digital_high="32" digital_low="0" />
+		</io>
+	</digital_servo>
+	<digital_servo index="3">
+		<!-- digital servo osc-->
+		<io module="JASPER">
+			<velocity_primary_setpoint offset="46" mask="0x0000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<velocity_background_setpoint offset="46" mask="0x1000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<current_limit offset="46" mask="0x2000" digital_high="4000" digital_low="0" />
+			<enable offset="46" bit="0" mask="0x3000"/>
+			<feedback_select offset="46" bit="1" mask="0x3000"/>
+			<pulse_enable offset="46" bit="2" mask="0x3000"/>
+			<velocity_p_term offset="46" mask="0x4000" digital_high="4095" digital_low="0" />
+			<velocity_i_term offset="46" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<current_i_term offset="46" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<velocity_telemetry offset="46" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095"/>
+			<capacitor_select offset="46" bit="3" mask="0x3000"/>
+			<current_telemetry offset="103" digital_high="4000" digital_low="0" analog_high="4" analog_low="-4"/>
+			<open_loop_duty offset="46" mask="0x7000" digital_high="1400" digital_low="0" analog_high="100" analog_low="0"/>
+			<open_loop_enable offset="46" bit="0" mask="0x8000"/>
+			<open_loop_direction offset="46" bit="1" mask="0x8000"/>
+			<current_p_term offset="46" mask="0x9000" digital_high="4095" digital_low="0" />
+			<brake_relay offset="46" bit="4" mask="0x3000"/>
+			<reverse_velocity_telemetry offset="46" bit="5" mask="0x3000"/>
+			<current_component offset="46" mask="0xB000" digital_high="4095" digital_low="0" />
+			<brake_active offset="46" bit="6" mask="0x3000" checkType='0'/>
+			<current_p_multiplier offset="46" mask="0xD000" digital_high="32" digital_low="0" />
+		</io>
+	</digital_servo>
+	<digital_servo index="4">
+		<io module="JASPER">
+			<velocity_primary_setpoint offset="47" mask="0x0000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<velocity_background_setpoint offset="47" mask="0x1000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<current_limit offset="47" mask="0x2000" digital_high="4000" digital_low="0" />
+			<enable offset="47" bit="0" mask="0x3000"/>
+			<feedback_select offset="47" bit="1" mask="0x3000"/>
+			<pulse_enable offset="47" bit="2" mask="0x3000"/>
+			<velocity_p_term offset="47" mask="0x4000" digital_high="4095" digital_low="0" />
+			<velocity_i_term offset="47" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<current_i_term offset="47" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<velocity_telemetry offset="47" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095"/>
+			<capacitor_select offset="47" bit="3" mask="0x3000"/>
+			<current_telemetry offset="104" digital_high="4000" digital_low="0" analog_high="4" analog_low="-4"/>
+			<open_loop_duty offset="47" mask="0x7000" digital_high="1400" digital_low="0" analog_high="100" analog_low="0"/>
+			<open_loop_enable offset="47" bit="0" mask="0x8000"/>
+			<open_loop_direction offset="47" bit="1" mask="0x8000"/>
+			<current_p_term offset="47" mask="0x9000" digital_high="4095" digital_low="0" />
+			<brake_relay offset="47" bit="4" mask="0x3000"/>
+			<reverse_velocity_telemetry offset="47" bit="5" mask="0x3000"/>
+			<current_component offset="47" mask="0xB000" digital_high="4095" digital_low="0" />
+			<brake_active offset="47" bit="6" mask="0x3000" checkType='0'/>
+			<current_p_multiplier offset="47" mask="0xD000" digital_high="32" digital_low="0" />
+		</io>
+	</digital_servo>
+	<digital_servo index="5">
+		<io module="JASPER">
+			<velocity_primary_setpoint offset="48" mask="0x0000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<velocity_background_setpoint offset="48" mask="0x1000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<current_limit offset="48" mask="0x2000" digital_high="4000" digital_low="0" />
+			<enable offset="48" bit="0" mask="0x3000"/>
+			<feedback_select offset="48" bit="1" mask="0x3000"/>
+			<pulse_enable offset="48" bit="2" mask="0x3000"/>
+			<velocity_p_term offset="48" mask="0x4000" digital_high="4095" digital_low="0" />
+			<velocity_i_term offset="48" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<current_i_term offset="48" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<velocity_telemetry offset="48" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095"/>
+			<capacitor_select offset="48" bit="3" mask="0x3000"/>
+			<current_telemetry offset="105" digital_high="4000" digital_low="0" analog_high="4" analog_low="-4"/>
+			<open_loop_duty offset="48" mask="0x7000" digital_high="1400" digital_low="0" analog_high="100" analog_low="0"/>
+			<open_loop_enable offset="48" bit="0" mask="0x8000"/>
+			<open_loop_direction offset="48" bit="1" mask="0x8000"/>
+			<current_p_term offset="48" mask="0x9000" digital_high="4095" digital_low="0" />
+			<brake_relay offset="48" bit="4" mask="0x3000"/>
+			<reverse_velocity_telemetry offset="48" bit="5" mask="0x3000"/>
+			<current_component offset="48" mask="0xB000" digital_high="4095" digital_low="0" />
+			<brake_active offset="48" bit="6" mask="0x3000" checkType='0'/>
+			<current_p_multiplier offset="48" mask="0xD000" digital_high="32" digital_low="0" />
+		</io>
+	</digital_servo>
+	<digital_servo index="6">
+		<io module="JASPER">
+			<velocity_primary_setpoint offset="49" mask="0x0000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<velocity_background_setpoint offset="49" mask="0x1000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<current_limit offset="49" mask="0x2000" digital_high="4000" digital_low="0" />
+			<enable offset="49" bit="0" mask="0x3000"/>
+			<feedback_select offset="49" bit="1" mask="0x3000"/>
+			<pulse_enable offset="49" bit="2" mask="0x3000"/>
+			<velocity_p_term offset="49" mask="0x4000" digital_high="4095" digital_low="0" />
+			<velocity_i_term offset="49" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<current_i_term offset="49" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<velocity_telemetry offset="49" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095"/>
+			<capacitor_select offset="49" bit="3" mask="0x3000"/>
+			<current_telemetry offset="106" digital_high="4000" digital_low="0" analog_high="4" analog_low="-4"/>
+			<open_loop_duty offset="49" mask="0x7000" digital_high="1400" digital_low="0" analog_high="100" analog_low="0"/>
+			<open_loop_enable offset="49" bit="0" mask="0x8000"/>
+			<open_loop_direction offset="49" bit="1" mask="0x8000"/>
+			<current_p_term offset="49" mask="0x9000" digital_high="4095" digital_low="0" />
+			<brake_relay offset="49" bit="4" mask="0x3000"/>
+			<reverse_velocity_telemetry offset="49" bit="5" mask="0x3000"/>
+			<current_component offset="49" mask="0xB000" digital_high="4095" digital_low="0" />
+			<brake_active offset="49" bit="6" mask="0x3000" checkType='0'/>
+			<current_p_multiplier offset="49" mask="0xD000" digital_high="32" digital_low="0" />
+		</io>
+	</digital_servo>
+	<digital_servo index="7">
+		<io module="JASPER">
+			<velocity_primary_setpoint offset="50" mask="0x0000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<velocity_background_setpoint offset="50" mask="0x1000" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095" />
+			<current_limit offset="50" mask="0x2000" digital_high="4000" digital_low="0" />
+			<enable offset="50" bit="0" mask="0x3000"/>
+			<feedback_select offset="50" bit="1" mask="0x3000"/>
+			<pulse_enable offset="50" bit="2" mask="0x3000"/>
+			<velocity_p_term offset="50" mask="0x4000" digital_high="4095" digital_low="0" />
+			<velocity_i_term offset="50" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<current_i_term offset="50" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<velocity_telemetry offset="50" analog_high="24" analog_low="-24" digital_high="0" digital_low="4095"/>
+			<capacitor_select offset="50" bit="3" mask="0x3000"/>
+			<current_telemetry offset="107" digital_high="4000" digital_low="0" analog_high="4" analog_low="-4"/>
+			<open_loop_duty offset="50" mask="0x7000" digital_high="1400" digital_low="0" analog_high="100" analog_low="0"/>
+			<open_loop_enable offset="50" bit="0" mask="0x8000"/>
+			<open_loop_direction offset="50" bit="1" mask="0x8000"/>
+			<current_p_term offset="50" mask="0x9000" digital_high="4095" digital_low="0" />
+			<brake_relay offset="50" bit="4" mask="0x3000"/>
+			<reverse_velocity_telemetry offset="50" bit="5" mask="0x3000"/>
+			<current_component offset="50" mask="0xB000" digital_high="4095" digital_low="0" />
+			<brake_active offset="50" bit="6" mask="0x3000" checkType='0'/>
+			<current_p_multiplier offset="50" mask="0xD000" digital_high="32" digital_low="0" />
+		</io>
+	</digital_servo>
+
+	<!--STEPPERS-->
+	<digital_stepper index="0">
+		<!-- digital stepper-->
+		<io module="JASPER">
+			<brakes offset="38" bit="0"/>
+			<high_period_setpoint offset="79" mask="0x0000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint offset="79" mask="0x1000" digital_high="4095" digital_low="0" />
+			<high_period_setpoint_multiplier offset="79" mask="0x2000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint_multiplier offset="79" mask="0x3000" digital_high="4095" digital_low="0"/>
+			<enable offset="79" bit="0" mask="0x4000"/>
+			<step_clock_enable offset="79" bit="1" mask="0x4000"/>
+			<direction offset="79" bit="2" mask="0x4000"/>
+			<pulse_enable offset="79" bit="3" mask="0x4000"/>
+			<acceleration_time_setpoint offset="79" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<acceleration_time_setpoint_multiplier offset="79" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<microstepping_resolution offset="79" mask="0x7000" digital_high="4095" digital_low="0"/>
+			<current_adjust_resistor offset="79" mask="0x8000" analog_high="7" analog_low="0" digital_high="4095" digital_low="0"/>
+			<current_reduction_resistor offset="79" mask="0x9000" digital_high="1024" digital_low="0"/>
+			<step_counts offset="79" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0" is_twos_complemented="true"/>
+		</io>
+	</digital_stepper>
+	<digital_stepper index="1">
+		<!-- digital stepper-->
+		<io module="JASPER">
+			<high_period_setpoint offset="80" mask="0x0000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint offset="80" mask="0x1000" digital_high="4095" digital_low="0" />
+			<high_period_setpoint_multiplier offset="80" mask="0x2000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint_multiplier offset="80" mask="0x3000" digital_high="4095" digital_low="0"/>
+			<enable offset="80" bit="0" mask="0x4000"/>
+			<step_clock_enable offset="80" bit="1" mask="0x4000"/>
+			<direction offset="80" bit="2" mask="0x4000"/>
+			<pulse_enable offset="80" bit="3" mask="0x4000"/>
+			<acceleration_time_setpoint offset="80" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<acceleration_time_setpoint_multiplier offset="80" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<microstepping_resolution offset="80" mask="0x7000" digital_high="4095" digital_low="0"/>
+			<current_adjust_resistor offset="80" mask="0x8000" analog_high="7" analog_low="0" digital_high="4095" digital_low="0"/>
+			<current_reduction_resistor offset="80" mask="0x9000" digital_high="1024" digital_low="0"/>
+			<step_counts offset="80" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0" is_twos_complemented="true" />
+		</io>
+	</digital_stepper>
+	<digital_stepper index="2">
+		<!-- digital stepper-->
+		<io module="JASPER">
+			<brakes offset="38" bit="1"/>
+			<high_period_setpoint offset="81" mask="0x0000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint offset="81" mask="0x1000" digital_high="4095" digital_low="0" />
+			<high_period_setpoint_multiplier offset="81" mask="0x2000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint_multiplier offset="81" mask="0x3000" digital_high="4095" digital_low="0"/>
+			<enable offset="81" bit="0" mask="0x4000"/>
+			<step_clock_enable offset="81" bit="1" mask="0x4000"/>
+			<direction offset="81" bit="2" mask="0x4000"/>
+			<pulse_enable offset="81" bit="3" mask="0x4000"/>
+			<acceleration_time_setpoint offset="81" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<acceleration_time_setpoint_multiplier offset="81" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<microstepping_resolution offset="81" mask="0x7000" digital_high="4095" digital_low="0"/>
+			<current_adjust_resistor offset="81" mask="0x8000" analog_high="7" analog_low="0" digital_high="4095" digital_low="0"/>
+			<current_reduction_resistor offset="81" mask="0x9000" digital_high="1024" digital_low="0"/>
+			<step_counts offset="81" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0" is_twos_complemented="true"/>
+		</io>
+	</digital_stepper>
+	<digital_stepper index="3">
+		<!-- digital stepper-->
+		<io module="JASPER">
+			<high_period_setpoint offset="82" mask="0x0000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint offset="82" mask="0x1000" digital_high="4095" digital_low="0" />
+			<high_period_setpoint_multiplier offset="82" mask="0x2000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint_multiplier offset="82" mask="0x3000" digital_high="4095" digital_low="0"/>
+			<enable offset="82" bit="0" mask="0x4000"/>
+			<step_clock_enable offset="82" bit="1" mask="0x4000"/>
+			<direction offset="82" bit="2" mask="0x4000"/>
+			<pulse_enable offset="82" bit="3" mask="0x4000"/>
+			<acceleration_time_setpoint offset="82" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<acceleration_time_setpoint_multiplier offset="82" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<microstepping_resolution offset="82" mask="0x7000" digital_high="4095" digital_low="0"/>
+			<current_adjust_resistor offset="82" mask="0x8000" analog_high="7" analog_low="0" digital_high="4095" digital_low="0"/>
+			<current_reduction_resistor offset="82" mask="0x9000" digital_high="1024" digital_low="0"/>
+			<step_counts offset="82" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0" is_twos_complemented="true"/>
+		</io>
+	</digital_stepper>
+	<digital_stepper index="4">
+		<!-- digital stepper-->
+		<io module="JASPER">
+			<high_period_setpoint offset="83" mask="0x0000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint offset="83" mask="0x1000" digital_high="4095" digital_low="0" />
+			<high_period_setpoint_multiplier offset="83" mask="0x2000" digital_high="4095" digital_low="0" />
+			<low_period_setpoint_multiplier offset="83" mask="0x3000" digital_high="4095" digital_low="0"/>
+			<enable offset="83" bit="0" mask="0x4000"/>
+			<step_clock_enable offset="83" bit="1" mask="0x4000"/>
+			<direction offset="83" bit="2" mask="0x4000"/>
+			<pulse_enable offset="83" bit="3" mask="0x4000"/>
+			<acceleration_time_setpoint offset="83" mask="0x5000" digital_high="4095" digital_low="0"/>
+			<acceleration_time_setpoint_multiplier offset="83" mask="0x6000" digital_high="4095" digital_low="0"/>
+			<microstepping_resolution offset="83" mask="0x7000" digital_high="4095" digital_low="0"/>
+			<current_adjust_resistor offset="83" mask="0x8000" analog_high="7" analog_low="0" digital_high="4095" digital_low="0"/>
+			<current_reduction_resistor offset="83" mask="0x9000" digital_high="1024" digital_low="0"/>
+			<step_counts offset="83" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0" is_twos_complemented="true"/>
+		</io>
+	</digital_stepper>
+
+	<position index="0">
+		<io module="JASPER">
+			<potentiometer offset="19" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"/>
+			<encoder offset="87" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0"/>
+			<encoder_counts_per_period offset="43" mask="0xC000" digital_high="4095" digital_low="0" />
+			<encoder_count_period offset="125" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0"/>
+		</io>
+	</position>
+	<position index="1">
+		<io module="JASPER">
+			<potentiometer offset="20" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095" />
+			<encoder offset="88" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0"/>
+			<encoder_counts_per_period offset="44" mask="0xC000" digital_high="4095" digital_low="0" />
+			<encoder_count_period offset="126" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0"/>
+		</io>
+	</position>
+	<position index="2">
+		<io module="JASPER">
+			<potentiometer offset="21" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095" />
+			<encoder offset="89" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0"/>
+			<encoder_counts_per_period offset="45" mask="0xC000" digital_high="4095" digital_low="0" />
+			<encoder_count_period offset="127" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0"/>
+		</io>
+	</position>
+	<position index="3">
+		<io module="JASPER">
+			<potentiometer offset="22" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095" />
+			<encoder offset="90" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0"/>
+			<encoder_counts_per_period offset="46" mask="0xC000" digital_high="4095" digital_low="0" />
+			<encoder_count_period offset="128" analog_high="24" analog_low="-24" digital_high="65535" digital_low="0"/>
+		</io>
+	</position>
+	<position index="4">
+		<io module="JASPER">
+			<potentiometer offset="25" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095" />
+		</io>
+	</position>
+	<!--SPARES-->
+	<spares>
+		<io module="JASPER">
+			<spare_analog_output_2 offset="6" analog_high="10" analog_low="-10" digital_high="65535" digital_low="0"/>
+			<spare_analog_output_3 offset="7" analog_high="10" analog_low="-10" digital_high="65535" digital_low="0"/>
+			<spare_analog_output_5 offset="9" analog_high="0" analog_low="-5" digital_high="32767" digital_low="65535"/>
+
+			<spare_analog_input_2 offset="21" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"/>
+			<spare_analog_input_3 offset="22" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"/>
+			<spare_analog_input_4 offset="23" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"/>
+			<spare_analog_input_5 offset="24" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"/>
+			<spare_analog_input_6 offset="25" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"/>
+			<spare_analog_input_7 offset="26" analog_high="10" analog_low="-10" digital_high="0" digital_low="4095"/>
+
+			<spare_digital_output_0 offset="38" bit="0" />
+			<spare_digital_output_1 offset="38" bit="1" />
+			<spare_digital_output_2 offset="38" bit="2" />
+			<spare_digital_output_3 offset="38" bit="3" />
+			<spare_digital_output_4 offset="38" bit="4" />
+			<spare_digital_output_5 offset="38" bit="5" />
+			<spare_digital_output_6 offset="38" bit="6" />
+			<spare_digital_output_7 offset="38" bit="7" />
+			<spare_digital_output_8 offset="38" bit="8" />
+			<spare_digital_output_9 offset="38" bit="9" />
+			<spare_digital_output_10 offset="38" bit="10" />
+			<spare_digital_output_11 offset="38" bit="11" />
+			<spare_digital_output_12 offset="38" bit="12" />
+			<spare_digital_output_13 offset="38" bit="13" />
+			<spare_digital_output_14 offset="38" bit="14" />
+			<spare_digital_output_15 offset="38" bit="15" />
+
+			<spare_digital_input_0 offset="40" bit="0" mask="1"/>
+			<spare_digital_input_1 offset="40" bit="1" />
+			<spare_digital_input_2 offset="40" bit="2" />
+			<spare_digital_input_3 offset="40" bit="3" />
+			<spare_digital_input_4 offset="40" bit="4" />
+			<spare_digital_input_5 offset="40" bit="5" />
+			<spare_digital_input_6 offset="40" bit="6" />
+			<spare_digital_input_7 offset="40" bit="7" />
+
+			<gpio_digital_input_3 offset="9999" bit="99" />
+			<gpio_digital_input_8 offset="9999" bit="32" />
+			<gpio_digital_input_9 offset="9999" bit="36" />
+			<gpio_digital_input_10 offset="9999" bit="38" />
+			<gpio_digital_input_11 offset="9999" bit="76" />
+			<gpio_digital_input_14 offset="9999" bit="124" />
+			<gpio_digital_input_15 offset="9999" bit="166" />
+
+			<gpio_digital_output_3 offset="9999" bit="127" />
+		</io>
+	</spares>
+
+	<hardware_detection>
+		<io module="JASPER">
+			<has_arc_starter offset="9999" bit="169" />
+			<has_hotwire offset="9999" bit="189" />
+			<has_external_estop offset="9999" bit="98" />
+		</io>
+	</hardware_detection>
+
+	<high_speed_data>
+		<io module="JASPER">
+			<control offset="96"/>
+			<is_busy offset="96" bit="0" />
+			<is_last_page offset="96" bit="1" />
+			<is_full offset="96" bit="2" />
+			<bytes_1_0 offset="60"/>
+			<bytes_3_2 offset="59"/>
+			<bytes_5_4 offset="58"/>
+			<bytes_7_6 offset="57"/>
+			<bytes_9_8 offset="56"/>
+			<bytes_11_10 offset="55"/>
+			<bytes_13_12 offset="54"/>
+			<bytes_15_14 offset="53"/>
+		</io>
+	</high_speed_data>
+
+	<firmware_test>
+		<io module="JASPER">
+			<register_0 offset="1000" />
+			<register_1 offset="1001" />
+			<register_2 offset="1002" />
+			<register_3 offset="1003" />
+			<register_4 offset="1004" />
+			<register_5 offset="1005" />
+			<register_6 offset="1006" />
+			<register_7 offset="1007" />
+			<register_8 offset="1008" />
+			<register_9 offset="1009" />
+		</io>
+	</firmware_test>
+
+	<hard_limits index="0">
+		<io module="JASPER">
+			<limit_input offset="40" bit="0"/>
+		</io>
+	</hard_limits>
+	<hard_limits index="1">
+		<io module="JASPER">
+			<limit_input offset="40" bit="1"/>
+		</io>
+	</hard_limits>
+	<hard_limits index="2">
+		<io module="JASPER">
+			<limit_input offset="40" bit="2"/>
+		</io>
+	</hard_limits>
+	<hard_limits index="3">
+		<io module="JASPER">
+			<limit_input offset="40" bit="3"/>
+		</io>
+	</hard_limits>
+
+	<analog_servo index="0">
+		<io module="JASPER">
+			<enable_forward offset="52" bit="0"/>
+			<enable_reverse offset="52" bit="0"/>
+			<direction_selection offset="52" bit="1"/>
+		</io>
+	</analog_servo>
+	<analog_servo index="1">
+		<io module="JASPER">
+			<enable_forward offset="52" bit="2"/>
+			<enable_reverse offset="52" bit="2"/>
+			<direction_selection offset="52" bit="3"/>
+		</io>
+	</analog_servo>
+</iomap>

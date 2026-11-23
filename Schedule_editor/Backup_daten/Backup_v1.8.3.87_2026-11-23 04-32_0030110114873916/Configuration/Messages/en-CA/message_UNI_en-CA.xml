@@ -1,0 +1,12 @@
+<language fileType="UNI" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>Do you want to clear all custom units?</text>
+		<desc>Does the user want to clear any custom user units.</desc>
+	</str>
+</language>

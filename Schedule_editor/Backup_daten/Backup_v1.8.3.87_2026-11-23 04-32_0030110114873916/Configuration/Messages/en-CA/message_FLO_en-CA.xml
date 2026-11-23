@@ -1,0 +1,28 @@
+<language fileType="FLO" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:16</date>
+	</metadata>
+	<str id="1">
+		<text>Communication error on port %1. Error sending data.</text>
+		<desc>Error sending data. %1 = description of port.</desc>
+	</str>
+	<str id="2">
+		<text>Communication error on port %1. The system has not initialized communication services yet.</text>
+		<desc>Failed to perform functionality since flow control is not initialized. %1 = description of port.</desc>
+	</str>
+	<str id="3">
+		<text>Communication error on port %1. The send buffer is full.</text>
+		<desc>Failed to send data due to max buffer size being reached. %1 = description of port.</desc>
+	</str>
+	<str id="4">
+		<text>Communication error on port %2. A packet with ID %1 timed out.</text>
+		<desc>A packet timed out when waiting for a response. %1 = packet identifier. %2 = description of port</desc>
+	</str>
+	<str id="5">
+		<text>Communication error on port %1. An error has occurred while processing received data. %2</text>
+		<desc>Failed to process data received on the port. %1 = description of port. %2 = Further details about the error.</desc>
+	</str>
+</language>

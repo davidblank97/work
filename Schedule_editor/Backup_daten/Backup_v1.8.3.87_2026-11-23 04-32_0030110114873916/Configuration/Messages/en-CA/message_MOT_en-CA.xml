@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="MOT" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.4.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>The %1 axis' motor had an incorrect bus voltage.</text>
+		<desc>Bad Bus Voltage. %1 = Axis name</desc>
+	</str>
+	<str id="2">
+		<text>The %1 axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.</text>
+		<desc>Over Current. %1 = Axis name</desc>
+	</str>
+	<str id="3">
+		<text>The %1 axis' motor exceeded its rated temperature. Wait for the motor to cool down and inspect before continuing normal operation.</text>
+		<desc>Over Temperature. %1 = Axis name</desc>
+	</str>
+	<str id="4">
+		<text>Following Error: %1</text>
+		<desc>Following Error. %1 = Axis name</desc>
+	</str>
+	<str id="5">
+		<text>Over Speed: %1</text>
+		<desc>Over Speed. %1 = Axis name</desc>
+	</str>
+	<str id="6">
+		<text>Over Acceleration: %1</text>
+		<desc>Over Acceleration. %1 = Axis name</desc>
+	</str>
+	<str id="7">
+		<text>Check Error ID: %1</text>
+		<desc>Check Error ID. %1 = Axis name</desc>
+	</str>
+	<str id="8">
+		<text>Positive limit reached: %1</text>
+		<desc>Positive limit reached. %1 = Axis name</desc>
+	</str>
+	<str id="9">
+		<text>Negative limit reached: %1</text>
+		<desc>Negative limit reached. %1 = Axis name</desc>
+	</str>
+	<str id="10">
+		<text>A communication error has occurred on one of the motors. Please restart the full system.</text>
+		<desc>Motor communication error</desc>
+	</str>
+	<str id="11">
+		<text>A communication error has occurred on one of the motors. Please E-Stop and check the motor connection.</text>
+		<desc>Motor connection error</desc>
+	</str>
+	<str id="12">
+		<text>Zero position not set: %1</text>
+		<desc>Axis not zeroed. %1 = Axis name</desc>
+	</str>
+	<str id="13">
+		<text>Short Circuit: %1</text>
+		<desc>Short Circuit. %1 = Axis name</desc>
+	</str>
+	<str id="14">
+		<text>Under Voltage: %1</text>
+		<desc>Under Voltage. %1 = Axis name</desc>
+	</str>	
+	<str id="15">
+		<text>Over Voltage: %1</text>
+		<desc>Over Voltage. %1 = Axis name</desc>
+	</str>	
+	<str id="16">
+		<text>Motor error occurred. Check logs for details.</text>
+		<desc>Could not start weld since a motor error happened</desc>
+	</str>
+	<str id="17">
+		<text>One or more motors have reached a limit.</text>
+		<desc>Could not start weld since one or more motors have reached a limit.</desc>
+	</str>
+	<str id="18">
+		<text>No SMX found in the update folder</text>
+		<desc>No SMX found in the update folder</desc>
+	</str>
+	<str id="19">
+		<text>More than one SMX files found on USB.</text>
+		<desc>More than one SMX files found on USB.</desc>
+	</str>
+	<str id="20">
+		<text>A motor failed to apply brakes.</text>
+		<desc>Motor failed to apply brakes.</desc>
+	</str>
+	<str id="21">
+		<text>A motor failed to release brakes.</text>
+		<desc>Motor failed to release brakes.</desc>
+	</str>
+	<str id="22">
+		<text>A motor does not have IO.</text>
+		<desc>Motor does not have IO.</desc>
+	</str>
+	<str id="23">
+		<text>Failed to initialize the motor. Reason: %1</text>
+		<desc>Failed to initialize the motor. %1 = reason for failure</desc>
+	</str>
+	<str id="24">
+		<text>Failed to load configuration file: %1.</text>
+		<desc>Failed to load configuration file. %1 = Axis name</desc>
+	</str>
+	<str id="25">
+		<text>An error has occurred, which has caused a service to stop unexpectedly. Contact Liburdi for further assistance.</text>
+		<desc>An error has occurred, which has caused a service to stop unexpectedly.</desc>
+	</str>
+	<str id="26">
+		<text>%1 target position outside of max range.</text>
+		<desc>%1 target position outside of max range.</desc>
+	</str>
+	<str id="27">
+		<text>%1 lost reference position. Please re-zero or re-home the axis.</text>
+		<desc>Warning to re-zero or re-home when axis loses reference position. %1 = axis name.</desc>
+	</str>	
+</language>

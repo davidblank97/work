@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="IOM" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Adresse numérique (%1 %2) non valide.</text>
+		<desc>Digital address does not exist. %1 = offset. %2 = bit.</desc>
+	</str>
+	<str id="2">
+		<text>Adresse analogique (%1) non valide.</text>
+		<desc>Analog address does not exist. %1 = offset.</desc>
+	</str>
+	<str id="3">
+		<text>La version du microprogramme de la carte Jasper est %1, mais le système nécessite la version %2. Contactez Liburdi Automation pour en savoir plus.</text>
+		<desc>%1 = firmware on the board. %2 = version the software is expecting to be loaded.</desc>
+	</str>
+	<str id="4">
+		<text>La version du microprogramme de la carte de servocommande est %1, mais le logiciel nécessite la version %2. Contactez Liburdi Automation pour en savoir plus.</text>
+		<desc>%1 = firmware on the board. %2 = version the software is expecting to be loaded.</desc>
+	</str>
+	<str id="5">
+		<text>La version du microprogramme de la carte d&apos;exécution pas à pas est %1, mais le logiciel nécessite la version %2. Contactez Liburdi Automation pour en savoir plus.</text>
+		<desc>%1 = firmware on the board. %2 = version the software is expecting to be loaded.</desc>
+	</str>
+</language>

@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="DEV" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Le débit de réfrigérant de %1 est inférieur au débit minimum autorisé de %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Coolant flow rate is too low.</desc>
+	</str>
+	<str id="2">
+		<text>Le débit de gaz de protection de %1 est inférieur au débit minimum autorisé de %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Shield Gas flow rate too low</desc>
+	</str>
+	<str id="3">
+		<text>Le débit de gaz de protection pour trainard de %1 est inférieur au débit minimum autorisé de %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Trail Gas flow rate too low</desc>
+	</str>
+	<str id="4">
+		<text>Le débit de gaz de secours de %1 est inférieur au débit minimum autorisé de %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Backup Gas flow rate too low</desc>
+	</str>
+	<str id="5">
+		<text>Le débit de gaz plasma de %1 est inférieur au débit minimum autorisé de %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Plasma Gas flow rate too low</desc>
+	</str>
+	<str id="6">
+		<text>La télémétrie du courant du fil chaud est de zéro.</text>
+		<desc>Hot wire is enabled but amperage telemetry is 0</desc>
+	</str>
+	<str id="7">
+		<text>Impossible d&apos;activer le capteur tactile.</text>
+		<desc>A detail to be added to another message. Failed to enable touch sense</desc>
+	</str>
+	<str id="8">
+		<text>L&apos;électrode a touché la pièce.</text>
+		<desc>A detail to be added to another message. Electrode Touched</desc>
+	</str>
+	<str id="9">
+		<text>Aucun débit de gaz.</text>
+		<desc>A detail to be added to another message. One or more gasses are enabled but no gas is flowing.</desc>
+	</str>
+	<str id="10">
+		<text>Le système a détecté un objet dans la zone d&apos;alerte. Retirez l&apos;objet et revenez en arrière.</text>
+		<desc>Proximity sensor detected object in warning zone</desc>
+	</str>
+	<str id="11">
+		<text>Une nouvelle tête de soudage a été détectée. Voulez-vous basculer vers la nouvelle tête de soudage ?</text>
+		<desc>New weld head was detected. The user has the option to load the new weld head.</desc>
+	</str>
+	<str id="12">
+		<text>Chargement de la configuration pour la tête %1.</text>
+		<desc>Loading new weld head. %1 = new weld head name.</desc>
+	</str>
+	<str id="13">
+		<text>Une temporisation s&apos;est produite pendant que le système attendait que l&apos;électrode touche la pièce. Motif : %1</text>
+		<desc>Electrode did not touch the part in the specified waiting period. %1 = reason for failure</desc>
+	</str>
+	<str id="14">
+		<text>Une temporisation s&apos;est produite pendant que le système attendait que l&apos;électrode interrompe le contact avec la pièce. Motif : %1</text>
+		<desc>Electrode did not clear the touched part in the specified waiting period. %1 = reason for failure</desc>
+	</str>
+	<str id="15">
+		<text>Défaillance du courant d&apos;entrée, la tension de la phase %1 est égale à zéro.</text>
+		<desc>Input power fault. %1 = voltage phase (A, B, or C)</desc>
+	</str>
+	<str id="16">
+		<text>Une tension d&apos;entrée moyenne entre phases de %1 a été détectée. Le système était précédemment configuré pour une tension de %2, la valeur attendue était donc comprise entre %3 et %4. Une nouvelle connexion du transformateur (T1) est requise.|Redémarrez le système seul un utilisateur disposant d&apos;un niveau de sécurité ADMIN pourra accepter la nouvelle tension d&apos;entrée.</text>
+		<desc>%1 = detected voltage, %2 = previously tapped voltage, %3 = expected voltage lower limit, %4 = expected voltage upper limit</desc>
+	</str>
+	<str id="17">
+		<text>Une tension d&apos;entrée entre phases %1 de %2 a été détectée. La plage autorisée est comprise entre %3 et %4.</text>
+		<desc>%1 = line-line voltage phases (AB, BC, or AC), %2 = detected voltage, %3 = expected voltage lower limit, %4 = expected voltage upper limit</desc>
+	</str>
+	<str id="18">
+		<text>Le périphérique à commande à distance %1 n&apos;est pas pris en charge par ce système. Contactez Liburdi Automation pour en savoir plus.</text>
+		<desc>Pendant is not compatible. %1 = device id</desc>
+	</str>
+	<str id="19">
+		<text>Le mode de commande à distance trouvé dans le fichier de configuration n&apos;est pas compatible. Le fichier contient le mode %1 et le système attendait le mode %2.</text>
+		<desc>Wrong pendant mode was specified in the pendant configuration file. %1 = mode in file. %2 expected mode</desc>
+	</str>
+	<str id="20">
+		<text>Le traitement de la demande pour la clé %1 a échoué.</text>
+		<desc>Pendant mode that does not exist was specified for a key. %1 = key name.</desc>
+	</str>
+	<str id="21">
+		<text>Une erreur de communication s&apos;est produite lors de la tentative d&apos;activation du contrôleur massique à l&apos;adresse %1.</text>
+		<desc>Enable failed to send to Mass Flow Controller due to a connection issue. %1 = MFC address.</desc>
+	</str>
+	<str id="22">
+		<text>Le débit du gaz de protection est faible.</text>
+		<desc>Shield Gas flow rate is in the warning range.</desc>
+	</str>
+	<str id="23">
+		<text>Le débit du gaz de protection pour trainard est faible.</text>
+		<desc>Trail Gas flow rate is in the warning range.</desc>
+	</str>
+	<str id="24">
+		<text>Le débit du gaz de secours est faible.</text>
+		<desc>Backup Gas flow rate is in the warning range.</desc>
+	</str>
+	<str id="25">
+		<text>Le débit du gaz plasma est faible.</text>
+		<desc>Plasma Gas flow rate is in the warning range.</desc>
+	</str>
+	<str id="26">
+		<text>Le débit du réfrigérant est faible.</text>
+		<desc>Coolant flow rate is in the warning range.</desc>
+	</str>
+	<str id="27">
+		<text>Aucun débit de gaz détecté. La purge a été désactivée pour éviter d&apos;endommager le contrôleur massique.</text>
+		<desc>No gas flow detected so purge was disabled since the Mass Flow Controller may be damaged if it is enabled with no flow.</desc>
+	</str>
+	<str id="28">
+		<text>%1 flow rate setpoint is 0 for segment %2.</text>
+		<desc>Gas flow will be enabled with a flow rate of 0 which is not recommended. %1 = gas type. %2 = segment number</desc>
+	</str>
+	<str id="29">
+		<text>Un périphérique a été désactivé suite à une erreur de mise à jour du statut.|%1</text>
+		<desc>An error occurred when checking a device&apos;s status so it was disabled. %1 = further details.</desc>
+	</str>
+	<str id="30">
+		<text>Le système n&apos;a pas pu détecté de pièce ou de câble de masse connecté à la pièce.</text>
+		<desc>Hardware could not detect a work cable connected to the part.</desc>
+	</str>
+	<str id="31">
+		<text>Surchauffe du générateur.</text>
+		<desc>A detail to be added to another message. Temperature of the power supply exceeded the max threshold allowed for welding.</desc>
+	</str>
+	<str id="32">
+		<text>La commande d&apos;oscillation doit être déplacée une fois dans la position de synchronisation avant de démarrer un soudage.</text>
+		<desc>Oscillation steering pot control has to be manually moved once before the user can weld.</desc>
+	</str>
+	<str id="33">
+		<text>La commande à distance n&apos;est pas connectée.</text>
+		<desc>Pendant is enabled but not connected.</desc>
+	</str>
+	<str id="34">
+		<text>La commande à distance (%1) est connectée.</text>
+		<desc>Pendant is connected. Type = %1</desc>
+	</str>
+	<str id="35">
+		<text>Aucun débit de réfrigérant.</text>
+		<desc>Coolant flow rate is too low.</desc>
+	</str>
+	<str id="36">
+		<text>Aucun débit de gaz de protection.</text>
+		<desc>Shield Gas flow rate too low</desc>
+	</str>
+	<str id="37">
+		<text>Aucun débit de gaz de protection pour trainard.</text>
+		<desc>Trail Gas flow rate too low</desc>
+	</str>
+	<str id="38">
+		<text>Aucun débit de gaz de secours.</text>
+		<desc>Backup Gas flow rate too low</desc>
+	</str>
+	<str id="39">
+		<text>Aucun débit de gaz plasma.</text>
+		<desc>Plasma Gas flow rate too low</desc>
+	</str>
+	<str id="40">
+		<text>No MFC detected at address %1.</text>
+		<desc>%1 = address of MFC (Mass Flow Controller) not detected</desc>
+	</str>
+	<str id="41">
+		<text>No MFM detected at address %1.</text>
+		<desc>%1 = address of MFM (Mass Flow Meter) not detected</desc>
+	</str>
+	<str id="42">
+		<text>Shield Gas MFC is not OEM calibrated.</text>
+		<desc>Shield Gas MFC was calibrated locally instead of by the MFC manufacturer.</desc>
+	</str>
+	<str id="43">
+		<text>Shield Gas MFM is not OEM calibrated.</text>
+		<desc>Shield Gas MFM was calibrated locally instead of by the MFM manufacturer.</desc>
+	</str>
+	<str id="44">
+		<text>Trail Gas MFC is not OEM calibrated.</text>
+		<desc>Trail Gas MFC was calibrated locally instead of by the MFC manufacturer.</desc>
+	</str>
+	<str id="45">
+		<text>Trail Gas MFM is not OEM calibrated.</text>
+		<desc>Trail Gas MFM was calibrated locally instead of by the MFM manufacturer.</desc>
+	</str>
+	<str id="46">
+		<text>Backup Gas MFC is not OEM calibrated.</text>
+		<desc>Backup Gas MFC was calibrated locally instead of by the MFC manufacturer.</desc>
+	</str>
+	<str id="47">
+		<text>Backup Gas MFM is not OEM calibrated.</text>
+		<desc>Backup Gas MFM was calibrated locally instead of by the MFM manufacturer.</desc>
+	</str>
+	<str id="48">
+		<text>Plasma Gas MFC is not OEM calibrated.</text>
+		<desc>Plasma Gas MFC was calibrated locally instead of by the MFC manufacturer.</desc>
+	</str>
+	<str id="49">
+		<text>Plasma Gas MFM is not OEM calibrated.</text>
+		<desc>Plasma Gas MFM was calibrated locally instead of by the MFM manufacturer.</desc>
+	</str>	
+	<str id="50">
+		<text>Input power failure, the  average voltage %1 is not supported. Check input power.</text>
+		<desc>Input power fault. %1 = average voltage</desc>
+	</str>
+	<str id="51">
+		<text>System is inter-locked. Un-lock to allow welding.</text>
+		<desc>The inter-lock button on the closed head pendant is active</desc>
+	</str>
+	<str id="52">
+		<text>Electrode failed to touch the workpiece. Moving any axis during this operation stops execution and will cause this to fail.</text>
+		<desc>Electrode did not touch the part.</desc>
+	</str>
+</language>

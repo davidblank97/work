@@ -1,0 +1,56 @@
+<language fileType="MOD" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:16</date>
+	</metadata>
+	<str id="1">
+		<text>Modbus client failed to initialize communication.</text>
+		<desc>Modbus was not initialized</desc>
+	</str>
+	<str id="2">
+		<text>Modbus read coils request failed.</text>
+		<desc>Error reading coils.</desc>
+	</str>
+	<str id="3">
+		<text>Modbus write coils request failed.</text>
+		<desc>Error writing coils.</desc>
+	</str>
+	<str id="4">
+		<text>Modbus write single register request failed.</text>
+		<desc>Error writing single registers.</desc>
+	</str>
+	<str id="5">
+		<text>Modbus write multiple registers request failed.</text>
+		<desc>Error writing multiple registers.</desc>
+	</str>
+	<str id="6">
+		<text>Modbus write multiple coils request failed.</text>
+		<desc>Error writing multiple coils.</desc>
+	</str>
+	<str id="7">
+		<text>Modbus read input discretes request failed.</text>
+		<desc>Error reading input discretes.</desc>
+	</str>
+	<str id="8">
+		<text>Modbus read multiple registers request failed.</text>
+		<desc>Error reading multiple registers.</desc>
+	</str>
+	<str id="9">
+		<text>Modbus read input registers request failed.</text>
+		<desc>Error reading input registers.</desc>
+	</str>
+	<str id="10">
+		<text>Modbus read exception status request failed.</text>
+		<desc>Error reading exception status.</desc>
+	</str>
+	<str id="11">
+		<text>Modbus watchdog timeout.</text>
+		<desc>The modbus watchdog timer has expired.</desc>
+	</str>
+	<str id="12">
+		<text>Modbus exception response failed.</text>
+		<desc>Error sending response with exception packet.</desc>
+	</str>
+</language>

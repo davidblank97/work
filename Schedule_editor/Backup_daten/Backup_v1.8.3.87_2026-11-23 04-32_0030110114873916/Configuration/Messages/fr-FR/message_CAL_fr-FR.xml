@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="CAL" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Aucune cible d&apos;étalonnage sélectionnée.</text>
+		<desc></desc>
+	</str>
+	<str id="2">
+		<text>La valeur mesurée ne peut pas être égale à zéro. Entrez une valeur différente de zéro.</text>
+		<desc></desc>
+	</str>
+	<str id="3">
+		<text>La routine d&apos;étalonnage n&apos;a pas été exécutée suffisamment longtemps avant de s&apos;arrêter à %1 secondes. Redémarrez la routine d&apos;étalonnage et exécutez-la pendant au moins %2 secondes.</text>
+		<desc>Calibration time too short. %1 = time calibration ran in seconds. %2 = minimum time in seconds.</desc>
+	</str>
+	<str id="4">
+		<text>Une distance égale à zéro ne peut pas être étalonnée. Entrez une distance différente de zéro.</text>
+		<desc></desc>
+	</str>
+	<str id="5">
+		<text>Un GAIN DE VALEUR DE REGLAGE de %1 est en dehors de la plage recommandée. La valeur du gain recommandée doit être comprise entre %2 et %3.</text>
+		<desc>%1 = calculated gain. %1 = lower limit of valid range. %2 = upper limit of valid range</desc>
+	</str>
+	<str id="6">
+		<text>La valeur de OFFSET DE VALEUR DE REGLAGE est en dehors de la plage recommandée. La valeur d&apos;offset doit être comprise entre %1 et %2 (%3% et %4% de la valeur maximum %5).</text>
+		<desc>%1 = lower limit of valid range. %2 = upper limit of valid range. %3 lower limit percent. %4 upper limit percent. %5 max value.</desc>
+	</str>
+	<str id="7">
+		<text>Un GAIN DE TELEMETRIE de %1 est en dehors de la plage recommandée. La valeur du gain recommandée doit être comprise entre %2 et %3.</text>
+		<desc>%1 = calculated gain. %2 = lower limit of valid range. %3 = upper limit of valid range</desc>
+	</str>
+	<str id="8">
+		<text>La valeur de OFFSET DE TELEMETRIE est en dehors de la plage recommandée. La valeur d&apos;offset doit être comprise entre %1 et %2 (%3% et %4% de la valeur maximum %5).</text>
+		<desc>%1 = lower limit of valid range. %2 = upper limit of valid range. %3 lower limit percent. %4 upper limit percent. %5 max value.</desc>
+	</str>
+	<str id="9">
+		<text>Un GAIN DE VALEUR DE REGLAGE de %1 est en dehors de la plage autorisée. La valeur du gain doit être comprise entre %2 et %3.</text>
+		<desc>%1 = calculated gain. %2 = lower limit of valid range. %3 = upper limit of valid range</desc>
+	</str>
+	<str id="10">
+		<text>La valeur de OFFSET DE VALEUR DE REGLAGE est en dehors de la plage autorisée. La valeur d&apos;offset doit être comprise entre %1 et %2 (%3% et %4% de la valeur maximum %5).</text>
+		<desc>%1 = lower limit of valid range. %2 = upper limit of valid range. %3 lower limit percent. %4 upper limit percent. %5 max value.</desc>
+	</str>
+	<str id="11">
+		<text>Un GAIN DE TELEMETRIE de %1 est en dehors de la plage autorisée. La valeur du gain doit être comprise entre %2 et %3.</text>
+		<desc>%1 = calculated gain. %2 = lower limit of valid range. %3 = upper limit of valid range</desc>
+	</str>
+	<str id="12">
+		<text>La valeur de OFFSET DE VALEUR DE REGLAGE est en dehors de la plage autorisée. La valeur d&apos;offset doit être comprise entre %1 et %2 (%3% et %4% de la valeur maximum %5).</text>
+		<desc>%1 = lower limit of valid range. %2 = upper limit of valid range. %3 lower limit percent. %4 upper limit percent. %5 max value.</desc>
+	</str>
+	<str id="13">
+		<text>Impossible d&apos;enregistrer les résultats de l&apos;étalonnage car une ou plusieurs valeurs sont en dehors de la plage autorisée. Réessayez le processus d&apos;étalonnage pour atteindre des gains acceptables.</text>
+		<desc>Unable to save the results of calibration due to the values being outside of the valid range.</desc>
+	</str>
+	<str id="14">
+		<text>Une vitesse égale à zéro ne peut pas être étalonnée. Entrez une valeur différente de zéro et redémarrez.</text>
+		<desc>Unable to perform axis calibration move since velocity is 0.</desc>
+	</str>
+	<str id="15">
+		<text>La distance de la routine d&apos;étalonnage doit être au moins de %1 pour permettre un déplacement pendant le temps minimum requis de %2 secondes. Entrez une distance supérieure à %1 ou ajustez la vitesse et réessayez.</text>
+		<desc>Calibration time will be too short. %1 = minimum distance. %2 = minimum time in seconds.</desc>
+	</str>
+	<str id="16">
+		<text>L&apos;axe %1 ne prend pas en charge l&apos;étalonnage de la limite.</text>
+		<desc>%1 = axis name.</desc>
+	</str>
+	<str id="17">
+		<text>Les valeurs limites positives et négatives ne peuvent pas être réglées sur la même position.</text>
+		<desc>The user requested that both the negative and positive position limit be equal in value.</desc>
+	</str>
+	<str id="18">
+		<text>La position zéro se situe en dehors des limites positives %1 et négatives %2 demandées. Déplacez la position zéro ou demandez de nouvelles limites.</text>
+		<desc>Invalid limits. %1 = positive limit. %2 = negative limit.</desc>
+	</str>
+	<str id="19">
+		<text>La tension du shunt mesurée doit être supérieure à zéro.</text>
+		<desc>User must enter in a shunt voltage more than 0.</desc>
+	</str>
+	<str id="20">
+		<text>Le courant du shunt mesuré doit être supérieur à zéro.</text>
+		<desc>User must enter in a shunt amperage more than 0.</desc>
+	</str>
+	<str id="21">
+		<text>Les résultats de l&apos;étalonnage ont été enregistrés avec succès.</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="22">
+		<text>Une position zéro de %1 ne peut pas être réglée car elle se situe en dehors des limites %2 et %3. Faites marcher l&apos;axe à vide de façon à ce qu&apos;il se situe dans les limites avant de régler la position zéro.</text>
+		<desc>%1 = current position. %2 = first limit. %3 = second limit.</desc>
+	</str>
+	<str id="23">
+		<text>La distance mesurée entraîne une résolution (%1) qui dévie de plus de %2% de la résolution d&apos;origine de la tête de soudage (%3). Entrez une nouvelle mesure ou réétalonnez les limites.</text>
+		<desc>%1 = new volts per inch. %2 = limit percent. %3 = weld head volts per inch.</desc>
+	</str>
+	<str id="24">
+		<text>The %1 axis does not support diameter calibration.</text>
+		<desc>%1 = axis name.</desc>
+	</str>
+	<str id="25">
+		<text>No calibration required for flat track.</text>
+		<desc>N/A</desc>
+	</str>
+</language>

@@ -1,0 +1,44 @@
+<language fileType="CHS" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>Loaded chainset %1.</text>
+		<desc>%1 = chainset name</desc>
+	</str>
+	<str id="2">
+		<text>Saved chainset %1.</text>
+		<desc>%1 = chainset name</desc>
+	</str>
+	<str id="3">
+		<text>No chainset is loaded. Please load a chainset before pressing START.</text>
+		<desc>Unable to run a chainset since one is not loaded</desc>
+	</str>
+	<str id="4">
+		<text>The loaded chainset is empty. Add one or more schedules before running.</text>
+		<desc>Unable to run a chainset since the chainset does not contain any schedules</desc>
+	</str>
+	<str id="5">
+		<text>One or more schedules in the chainset no longer exist. Replace or delete the invalid schedules.</text>
+		<desc>One or more schedules contained in the loaded chainset are invalid.</desc>
+	</str>
+	<str id="6">
+		<text>No schedules in the loaded chainset are enabled. Enable at least one schedule before pressing START.</text>
+		<desc>The chainset does not contain any enabled schedules and cannot be ran.</desc>
+	</str>
+	<str id="7">
+		<text>Invalid ID %1 for a chainset.</text>
+		<desc>%1 = chainset ID.</desc>
+	</str>
+	<str id="8">
+		<text>A chainset with an ID %1 already exists. Do you want to overwrite the existing chainset?</text>
+		<desc>%1 = chainset ID.</desc>
+	</str>
+	<str id="9">
+		<text>There are references to schedules that no longer exist and have been removed from all chainsets. References that were removed: |%1</text>
+		<desc>%1 = details on which schedules were removed.</desc>
+	</str>
+</language>

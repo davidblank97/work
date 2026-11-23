@@ -1,0 +1,44 @@
+<mig_table>
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.11.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<process>PULSE</process>	
+	<synergic>			
+		<parameter name="pri_amps">		
+			<a>-0.001338</a>	
+			<b>1.609403</b>	
+			<c>-42.17</c>	
+			<r>17405</r>	
+		</parameter>
+		<parameter name="bkg_amps" pct='50'>		
+			<a>-0.000252</a>	
+			<b>0.57077</b>	
+			<c>-108.43</c>	
+			<r>10285</r>	
+		</parameter>
+		<parameter name="volts" pct='50'>		
+			<a>0.000004</a>	
+			<b>0.034539</b>	
+			<c>12.15</c>	
+			<r>470</r>	
+		</parameter>
+		<parameter name="freq" pct='10'>		
+			<a>-0.000274</a>	
+			<b>0.630516</b>	
+			<c>-29.83</c>	
+			<r>3006</r>	
+		</parameter>
+		<parameter name="initial_wire_speed" pct='100'>
+			<c>150</c>
+		</parameter>
+		<parameter name="initial_current" pct='100'>
+			<c>400</c>
+		</parameter>
+		<parameter name="initial_current_time" pct='100'>
+			<c>0.075000</c>
+		</parameter>
+	</synergic>			
+</mig_table>				

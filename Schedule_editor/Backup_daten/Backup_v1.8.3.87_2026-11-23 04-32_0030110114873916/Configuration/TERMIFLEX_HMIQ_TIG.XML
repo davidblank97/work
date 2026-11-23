@@ -1,0 +1,207 @@
+<termkeys map='jw'>
+	<metadata>
+		<schema_version/>
+		<config_version>1.5.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<mode index='0' name='default'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>test</key>
+			<key index='4'>toggle</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri</key>
+			<key index='1'>volts_pri</key>
+			<key index='2'>amps_pri</key>
+			<key index='3'>arrow_up</key>
+			<key index='4'>keymode_2</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_bkg</key>
+			<key index='1'>volts_bkg</key>
+			<key index='2'>amps_bkg</key>
+			<key index='3'>arrow_down</key>
+			<key index='4'>volts_up</key>
+		</row>
+		<row index='3'>
+			<key index='0'>wire_pri</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+			<key index='4'>volts_down</key>			
+		</row>
+		<row index='4'>
+			<key index='0'>wire_bkg</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+			<key index='4'>cross_up</key>
+		</row>
+		<row index='5'>
+			<key index='0'>indwell</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+			<key index='4'>cross_down</key>
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+			<key index='4'>keymode_3</key>			
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='1'>start</key>
+			<key index='2'>ctrl_1</key>
+			<key index='3'>stop</key>
+		</row>
+	</mode>
+	<mode index='1' name='ctrl' symbol='^'>
+		<row index='0'>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_up_latch</key>
+			<key index='3'>cross_step_up</key>
+		</row>
+		<row index='2'>			
+			<key index='0'>trav_down_latch</key>
+			<key index='3'>cross_step_down</key>
+		</row>
+		<row index='3'>
+			<key index='1'>wire_manipulator_vertical</key>
+			<key index='2'>load</key>
+			<key index='3'>save</key>
+		</row>
+		<row index='4'>
+			<key index='1'>wire_manipulator_horizontal</key>
+			<key index='2'>width</key>
+			<key index='3'>excur</key>
+		</row>
+		<row index='5'>
+			<key index='3'>restart</key>
+		</row>
+		<row index='6'>
+			<key index='2'>view</key>
+		</row>
+	</mode>
+	<mode index='2' name='TRAVEL_WIRE'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>test</key>
+			<key index='4'>toggle</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri</key>
+			<key index='1'>volts_pri</key>
+			<key index='2'>amps_pri</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_bkg</key>
+			<key index='1'>volts_bkg</key>
+			<key index='2'>amps_bkg</key>
+			<key index='3'>arrow_down</key>
+			<key index='4'>wire_up</key>
+		</row>
+		<row index='3'>
+			<key index='0'>wire_pri</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+			<key index='4'>wire_down</key>			
+		</row>
+		<row index='4'>
+			<key index='0'>wire_bkg</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+			<key index='4'>trav_down</key>
+		</row>
+		<row index='5'>
+			<key index='0'>indwell</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+			<key index='4'>trav_up</key>
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+			<key index='4'>keymode_3</key>
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='1'>start</key>
+			<key index='2'>ctrl_1</key>
+			<key index='3'>stop</key>
+			<key index='4'>keymode_0</key>						
+		</row>
+	</mode>
+	<mode index='3' name='AMPS'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>test</key>
+			<key index='4'>toggle</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri</key>
+			<key index='1'>volts_pri</key>
+			<key index='2'>amps_pri</key>
+			<key index='3'>arrow_up</key>
+			<key index='4'>keymode_2</key>			
+		</row>
+		<row index='2'>
+			<key index='0'>trav_bkg</key>
+			<key index='1'>volts_bkg</key>
+			<key index='2'>amps_bkg</key>
+			<key index='3'>arrow_down</key>
+			<key index='4'>amps_up</key>
+		</row>
+		<row index='3'>
+			<key index='0'>wire_pri</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+			<key index='4'>amps_down</key>			
+		</row>
+		<row index='4'>
+			<key index='0'>wire_bkg</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+			<key index='4'>trav_down</key>
+		</row>
+		<row index='5'>
+			<key index='0'>indwell</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+			<key index='4'>trav_up</key>
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='1'>start</key>
+			<key index='2'>ctrl_1</key>
+			<key index='3'>stop</key>
+			<key index='4'>keymode_0</key>
+		</row>
+	</mode>
+</termkeys>

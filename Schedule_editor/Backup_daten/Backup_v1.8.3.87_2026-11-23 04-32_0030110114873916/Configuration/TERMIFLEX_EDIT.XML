@@ -1,0 +1,192 @@
+<termkeys map='jw'>
+	<metadata>
+		<schema_version/>
+		<config_version>1.5.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<mode index='0' name='default'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>test</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri</key>
+			<key index='1'>volts_pri</key>
+			<key index='2'>amps_pri</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_bkg</key>
+			<key index='1'>volts_bkg</key>
+			<key index='2'>amps_bkg</key>
+			<key index='3'>arrow_down</key>
+		</row>
+		<row index='3'>
+			<key index='0'>wire_pri</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+		</row>
+		<row index='4'>
+			<key index='0'>wire_bkg</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+		</row>
+		<row index='5'>
+			<key index='0'>indwell</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='1'>start</key>
+			<key index='2'>ctrl_1</key>
+			<key index='3'>stop</key>
+		</row>
+	</mode>
+	<mode index='1' name='ctrl' symbol='^'>
+		<row index='1'>
+			<key index='0'>trav_up_latch</key>
+			<key index='3'>cross_step_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_down_latch</key>
+			<key index='3'>cross_step_down</key>
+		</row>
+		<row index='3'>
+			<key index='1'>aux1</key>
+			<key index='2'>load</key>
+			<key index='3'>save</key>
+		</row>
+		<row index='4'>
+			<key index='1'>aux0</key>
+			<key index='2'>width</key>
+			<key index='3'>excur</key>
+		</row>
+		<row index='5'>
+			<key index='2'>decimal</key>
+			<key index='3'>restart</key>
+		</row>
+		<row index='6'>
+			<key index='1'>back</key>
+			<key index='2'>view_4</key>
+			<key index='3'>edit_2</key>
+		</row>
+	</mode>
+	<mode index='2' name='edit' symbol='+'>
+		<row index='0'>
+			<key index='2'>purge</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri</key>
+			<key index='1'>volts_pri</key>
+			<key index='2'>amps_pri</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_bkg</key>
+			<key index='1'>volts_bkg</key>
+			<key index='2'>amps_bkg</key>
+			<key index='3'>arrow_down</key>
+		</row>
+		<row index='3'>
+			<key index='0'>wire_pri</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+		</row>
+		<row index='4'>
+			<key index='0'>wire_bkg</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+		</row>
+		<row index='5'>
+			<key index='0'>indwell</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='2'>ctrl_3</key>
+		</row>
+	</mode>
+	<mode index='3' name='ctrl' symbol='^'>
+		<row index='3'>
+			<key index='1'>aux1</key>
+			<key index='3'>save</key>
+		</row>
+		<row index='4'>
+			<key index='1'>aux0</key>
+			<key index='2'>width</key>
+			<key index='3'>excur</key>
+		</row>
+		<row index='5'>
+			<key index='1'>segment_index</key>
+			<key index='2'>decimal</key>
+			<key index='3'>global_parameters</key>
+		</row>
+		<row index='6'>
+			<key index='1'>back</key>
+		</row>
+		<row index='7'>
+			<key index='3'>stop</key>
+		</row>
+	</mode>
+	<mode index='4' name='view' symbol='-'>
+		<row index='1'>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='3'>arrow_down</key>
+		</row>		
+		<row index='3'>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+		</row>
+		<row index='4'>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+		</row>
+		<row index='5'>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+		</row>
+		<row index='6'>
+			<key index='1'>clear</key>
+			<key index='3'>enter</key>
+		</row>
+		<row index='7'>
+			<key index='2'>ctrl_5</key>
+		</row>
+	</mode>
+	<mode index='5' name='ctrl' symbol='^'>
+		<row index='5'>
+			<key index='3'>global_parameters</key>
+		</row>
+		<row index='6'>
+			<key index='1'>back</key>
+		</row>
+	</mode>
+</termkeys>

@@ -1,0 +1,26 @@
+<head model="SMAW">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.1</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:42</date>
+	</metadata>
+	<properties>
+		<arc_start>0</arc_start>
+		<avc_sense>0</avc_sense>
+		<max_amps>600.0000</max_amps>
+		<trail_fault>0</trail_fault>
+		<cool_flow>3.6</cool_flow>
+		<cool_fault>0</cool_fault>
+		<gas_fault>0</gas_fault>
+		<avc_max>1</avc_max>
+		<step_max>1</step_max>
+		<IPM_convert>0</IPM_convert>
+		<estop_mode_switch>0</estop_mode_switch>
+		<service_motor_period>0.1</service_motor_period>
+		<remote_start>1</remote_start>
+		<remote_current_control_min>10</remote_current_control_min>
+		<remote_current_control_max>100</remote_current_control_max>
+		<tuning_revision>2</tuning_revision>
+	</properties>
+</head>

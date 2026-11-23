@@ -1,0 +1,20 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+04:51:20:350|0|USER LOGIN|ADMIN
+
+04:51:20:352|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:51:26:459|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+04:51:26:516|3|SCHEDULE LOADED|0404-Fill-OUT
+
+04:51:30:307|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+06:38:00:338|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+06:38:00:849|11|USER LOGOUT|ADMIN
+

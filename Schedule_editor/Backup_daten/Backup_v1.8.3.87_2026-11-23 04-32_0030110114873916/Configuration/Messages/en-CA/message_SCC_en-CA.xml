@@ -1,0 +1,16 @@
+<language fileType="SCC" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>The screen %1 could not be found.</text>
+		<desc>Screen name = %1</desc>
+	</str>
+	<str id="2">
+		<text>The screen %1 can not be edited since it is currently loaded. Please load a different screen before making changes.</text>
+		<desc>Screen name = %1</desc>
+	</str>
+</language>

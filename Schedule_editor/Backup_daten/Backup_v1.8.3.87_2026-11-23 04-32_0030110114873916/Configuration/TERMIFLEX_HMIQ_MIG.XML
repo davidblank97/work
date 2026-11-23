@@ -1,0 +1,251 @@
+<termkeys map='jw'>
+	<metadata>
+		<schema_version/>
+		<config_version>1.5.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<mode index='0' name='default'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>test</key>
+				<key index='4'>hotkeymode_2</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri_latch_up</key>
+			<key index='1'>mig_volts</key>
+			<key index='2'>zero</key>
+			<key index='3'>arrow_up</key>
+				<key index='4'>hotkeymode_3</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_pri_latch_down</key>
+			<key index='1'>wire</key>
+			<key index='2'>prox</key>
+			<key index='3'>arrow_down</key>
+				<key index='4'>prox_up</key>
+		</row>
+		<row index='3'>
+			<key index='0'>width</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+				<key index='4'>prox_down</key>			
+		</row>
+		<row index='4'>
+			<key index='0'>excursion</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+				<key index='4'>osc_aux1_up</key>
+		</row>
+		<row index='5'>
+			<key index='0'>indwell_down</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+				<key index='4'>osc_aux1_down</key>
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell_up</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+				<key index='4'>hotkeymode_4</key>			
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='1'>start</key>
+			<key index='2'>ctrl_1</key>
+			<key index='3'>stop</key>
+				<key index='4'>startstop</key>						
+		</row>
+	</mode>
+	<mode index='1' name='ctrl' symbol='^'>
+		<row index='1'>
+			<key index='3'>step_up</key>
+		</row>
+		<row index='2'>			
+			<key index='3'>step_down</key>
+		</row>
+		<row index='3'>
+			<key index='1'>edit</key>
+			<key index='2'>load</key>
+			<key index='3'>save</key>
+		</row>
+		<row index='4'>
+			<key index='1'>mig_pinch</key>
+			<key index='2'>mig_ultimarc</key>
+			<key index='3'>mig_trim</key>
+		</row>
+		<row index='5'>
+			<key index='3'>restart</key>
+		</row>
+		<row index='6'>
+			<key index='1'>clear</key>
+			<key index='2'>decimal</key>
+		</row>
+		<row index='7'>
+			<key index='3'>stop</key>
+		</row>
+	</mode>
+	<mode index='2' name='OSCWIDTH'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>test</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri_latch_up</key>
+			<key index='1'>mig_volts</key>
+			<key index='2'>zero</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_pri_latch_down</key>
+			<key index='1'>wire</key>
+			<key index='2'>prox</key>
+			<key index='3'>arrow_down</key>
+				<key index='4'>width_up</key>
+		</row>
+		<row index='3'>
+			<key index='0'>width</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+				<key index='4'>width_down</key>			
+		</row>
+		<row index='4'>
+			<key index='0'>excursion</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+				<key index='4'>theta_up</key>			
+		</row>
+		<row index='5'>
+			<key index='0'>indwell_down</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+				<key index='4'>theta_down</key>			
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell_up</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='1'>start</key>
+			<key index='3'>stop</key>
+		</row>
+	</mode>
+	<mode index='3' name='TRAVEL_WIRE'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>test</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri_latch_up</key>
+			<key index='1'>mig_volts</key>
+			<key index='2'>zero</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_pri_latch_down</key>
+			<key index='1'>wire</key>
+			<key index='2'>prox</key>
+			<key index='3'>arrow_down</key>
+				<key index='4'>wire_up</key>
+		</row>
+		<row index='3'>
+			<key index='0'>width</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+				<key index='4'>wire_down</key>			
+		</row>
+		<row index='4'>
+			<key index='0'>excursion</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+				<key index='4'>trav_up</key>
+		</row>
+		<row index='5'>
+			<key index='0'>indwell_down</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+				<key index='4'>trav_down</key>
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell_up</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='1'>start</key>
+			<key index='3'>stop</key>
+		</row>
+	</mode>
+	<mode index='4' name='VOLTS'>
+		<row index='0'>
+			<key index='0'>trav_fwd</key>
+			<key index='1'>wire_on</key>
+			<key index='2'>purge</key>
+			<key index='3'>test</key>
+		</row>
+		<row index='1'>
+			<key index='0'>trav_pri_latch_up</key>
+			<key index='1'>mig_volts</key>
+			<key index='2'>zero</key>
+			<key index='3'>arrow_up</key>
+		</row>
+		<row index='2'>
+			<key index='0'>trav_pri_latch_down</key>
+			<key index='1'>wire</key>
+			<key index='2'>prox</key>
+			<key index='3'>arrow_down</key>
+				<key index='4'>mig_volts_up</key>
+		</row>
+		<row index='3'>
+			<key index='0'>width</key>
+			<key index='1'>num_1</key>
+			<key index='2'>num_2</key>
+			<key index='3'>num_3</key>
+				<key index='4'>mig_volts_down</key>			
+		</row>
+		<row index='4'>
+			<key index='0'>excursion</key>
+			<key index='1'>num_4</key>
+			<key index='2'>num_5</key>
+			<key index='3'>num_6</key>
+		</row>
+		<row index='5'>
+			<key index='0'>indwell_down</key>
+			<key index='1'>num_7</key>
+			<key index='2'>num_8</key>
+			<key index='3'>num_9</key>
+		</row>
+		<row index='6'>
+			<key index='0'>outdwell_up</key>
+			<key index='1'>clear</key>
+			<key index='2'>num_0</key>
+			<key index='3'>enter</key>
+		</row>
+		<row index='7'>
+			<key index='0'>cross</key>
+			<key index='1'>start</key>
+			<key index='3'>stop</key>
+		</row>
+	</mode>
+</termkeys>

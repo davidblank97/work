@@ -1,0 +1,33 @@
+<Schema name="mig_table" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.0">
+	<ElementType name="parameter" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="restricted" required="yes" dt:type="string" />
+		<attribute type="restricted" />
+	</ElementType>
+
+	<AttributeType name="name" required="yes" dt:type="string" />
+
+	<ElementType name="process" model="closed" order="many">
+		<attribute type="name" />
+		<element type="parameter" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="advanced_parameters" model="closed" order="many">
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="process" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

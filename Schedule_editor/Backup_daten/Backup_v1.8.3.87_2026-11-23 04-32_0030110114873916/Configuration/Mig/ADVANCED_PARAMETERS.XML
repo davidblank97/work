@@ -1,0 +1,58 @@
+<advanced_parameters>
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.2</config_version>
+		<author>Liburdi Automation</author>
+		<date>01/26/2021</date>
+	</metadata>
+	<process name="CV">
+		<parameter restricted="false">cv_min_current</parameter>
+		<parameter restricted="false">cv_max_current</parameter>
+		<parameter restricted="true">dip_dynamics_clear_short_threshold</parameter>
+		<parameter restricted="true">dip_dynamics_detect_short_threshold</parameter>
+	</process>
+	<process name="PULSE">
+		<parameter restricted="false">pri_amps</parameter>
+		<parameter restricted="false">bkg_amps</parameter>
+		<parameter restricted="false">freq</parameter>
+		<parameter restricted="false">pulse_width_min</parameter>
+		<parameter restricted="false">pulse_width_max</parameter>
+		<parameter restricted="false">mig_pulse_deadband</parameter>
+		<parameter restricted="false">mig_pulse_slowband</parameter>
+		<parameter restricted="false">mig_pulse_low_sensitivity</parameter>
+		<parameter restricted="false">mig_pulse_high_sensitivity</parameter>
+		<parameter restricted="true">dip_dynamics_enable_voltage_threshold</parameter>
+		<parameter restricted="true">dip_dynamics_wetting_ramp_rate</parameter>
+		<parameter restricted="true">dip_dynamics_clear_short_max_current</parameter>
+		<parameter restricted="true">dip_pulse_exponential_decay_period</parameter>
+		<parameter restricted="true">dip_dynamics_clear_short_threshold</parameter>
+		<parameter restricted="true">dip_dynamics_detect_short_threshold</parameter>
+		<parameter restricted="true">dip_dynamics_clear_short_ramp_rate</parameter>
+		<parameter restricted="true">dip_dynamics_short_wetting_time</parameter>
+		<parameter restricted="true">dip_dynamic_wetting_amps_drop</parameter>
+		<parameter restricted="true">mig_pulse_voltage_slope</parameter>
+		<parameter restricted="true">mig_pulse_voltage_offset</parameter>
+	</process>
+	<process name="DIP">
+		<parameter restricted="true">dip_base_current</parameter>
+		<parameter restricted="true">dip_blast_amps</parameter>
+		<parameter restricted="true">dip_detachment_amps</parameter>
+		<parameter restricted="true">dip_burn_back_amps</parameter>
+		<parameter restricted="true">dip_dynamic_wetting_amps_drop</parameter>
+		<parameter restricted="true">dip_dynamics_short_wetting_time</parameter>
+		<parameter restricted="true">dip_detachment_wetting_time</parameter>
+		<parameter restricted="true">dip_minimum_burn_back_current_time</parameter>
+		<parameter restricted="true">dip_dynamics_clear_short_ramp_rate</parameter>
+		<parameter restricted="true">dip_dynamics_detect_short_threshold</parameter>
+		<parameter restricted="true">dip_dynamics_clear_short_threshold</parameter>
+		<parameter restricted="true">dip_detachment_current_ramp_rate</parameter>
+		<parameter restricted="true">dip_pulse_exponential_decay_period</parameter>
+		<parameter restricted="true">dip_dynamics_clear_short_max_current</parameter>
+		<parameter restricted="true">dip_dynamics_wetting_ramp_rate</parameter>
+		<parameter restricted="true">dip_dynamics_enable_voltage_threshold</parameter>
+		<parameter restricted="true">dip_blast_current_ramp_rate</parameter>
+		<parameter restricted="true">dip_burnback_current_ramp_rate</parameter>
+		<parameter restricted="true">dip_pre_detachment_ramp_rate</parameter>
+		<parameter restricted="true">dip_energy</parameter>
+	</process>
+</advanced_parameters>

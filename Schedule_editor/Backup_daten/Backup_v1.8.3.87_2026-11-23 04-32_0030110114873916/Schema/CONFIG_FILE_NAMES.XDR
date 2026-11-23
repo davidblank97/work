@@ -1,0 +1,41 @@
+<Schema name="CONFIG_FILE_NAMES" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.1">
+
+	<ElementType name="files" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="system" required="yes" dt:type="string" />
+		<attribute type="system" />
+		<!--DECLARE ELEMENTS-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="config" minOccurs="1" maxOccurs="1" />
+		<element type="calibration" minOccurs="1" maxOccurs="1" />
+		<element type="io" minOccurs="1" maxOccurs="1" />
+		<element type="peripheral" minOccurs="1" maxOccurs="1" />
+		<element type="schedule_selection" minOccurs="0" maxOccurs="1"/>
+		<element type="power_monitor" minOccurs="0" maxOccurs="1"/>
+		<element type="power_supply_serial_number" minOccurs="0" maxOccurs="1"/>
+	</ElementType>
+
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (METADATA)-->
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS-->
+	<ElementType name="weld_head" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="calibration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="io" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="peripheral" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="schedule_selection" model="closed"  dt:type="string" content="textOnly"  />
+	<ElementType name="weld_head_folder" model="closed"  dt:type="string" content="textOnly"  />
+	<ElementType name="power_monitor" model="closed"  dt:type="string" content="textOnly"  />
+	<ElementType name="power_supply_serial_number" model="closed"  dt:type="string" content="textOnly"  />
+</Schema>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="TRC" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>La valeur de sensibilité du guidage de rainure est inférieure à zéro. Choisissez une valeur comprise entre 0 et 1 pour démarrer un soudage avec un guidage de rainure.</text>
+		<desc>Tracking sensitivity can only have values between 0.0 and 1.0.</desc>
+	</str>
+	<str id="2">
+		<text>Le guidage de rainure n&apos;a pas pu démarrer en mode Relecture car aucune correction du passage précédent n&apos;est disponible. Enregistrez un passage en mode Courant avant d&apos;utiliser le mode Relecture.</text>
+		<desc>To enable groove tracker in &apos;replay&apos; mode a previous pass should have been run in &apos;amperage&apos; mode to store corrections for that pass.</desc>
+	</str>
+</language>

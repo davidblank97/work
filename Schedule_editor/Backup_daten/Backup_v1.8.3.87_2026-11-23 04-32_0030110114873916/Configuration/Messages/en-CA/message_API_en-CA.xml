@@ -1,0 +1,32 @@
+<language fileType="API" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>%1 can not be set to %2 since the minimum acceptable value is %3. Please enter a value of %3 or more.</text>
+		<desc>Value is less than the minimum allowed value for the given parameter. %1 = parameter name %2 = value %3 = minimum value</desc>
+	</str>
+	<str id="2">
+		<text>%1 can not be set to %2 since the maximum acceptable value is %3. Please enter a value of %3 or less.</text>
+		<desc>Value is greater than the maximum allowed value for the given parameter. %1 = parameter %2 = value %3 = maximum value</desc>
+	</str>
+	<str id="3">
+		<text>The command requested could not be completed since the system is busy. Briefly wait and try the command again.</text>
+		<desc>Machine to machine message. Service could not be executed since the module attempting to execute is not enabled.</desc>
+	</str>
+	<str id="4">
+		<text>The value for %1 is read only and cannot be set.</text>
+		<desc>Machine to machine message. No write function specified for given parameter id. %1 = parameter to write.</desc>
+	</str>
+	<str id="5">
+		<text>%1 has been changed from %2 to the minimum acceptable value of %3.</text>
+		<desc>Value is less than the minimum allowed value for the given parameter, so value was bounded to minimum. %1 = parameter. %2 = old value %3 = new value</desc>
+	</str>
+	<str id="6">
+		<text>%1 has been changed from %2 to the maximum acceptable value of %3.</text>
+		<desc>Value is greater than the maximum allowed value for the given parameter, so value was bounded to maximum. %1 = parameter. %2 = old value %3 = new value</desc>
+	</str>
+</language>

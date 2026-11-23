@@ -1,0 +1,35 @@
+<Schema name="mig_table_descriptions" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+  <ElementType name="mig_tables" model="closed" order="many">
+    <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="table" minOccurs="0" maxOccurs="*" /> 
+  </ElementType>
+  
+  <!--DECLARE ALL ELEMENTS (METADATA)-->
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+  
+  <ElementType name="table" model="closed" order="many">
+    <AttributeType name="id" required="yes" dt:type="int" /> 
+    <attribute type="id" />
+    <element type="name" minOccurs="1" maxOccurs="1" />
+    <element type="description" minOccurs="0" maxOccurs="1" /> 
+    <element type="wire_size" minOccurs="0" maxOccurs="1" />
+    <element type="material" minOccurs="0" maxOccurs="1" />
+    <element type="gas_type" minOccurs="0" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="name" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="description" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="wire_size" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="material" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="gas_type" model="closed"  dt:type="string" content="textOnly" />
+  
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+</Schema>

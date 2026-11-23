@@ -1,0 +1,139 @@
+<system_user_units>
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/05/06 11:28:15</date>
+	</metadata>
+	<defaults>
+		<linear_distance unit="millimeters"/>
+		<rotation_distance unit="degrees"/>
+		<time unit="seconds"/>
+		<current unit="amps"/>
+		<voltage unit="volts"/>
+		<linear_speed unit="centimeters_per_minute"/>
+		<rotation_speed unit="rotations_per_minute"/>
+		<percentage unit="percent"/>
+		<frequency unit="hertz"/>
+		<io unit="counts"/>
+		<power unit="kilowatts"/>
+		<energy unit="joules"/>
+		<flow unit="liters_per_minute"/>
+		<heat_input unit="kilojoules_per_millimeter"/>
+		<resolution unit="volts_per_inch"/>
+		<amps_rate unit="amps_per_ms"/>
+		<volts_rate unit="volts_per_ms"/>
+		<hotwire_rate unit="amps_per_ipm"/>
+	</defaults>
+	<groups>
+		<travel_speed unit=""/>
+		<travel_distance unit="millimeters"/>
+		<wire_speed unit=""/>
+		<wire_distance unit=""/>
+		<osc_speed unit=""/>
+		<osc_distance unit=""/>
+		<theta_speed unit=""/>
+		<theta_distance_setpoint unit=""/>
+		<ahc_speed unit=""/>
+		<ahc_distance unit=""/>
+		<hotwire_amps unit=""/>
+		<arc_amps unit=""/>
+		<arc_volts unit=""/>
+		<shunt_volts unit="millivolts"/>
+		<pilot_arc_amps unit=""/>
+		<segment_duration unit=""/>
+		<calibration_resolution unit="volts_per_millimeter"/>
+		<groove_depth unit=""/>
+		<pipe_diameter unit=""/>
+		<gas_flow unit=""/>
+		<theta_distance_telemetry unit=""/>
+		<wire_manipulator_speed unit=""/>
+		<wire_manipulator_distance unit=""/>
+		<rotating_tungsten_speed unit=""/>
+		<rotating_tungsten_distance_setpoint unit="degrees"/>
+		<tilt_speed unit=""/>
+		<tilt_distance unit=""/>
+		<pulse_time unit=""/>
+		<rotating_tungsten_distance_telemetry unit="degrees"/>
+		<motor_current unit=""/>
+		<motor_peak_current_time unit="milliseconds"/>
+	</groups>
+	<parameters>
+		<parameter id="268225" mode="0" unit="analog_voltage"/>
+		<parameter id="268033" mode="0" unit="analog_voltage"/>
+		<parameter id="268036" mode="0" unit="analog_voltage"/>
+		<parameter id="268224" mode="0" unit="analog_voltage"/>
+		<parameter id="268032" mode="0" unit="analog_voltage"/>
+		<parameter id="268035" mode="0" unit="analog_voltage"/>
+		<parameter id="268034" mode="0" unit="analog_voltage"/>
+		<parameter id="268226" mode="0" unit="analog_voltage"/>
+		<parameter id="268037" mode="0" unit="analog_voltage"/>
+		<parameter id="268223" mode="0" unit="analog_voltage"/>
+		<parameter id="268222" mode="0" unit="analog_voltage"/>
+		<parameter id="268221" mode="0" unit="analog_voltage"/>
+		<parameter id="268218" mode="0" unit="analog_voltage"/>
+		<parameter id="268040" mode="0" unit="analog_voltage"/>
+		<parameter id="268217" mode="0" unit="analog_voltage"/>
+		<parameter id="268140" mode="0" unit="analog_voltage"/>
+		<parameter id="268038" mode="0" unit="analog_voltage"/>
+		<parameter id="268039" mode="0" unit="analog_voltage"/>
+		<parameter id="268206" mode="0" unit="analog_voltage"/>
+		<parameter id="268207" mode="0" unit="analog_voltage"/>
+		<parameter id="268209" mode="0" unit="analog_voltage"/>
+		<parameter id="268210" mode="0" unit="analog_voltage"/>
+		<parameter id="268211" mode="0" unit="analog_voltage"/>
+		<parameter id="268212" mode="0" unit="analog_voltage"/>
+		<parameter id="268213" mode="0" unit="analog_voltage"/>
+		<parameter id="268214" mode="0" unit="analog_voltage"/>
+		<parameter id="268215" mode="0" unit="analog_voltage"/>
+		<parameter id="268216" mode="0" unit="analog_voltage"/>
+		<parameter id="268219" mode="0" unit="analog_voltage"/>
+		<parameter id="268220" mode="0" unit="analog_voltage"/>
+		<parameter id="268060" mode="0" unit="analog_voltage"/>
+		<parameter id="268061" mode="0" unit="analog_voltage"/>
+		<parameter id="268070" mode="0" unit="analog_voltage"/>
+		<parameter id="268071" mode="0" unit="analog_voltage"/>
+		<parameter id="268080" mode="0" unit="analog_voltage"/>
+		<parameter id="268081" mode="0" unit="analog_voltage"/>
+		<parameter id="268090" mode="0" unit="analog_voltage"/>
+		<parameter id="268091" mode="0" unit="analog_voltage"/>
+		<parameter id="268100" mode="0" unit="analog_voltage"/>
+		<parameter id="268101" mode="0" unit="analog_voltage"/>
+		<parameter id="268099" mode="0" unit="analog_voltage"/>
+		<parameter id="268119" mode="0" unit="analog_voltage"/>
+		<parameter id="268241" mode="0" unit="analog_voltage"/>
+		<parameter id="268098" mode="0" unit="analog_voltage"/>
+		<parameter id="268078" mode="0" unit="analog_voltage"/>
+		<parameter id="268088" mode="0" unit="analog_voltage"/>
+		<parameter id="268068" mode="0" unit="analog_voltage"/>
+		<parameter id="268108" mode="0" unit="analog_voltage"/>
+		<parameter id="268111" mode="0" unit="analog_voltage"/>
+		<parameter id="268110" mode="0" unit="analog_voltage"/>
+		<parameter id="268118" mode="0" unit="analog_voltage"/>
+		<parameter id="268121" mode="0" unit="analog_voltage"/>
+		<parameter id="268120" mode="0" unit="analog_voltage"/>
+		<parameter id="268128" mode="0" unit="analog_voltage"/>
+		<parameter id="268131" mode="0" unit="analog_voltage"/>
+		<parameter id="268130" mode="0" unit="analog_voltage"/>
+		<parameter id="268138" mode="0" unit="analog_voltage"/>
+		<parameter id="265732" mode="0" unit="milliseconds"/>
+		<parameter id="265756" mode="0" unit="microseconds"/>
+		<parameter id="264999" mode="0" unit="microseconds"/>
+		<parameter id="265757" mode="0" unit="milliseconds"/>
+		<parameter id="266244" mode="0" unit="hours"/>
+		<parameter id="264998" mode="0" unit="microseconds"/>
+		<parameter id="265000" mode="0" unit="milliseconds"/>
+		<parameter id="265005" mode="0" unit="microseconds"/>
+		<parameter id="268041" mode="0" unit="analog_voltage"/>
+		<parameter id="268042" mode="0" unit="analog_voltage"/>
+		<parameter id="268043" mode="0" unit="analog_voltage"/>
+		<parameter id="268044" mode="0" unit="analog_voltage"/>
+		<parameter id="268045" mode="0" unit="analog_voltage"/>
+		<parameter id="271626" mode="0" unit="milliseconds"/>
+		<parameter id="271629" mode="0" unit="milliseconds"/>
+		<parameter id="268109" mode="0" unit="analog_voltage"/>
+		<parameter id="268069" mode="0" unit="analog_voltage"/>
+		<parameter id="268079" mode="0" unit="analog_voltage"/>
+		<parameter id="268089" mode="0" unit="analog_voltage"/>
+	</parameters>
+</system_user_units>

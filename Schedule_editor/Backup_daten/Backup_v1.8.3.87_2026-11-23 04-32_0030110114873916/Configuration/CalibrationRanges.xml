@@ -1,0 +1,36 @@
+<calibration_ranges>
+	<metadata>
+		<schema_version/>
+		<config_version>1.5.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<enabled>true</enabled>
+	<setpoint>
+		<gain>			
+			<range type="invalid" max="0.1" inclusive="false"/>
+			<range type="warning" max="0.7" inclusive="false"/>
+			<range type="valid" max="1.3" inclusive="true"/>
+			<range type="warning" max="1.4" inclusive="true"/>
+		</gain>
+		<offset>
+			<range type="valid" max="0.2" inclusive="true"/>
+			<range type="warning" max="0.3" inclusive="true"/>
+		</offset>
+	</setpoint>
+	<telemetry>
+		<gain>			
+			<range type="invalid" max="0.1" inclusive="false"/>
+			<range type="warning" max="0.6" inclusive="false"/>
+			<range type="valid" max="1.4" inclusive="true"/>
+			<range type="warning" max="1.5" inclusive="true"/>
+		</gain>
+		<offset>
+			<range type="valid" max="0.2" inclusive="true"/>
+			<range type="warning" max="0.3" inclusive="true"/>
+		</offset>
+	</telemetry>
+	<vpi>
+		<range type="valid" max="0.7" inclusive="true"/>
+	</vpi>
+</calibration_ranges>

@@ -1,0 +1,25 @@
+<Schema name="UPDATE_DETAILS" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.7.7.0">
+  
+  <ElementType name="update_details" model="closed" content="eltOnly" order="seq">
+    <element type="target" minOccurs="0" maxOccurs="1" />
+    <element type="version" minOccurs="1" maxOccurs="1" />
+    <element type="release_notes" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="version" model="closed" content="eltOnly" order="seq">
+    <element type="product" minOccurs="1" maxOccurs="1" />
+    <element type="control_board" minOccurs="0" maxOccurs="1" />
+    <element type="stepper_board" minOccurs="0" maxOccurs="1" />
+    <element type="servo_board" minOccurs="0" maxOccurs="1" />
+    <element type="ui" minOccurs="0" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="target" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="product" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="control_board" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="stepper_board" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="servo_board" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="ui" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="release_notes" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

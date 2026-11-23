@@ -1,0 +1,801 @@
+<mqtt_service_configuration>
+	<metadata>
+		<schema_version/>
+		<config_version>1.5.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<subscribed_topics>
+	<!--
+		Example of subscribed parameter:
+			-Each topic needs a unique ID
+		<topic enable="true">
+			<id>0</id>
+			<name></name>
+		</topic>
+
+		NOTE: The name for each topic can be changed to whatever the user or administrator desires however the IDs
+		must be a valid Liburdi API Parameter ID from the list of allowed FireConnect parameters.
+		NOTE: The topic name will be appended to the system's topic prefix, for example:
+
+				/liburdi/0012345678900/primaryCurrentTelemetry
+
+		Where 0012345678900 is the unique controller ID of the system and the element "liburdi" is the common root
+		element for all MQTT topics published from Liburdi systems
+	-->
+	</subscribed_topics>
+	<published_topics publish_interval_ms="100">
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263424</id>
+			<name>primaryCurrentTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264963</id>
+			<name>primaryCurrentSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263425</id>
+			<name>backgroundCurrentTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264964</id>
+			<name>backgroundCurrentSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263426</id>
+			<name>averageCurrentTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263427</id>
+			<name>averageVoltageTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263428</id>
+			<name>primaryTravelTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264965</id>
+			<name>primaryTravelSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263429</id>
+			<name>backgroundTravelTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264966</id>
+			<name>backgroundTravelSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263430</id>
+			<name>averageTravelSpeedTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263431</id>
+			<name>primaryWireTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264967</id>
+			<name>primaryWireSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263432</id>
+			<name>backgroundWireTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264968</id>
+			<name>backgroundWireSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263433</id>
+			<name>averageWireSpeedTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263437</id>
+			<name>hotwireAmperageTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263439</id>
+			<name>pilotArcAmperageTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263440</id>
+			<name>migVoltsTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263441</id>
+			<name>primaryAvcTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263442</id>
+			<name>backgroundAvcTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263443</id>
+			<name>accTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263444</id>
+			<name>heatInputTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>69634</id>
+			<name>weldState</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="true">
+			<id>329728</id>
+			<name>loadedScheduleName</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="true">
+			<id>329984</id>
+			<name>loadedWeldHeadModel</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="true">
+			<id>331524</id>
+			<name>loggedInUserName</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>265014</id>
+			<name>accSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>263168</id>
+			<name>coolantFlowTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264979</id>
+			<name>pulseWidthSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264978</id>
+			<name>pulseFrequencySetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264981</id>
+			<name>motionPulseWidthSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264980</id>
+			<name>motionPulseFrequencySetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264974</id>
+			<name>oscillationWidthSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264982</id>
+			<name>thetaWidthSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264977</id>
+			<name>excursionSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264975</id>
+			<name>inDwellSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264976</id>
+			<name>outDwellSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>266243</id>
+			<name>elapsedWeldDuration</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>266240</id>
+			<name>remainingSegmentDuration</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>266244</id>
+			<name>totalArcTime</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>200704</id>
+			<name>isWeldMode</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197635</id>
+			<name>isCoolantEnabled</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>200709</id>
+			<name>isPurgeEnabled</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>201728</id>
+			<name>isTravelForward</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197313</id>
+			<name>isWireLocked</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197314</id>
+			<name>isWire2Locked</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197315</id>
+			<name>isAvcLocked</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>198400</id>
+			<name>isArcOn</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>203264</id>
+			<name>isEstopRaised</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>204544</id>
+			<name>isAnyAlarmRaised</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>198152</id>
+			<name>isShieldGasAlarmRaised</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>198155</id>
+			<name>isPlasmaGasAlarmRaised</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>198153</id>
+			<name>isTrailGasAlarmRaised</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>198154</id>
+			<name>isBackupGasAlarmRaised</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197634</id>
+			<name>isCoolerAlarmRaised</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197280</id>
+			<name>isTravelMoving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197281</id>
+			<name>isWireMoving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197282</id>
+			<name>isWire2Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197283</id>
+			<name>isAvcMoving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197284</id>
+			<name>isAccMoving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197285</id>
+			<name>isOscillationMoving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197286</id>
+			<name>isThetaMoving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197287</id>
+			<name>isAux0Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197288</id>
+			<name>isAux1Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197289</id>
+			<name>isAux2Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197290</id>
+			<name>isAux3Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197291</id>
+			<name>isAux4Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197292</id>
+			<name>isAux5Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197293</id>
+			<name>isAux6Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197294</id>
+			<name>isAux7Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197295</id>
+			<name>isAux8Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197296</id>
+			<name>isAux9Moving</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197152</id>
+			<name>doesTravelExist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197153</id>
+			<name>doesWireExist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197154</id>
+			<name>doesWire2Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197155</id>
+			<name>doesAvcExist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197156</id>
+			<name>doesAccExist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197157</id>
+			<name>doesOscillationExist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197158</id>
+			<name>doesThetaExist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197159</id>
+			<name>doesAux0Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197160</id>
+			<name>doesAux1Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197161</id>
+			<name>doesAux2Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197162</id>
+			<name>doesAux3Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197163</id>
+			<name>doesAux4Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197164</id>
+			<name>doesAux5Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197165</id>
+			<name>doesAux6Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197166</id>
+			<name>doesAux7Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197167</id>
+			<name>doesAux8Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>197168</id>
+			<name>doesAux9Exist</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264448</id>
+			<name>prePurgeDurationSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264449</id>
+			<name>postPurgeDurationSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264450</id>
+			<name>downslopeDurationSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264453</id>
+			<name>initialAmpsSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264454</id>
+			<name>finalAmpsSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264455</id>
+			<name>hotwireGainSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264456</id>
+			<name>hotwire2GainSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264460</id>
+			<name>thetaTorchHeight</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>265013</id>
+			<name>pipeDiameter</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264462</id>
+			<name>travelDelaySetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264464</id>
+			<name>wireRetractSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264465</id>
+			<name>wire2RetractSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264466</id>
+			<name>wireDelaySetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264468</id>
+			<name>ahcDelaySetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264469</id>
+			<name>ahcStopDelaySetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264471</id>
+			<name>ahcRetractSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264472</id>
+			<name>avcLowSensitivitySetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264473</id>
+			<name>avcDeadbandSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264474</id>
+			<name>avcHighSensitivitySetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264475</id>
+			<name>avcSlowbandSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264608</id>
+			<name>travelJogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264609</id>
+			<name>ahcJogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264610</id>
+			<name>wireJogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264611</id>
+			<name>wire2JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264612</id>
+			<name>oscillationJogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264613</id>
+			<name>thetaJogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264614</id>
+			<name>aux0JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264615</id>
+			<name>aux1JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264616</id>
+			<name>aux2JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264617</id>
+			<name>aux3JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264618</id>
+			<name>aux4JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264619</id>
+			<name>aux5JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264620</id>
+			<name>aux6JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264621</id>
+			<name>aux7JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264622</id>
+			<name>aux8JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264623</id>
+			<name>aux9JogSpeedSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264640</id>
+			<name>travelStepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264641</id>
+			<name>wireStepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264642</id>
+			<name>wire2StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264643</id>
+			<name>ahcStepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264644</id>
+			<name>oscillationStepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264645</id>
+			<name>thetaStepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264646</id>
+			<name>aux0StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264647</id>
+			<name>aux1StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264648</id>
+			<name>aux2StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264649</id>
+			<name>aux3StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264650</id>
+			<name>aux4StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264651</id>
+			<name>aux5StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264652</id>
+			<name>aux6StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264653</id>
+			<name>aux7StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264654</id>
+			<name>aux8StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264655</id>
+			<name>aux9StepDistanceSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264708</id>
+			<name>amperageOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264709</id>
+			<name>amperageOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264710</id>
+			<name>travelOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264711</id>
+			<name>travelOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264712</id>
+			<name>wireOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264713</id>
+			<name>wireOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264714</id>
+			<name>wire2OverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264715</id>
+			<name>wire2OverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264716</id>
+			<name>hotwireOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264717</id>
+			<name>hotwireOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264718</id>
+			<name>hotwire2OverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264719</id>
+			<name>hotwire2OverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264720</id>
+			<name>migVoltsOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264721</id>
+			<name>migVoltsOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264722</id>
+			<name>thetaOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264723</id>
+			<name>thetaOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264724</id>
+			<name>oscillationOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264725</id>
+			<name>oscillationOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264728</id>
+			<name>excursionOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264729</id>
+			<name>excursionOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264730</id>
+			<name>dwellOverrideMax</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264731</id>
+			<name>dwellOverrideRate</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264960</id>
+			<name>segmentDurationSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264961</id>
+			<name>segmentSlopeDurationSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264969</id>
+			<name>primaryWire2Setpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264970</id>
+			<name>backgroundWire2Setpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264972</id>
+			<name>primaryAvcSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>264973</id>
+			<name>backgroundAvcSetpoint</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>67585</id>
+			<name>activeSegmentIndex</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>67850</id>
+			<name>pulseMode</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262880</id>
+			<name>travelPositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262881</id>
+			<name>wirePositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262882</id>
+			<name>wire2PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262883</id>
+			<name>avcPositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262884</id>
+			<name>accPositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262885</id>
+			<name>oscillationPositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262886</id>
+			<name>thetaPositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262887</id>
+			<name>aux0PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262888</id>
+			<name>aux1PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262889</id>
+			<name>aux2PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262890</id>
+			<name>aux3PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262891</id>
+			<name>aux4PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262892</id>
+			<name>aux5PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262893</id>
+			<name>aux6PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262894</id>
+			<name>aux7PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262895</id>
+			<name>aux8PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>262896</id>
+			<name>aux9PositionTelemetry</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>69636</id>
+			<name>controlSoftwareMajorVersion</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>69637</id>
+			<name>controlSoftwareMinorVersion</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>69638</id>
+			<name>controlSoftwareRevision</name>
+		</topic>
+		<topic enable="true" qosLevel="0" storeOffline="true" updateOnlyOnValueChange="true" retainOnServer="false">
+			<id>69639</id>
+			<name>controlSoftwareBuildNumber</name>
+		</topic>
+	</published_topics>
+</mqtt_service_configuration>

@@ -1,0 +1,296 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+02:53:25:995|0|USER LOGIN|ADMIN
+
+02:53:25:997|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+02:53:31:490|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+02:53:31:549|3|SCHEDULE LOADED|0403-Hotpass2
+
+02:53:35:350|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+03:00:19:574|10|WELD MODE CHANGED|WELD
+
+03:04:09:125|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:04:09:126|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+03:05:51:963|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+03:05:51:963|1|ALARM|[SCH006] Loaded schedule 9997-VERIFICATION 60SEC.
+
+03:06:08:513|7|WELD STARTED|
+
+03:06:12:972|1|ALARM|[DEV002] Shield Gas flow of 0.19l/min is below the minimum acceptable rate of 10.00l/min.
+
+03:06:13:376|1|ALARM|[EXE001] The sequence has been aborted. Reason: [EXE009] The system did not sense any shield gas flow.
+
+03:06:30:625|10|WELD MODE CHANGED|TEST
+
+03:06:31:904|10|WELD MODE CHANGED|WELD
+
+03:06:42:485|1|ALARM|[DEV002] Shield Gas flow of 0.22l/min is below the minimum acceptable rate of 10.00l/min.
+
+03:08:21:266|10|WELD MODE CHANGED|TEST
+
+03:08:31:552|7|WELD STARTED|
+
+03:22:40:744|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:22:40:746|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+03:23:30:793|3|SCHEDULE LOADED|0403-Hotpass2
+
+03:23:30:793|1|ALARM|[SCH006] Loaded schedule 0403-Hotpass2.
+
+03:23:40:760|3|SCHEDULE LOADED|0402-Hotpass1
+
+03:23:40:761|1|ALARM|[SCH006] Loaded schedule 0402-Hotpass1.
+
+03:23:53:552|3|SCHEDULE LOADED|0403-Hotpass2
+
+03:23:53:553|1|ALARM|[SCH006] Loaded schedule 0403-Hotpass2.
+
+03:24:00:003|4|SCHEDULE SAVED|0403-Hotpass2
+
+03:24:00:004|1|ALARM|[SCH008] Saved schedule 0403-Hotpass2.
+
+03:24:06:459|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:24:06:459|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+03:24:13:217|4|SCHEDULE SAVED|0404-Fill-OUT
+
+03:24:13:217|1|ALARM|[SCH008] Saved schedule 0404-Fill-OUT.
+
+03:24:18:038|3|SCHEDULE LOADED|0403-Hotpass2
+
+03:24:18:039|1|ALARM|[SCH006] Loaded schedule 0403-Hotpass2.
+
+03:24:25:177|3|SCHEDULE LOADED|0405-Fill-IN
+
+03:24:25:178|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+03:24:33:753|4|SCHEDULE SAVED|0405-Fill-IN
+
+03:24:33:754|1|ALARM|[SCH008] Saved schedule 0405-Fill-IN.
+
+03:24:40:237|3|SCHEDULE LOADED|0406-Fill-MID
+
+03:24:40:237|1|ALARM|[SCH006] Loaded schedule 0406-Fill-MID.
+
+03:24:45:912|4|SCHEDULE SAVED|0406-Fill-MID
+
+03:24:45:913|1|ALARM|[SCH008] Saved schedule 0406-Fill-MID.
+
+03:24:52:002|3|SCHEDULE LOADED|0407-Comp
+
+03:24:52:002|1|ALARM|[SCH006] Loaded schedule 0407-Comp.
+
+03:25:11:842|4|SCHEDULE SAVED|0407-Comp
+
+03:25:11:842|1|ALARM|[SCH008] Saved schedule 0407-Comp.
+
+03:25:18:254|3|SCHEDULE LOADED|0408-Cap
+
+03:25:18:257|1|ALARM|[SCH006] Loaded schedule 0408-Cap.
+
+03:25:25:504|4|SCHEDULE SAVED|0408-Cap
+
+03:25:25:505|1|ALARM|[SCH008] Saved schedule 0408-Cap.
+
+03:25:34:200|3|SCHEDULE LOADED|0409-Cap-LOW _W
+
+03:25:34:201|1|ALARM|[SCH006] Loaded schedule 0409-Cap-LOW _W.
+
+03:25:40:662|4|SCHEDULE SAVED|0409-Cap-LOW _W
+
+03:25:40:663|1|ALARM|[SCH008] Saved schedule 0409-Cap-LOW _W.
+
+03:25:48:138|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:25:48:139|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+03:31:12:241|4|SCHEDULE SAVED|0404-Fill-OUT
+
+03:31:12:242|1|ALARM|[SCH008] Saved schedule 0404-Fill-OUT.
+
+03:38:22:465|10|WELD MODE CHANGED|WELD
+
+03:38:36:218|7|WELD STARTED|
+
+03:40:14:538|7|WELD STARTED|
+
+03:40:15:433|9|WELD ABORTED|
+
+03:40:37:961|7|WELD STARTED|
+
+04:11:07:468|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+04:11:26:068|9|WELD ABORTED|
+
+04:19:25:636|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:20:01:649|3|SCHEDULE LOADED|0405-Fill-IN
+
+04:20:01:650|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+04:25:03:409|7|WELD STARTED|
+
+04:25:24:700|8|WELD STOPPED|
+
+04:25:25:193|8|WELD STOPPED|
+
+04:41:12:830|7|WELD STARTED|
+
+05:12:12:520|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+05:23:25:800|3|SCHEDULE LOADED|0404-Fill-OUT
+
+05:23:25:801|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+05:23:44:817|10|WELD MODE CHANGED|TEST
+
+05:23:46:575|10|WELD MODE CHANGED|WELD
+
+05:26:35:237|3|SCHEDULE LOADED|0405-Fill-IN
+
+05:26:35:238|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+05:27:01:557|3|SCHEDULE LOADED|0404-Fill-OUT
+
+05:27:01:557|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+05:28:18:401|7|WELD STARTED|
+
+05:59:50:331|7|WELD STARTED|
+
+06:01:04:268|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+06:01:34:453|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+06:01:37:542|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+06:01:46:153|10|WELD MODE CHANGED|TEST
+
+06:01:48:263|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+06:09:18:305|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:11:45:402|3|SCHEDULE LOADED|0405-Fill-IN
+
+06:11:45:403|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+06:12:25:299|3|SCHEDULE LOADED|0404-Fill-OUT
+
+06:12:25:300|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+06:12:30:493|3|SCHEDULE LOADED|0405-Fill-IN
+
+06:12:30:496|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+06:15:50:820|7|WELD STARTED|
+
+06:16:10:712|9|WELD ABORTED|
+
+06:16:25:333|10|WELD MODE CHANGED|WELD
+
+06:16:50:377|1|ALARM|[DEV030] The system could not detect a work or ground cable connected to the part.
+
+
+06:17:10:472|7|WELD STARTED|
+
+06:20:41:301|8|WELD STOPPED|
+
+06:24:20:099|7|WELD STARTED|
+
+06:52:47:430|7|WELD STARTED|
+
+07:06:36:117|1|ALARM|[DEV030] The system could not detect a work or ground cable connected to the part.
+
+
+07:08:08:528|7|WELD STARTED|
+
+07:32:52:955|7|WELD STARTED|
+
+07:56:06:753|3|SCHEDULE LOADED|0404-Fill-OUT
+
+07:56:06:754|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+07:57:43:254|7|WELD STARTED|
+
+08:28:39:072|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+08:32:19:911|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: UNSPECIFIED
+
+08:41:38:096|10|WELD MODE CHANGED|TEST
+
+08:41:59:267|10|WELD MODE CHANGED|WELD
+
+08:44:09:003|3|SCHEDULE LOADED|0405-Fill-IN
+
+08:44:09:005|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+08:45:03:369|7|WELD STARTED|
+
+09:16:04:688|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+09:16:09:320|1|ALARM|[DEV008] Electrode touched the work piece.
+
+09:16:09:591|1|ALARM|[EXE001] The sequence has been aborted. Reason: [EXE003] The electrode made contact with the work piece.
+
+09:16:33:732|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+09:16:33:741|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: [AXI013] The travel axis failed to move in sequence. Reason: [AXI015] The system is detecting a closed circuit voltage at the electrode. The electrode may be touching the work piece. Jog the torch up and away from the part to break contact.
+
+
+
+
+09:16:42:538|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+09:22:13:302|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: UNSPECIFIED
+
+09:28:08:291|3|SCHEDULE LOADED|0404-Fill-OUT
+
+09:28:08:291|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+09:29:24:937|7|WELD STARTED|
+
+10:00:33:441|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+10:06:19:545|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: UNSPECIFIED
+
+10:07:15:723|3|SCHEDULE LOADED|0405-Fill-IN
+
+10:07:15:724|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+10:08:33:186|1|ALARM|[DEV008] Electrode touched the work piece.
+
+10:15:18:114|7|WELD STARTED|
+
+10:46:46:070|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+10:49:03:900|1|ALARM|[DEV008] Electrode touched the work piece.
+
+10:49:04:168|1|ALARM|[EXE001] The sequence has been aborted. Reason: [EXE003] The electrode made contact with the work piece.
+
+10:49:17:600|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+10:49:17:612|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: [AXI013] The travel axis failed to move in sequence. Reason: [AXI015] The system is detecting a closed circuit voltage at the electrode. The electrode may be touching the work piece. Jog the torch up and away from the part to break contact.
+
+
+
+
+10:49:27:341|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+10:58:02:333|3|SCHEDULE LOADED|0405-Fill-IN
+
+10:58:08:383|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+10:58:08:942|11|USER LOGOUT|ADMIN
+

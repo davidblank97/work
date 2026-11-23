@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="EXE" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>La séquence a été interrompue. Motif : %1</text>
+		<desc>Weld stopped or aborted. %1 = reason for stop/abort.</desc>
+	</str>
+	<str id="2">
+		<text>La séquence a échoué lors de l&apos;étape : %1. Motif : %2</text>
+		<desc>The sequence failed while trying to execute an instruction. %1 = instruction name. %2 = reason for failure</desc>
+	</str>
+	<str id="3">
+		<text>L&apos;électrode a touché la pièce.</text>
+		<desc>The execution engine will abort because electrode touched the part.</desc>
+	</str>
+	<str id="4">
+		<text>L&apos;arc est sorti.</text>
+		<desc>The execution engine will abort because arc went out.</desc>
+	</str>
+	<str id="5">
+		<text>L&apos;électrode n&apos;a pas pu être chargée.</text>
+		<desc>The execution engine will abort because electrode could not charge.</desc>
+	</str>
+	<str id="6">
+		<text>Le système n&apos;a pas détecté de débit de gaz de protection pour trainard.</text>
+		<desc>The execution engine will stop because there is no trail gas.</desc>
+	</str>	
+	<str id="7">
+		<text>Le système n&apos;a pas détecté de débit de gaz de secours.</text>
+		<desc>The execution engine will stop because there is no backup gas.</desc>
+	</str>	
+	<str id="8">
+		<text>Le système n&apos;a pas détecté de débit de gaz plasma.</text>
+		<desc>The execution engine will stop because there is no plasma gas.</desc>
+	</str>	
+	<str id="9">
+		<text>Le système n&apos;a pas détecté de débit de gaz de protection.</text>
+		<desc>The execution engine will abort because there is no shield gas.</desc>
+	</str>
+	<str id="10">
+		<text>Le système n&apos;a pas détecté de débit de réfrigérant.</text>
+		<desc>The execution engine will stop because there is no cooler flow.</desc>
+	</str>	
+	<str id="11">
+		<text>Aucun courant de fil chaud.</text>
+		<desc>A detail to be added to another message. The execution engine will stop because there is no hotwire amps.</desc>
+	</str>			
+	<str id="12">
+		<text>Le contrôle du prédémarrage a échoué. Motif : %1</text>
+		<desc>A pre weld check failed to weld could not start. %1 = reason for not starting</desc>
+	</str>
+	<str id="13">
+		<text>La télémétrie %1 (%2) est sortie de la plage autorisée comprise entre %3 et %4. Pour afficher et ajuster les plages autorisées, utilisez l&apos;écran VALEURS LIMITES.</text>
+		<desc>The execution engine will stop because the parameter telemetry deviated from the fault threshold values. %1 = parameter name. %2 =  parameter telemetry. %3 = fault threshold lower limit. %4 =  fault threshold upper limit.</desc>
+	</str>
+	<str id="14">
+		<text>Naviguez jusqu&apos;à la zone de soudage pour commencer un soudage.</text>
+		<desc>Navigate to the weld area to begin a weld.</desc>
+	</str>
+	<str id="15">
+		<text>La température interne du générateur est trop élevée pour souder en toute sécurité.</text>
+		<desc>The execution engine will stop because the power supply&apos;s internal temperature exceeded the max threshold allowed for welding.</desc>
+	</str>
+	<str id="16">
+		<text>Aucun segment n&apos;est activé dans le programme. Activez au moins un segment avant de redémarrer.</text>
+		<desc></desc>
+	</str>
+		<str id="17">
+		<text>A weld has been started while Trace Logs are enabled. Welding performance may be heavily impacted.</text>
+		<desc>The user has started a weld while the system is collecting Trace Log diagnostics data. This can lead to performance issues with the weld.</desc>
+	</str>
+	<str id="18">
+		<text>There are too many instructions included in the weld schedule. Please reduce the loop count or the number of enabled segments in the schedule and start again.</text>
+		<desc>The user has included more segments than the system can handle. They need to reduce the number of segments before they can attempt to start the weld again.</desc>
+	</str>
+	<str id="19">
+		<text>Unable to establish an arc.</text>
+		<desc>The execution engine will fail because arc was not established.</desc>
+	</str>
+	<str id="20">
+		<text>A weld has been started with a scratch/manual arc start.</text>
+		<desc>The user has started a weld with arc start type selected as Scratch arc.</desc>
+	</str>	
+</language>

@@ -1,0 +1,30 @@
+<cal model="H2-FV-100S">
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.4.0</config_version>
+		<author>Michael Behrendt</author>
+		<date>2026/06/17 04:01:31</date>
+	</metadata>
+	<axis name="travel">
+		<gain timestamp="2026/06/17 02:56">0.9416</gain>
+		<offset>-0.0465</offset>
+		<tel_gain>1.0622</tel_gain>
+		<tel_offset>0.0500</tel_offset>
+		<rev_gain timestamp="2026/06/10 06:47">1.0000</rev_gain>
+		<rev_offset>0.0000</rev_offset>
+		<rev_tel_gain>1.0000</rev_tel_gain>
+		<rev_tel_offset>0.0000</rev_tel_offset>
+	</axis>
+	<axis name="wire">
+		<gain timestamp="2026/06/17 03:50">0.7889</gain>
+		<offset>-0.0291</offset>
+		<tel_gain>1.2690</tel_gain>
+		<tel_offset>-0.0110</tel_offset>
+	</axis>
+	<axis name="osc">
+		<pos_limit timestamp="2026/06/17 04:01">0.8924</pos_limit>
+		<neg_limit>-0.8793</neg_limit>
+		<vpi>9.6652</vpi>
+		<zero>0.3394</zero>
+	</axis>
+</cal>

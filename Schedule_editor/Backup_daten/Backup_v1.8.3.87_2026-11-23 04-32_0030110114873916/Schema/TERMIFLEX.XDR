@@ -1,0 +1,45 @@
+<Schema name="pendant" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+
+  <ElementType name="key" model="closed"  dt:type="string" content="textOnly" >
+    <AttributeType name="index" required="yes" dt:type="string" /> 
+    <attribute type="index" /> 
+  </ElementType>
+
+  <ElementType name="row" model="closed">
+    <AttributeType name="index" required="yes" dt:type="string" /> 
+    <attribute type="index" /> 
+    <element type="key" minOccurs="0" maxOccurs="*" /> 
+  </ElementType>
+
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (METADATA)-->
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="mode" model="closed">
+    <AttributeType name="index" required="yes" dt:type="string" /> 
+    <AttributeType name="name" required="yes" dt:type="string" /> 
+    <AttributeType name="symbol" required="no" dt:type="string" /> 
+    <attribute type="index" /> 
+    <attribute type="name" /> 
+    <attribute type="symbol" /> 
+    <element type="row" minOccurs="1" maxOccurs="*" /> 
+  </ElementType>
+
+  <ElementType name="termkeys" model="closed">
+    <AttributeType name="map" required="yes" dt:type="string" /> 
+    <attribute type="map" /> 
+    <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="mode" minOccurs="1" maxOccurs="*" /> 
+  </ElementType>
+
+  <!--DEFINE ELEMENTS (METADATA)-->
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

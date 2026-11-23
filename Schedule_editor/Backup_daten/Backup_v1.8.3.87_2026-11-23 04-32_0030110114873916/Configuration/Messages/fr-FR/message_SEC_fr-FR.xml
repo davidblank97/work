@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="SEC" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Le nom d&apos;utilisateur %1 n&apos;existe pas.</text>
+		<desc>Unable to complete request as user name does not exist. %1 = user name entered</desc>
+	</str>
+	<str id="2">
+		<text>Mot de passe incorrect.</text>
+		<desc>Unable to login due to incorrect password</desc>
+	</str>
+	<str id="3">
+		<text>L&apos;utilisateur %1 n&apos;a pas pu être créé car le nom d&apos;utilisateur existe déjà dans le système. Entrez un nom d&apos;utilisateur unique et réessayez.</text>
+		<desc>Could not create user as user name entered already exists. %1 = user name entered</desc>
+	</str>
+	<str id="4">
+		<text>Le niveau de sécurité %1 n&apos;existe pas.</text>
+		<desc>Unable to complete request as security level name does not exist. %1 = security level name entered</desc>
+	</str>
+	<str id="5">
+		<text>Le niveau de sécurité %1 n&apos;a pas pu être créé car le nom existe déjà dans le système. Entrez un nom de niveau de sécurité unique et réessayez.</text>
+		<desc>Could not create security level as security level name entered already exists. %1 = security level name entered</desc>
+	</str>
+	<str id="6">
+		<text>Un utilisateur doit être connecté pour exécuter la requête.</text>
+		<desc>Machine to machine message. Unable to complete request since a user is not logged in</desc>
+	</str>
+	<str id="7">
+		<text>L&apos;utilisateur %1 n&apos;est pas autorisé à exécuter la requête.</text>
+		<desc>Machine to machine message. Unable to complete request since they do not have correct permission.</desc>
+	</str>
+	<str id="8">
+		<text>%1 est un utilisateur par défaut et ne peut pas être supprimé.</text>
+		<desc>Unable to delete user since the selected user is the admin. %1 = name of the default user</desc>
+	</str>
+	<str id="9">
+		<text>Le champ du nom d&apos;utilisateur doit être renseigné. Entrez un nom valide et réessayez.</text>
+		<desc>Unable to complete request as user name cannot be empty.</desc>
+	</str>
+	<str id="10">
+		<text>Le champ du mot de passe doit être renseigné. Entrez un mot de passe valide et réessayez.</text>
+		<desc>Unable to complete request as password cannot be empty.</desc>
+	</str>
+	<str id="11">
+		<text>Ce niveau de sécurité ne peut pas être supprimé tant qu&apos;un ou plusieurs utilisateurs y sont associés.</text>
+		<desc>Unable to delete the security level since existing user(s) use the security level. %1 = security level name.</desc>
+	</str>
+	<str id="12">
+		<text>L&apos;utilisateur %1 ne peut pas être supprimé tant qu&apos;il n&apos;est pas déconnecté.</text>
+		<desc>Unable to delete the user that is currently logged in. %1 = user name selected</desc>
+	</str>
+	<str id="13">
+		<text>Le paramètre n&apos;a pas pu être modifié. Les paramètres de l&apos;utilisateur %1 sont gérés par l&apos;administrateur.</text>
+		<desc>Unable to edit setting since the settings for that account are controlled by the system&apos;s administrator. %1 = user name</desc>
+	</str>
+	<str id="14">
+		<text>Le niveau de sécurité %1 ne permet pas d&apos;effacer les erreurs critiques.</text>
+		<desc>Security level %1 does not have permission to clear critical faults. %1 = security level</desc>
+	</str>
+	<str id="15">
+		<text>%1 est un niveau de sécurité par défaut et ne peut pas être supprimé.</text>
+		<desc>%1 = default security level</desc>
+	</str>
+</language>

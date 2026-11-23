@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="ARC" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Le générateur Lincoln n&apos;a pas pu initialiser la communication. Assurez-vous que toutes les connexions de communication sont sécurisées, que le générateur est alimenté et essayez de vous connecter à nouveau.</text>
+		<desc>Error occurred when initializing communication.</desc>
+	</str>
+	<str id="2">
+		<text>Le générateur Lincoln a retourné le message PAS PRET lors du soudage.</text>
+		<desc>Weld sequence stopped because status changed to NOT READY.</desc>
+	</str>
+	<str id="3">
+		<text>Le générateur Lincoln a retourné le message STOP lors du soudage.</text>
+		<desc>Weld sequence stopped because a fault occurred.</desc>
+	</str>	
+	<str id="4">
+		<text>L&apos;adresse du générateur Lincoln (classe d&apos;objet %1) n&apos;est pas définie.</text>
+		<desc>Error initializing robot. %1 = Weld Controller address.</desc>
+	</str>
+	<str id="5">
+		<text>L&apos;adresse du maître du bus (classe d&apos;objet %1) n&apos;est pas définie.</text>
+		<desc>Error initializing robot. %1 = Bus Master address.</desc>
+	</str>
+	<str id="6">
+		<text>Le générateur Lincoln n&apos;est pas prêt. Le réglage du mode a échoué.</text>
+		<desc>Failed to set mode.</desc>
+	</str>
+	<str id="7">
+		<text>Le générateur Lincoln n&apos;est pas prêt. L&apos;accès au mode a échoué.</text>
+		<desc>Failed to get mode.</desc>
+	</str>
+	<str id="8">
+		<text>Le mode de soudage n&apos;a pas été réglé. L&apos;accès au mode a échoué.</text>
+		<desc>Failed to get mode.</desc>
+	</str>
+	<str id="9">
+		<text>Le générateur Lincoln n&apos;est pas prêt. Impossible d&apos;obtenir les résultats de recherche de la table de soudage.</text>
+		<desc>Failed to get weld table search results.</desc>
+	</str>
+	<str id="10">
+		<text>Aucune donnée de procédure disponible.</text>
+		<desc>Could not retrieve procedure data as no data is available.</desc>
+	</str>
+	<str id="11">
+		<text>Le mode de soudage n&apos;est pas réglé. Impossible d&apos;obtenir des informations sur le paramètre synergique.</text>
+		<desc>Failed to get synergic parameter information.</desc>
+	</str>
+	<str id="12">
+		<text>Le mode de soudage n&apos;est pas réglé. Impossible d&apos;obtenir des informations sur le paramètre.</text>
+		<desc>Failed to get parameter information.</desc>
+	</str>
+	<str id="13">
+		<text>Le mode de soudage n&apos;est pas réglé. Impossible d&apos;obtenir des valeurs de paramètre.</text>
+		<desc>Failed to get parameter values.</desc>
+	</str>
+	<str id="14">
+		<text>Le mode de soudage n&apos;est pas réglé. Impossible de régler des valeurs de paramètre.</text>
+		<desc>Failed to set parameter values.</desc>
+	</str>
+	<str id="15">
+		<text>Le générateur Lincoln n&apos;est pas prêt. Impossible de lire la plage synergique de paramètres.</text>
+		<desc>Failed to read parameter synergic range.</desc>
+	</str>
+	<str id="16">
+		<text>Le générateur Lincoln n&apos;est pas prêt. La recherche de la table de soudage a échoué.</text>
+		<desc>Failed to search weld table.</desc>
+	</str>
+	<str id="17">
+		<text>Le générateur Lincoln n&apos;est pas prêt. La lecture des données de procédure a échoué.</text>
+		<desc>Failed to read procedure data.</desc>
+	</str>
+	<str id="18">
+		<text>Le générateur Lincoln n&apos;est pas prêt. La lecture des informations sur le paramètre a échoué.</text>
+		<desc>Failed to read parameter information.</desc>
+	</str>
+	<str id="19">
+		<text>Le générateur Lincoln n&apos;est pas prêt. Le démarrage de la séquence de soudage a échoué.</text>
+		<desc>Failed to start the weld sequence as the robot is not ready.</desc>
+	</str>
+	<str id="20">
+		<text>Le générateur Lincoln n&apos;est pas prêt. Le démarrage de la séquence de soudage a échoué.</text>
+		<desc>Failed to start the weld sequence as the weld controller is not ready.</desc>
+	</str>
+	<str id="21">
+		<text>Une erreur s&apos;est produite lors de l&apos;attente de l&apos;arc.</text>
+		<desc>Error occurred while waiting for arc event.</desc>
+	</str>
+	<str id="22">
+		<text>Aucun arc n&apos;a pu être établi après le délai d&apos;attente de %1 ms.</text>
+		<desc>Time out occurred while waiting for arc event. %1 = time before timeout (ms).</desc>
+	</str>
+	<str id="23">
+		<text>Le générateur Lincoln n&apos;est pas prêt. L&apos;arrêt de la séquence de soudage a échoué.</text>
+		<desc>Failed to stop weld sequence as the robot is not ready.</desc>
+	</str>
+	<str id="24">
+		<text>Le générateur Lincoln n&apos;est pas prêt. L&apos;arrêt de la séquence de soudage a échoué.</text>
+		<desc>Failed to stop weld sequence as the weld controller is not ready.</desc>
+	</str>
+	<str id="25">
+		<text>L&apos;enregistrement des paramètres de soudage pendant le processus a échoué.</text>
+		<desc>Weld sequence stopped because write welding parameters failed.</desc>
+	</str>
+	<str id="26">
+		<text>La mise à jour des paramètres de soudage a échoué.</text>
+		<desc>Error occurred while updating weld parameters.</desc>
+	</str>
+	<str id="27">
+		<text>Erreur de mode.</text>
+		<desc>Mode error occurred.</desc>
+	</str>
+	<str id="28">
+		<text>Erreur de point de travail.</text>
+		<desc>WorkPoint error occurred.</desc>
+	</str>
+	<str id="29">
+		<text>Erreur de tension de soudage.</text>
+		<desc>Trim error occurred.</desc>
+	</str>
+	<str id="30">
+		<text>Erreur WaveControl 1.</text>
+		<desc>WaveControl1 error occurred.</desc>
+	</str>
+	<str id="31">
+		<text>Erreur WaveControl 2.</text>
+		<desc>WaveControl2 error occurred.</desc>
+	</str>
+	<str id="32">
+		<text>Erreur WaveControl 3.</text>
+		<desc>WaveControl3 error occurred.</desc>
+	</str>
+	<str id="33">
+		<text>Erreur WaveControl 4.</text>
+		<desc>WaveControl4 error occurred.</desc>
+	</str>
+	<str id="34">
+		<text>Le délai d&apos;envoi du message Ecrire attribut a expiré.</text>
+		<desc>Failed to send Write Attribute message as it timed out.</desc>
+	</str>
+	<str id="35">
+		<text>Le délai d&apos;envoi du message Créer rapport d&apos;événement a expiré.</text>
+		<desc>Failed to send Create Event Report message as it timed out.</desc>
+	</str>
+	<str id="36">
+		<text>Le délai d&apos;envoi du message Régler contrôles de soudage a expiré.</text>
+		<desc>Failed to send Welding Controls message as it timed out.</desc>
+	</str>
+	<str id="37">
+		<text>Arclink n&apos;est pas prêt. L&apos;accès au poste de soudage a échoué.</text>
+		<desc>Failed to get weld set.</desc>
+	</str>
+	<str id="38">
+		<text>L&apos;initialisation du robot a échoué.</text>
+		<desc>Error occurred while initializing robot.</desc>
+	</str>
+	<str id="39">
+		<text>Le générateur Lincoln n&apos;est pas prêt. Le test des données du mode lecture a échoué.</text>
+		<desc>Failed to test read mode data.</desc>
+	</str>
+	<str id="40">
+		<text>Succès.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="41">
+		<text>Attribut non trouvé.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="42">
+		<text>L&apos;attribut est en lecture seule.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="43">
+		<text>La valeur d&apos;attribut (en cours d&apos;écriture) est située en dehors des valeurs limites</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="44">
+		<text>La valeur d&apos;attribut (en cours d&apos;écriture) dépasse la limite supérieure.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="45">
+		<text>La valeur d&apos;attribut (en cours d&apos;écriture) est située en dessous de la limite inférieure.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="46">
+		<text>Adresse d&apos;objet Arclink erronée.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="47">
+		<text>La propriété de l&apos;attribut indiquée n&apos;est pas valide.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="48">
+		<text>La propriété de l&apos;attribut n&apos;est pas applicable.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="49">
+		<text>La propriété de l&apos;attribut n&apos;est pas prise en charge.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="50">
+		<text>La propriété de l&apos;attribut est en lecture seule.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="51">
+		<text>L&apos;attribut n&apos;est pas valide.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="52">
+		<text>Les messages de l&apos;objet Arclink n&apos;ont pas pu être relayés par Ethernet.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="53">
+		<text>Le service Arclink est occupé.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="54">
+		<text>ID de bloc Arclink non trouvé.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="55">
+		<text>ID d&apos;action Arclink non trouvé.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="56">
+		<text>Adresse de groupe Arclink non trouvée.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="57">
+		<text>ID d&apos;événement Arclink non trouvé.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="58">
+		<text>Le service Arclink n&apos;est pas pris en charge.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="59">
+		<text>Le service Arclink n&apos;est pas disponible.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="60">
+		<text>La mémoire de fragment est occupée.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="61">
+		<text>Le fragment est en dehors de la séquence.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="62">
+		<text>Le délai de réception du fragment a expiré.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="63">
+		<text>Le message de fragment n&apos;est pas valide.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="64">
+		<text>La taille de la demande de message n&apos;est pas valide.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="65">
+		<text>La mémoire de réponse du message était trop petite.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="66">
+		<text>Le message a expiré.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="67">
+		<text>L&apos;écriture a échoué.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="68">
+		<text>La lecture a échoué.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="69">
+		<text>La sélection n&apos;est pas valide.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="70">
+		<text>L&apos;objet Arclink était occupé.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="71">
+		<text>Le mode n&apos;est pas valide ou le mode ne fait pas partie du poste de soudage.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="72">
+		<text>Code de statut %1 inconnu.</text>
+		<desc>Status message. %1 = status code.</desc>
+	</str>
+	<str id="73">
+		<text>Une panne de générateur Lincoln s&apos;est produite (Panne : %1).</text>
+		<desc>Weld controller system faults occurred. %1 = fault mask.</desc>
+	</str>
+	<str id="74">
+		<text>- Surtension secondaire.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="75">
+		<text>- Surtension banc B condensateur onduleur</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="76">
+		<text>- Surtension banc A condensateur onduleur</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="77">
+		<text>- Sous-tension banc B condensateur onduleur</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="78">
+		<text>- Sous-tension banc A condensateur onduleur</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="79">
+		<text>- Surintensité principale</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="80">
+		<text>- Tension delta condensateur onduleur</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="81">
+		<text>- Problème de carte PC de commande</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="82">
+		<text>- Echec de préchargement de l&apos;onduleur</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="83">
+		<text>- Défaut de source d&apos;alimentation parallèle CA-CC</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="84">
+		<text>- Surtension secondaire</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="85">
+		<text>- Courant d&apos;entrée monophase</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="86">
+		<text>Défaut de réfrigérant. Vérifier le débit de réfrigérant. Mettre le générateur sous tension.</text>
+		<desc>No cooler flow. The only way to recover is to power cycle Lincoln</desc>
+	</str>
+	<str id="87">
+		<text>Tentative d&apos;initialisation de POWERWAVE</text>
+		<desc>MIG system with powerwave detected, connection not yet established</desc>
+	</str>
+	<str id="88">
+		<text>Initialisation de POWERWAVE</text>
+		<desc>Connection established with powerwave, not yet ready</desc>
+	</str>
+	<str id="89">
+		<text>POWERWAVE est prêt : %1</text>
+		<desc>Powerwave is connected and is ready. %1 = weld set</desc>
+	</str>
+  <str id="90">
+    <text>Le capteur tactile est activé. Le démarrage de la séquence de soudage a échoué.</text>
+    <desc>Failed to start the weld sequence as the touch sense feature is enabled on the weld controller.</desc>
+  </str>
+  <str id="91">
+    <text>La séquence de soudage est activée. L&apos;activation du capteur tactile a échoué.</text>
+    <desc>Failed to enable touch sense because the weld sequence is started on the weld controller.</desc>
+  </str>
+  <str id="92">
+    <text>Le robot n&apos;est pas prêt. L&apos;activation du capteur tactile a échoué.</text>
+    <desc>Failed to start the weld sequence as the robot is not ready.</desc>
+  </str>
+  <str id="93">
+    <text>Le contrôleur de soudage n&apos;est pas prêt. L&apos;activation du capteur tactile a échoué.</text>
+    <desc>Failed to start the weld sequence as the weld controller is not ready.</desc>
+  </str>
+  <str id="94">
+    <text>Impossible de trouver une description pour le code Type de gaz Lincoln : %1. Contactez Liburdi pour obtenir des descriptions à jour Lincoln.</text>
+    <desc>%1 = Lincoln Gas Type Code</desc>
+  </str>
+  <str id="95">
+    <text>Impossible de trouver une description pour le code Type de fil Lincoln : %1. Contactez Liburdi pour obtenir des descriptions à jour Lincoln.</text>
+    <desc>%1 = Lincoln Wire Type Code</desc>
+  </str>
+  <str id="96">
+    <text>Impossible de trouver une description pour le code Unité Lincoln : %1. Contactez Liburdi pour obtenir des descriptions à jour Lincoln.</text>
+    <desc>%1 = Lincoln Unit Code</desc>
+  </str>
+  <str id="97">
+    <text>Impossible de trouver une description pour le code Clé de processus Lincoln : %1. Contactez Liburdi pour obtenir des descriptions à jour Lincoln.</text>
+    <desc>%1 = Lincoln Process Key Code</desc>
+  </str>
+  <str id="98">
+    <text>Impossible de trouver une description pour le code Processus Lincoln : %1. Contactez Liburdi pour obtenir des descriptions à jour Lincoln.</text>
+    <desc>%1 = Lincoln Process Code</desc>
+  </str>
+  <str id="99">
+    <text>Impossible de trouver une description pour le code Taille de fil Lincoln : %1. Contactez Liburdi pour obtenir des descriptions à jour Lincoln.</text>
+    <desc>%1 = Lincoln Wire Size Code</desc>
+  </str>
+</language>

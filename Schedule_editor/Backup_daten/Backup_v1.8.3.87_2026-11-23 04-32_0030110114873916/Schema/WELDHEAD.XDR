@@ -1,0 +1,277 @@
+<Schema name="WH_DABBER" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.1">
+
+	<ElementType name="head" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="model" required="yes" dt:type="string" />
+		<attribute type="model" />
+		<!--DECLARE ALL ELEMENTS (HEAD)-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="properties" minOccurs="1" maxOccurs="1" />
+		<element type="axis" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="0" maxOccurs="1" />
+		<element type="date" minOccurs="0" maxOccurs="1" />
+		<element type="signature" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (HEAD)-->
+	<ElementType name="properties" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (PROPERTIES)-->
+		<element type="arc_start" minOccurs="0" maxOccurs="1" />
+		<element type="avc_sense" minOccurs="0" maxOccurs="1" />
+		<element type="plasma" minOccurs="0" maxOccurs="1" />
+		<element type="max_amps" minOccurs="1" maxOccurs="1" />
+		<element type="avg_amps" minOccurs="0" maxOccurs="1" />
+		<element type="trail_fault" minOccurs="1" maxOccurs="1" />
+		<element type="mig" minOccurs="0" maxOccurs="1" />
+		<element type="cool_flow" minOccurs="1" maxOccurs="1" />
+		<element type="cool_fault" minOccurs="1" maxOccurs="1" />
+		<element type="gas_fault" minOccurs="1" maxOccurs="1" />
+		<element type="avc_max" minOccurs="0" maxOccurs="1" />
+		<element type="step_max" minOccurs="0" maxOccurs="1" />
+		<element type="IPM_convert" minOccurs="0" maxOccurs="1" />
+		<element type="trail_gas" minOccurs="0" maxOccurs="1" />
+		<element type="backup_gas" minOccurs="0" maxOccurs="1" />
+		<element type="plasma_gas" minOccurs="0" maxOccurs="1" />
+		<element type="estop_mode_switch" minOccurs="0" maxOccurs="1" />
+		<element type="service_motor_period" minOccurs="0" maxOccurs="1" />
+		<element type="purge_fault_delay" minOccurs="0" maxOccurs="1" />
+		<element type="osc_steer" minOccurs="0" maxOccurs="1" />
+		<element type="jog_toggle_switch" minOccurs="0" maxOccurs="1" />
+		<element type="seq_control" minOccurs="0" maxOccurs="1" />
+		<element type="wire_toggle" minOccurs="0" maxOccurs="1" />
+		<element type="avc_sensor_connector" minOccurs="0" maxOccurs="1" />
+		<element type="wire_manipulator" minOccurs="0" maxOccurs="1" />
+		<element type="remote_start" minOccurs="0" maxOccurs="1" />
+		<element type="remote_current_control_min" minOccurs="0" maxOccurs="1" />
+		<element type="remote_current_control_max" minOccurs="0" maxOccurs="1" />
+		<element type="tuning_revision" minOccurs="0" maxOccurs="1" />
+		<element type="is_closed" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="axis" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<AttributeType name="optional_name" required="no" dt:type="string" />
+		<AttributeType name="type" required="no" dt:type="string" />
+		<AttributeType name="com_index" required="no" dt:type="string" />
+		<AttributeType name="io_index" required="no" dt:type="string" />
+		<AttributeType name="degrees" required="no" dt:type="string" />
+		<attribute type="name" />
+		<attribute type="optional_name" />
+		<attribute type="type" />
+		<attribute type="com_index" />
+		<attribute type="io_index" />
+		<attribute type="degrees" />
+		<!--DECLARE ALL ELEMENTS (AXIS)-->
+		<element type="max_speed" minOccurs="1" maxOccurs="1" />
+		<element type="units_rpm" minOccurs="0" maxOccurs="1" />
+		<element type="acceleration" minOccurs="0" maxOccurs="1" />
+		<element type="cmd_volts" minOccurs="0" maxOccurs="1" />
+		<element type="tel_volts" minOccurs="0" maxOccurs="1" />
+		<element type="hard_limits" minOccurs="0" maxOccurs="1" />
+		<element type="curr_limit" minOccurs="0" maxOccurs="1" />
+		<element type="peak_current" minOccurs="0" maxOccurs="1" />
+		<element type="peak_current_time" minOccurs="0" maxOccurs="1" />
+		<element type="vlp" minOccurs="0" maxOccurs="1" />
+		<element type="vli" minOccurs="0" maxOccurs="1" />
+		<element type="clp" minOccurs="0" maxOccurs="1" />
+		<element type="cli" minOccurs="0" maxOccurs="1" />
+		<element type="back_emf_current_component" minOccurs="0" maxOccurs="1" />
+		<element type="pos" minOccurs="0" maxOccurs="*" />
+		<element type="pulse" minOccurs="0" maxOccurs="1" />
+		<element type="sync" minOccurs="0" maxOccurs="1" />
+		<element type="must_be_zeroed" minOccurs="0" maxOccurs="1" />
+		<element type="hotwire" minOccurs="0" maxOccurs="1" />
+		<element type="diameter_inch" minOccurs="0" maxOccurs="1" />
+		<element type="smart_address" minOccurs="0" maxOccurs="1" />
+		<element type="hasBrake" minOccurs="0" maxOccurs="1" />
+		<element type="bump_sense" minOccurs="0" maxOccurs="1" />
+		<element type="rem_emf" minOccurs="0" maxOccurs="1" />
+		<element type="tach" minOccurs="0" maxOccurs="1" />
+		<element type="shouldStepInsteadOfJogDuringWeld" minOccurs="0" maxOccurs="1" />
+		<element type="isMotionControlledBySyncSignal" minOccurs="0" maxOccurs="1" />
+		<element type="home_state" minOccurs="0" maxOccurs="1" />
+		<element type="home_dir" minOccurs="0" maxOccurs="1" />
+		<element type="home_timeout_distance" minOccurs="0" maxOccurs="1" />
+		<element type="home_attempts" minOccurs="0" maxOccurs="1" />
+		<element type="homing_speed_to_jog_ratio" minOccurs="0" maxOccurs="1" />
+		<element type="can_dab" minOccurs="0" maxOccurs="1" />
+		<element type="primary_axis" minOccurs="0" maxOccurs="1" />
+		<element type="secondary_axis" minOccurs="0" maxOccurs="1" />
+		<element type="angle" minOccurs="0" maxOccurs="1" />
+		<element type="dep_axis" minOccurs="0" maxOccurs="1" />
+		<element type="can_center_position_inside_groove" minOccurs="0" maxOccurs="1" />
+		<element type="can_detect_width_inside_groove" minOccurs="0" maxOccurs="1" />
+		<element type="canGeneratePath" minOccurs="0" maxOccurs="1" />
+		<element type="microstepping_resolution" minOccurs="0" maxOccurs="1" />
+		<element type="current_adjust" minOccurs="0" maxOccurs="1" />
+		<element type="current_reduction" minOccurs="0" maxOccurs="1" />
+		<element type="direction" minOccurs="0" maxOccurs="1" />
+		<element type="globe" minOccurs="0" maxOccurs="1" />
+		<element type="forward_hard_limit_index" minOccurs="0" maxOccurs="1" />
+		<element type="reverse_hard_limit_index" minOccurs="0" maxOccurs="1" />
+		<element type="canOscillate" minOccurs="0" maxOccurs="1" />
+		<element type="home_switch_index" minOccurs="0" maxOccurs="1" />
+		<element type="home_switch_type" minOccurs="0" maxOccurs="1" />
+		<element type="safety_limit" minOccurs="0" maxOccurs="1" />
+		<element type="limit_switch_active_high" minOccurs="0" maxOccurs="1" />
+		<element type="drive_loses_power_on_estop" minOccurs="0" maxOccurs="1" />
+		<element type="must_be_at_home_to_start" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="signature" model="closed" dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (PROPERTIES)-->
+	<ElementType name="arc_start" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="avc_sense" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="plasma" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="max_amps" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="avg_amps" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="trail_fault" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="mig" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="cool_flow" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="cool_fault" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="gas_fault" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="avc_max" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="step_max" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="IPM_convert" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="trail_gas" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="backup_gas" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="plasma_gas" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="estop_mode_switch" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="service_motor_period" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="purge_fault_delay" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="osc_steer" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="jog_toggle_switch" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="seq_control" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="wire_toggle" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="avc_sensor_connector" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="wire_manipulator" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="remote_start" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="remote_current_control_min" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="remote_current_control_max" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tuning_revision" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="is_closed" model="closed"  dt:type="int" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (AXIS)-->
+	<ElementType name="max_speed" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="units_rpm" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="acceleration" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="cmd_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tel_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="hard_limits" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="curr_limit" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="peak_current" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="peak_current_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="vlp" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="vli" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="clp" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="cli" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="smart_address" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="pos" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="type" required="yes" dt:type="string" />
+		<AttributeType name="channel" required="no" dt:type="string" />
+		<AttributeType name="degrees" required="no" dt:type="string" />
+		<attribute type="type" />
+		<attribute type="channel" />
+		<attribute type="degrees" />
+		<!--DECLARE ALL ELEMENTS (POS)-->
+		<element type="velocity" minOccurs="0" maxOccurs="1" />
+		<element type="cpi" minOccurs="0" maxOccurs="1" />
+		<element type="vpi" minOccurs="0" maxOccurs="1" />
+		<element type="fwd_counts" minOccurs="0" maxOccurs="1" />
+		<element type="rev_counts" minOccurs="0" maxOccurs="1" />
+		<element type="fwd_volts" minOccurs="0" maxOccurs="1" />
+		<element type="rev_volts" minOccurs="0" maxOccurs="1" />
+		<element type="offset" minOccurs="0" maxOccurs="1" />
+		<element type="loop" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="pulse" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="sync" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="must_be_zeroed" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="hotwire" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+	</ElementType>
+	<ElementType name="diameter_inch" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="hasBrake" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="bump_sense" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="rem_emf" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tach" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="shouldStepInsteadOfJogDuringWeld" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="isMotionControlledBySyncSignal" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="home_state" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="home_dir" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="home_timeout_distance" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="home_attempts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="homing_speed_to_jog_ratio" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="can_dab" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="primary_axis" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="secondary_axis" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="angle" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="dep_axis" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="can_center_position_inside_groove" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="can_detect_width_inside_groove" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="canGeneratePath" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="microstepping_resolution" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="current_adjust" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="current_reduction" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="direction" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="globe" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="forward_hard_limit_index" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="reverse_hard_limit_index" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="canOscillate" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="back_emf_current_component" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="home_switch_index" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="home_switch_type" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="safety_limit" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="direction" required="yes" dt:type="string" />
+		<attribute type="direction" />
+		<AttributeType name="compare" required="yes" dt:type="string" />
+		<attribute type="compare" />
+		<AttributeType name="position" required="yes" dt:type="string" />
+		<attribute type="position" />
+	</ElementType>
+	<ElementType name="limit_switch_active_high" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="drive_loses_power_on_estop" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="must_be_at_home_to_start" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (POS)-->
+	<ElementType name="velocity" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="cpi" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="offset" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="fwd_counts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="rev_counts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="vpi" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="fwd_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="rev_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="loop" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="divisor" required="yes" dt:type="string" />
+		<attribute type="divisor" />
+		<element type="p" minOccurs="0" maxOccurs="1" />
+		<element type="i" minOccurs="0" maxOccurs="1" />
+		<element type="d" minOccurs="0" maxOccurs="1" />
+		<element type="deadband" minOccurs="0" maxOccurs="1" />
+		<element type="disableband" minOccurs="0" maxOccurs="1" />
+		<element type="vff" minOccurs="0" maxOccurs="1" />
+		<element type="follow_err" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (LOOP)-->
+	<ElementType name="p" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="i" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="d" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="deadband" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="disableband" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="vff" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="follow_err" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

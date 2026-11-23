@@ -1,0 +1,43 @@
+<head model="HAND MIG-AVC-SENSE">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.1</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:36</date>
+		<signature/>
+	</metadata>
+	<properties>
+		<arc_start>1</arc_start>
+		<avc_sense>1</avc_sense>
+		<max_amps>500.0000</max_amps>
+		<trail_fault>0</trail_fault>
+		<mig>1</mig>
+		<cool_flow>5.0</cool_flow>
+		<cool_fault>0</cool_fault>
+		<gas_fault>1</gas_fault>
+		<avc_max>1</avc_max>
+		<step_max>1</step_max>
+		<IPM_convert>0</IPM_convert>
+		<estop_mode_switch>0</estop_mode_switch>
+		<tuning_revision>1</tuning_revision>
+	</properties>
+	<axis name="wire" type="3" io_index="1">
+		<max_speed>700</max_speed>
+		<acceleration>500.0</acceleration>
+		<hard_limits>0</hard_limits>
+		<curr_limit>3.5</curr_limit>
+		<peak_current>3.9</peak_current>
+		<peak_current_time>10</peak_current_time>
+		<vlp>2500</vlp>
+		<vli>15</vli>
+		<clp>205</clp>
+		<cli>4</cli>
+		<back_emf_current_component>0</back_emf_current_component>
+		<pulse>0</pulse>
+		<must_be_zeroed>0</must_be_zeroed>
+		<hasBrake>0</hasBrake>
+		<bump_sense>0</bump_sense>
+		<rem_emf>0</rem_emf>
+		<direction>-1</direction>
+	</axis>
+</head>

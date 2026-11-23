@@ -1,0 +1,49 @@
+<Schema name="user_security" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.1">
+
+  <ElementType name="name" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="password" model="closed"  dt:type="string" content="textOnly" />  
+  <ElementType name="last_login_time" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="security_level_name" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="permissions" model="closed"  dt:type="int" content="textOnly" />
+
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+	
+  <ElementType name="security_level" model="closed">
+    <element type="name" minOccurs="0" maxOccurs="1" />
+    <element type="permissions" minOccurs="0" maxOccurs="1" /> 
+  </ElementType>  
+  
+  <ElementType name="user" model="closed">
+    <element type="name" minOccurs="1" maxOccurs="1" /> 
+    <element type="password" minOccurs="1" maxOccurs="1" /> 
+    <element type="last_login_time" minOccurs="1" maxOccurs="1" /> 
+    <element type="security_level_name" minOccurs="1" maxOccurs="1" /> 
+  </ElementType>
+
+  <ElementType name="security_levels" model="closed">
+    <element type="security_level" minOccurs="0" maxOccurs="*" /> 
+  </ElementType>
+
+  <ElementType name="users" model="closed">
+    <element type="user" minOccurs="0" maxOccurs="*" /> 
+  </ElementType>
+  
+  <ElementType name="user_security" model="closed">
+	<AttributeType name="fleet_id" required="yes" dt:type="string" />
+	<attribute type="fleet_id" />
+	<element type="metadata" minOccurs="1" maxOccurs="1" />
+	<element type="security_levels" minOccurs="1" maxOccurs="1" /> 
+    <element type="users" minOccurs="1" maxOccurs="1" /> 
+  </ElementType>
+  
+</Schema>

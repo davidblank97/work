@@ -1,0 +1,29 @@
+<Schema name="GAS" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.6.0.0">
+
+	<ElementType name="gas_info" model="closed" content="eltOnly" order="seq">
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="gas" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="gas" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+	<ElementType name="symbol" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="conversion" model="closed"  dt:type="float" content="textOnly" />
+
+</Schema>

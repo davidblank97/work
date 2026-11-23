@@ -1,0 +1,266 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+02:51:05:054|0|USER LOGIN|ADMIN
+
+02:51:05:055|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+02:54:59:943|0|USER LOGIN|ADMIN
+
+02:54:59:946|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+02:55:08:677|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+02:55:08:734|3|SCHEDULE LOADED|0409-Cap-LOW _W
+
+02:55:12:493|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+03:07:08:818|7|WELD STARTED|
+
+03:36:22:442|7|WELD STARTED|
+
+03:42:48:981|9|WELD ABORTED|
+
+03:42:49:027|1|ALARM|[CAL021] Calibration results saved successfully.
+
+03:42:53:602|9|WELD ABORTED|
+
+03:42:55:924|3|SCHEDULE LOADED|0409-Cap-LOW _W
+
+03:43:02:358|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+03:43:02:358|1|ALARM|[SCH006] Loaded schedule 9997-VERIFICATION 60SEC.
+
+03:44:22:599|7|WELD STARTED|
+
+03:49:19:380|7|WELD STARTED|
+
+03:53:31:118|7|WELD STARTED|
+
+04:22:02:175|7|WELD STARTED|
+
+04:31:59:476|9|WELD ABORTED|
+
+04:31:59:521|1|ALARM|[CAL021] Calibration results saved successfully.
+
+04:32:08:778|9|WELD ABORTED|
+
+04:32:12:381|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+04:33:08:729|7|WELD STARTED|
+
+04:35:44:809|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+04:36:37:004|4|SCHEDULE SAVED|9997-VERIFICATION 60SEC
+
+04:36:37:005|1|ALARM|[SCH008] Saved schedule 9997-VERIFICATION 60SEC.
+
+04:36:57:863|7|WELD STARTED|
+
+04:37:29:194|8|WELD STOPPED|
+
+04:38:03:362|4|SCHEDULE SAVED|9997-VERIFICATION 60SEC
+
+04:38:03:363|1|ALARM|[SCH008] Saved schedule 9997-VERIFICATION 60SEC.
+
+04:38:21:109|7|WELD STARTED|
+
+04:40:33:605|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+04:40:40:410|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+04:40:40:410|1|ALARM|[SCH006] Loaded schedule 9997-VERIFICATION 60SEC.
+
+04:40:53:874|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+04:40:53:876|1|ALARM|[SCH006] Loaded schedule 9997-VERIFICATION 60SEC.
+
+04:41:47:028|4|SCHEDULE SAVED|9997-VERIFICATION 60SEC
+
+04:41:47:028|1|ALARM|[SCH008] Saved schedule 9997-VERIFICATION 60SEC.
+
+04:41:57:278|4|SCHEDULE SAVED|9997-VERIFICATION 60SEC
+
+04:41:57:279|1|ALARM|[SCH008] Saved schedule 9997-VERIFICATION 60SEC.
+
+04:41:57:279|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+04:41:57:302|1|ALARM|[SCH018] Parameter(s) in schedule '9997-VERIFICATION 60SEC' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+04:41:57:325|1|ALARM|[SCH006] Loaded schedule 9997-VERIFICATION 60SEC.
+
+04:42:27:667|4|SCHEDULE SAVED|9997-VERIFICATION 60SEC
+
+04:42:27:667|1|ALARM|[SCH008] Saved schedule 9997-VERIFICATION 60SEC.
+
+04:42:33:792|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+04:42:33:794|1|ALARM|[SCH006] Loaded schedule 9997-VERIFICATION 60SEC.
+
+04:43:08:749|7|WELD STARTED|
+
+04:46:00:178|1|ALARM|[CAL021] Calibration results saved successfully.
+
+04:48:15:880|7|WELD STARTED|
+
+05:15:38:262|7|WELD STARTED|
+
+05:22:21:382|9|WELD ABORTED|
+
+05:22:21:423|1|ALARM|[CAL021] Calibration results saved successfully.
+
+05:22:25:179|9|WELD ABORTED|
+
+05:22:25:605|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+05:23:01:829|7|WELD STARTED|
+
+05:25:13:892|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+05:25:30:201|3|SCHEDULE LOADED|0402-Hotpass1
+
+05:25:30:206|1|ALARM|[SCH006] Loaded schedule 0402-Hotpass1.
+
+05:26:49:457|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+06:12:23:514|0|USER LOGIN|ADMIN
+
+06:12:23:516|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+06:12:28:768|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+06:12:28:822|3|SCHEDULE LOADED|0402-Hotpass1
+
+06:12:32:664|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+06:20:46:459|1|ALARM|[MOT002] The TUNGSTEN axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.
+
+06:23:14:870|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:23:21:790|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:24:05:921|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:25:30:892|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:32:27:228|3|SCHEDULE LOADED|0404-Fill-OUT
+
+06:32:27:230|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+06:32:35:565|3|SCHEDULE LOADED|0402-Hotpass1
+
+06:32:35:566|1|ALARM|[SCH006] Loaded schedule 0402-Hotpass1.
+
+06:41:50:923|7|WELD STARTED|
+
+06:41:50:924|1|ALARM|[SCH030] Do you want to clear all warnings and start the weld sequence?
+
+06:42:08:712|8|WELD STOPPED|
+
+06:42:10:767|8|WELD STOPPED|
+
+06:42:12:081|9|WELD ABORTED|
+
+06:43:05:901|4|SCHEDULE SAVED|0402-Hotpass1
+
+06:43:05:902|1|ALARM|[SCH008] Saved schedule 0402-Hotpass1.
+
+06:46:24:490|10|WELD MODE CHANGED|WELD
+
+06:46:30:174|7|WELD STARTED|
+
+06:47:15:313|1|ALARM|MIN
+
+07:11:21:025|8|WELD STOPPED|
+
+07:14:00:758|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+07:15:07:259|1|ALARM|[MOD011] Modbus watchdog timeout.
+
+07:20:16:959|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+07:43:58:360|1|ALARM|[DEV002] Shield Gas flow of 9.97l/min is below the minimum acceptable rate of 10.00l/min.
+
+07:58:14:259|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+09:13:03:758|4|SCHEDULE SAVED|0402-Hotpass1
+
+09:13:03:761|1|ALARM|[SCH008] Saved schedule 0402-Hotpass1.
+
+09:20:24:532|10|WELD MODE CHANGED|TEST
+
+09:21:22:751|1|ALARM|[DEV008] Electrode touched the work piece.
+
+09:21:23:664|1|ALARM|[AXI012] The travel axis failed to jog. Reason: [AXI015] The system is detecting a closed circuit voltage at the electrode. The electrode may be touching the work piece. Jog the torch up and away from the part to break contact.
+
+
+
+
+09:21:48:839|10|WELD MODE CHANGED|WELD
+
+09:22:50:933|7|WELD STARTED|
+
+09:22:50:934|1|ALARM|[SCH030] Do you want to clear all warnings and start the weld sequence?
+
+09:22:55:366|1|ALARM|[DEV030] The system could not detect a work or ground cable connected to the part.
+
+
+09:24:08:360|1|ALARM|[MOD011] Modbus watchdog timeout.
+
+09:31:13:528|7|WELD STARTED|
+
+09:31:13:529|1|ALARM|[SCH030] Do you want to clear all warnings and start the weld sequence?
+
+10:10:57:890|7|WELD STARTED|
+
+10:24:45:320|1|ALARM|[DEV008] Electrode touched the work piece.
+
+10:24:47:551|1|ALARM|[AXI012] The avc axis failed to jog. Reason: [AXI015] The system is detecting a closed circuit voltage at the electrode. The electrode may be touching the work piece. Jog the torch up and away from the part to break contact.
+
+
+
+
+10:27:22:638|7|WELD STARTED|
+
+10:35:32:575|4|SCHEDULE SAVED|0402-Hotpass1
+
+10:35:32:576|1|ALARM|[SCH008] Saved schedule 0402-Hotpass1.
+
+10:35:36:596|3|SCHEDULE LOADED|0403-Hotpass2
+
+10:35:36:596|1|ALARM|[SCH006] Loaded schedule 0403-Hotpass2.
+
+10:56:41:468|7|WELD STARTED|
+
+11:16:07:145|8|WELD STOPPED|
+
+11:16:49:683|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+11:22:38:811|10|WELD MODE CHANGED|TEST
+
+11:23:38:847|4|SCHEDULE SAVED|0403-Hotpass2
+
+11:23:38:848|1|ALARM|[SCH008] Saved schedule 0403-Hotpass2.
+
+11:23:41:158|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+11:23:41:656|11|USER LOGOUT|ADMIN
+

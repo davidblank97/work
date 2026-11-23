@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="POW" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Le système a détecté une tension de %1, laquelle est trop faible pour activer un circuit ouvert. La tension à vide doit être supérieure à %2.</text>
+		<desc>Power supply voltage too low when enabling open circuit. %1 = arc voltage. %2 = open circuit voltage.</desc>
+	</str>
+	<str id="2">
+		<text>Le système a détecté une tension de %1, laquelle est trop élevée pour activer un court-circuit. La tension de court-circuit doit être inférieure à %2.</text>
+		<desc>Power supply voltage too high when enabling short circuit. %1 = arc voltage. %2 = short circuit voltage.</desc>
+	</str>
+	<str id="3">
+		<text>Le démarrage de l&apos;arc a été interrompu.</text>
+		<desc>Error occurred when starting arc.</desc>
+	</str>
+	<str id="4">
+		<text>There was an error when servicing the arc. Please check trace-logs for more details.</text>
+		<desc>Error occurred when servicing the arc.</desc>
+	</str>
+	<str id="5">
+		<text>L&apos;arc n&apos;a pas pu être établi dans les %1 ms.</text>
+		<desc>Unable to establish arc within specified time frame. %1 = timeout time (ms).</desc>
+	</str>
+	<str id="6">
+		<text>Arc arrêté.</text>
+		<desc>Arc was established and then stopped unexpectedly.</desc>
+	</str>
+	<str id="7">
+		<text>L&apos;initialisation d&apos;Arclink a échoué.</text>
+		<desc>Error occurred when initializing power supply</desc>
+	</str>
+	<str id="8">
+		<text>PowerWave n&apos;est pas prêt.</text>
+		<desc>Could not start arc because Power Wave was not ready</desc>
+	</str>
+	<str id="10">
+		<text>La séquence de démarrage du dévidoir de fil d&apos;apport a échoué.</text>
+		<desc>Error occurred when starting wire feeder sequence</desc>
+	</str>
+	<str id="11">
+		<text>L&apos;arc pilote a expiré.</text>
+		<desc>Pilot Arc took too long to strike</desc>
+	</str>
+	<str id="12">
+		<text>Le type d&apos;arc indiqué dans le programme (%1) est inconnu ou n&apos;est pas compatible avec le système.</text>
+		<desc>%1 = the arc type specified in the schedule. The arc type specified in the loaded schedule cannot strike on the system.</desc>
+	</str>
+	<str id="13">
+		<text>L&apos;arc pilote n&apos;est actuellement pas activé. Voulez-vous activer l&apos;arc pilote ?</text>
+		<desc>Pilot arc is not enabled when starting a weld. The user has the option to enable it.</desc>
+	</str>
+	<str id="14">
+		<text>L&apos;arc pilote a expiré.</text>
+		<desc>Pilot Arc was established and then stopped unexpectedly.</desc>
+	</str>
+	<str id="15">
+		<text>Une erreur critique a été détectée. Le système peut nécessiter une maintenance. La télémétrie du courant de %1 ne figurait pas dans la plage autorisée de la valeur de réglage %2. Un utilisateur avec un niveau de sécurité ADMIN ou TECHNICIEN peut se connecter et diagnostiquer le problème.</text>
+		<desc>Amperage telemetry went out of allowable range. Critical fault has occurred. %1 = amperage telemetry %2 = amperage set point</desc>
+	</str>
+	<str id="16">
+		<text>Une erreur critique a été détectée. Le système peut nécessiter une maintenance. La télémétrie de la tension de %1 ne figurait pas dans la plage autorisée de la valeur de réglage %2. Un utilisateur avec un niveau de sécurité ADMIN ou TECHNICIEN peut se connecter et diagnostiquer le problème.</text>
+		<desc>Voltage telemetry went out of allowable range. Critical fault has occurred. %1 = voltage telemetry %2 = voltage set point</desc>
+	</str>
+	<str id="17">
+		<text>Une erreur critique a été détectée. Le système peut nécessiter une maintenance. Le système a détecté un déséquilibre entre les modules du générateur. Un utilisateur avec un niveau de sécurité ADMIN ou TECHNICIEN peut se connecter et diagnostiquer le problème.</text>
+		<desc>System has detected an imbalance between power supply modules. Critical fault has occurred.</desc>
+	</str>
+	<str id="18">
+		<text>Toutes les erreurs critiques ont été résolues.</text>
+		<desc>All critical faults have been cleared.</desc>
+	</str>
+	<str id="19">
+		<text>Soyez prudent, une erreur critique est active.</text>
+		<desc>Use caution, critical fault is active.</desc>
+	</str>
+	<str id="20">
+		<text>Assurez-vous que le connecteur de l&apos;orifice est raccordé à l&apos;arrière du générateur. Un défaut de raccordement peut entraîner un choc grave. Appuyez sur %1 pour activer l&apos;arc pilote.</text>
+		<desc>Warning when enabling the pilot arc. %1 = name of button to enable the pilot arc.</desc>
+	</str>
+	<str id="21">
+		<text>Un défaut critique d&apos;alimentation d&apos;entrée a été détecté sur VOLTAGE_MONITOR_DEVICE DI, vérifier:|1.la puissance d&apos;entrée de la source d&apos;alimentation|2.les fusibles d&apos;entrée sur chaque phase</text>
+		<desc>A critical Input Power fault has been detected on VOLTAGE_MONITOR_DEVICE DI, the system may require service.</desc>
+	</str>
+	<str id="22">
+		<text>A critical fault has been detected, the system may require service. The system has detected %1 on the power supply modules when the modules were disabled. A user with an ADMIN or TECHNICIAN security level may login and diagnose the issue.</text>
+		<desc>System has detected voltage on disabled power supply modules. Critical fault has occurred.%1 = voltage telemetry</desc>
+	</str>	
+</language>

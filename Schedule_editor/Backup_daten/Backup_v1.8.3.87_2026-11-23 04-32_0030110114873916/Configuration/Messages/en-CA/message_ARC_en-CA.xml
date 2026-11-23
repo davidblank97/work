@@ -1,0 +1,404 @@
+<language fileType="ARC" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:16</date>
+	</metadata>
+	<str id="1">
+		<text>The Lincoln power supply failed to initialize communication. Ensure that all communication connections are secure, the power supply is receiving power and try connecting again.</text>
+		<desc>Error occurred when initializing communication.</desc>
+	</str>
+	<str id="2">
+		<text>The Lincoln power supply signalled NOT READY while welding.</text>
+		<desc>Weld sequence stopped because status changed to NOT READY.</desc>
+	</str>
+	<str id="3">
+		<text>The Lincoln power supply signalled FAULT while welding.</text>
+		<desc>Weld sequence stopped because a fault occurred.</desc>
+	</str>
+	<str id="4">
+		<text>The Lincoln power supply (object class %1) address not set.</text>
+		<desc>Error initializing robot. %1 = Weld Controller address.</desc>
+	</str>
+	<str id="5">
+		<text>Bus Master (object class %1) address not set.</text>
+		<desc>Error initializing robot. %1 = Bus Master address.</desc>
+	</str>
+	<str id="6">
+		<text>The Lincoln power supply is not ready. Failed to set mode.</text>
+		<desc>Failed to set mode.</desc>
+	</str>
+	<str id="7">
+		<text>The Lincoln power supply is not ready. Failed to get mode.</text>
+		<desc>Failed to get mode.</desc>
+	</str>
+	<str id="8">
+		<text>Weld mode has not been set. Failed to get mode.</text>
+		<desc>Failed to get mode.</desc>
+	</str>
+	<str id="9">
+		<text>The Lincoln power supply is not ready. Failed to get weld table search results.</text>
+		<desc>Failed to get weld table search results.</desc>
+	</str>
+	<str id="10">
+		<text>No procedure data available.</text>
+		<desc>Could not retrieve procedure data as no data is available.</desc>
+	</str>
+	<str id="11">
+		<text>Weld mode not set. Failed to get synergic parameter information.</text>
+		<desc>Failed to get synergic parameter information.</desc>
+	</str>
+	<str id="12">
+		<text>Weld mode not set. Failed to get parameter information.</text>
+		<desc>Failed to get parameter information.</desc>
+	</str>
+	<str id="13">
+		<text>Weld mode not set. Failed to get parameter values.</text>
+		<desc>Failed to get parameter values.</desc>
+	</str>
+	<str id="14">
+		<text>Weld mode not set. Failed to set parameter values.</text>
+		<desc>Failed to set parameter values.</desc>
+	</str>
+	<str id="15">
+		<text>The Lincoln power supply is not ready. Failed to read parameter synergic range.</text>
+		<desc>Failed to read parameter synergic range.</desc>
+	</str>
+	<str id="16">
+		<text>The Lincoln power supply is not ready. Failed to search weld table.</text>
+		<desc>Failed to search weld table.</desc>
+	</str>
+	<str id="17">
+		<text>The Lincoln power supply is not ready. Failed to read procedure data.</text>
+		<desc>Failed to read procedure data.</desc>
+	</str>
+	<str id="18">
+		<text>The Lincoln power supply is not ready. Failed to read parameter information.</text>
+		<desc>Failed to read parameter information.</desc>
+	</str>
+	<str id="19">
+		<text>The Lincoln power supply is not ready. Failed to start the weld sequence.</text>
+		<desc>Failed to start the weld sequence as the robot is not ready.</desc>
+	</str>
+	<str id="20">
+		<text>The Lincoln power supply is not ready. Failed to start the weld sequence.</text>
+		<desc>Failed to start the weld sequence as the weld controller is not ready.</desc>
+	</str>
+	<str id="21">
+		<text>Wait for arc failed.</text>
+		<desc>Error occurred while waiting for arc event.</desc>
+	</str>
+	<str id="22">
+		<text>An arc could not be established after waiting %1 ms.</text>
+		<desc>Time out occurred while waiting for arc event. %1 = time before timeout (ms).</desc>
+	</str>
+	<str id="23">
+		<text>The Lincoln power supply is not ready. Failed to stop weld sequence.</text>
+		<desc>Failed to stop weld sequence as the robot is not ready.</desc>
+	</str>
+	<str id="24">
+		<text>The Lincoln power supply is not ready. Failed to stop weld sequence.</text>
+		<desc>Failed to stop weld sequence as the weld controller is not ready.</desc>
+	</str>
+	<str id="25">
+		<text>Write welding parameters failed while welding.</text>
+		<desc>Weld sequence stopped because write welding parameters failed.</desc>
+	</str>
+	<str id="26">
+		<text>Update weld parameters failed.</text>
+		<desc>Error occurred while updating weld parameters.</desc>
+	</str>
+	<str id="27">
+		<text>Mode error.</text>
+		<desc>Mode error occurred.</desc>
+	</str>
+	<str id="28">
+		<text>WorkPoint error.</text>
+		<desc>WorkPoint error occurred.</desc>
+	</str>
+	<str id="29">
+		<text>Trim error.</text>
+		<desc>Trim error occurred.</desc>
+	</str>
+	<str id="30">
+		<text>WaveControl1 error.</text>
+		<desc>WaveControl1 error occurred.</desc>
+	</str>
+	<str id="31">
+		<text>WaveControl2 error.</text>
+		<desc>WaveControl2 error occurred.</desc>
+	</str>
+	<str id="32">
+		<text>WaveControl3 error.</text>
+		<desc>WaveControl3 error occurred.</desc>
+	</str>
+	<str id="33">
+		<text>WaveControl4 error.</text>
+		<desc>WaveControl4 error occurred.</desc>
+	</str>
+	<str id="34">
+		<text>Send Write Attribute message timed out.</text>
+		<desc>Failed to send Write Attribute message as it timed out.</desc>
+	</str>
+	<str id="35">
+		<text>Send Create Event Report message timed out.</text>
+		<desc>Failed to send Create Event Report message as it timed out.</desc>
+	</str>
+	<str id="36">
+		<text>Send Set Welding Controls message timed out.</text>
+		<desc>Failed to send Welding Controls message as it timed out.</desc>
+	</str>
+	<str id="37">
+		<text>Arclink is not ready. Failed to get weld set.</text>
+		<desc>Failed to get weld set.</desc>
+	</str>
+	<str id="38">
+		<text>Failed to initialize robot.</text>
+		<desc>Error occurred while initializing robot.</desc>
+	</str>
+	<str id="39">
+		<text>The Lincoln power supply is not ready. Failed to test read mode data.</text>
+		<desc>Failed to test read mode data.</desc>
+	</str>
+	<str id="40">
+		<text>Success.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="41">
+		<text>Attribute not found.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="42">
+		<text>Attribute is read-only.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="43">
+		<text>Attribute Value (being written) is out of limits</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="44">
+		<text>Attribute Value (being written) is above high limit.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="45">
+		<text>Attribute Value (being written) is below low limit.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="46">
+		<text>Bad Arclink object address.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="47">
+		<text>Attribute property specified is invalid.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="48">
+		<text>Attribute property is not applicable.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="49">
+		<text>Attribute property is not supported.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="50">
+		<text>Attribute property is read-only.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="51">
+		<text>Attribute is invalid.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="52">
+		<text>Arclink Object messages could not be relayed over Ethernet.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="53">
+		<text>Arclink service busy.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="54">
+		<text>Arclink Block ID not found.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="55">
+		<text>Arclink Action ID not found.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="56">
+		<text>Arclink Group Address not found.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="57">
+		<text>Arclink Event ID not found.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="58">
+		<text>Arclink Service not supported.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="59">
+		<text>Arclink Service not available.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="60">
+		<text>Fragment buffer busy.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="61">
+		<text>Fragment out of sequence.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="62">
+		<text>Fragment receive time out.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="63">
+		<text>Fragment message invalid.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="64">
+		<text>Message request size is invalid.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="65">
+		<text>Message response buffer was too small.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="66">
+		<text>Message time out.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="67">
+		<text>Write failed.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="68">
+		<text>Read failed.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="69">
+		<text>Invalid selection.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="70">
+		<text>Arclink Object was busy.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="71">
+		<text>Invalid Mode or Mode is not part of the weld set.</text>
+		<desc>Status message.</desc>
+	</str>
+	<str id="72">
+		<text>Unknown status code %1.</text>
+		<desc>Status message. %1 = status code.</desc>
+	</str>
+	<str id="73">
+		<text>The Lincoln power supply system fault occurred (Fault: %1).</text>
+		<desc>Weld controller system faults occurred. %1 = fault mask.</desc>
+	</str>
+	<str id="74">
+		<text>- Secondary Over Current.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="75">
+		<text>- Inverter Capacitor Bank B Over Voltage.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="76">
+		<text>- Inverter Capacitor Bank A Over Voltage.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="77">
+		<text>- Inverter Capacitor Bank B Under Voltage.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="78">
+		<text>- Inverter Capacitor Bank A Under Voltage.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="79">
+		<text>- Primary Over Current.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="80">
+		<text>- Inverter Capacitor Delta Voltage.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="81">
+		<text>- Control PC Board Problem.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="82">
+		<text>- Inverter PreCharge Failed.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="83">
+		<text>- ACDC Paralleled Power Source Fault.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="84">
+		<text>- Secondary Over Power.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="85">
+		<text>- Single Phase Input Power.</text>
+		<desc>Weld controller system fault.</desc>
+	</str>
+	<str id="86">
+		<text>Cooler fault. Check coolant flow. Power cycle Lincoln.</text>
+		<desc>No cooler flow. The only way to recover is to power cycle Lincoln</desc>
+	</str>
+	<str id="87">
+		<text>Attempting to initialize POWERWAVE</text>
+		<desc>MIG system with powerwave detected, connection not yet established</desc>
+	</str>
+	<str id="88">
+		<text>Initializing POWERWAVE</text>
+		<desc>Connection established with powerwave, not yet ready</desc>
+	</str>
+	<str id="89">
+		<text>POWERWAVE is ready: %1</text>
+		<desc>Powerwave is connected and is ready. %1 = weld set</desc>
+	</str>
+	<str id="90">
+		<text>Touch sense is enabled. Failed to start the weld sequence.</text>
+		<desc>Failed to start the weld sequence as the touch sense feature is enabled on the weld controller.</desc>
+	</str>
+	<str id="91">
+		<text>Weld sequence is enabled. Failed to enable touch sense.</text>
+		<desc>Failed to enable touch sense because the weld sequence is started on the weld controller.</desc>
+	</str>
+	<str id="92">
+		<text>Robot not ready. Failed to enable touch sense.</text>
+		<desc>Failed to start the weld sequence as the robot is not ready.</desc>
+	</str>
+	<str id="93">
+		<text>Weld Controller not ready. Failed to enable touch sense.</text>
+		<desc>Failed to start the weld sequence as the weld controller is not ready.</desc>
+	</str>
+	<str id="94">
+		<text>The system could not find a description for Lincoln Gas Type Code: %1. Please contact Liburdi for updated Lincoln descriptions.</text>
+		<desc>%1 = Lincoln Gas Type Code</desc>
+	</str>
+	<str id="95">
+		<text>The system could not find a description for Lincoln Wire Type Code: %1. Please contact Liburdi for updated Lincoln descriptions.</text>
+		<desc>%1 = Lincoln Wire Type Code</desc>
+	</str>
+	<str id="96">
+		<text>The system could not find a description for Lincoln Unit Code: %1. Please contact Liburdi for updated Lincoln descriptions.</text>
+		<desc>%1 = Lincoln Unit Code</desc>
+	</str>
+	<str id="97">
+		<text>The system could not find a description for Lincoln Process Key Code: %1. Please contact Liburdi for updated Lincoln descriptions.</text>
+		<desc>%1 = Lincoln Process Key Code</desc>
+	</str>
+	<str id="98">
+		<text>The system could not find a description for Lincoln Process Code: %1. Please contact Liburdi for updated Lincoln descriptions.</text>
+		<desc>%1 = Lincoln Process Code</desc>
+	</str>
+	<str id="99">
+		<text>The system could not find a description for Lincoln Wire Size Code: %1. Please contact Liburdi for updated Lincoln descriptions.</text>
+		<desc>%1 = Lincoln Wire Size Code</desc>
+	</str>
+</language>

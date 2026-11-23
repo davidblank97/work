@@ -1,0 +1,32 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+04:26:14:764|0|USER LOGIN|Welder
+
+04:26:14:767|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:30:00:102|0|USER LOGIN|Welder
+
+04:30:00:105|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:31:13:858|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+04:31:13:916|3|SCHEDULE LOADED|0409-Cap-LOW _W
+
+04:31:17:729|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+04:31:22:549|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:31:23:087|11|USER LOGOUT|Welder
+
+04:31:31:476|0|USER LOGIN|ADMIN
+
+04:31:31:476|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+

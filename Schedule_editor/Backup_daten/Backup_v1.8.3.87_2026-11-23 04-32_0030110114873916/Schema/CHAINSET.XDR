@@ -1,0 +1,49 @@
+<Schema name="CHAINSET" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+  <ElementType name="chainset" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ELEMENTS (program)-->
+    <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="desc" minOccurs="1" maxOccurs="1" />
+    <element type="schedules" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (METADATA)-->
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+    <element type="signature" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="desc" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ELEMENTS (desc)-->
+    <element type="note" minOccurs="1" maxOccurs="1" />
+    <element type="autorun" minOccurs="1" maxOccurs="1" />
+    <element type="loopto" minOccurs="1" maxOccurs="1" />
+    <element type="loopcount" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="schedules" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ELEMENTS (schedules)-->
+    <element type="schedule" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+  
+  <!--DEFINE ELEMENTS (schedule)-->
+  <ElementType name="schedule" model="closed" dt:type="string" content="textOnly">
+    <AttributeType name="isEnabled" required="yes" dt:type="string" />
+    <attribute type="isEnabled" />
+  </ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="signature" model="closed"  dt:type="string" content="textOnly" />
+
+  <ElementType name="note" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="autorun" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="loopto" model="closed"  dt:type="int" content="textOnly" />
+  <ElementType name="loopcount" model="closed"  dt:type="int" content="textOnly" />
+
+</Schema>

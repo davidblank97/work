@@ -1,0 +1,23 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:output omit-xml-declaration="yes"/>
+	<xsl:preserve-space elements="*" />
+	<!-- Add your XSL Transformations below this line -->
+	<xsl:template match="/sched/global/mig_pulse_voltage_offset">
+		<xsl:copy-of select="."/>
+		<xsl:choose>
+			<xsl:when test="/sched/global/is_weld_closed">
+			</xsl:when>
+			<xsl:otherwise>
+				<is_weld_closed>0</is_weld_closed>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- Do not change the template below-->
+	<xsl:template match="node()|@*" name="identity">
+		<xsl:copy>
+			<xsl:apply-templates select="node()|@*"/>
+		</xsl:copy>
+	</xsl:template>
+
+</xsl:stylesheet>

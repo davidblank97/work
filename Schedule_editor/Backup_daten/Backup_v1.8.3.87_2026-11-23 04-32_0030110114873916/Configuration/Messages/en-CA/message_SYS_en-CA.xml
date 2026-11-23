@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="SYS" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.3</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>The parameter %1 cannot be assigned the value %2.</text>
+		<desc>Invalid parameter value error. %1 = parameter name. %2 = value</desc>
+	</str>
+	<str id="2">
+		<text>The file '%1' could not be found.</text>
+		<desc>File not found error. %1 = file name</desc>
+	</str>
+	<str id="3">
+		<text>The file '%1' could not be read.</text>
+		<desc>File read error. %1 = file name</desc>
+	</str>
+	<str id="4">
+		<text>The file '%1' could not be saved.</text>
+		<desc>File save error. %1 = file name</desc>
+	</str>
+	<str id="5">
+		<text>Message strings are unavailable for category '%1'.</text>
+		<desc>Message strings have not been loaded. %1 = category</desc>
+	</str>
+	<str id="6">
+		<text>The folder '%1' could not be found.</text>
+		<desc>Folder not found error. %1 = folder name</desc>
+	</str>
+	<str id="7">
+		<text>The folder '%1' is empty.</text>
+		<desc>Folder empty error. %1 = folder name</desc>
+	</str>
+	<str id="8">
+		<text>The system failed to create folder '%1'.</text>
+		<desc>Folder cannot be created. %1 = folder name</desc>
+	</str>
+	<str id="9">
+		<text>The system failed to create a backup.</text>
+		<desc>System could not create a backup directory before updating application.</desc>
+	</str>
+	<str id="10">
+		<text>The system failed to update the application. Check that the update package provided is in the correct format.</text>
+		<desc>System could not update application.</desc>
+	</str>
+	<str id="11">
+		<text>Restoring application from last backup, please wait.</text>
+		<desc>System is restoring application files from the latest backup.</desc>
+	</str>
+	<str id="12">
+		<text>Could not create file '%1' since a file with the same name already exists.</text>
+		<desc>Could not create file since the a file with the same path already exists. %1 = file name</desc>
+	</str>
+	<str id="13">
+		<text>Could not create folder '%1' since a folder with the same name already exists.</text>
+		<desc>Could not create folder since the a folder with the same path already exists. %1 = folder name</desc>
+	</str>
+	<str id="14">
+		<text>The file '%1' already exists. Overwrite the file?</text>
+		<desc>A file with the same path already exists, does the user want to overwrite the file. %1 = file name</desc>
+	</str>
+	<str id="15">
+		<text>Cannot edit file '%1' since it is currently loaded.</text>
+		<desc>The file is currently loaded and cannot be loaded. %1 = file name</desc>
+	</str>
+	<str id="16">
+		<text>The folder '%1' could not be edited since it contains a currently loaded file.</text>
+		<desc>Folder could not be edited since it contains a currently loaded file. %1 = folder name</desc>
+	</str>
+	<str id="17">
+		<text>The tablet has disconnected. Connect from the tablet to resume or power cycle the welding controller to run the system in pendant only mode.</text>
+		<desc>Tablet has lost communication with the welding controller.</desc>
+	</str>
+	<str id="18">
+		<text>The file '%1' is not supported, the file's version must be '%2'.</text>
+		<desc>Version of the '%1' file is not supported. It must be at least version: '%2'</desc>
+	</str>
+	<str id="19">
+		<text>The product key in the license file does not match the welding system's product key.</text>
+		<desc>Product key in the license file does not match the welding system's product key.</desc>
+	</str>
+	<str id="20">
+		<text>Digital Signature is not valid for file '%1'</text>
+		<desc>Digital Signature validation failed for file:'%1'</desc>
+	</str>
+	<str id="21">
+		<text>Cannot add digital signature to file '%1'</text>
+		<desc>Adding digital signature failed for file:'%1</desc>
+	</str>
+	<str id="22">
+		<text>The file could not be created since the name cannot be empty. Enter a name for the file and try again.</text>
+		<desc>Cannot create a file with a blank name.</desc>
+	</str>
+	<str id="23">
+		<text>%1 IMPORTED</text>
+		<desc>Files imported. %1 = file type</desc>
+	</str>
+	<str id="24">
+		<text>%1 EXPORTED</text>
+		<desc>Files exported. %1 = file type</desc>
+	</str>
+	<str id="25">
+		<text>No backups exist on this system.</text>
+		<desc>No backups found.</desc>
+	</str>
+	<str id="26">
+		<text>The file path '%1' is too long.</text>
+		<desc>Specified file path is too long. %1 = file path.</desc>
+	</str>
+	<str id="27">
+		<text>Check system logs for details.</text>
+		<desc>Check the logs on the system for further details on the error.</desc>
+	</str>
+	<str id="28">
+		<text>Changes to the system's settings require a full restart. Please power down and restart the system.</text>
+		<desc>A change to the settings has been made which requires the system to be restarted.</desc>
+	</str>
+	<str id="29">
+		<text>There are %1 file conflicts that must be resolved before continuing.</text>
+		<desc>%1 = number of file conflicts</desc>
+	</str>
+	<str id="30">
+		<text>There are %1 files to import and %2 of them have conflicts. Would you like to resolve the conflicts, only import files without a conflict or cancel the import operation entirely?</text>
+		<desc>%1 = number of file to import %2 = number of file conflicts</desc>
+	</str>
+	<str id="31">
+		<text>A total of %1 %2 have successfully been imported. There were %3 conflicts resolved and %4 %2 were skipped.</text>
+		<desc>%1 = number of files imported %2 = file type %3 = number of conflicts %4 = number of files skipped</desc>
+	</str>
+	<str id="32">
+		<text>The file '%1' can not be converted to a '%2' file. Would you like to delete this file ?</text>
+		<desc>%1 = file name that could not be converted %2 = file type</desc>
+	</str>
+	<str id="33">
+		<text>An unexpected software error has occurred. Please contact Liburdi support if this problem persists.</text>
+		<desc></desc>
+	</str>
+	<str id="34">
+		<text>USB storage device not connected. Please connect a USB storage device to the system and try again.</text>
+		<desc></desc>
+	</str>
+	<str id="35">
+		<text>There were some file conflicts that were not resolved since the IDs assigned already exist on the system. Assign vacant IDs to the remaining conflicts and try again. The following file conflicts were not resolved: |%1</text>
+		<desc>%1 = A list of file conflicts that failed to resolve.</desc>
+	</str>
+	<str id="36">
+		<text>The file %1 failed to export to a USB.</text>
+		<desc>%1 = File Name.</desc>
+	</str>
+	<str id="37">
+		<text>Failed to import files from %1.</text>
+		<desc>%1 = Folder Name.</desc>
+	</str>	
+	<str id="38">
+		<text>The file type %1 has exceeded its maximum allowed storage space of %2 MB. Export or delete all files of this type.</text>
+		<desc>%1 = File Type. %2 = maximum allowed space in MB</desc>
+	</str>
+	<str id="39">
+		<text>SD storage device not connected. Please connect a SD storage device to the system and try again.</text>
+		<desc></desc>
+	</str>
+	<str id="40">
+		<text>The free storage space on the local storage device is less than %1 percent of maximum allowed space of %2 MB. Export and delete all log files to free up space.</text>
+		<desc></desc>
+	</str>
+	<str id="41">
+		<text>The free storage space on the local storage device is less than %1 percent of maximum allowed space of %2 MB. All log files have to be exported or deleted.</text>
+		<desc></desc>
+	</str>
+	<str id="42">
+		<text>The BACKUP TO USB button will copy the current (failed) software to a USB to be sent to Liburdi support.|Reason for failure:|%1</text>
+		<desc>%1 = failure reason</desc>
+	</str>
+	<str id="43">
+		<text>The system is unable to determine what version of servo boards are installed. The io file must be configured to the correct system configuration.</text>
+		<desc></desc>
+	</str>
+	<str id="44">
+		<text>A valid developer key file is required to perform this restore due to firmware version incompatibility. The installed %1 firmware is %2 and the backup is expecting version %3.</text>
+		<desc>%1 = firmware name. %2 = installed firmware version. %3 = backup firmware version.</desc>
+	</str>
+	<str id="45">
+		<text>A valid developer key file is required to perform this update due to firmware version incompatibility. The installed %1 firmware is %2 and the update is expecting version %3.</text>
+		<desc>%1 = firmware name. %2 = installed firmware version. %3 = update firmware version.</desc>
+	</str>
+</language>
+
+

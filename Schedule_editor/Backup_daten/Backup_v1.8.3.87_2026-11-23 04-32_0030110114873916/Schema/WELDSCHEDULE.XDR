@@ -1,0 +1,738 @@
+<Schema name="WeldSchedule" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.7">
+
+	<ElementType name="sched" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="id" required="no" dt:type="string" />
+		<AttributeType name="type" required="no" dt:type="string" />
+		<AttributeType name="head" required="yes" dt:type="string" />
+		<attribute type="id" />
+		<attribute type="type" />
+		<attribute type="head" />
+		<!--DECLARE ALL ELEMENTS (SCHED)-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="description" minOccurs="1" maxOccurs="1" />
+		<element type="global" minOccurs="1" maxOccurs="1" />
+		<element type="limits" minOccurs="1" maxOccurs="1" />
+		<element type="overrides" minOccurs="1" maxOccurs="1" />
+		<element type="path" minOccurs="0" maxOccurs="1" />
+		<element type="segment" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (METADATA)-->
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+		<element type="signature" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="description" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (DESC)-->
+		<element type="outer_diameter" minOccurs="1" maxOccurs="1" />
+		<element type="groove_depth" minOccurs="1" maxOccurs="1" />
+		<element type="custom_search_tag" minOccurs="1" maxOccurs="1" />
+		<element type="note" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="global" model="closed" content="eltOnly" order="seq" >
+		<!--DECLARE ALL ELEMENTS (GLOBAL)-->
+		<element type="arc_type" minOccurs="1" maxOccurs="1" />
+		<element type="excursion_mode" minOccurs="1" maxOccurs="1" />
+		<element type="datalog_mode" minOccurs="1" maxOccurs="1" />
+		<element type="prepurge" minOccurs="1" maxOccurs="1" />
+		<element type="postpurge" minOccurs="1" maxOccurs="1" />
+		<element type="trail_gas" minOccurs="1" maxOccurs="1" />
+		<element type="backup_gas" minOccurs="1" maxOccurs="1" />
+		<element type="plasma_gas" minOccurs="1" maxOccurs="1" />
+		<element type="auto_disable_pilot_arc" minOccurs="1" maxOccurs="1" />
+		<element type="pilot_arc_amps" minOccurs="1" maxOccurs="1" />
+		<element type="initial_amps" minOccurs="1" maxOccurs="1" />
+		<element type="final_amps" minOccurs="1" maxOccurs="1" />
+		<element type="impulse_amps" minOccurs="1" maxOccurs="1" />
+		<element type="impulse_time" minOccurs="1" maxOccurs="1" />
+		<element type="downslope" minOccurs="1" maxOccurs="1" />
+		<element type="downslope_mode" minOccurs="1" maxOccurs="1" />
+		<element type="theta_torch_height" minOccurs="1" maxOccurs="1" />
+		<element type="travel_direction" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_gap" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_mode" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2_mode" minOccurs="1" maxOccurs="1" />
+		<element type="wire_retract" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_retract" minOccurs="1" maxOccurs="1" />
+		<element type="travel_delay" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_delay" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_stop_delay" minOccurs="1" maxOccurs="1" />
+		<element type="wire_delay" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_delay" minOccurs="1" maxOccurs="1" />
+		<element type="travel_jog" minOccurs="1" maxOccurs="1" />
+		<element type="wire_jog_fwd" minOccurs="1" maxOccurs="1" />
+		<element type="wire_jog_rev" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_jog_fwd" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_jog_rev" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_jog" minOccurs="1" maxOccurs="1" />
+		<element type="osc_jog" minOccurs="1" maxOccurs="1" />
+		<element type="theta_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux0_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux1_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux2_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux3_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux4_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux5_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux6_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux7_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux8_jog" minOccurs="1" maxOccurs="1" />
+		<element type="aux9_jog" minOccurs="1" maxOccurs="1" />
+		<element type="travel_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_step" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_step" minOccurs="1" maxOccurs="1" />
+		<element type="theta_step" minOccurs="1" maxOccurs="1" />
+		<element type="osc_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux0_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux1_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux2_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux3_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux4_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux5_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux6_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux7_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux8_step" minOccurs="1" maxOccurs="1" />
+		<element type="aux9_step" minOccurs="1" maxOccurs="1" />
+		<element type="osc_auto_center" minOccurs="1" maxOccurs="1" />
+		<element type="osc_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="theta_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="travel_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="travel_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="travel_auto_zero" minOccurs="1" maxOccurs="1" />
+		<element type="travel_auto_home" minOccurs="1" maxOccurs="1" />
+		<element type="cut_angle" minOccurs="1" maxOccurs="1" />
+		<element type="electrode_diameter" minOccurs="1" maxOccurs="1" />
+		<element type="burn_back_time" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_x_tracking_on" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_z_tracking_on" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_width_tracking_on" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_x_channel" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_z_channel" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_width_channel" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_program" minOccurs="1" maxOccurs="1" />
+		<element type="seamtrack_angle" minOccurs="1" maxOccurs="1" />
+		<element type="groovetrack_max_correction_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="groovetrack_sensitivity_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="groovetrack_axis" minOccurs="1" maxOccurs="1" />
+		<element type="loop_count" minOccurs="1" maxOccurs="1" />
+		<element type="loop_to" minOccurs="1" maxOccurs="1" />
+		<element type="crater_fill_time" minOccurs="1" maxOccurs="1" />
+		<element type="initial_amps_time" minOccurs="1" maxOccurs="1" />
+		<element type="avc_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="avc_high_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="avc_deadband" minOccurs="1" maxOccurs="1" />
+		<element type="avc_slowband" minOccurs="1" maxOccurs="1" />
+		<element type="acc_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="acc_high_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="acc_deadband" minOccurs="1" maxOccurs="1" />
+		<element type="acc_slowband" minOccurs="1" maxOccurs="1" />
+		<element type="flying_start" minOccurs="1" maxOccurs="1" />
+		<element type="initial_wire_speed" minOccurs="1" maxOccurs="1" />
+		<element type="acc_compound_angle" minOccurs="1" maxOccurs="1" />
+		<element type="aux_0_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="aux_1_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="layer_diameter_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="torch_centering_height" minOccurs="1" maxOccurs="1" />
+		<element type="gas_flow_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="theta_tool_center_point" minOccurs="1" maxOccurs="1" />
+		<element type="travel_speed_compensated_by_height" minOccurs="1" maxOccurs="1" />
+		<element type="osc_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="theta_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="travel_speed_compensated_by_width" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="initial_travel_speed" minOccurs="1" maxOccurs="1" />
+		<element type="initial_volts" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_up_down_jog" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_up_down_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_jog" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_step" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_jog" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_auto_preposition" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_auto_postposition" minOccurs="1" maxOccurs="1" />
+		<element type="reverse_downslope" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_jog" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_step" minOccurs="1" maxOccurs="1" />
+		<element type="wire_select_mode" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_edit_mode" minOccurs="1" maxOccurs="1" />
+		<element type="initial_wire2_speed" minOccurs="1" maxOccurs="1" />
+		<element type="osc_centre_position_offset" minOccurs="1" maxOccurs="1" />
+		<element type="theta_centre_position_offset" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_centre_position_offset" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_centre_position_offset" minOccurs="1" maxOccurs="1" />
+		<element type="aux_0_pre_position" minOccurs="1" maxOccurs="1" />
+		<element type="aux_1_pre_position" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_pre_position" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_post_position" minOccurs="1" maxOccurs="1" />
+		<element type="is_weld_closed" minOccurs="1" maxOccurs="1" />
+		<element type="groovetrack_real_time_id" minOccurs="1" maxOccurs="1" />
+		<element type="is_residue_chipper_enabled" minOccurs="1" maxOccurs="1" />
+		<element type="is_layer_diameter_detection_enabled" minOccurs="1" maxOccurs="1" />
+		<element type="layer_diameter_lift_gap" minOccurs="1" maxOccurs="1" />
+		<element type="layer_diameter_touch_gap" minOccurs="1" maxOccurs="1" />
+		<element type="is_layer_diameter_pipe_touch_enabled" minOccurs="1" maxOccurs="1" />
+		<element type="residue_chipper_wire_speed" minOccurs="1" maxOccurs="1" />
+		<element type="residue_chipper_wire_retract" minOccurs="1" maxOccurs="1" />
+		<element type="jog_speed_edit_mode" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="limits" model="closed" content="eltOnly" order="seq" >
+		<!--DECLARE ALL ELEMENTS (LIMITS)-->
+		<element type="pri_amp_error" minOccurs="1" maxOccurs="1" />
+		<element type="pri_amp_fault" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp_error" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp_fault" minOccurs="1" maxOccurs="1" />
+		<element type="wire_error" minOccurs="1" maxOccurs="1" />
+		<element type="wire_fault" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_error" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_fault" minOccurs="1" maxOccurs="1" />
+		<element type="travel_error" minOccurs="1" maxOccurs="1" />
+		<element type="travel_fault" minOccurs="1" maxOccurs="1" />
+		<element type="voltage_low" minOccurs="1" maxOccurs="1" />
+		<element type="voltage_high" minOccurs="1" maxOccurs="1" />
+		<element type="avg_amp_fault_low" minOccurs="1" maxOccurs="1" />
+		<element type="avg_amp_fault_high" minOccurs="1" maxOccurs="1" />
+		<element type="heat_input_fault_low" minOccurs="1" maxOccurs="1" />
+		<element type="heat_input_fault_high" minOccurs="1" maxOccurs="1" />
+		<!--ANY ADDITIONAL PARAMETERS THAT SHOULD BE BACKWARDS COMPATIBLE WITH OLD SCHEDULES SHOULD BE ADDED WITH minOccurs="1"-->
+	</ElementType>
+
+	<ElementType name="overrides" model="closed" content="eltOnly" order="seq" >
+		<!--DECLARE ALL ELEMENTS (OVERRIDES)-->
+		<element type="pri_amp_max" minOccurs="1" maxOccurs="1" />
+		<element type="pri_amp_rate" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp_max" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp_rate" minOccurs="1" maxOccurs="1" />
+		<element type="travel_max" minOccurs="1" maxOccurs="1" />
+		<element type="travel_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire_retract_distance_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire_retract_distance_rate" minOccurs="1" maxOccurs="1" />
+		<element type="avg_wire_speed_max" minOccurs="1" maxOccurs="1" />
+		<element type="avg_wire_speed_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_retract_distance_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire2_retract_distance_rate" minOccurs="1" maxOccurs="1" />
+		<element type="avg_wire2_speed_max" minOccurs="1" maxOccurs="1" />
+		<element type="avg_wire2_speed_rate" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_amps_max" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_amps_rate" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2_amps_max" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2_amps_rate" minOccurs="1" maxOccurs="1" />
+		<element type="volt_max" minOccurs="1" maxOccurs="1" />
+		<element type="volt_rate" minOccurs="1" maxOccurs="1" />
+		<element type="theta_width_max" minOccurs="1" maxOccurs="1" />
+		<element type="theta_width_rate" minOccurs="1" maxOccurs="1" />
+		<element type="osc_width_max" minOccurs="1" maxOccurs="1" />
+		<element type="osc_width_rate" minOccurs="1" maxOccurs="1" />
+		<element type="dwell_max" minOccurs="1" maxOccurs="1" />
+		<element type="dwell_rate" minOccurs="1" maxOccurs="1" />
+		<element type="excursion_max" minOccurs="1" maxOccurs="1" />
+		<element type="excursion_rate" minOccurs="1" maxOccurs="1" />
+		<element type="acc_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="acc_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="avc_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="avc_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="workpoint_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="workpoint_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="trim_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="trim_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_1_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_1_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_2_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_2_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_3_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_3_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_4_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control_4_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="mig_sensitivity_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="mig_sensitivity_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_width_min_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_width_min_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_width_max_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="mig_pulse_width_max_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="blast_amps_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="blast_amps_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_freq_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_freq_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_width_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_width_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_width_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_width_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_freq_override_max" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_freq_override_rate" minOccurs="1" maxOccurs="1" />
+		<element type="compound_steering_angle_offset_max" minOccurs="1" maxOccurs="1" />
+		<element type="compound_steering_angle_offset_rate" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_width_max" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_in_out_width_rate" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_width_max" minOccurs="1" maxOccurs="1" />
+		<element type="tungsten_width_rate" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_time_max" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_time_rate" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_time_max" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_time_rate" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="path" model="closed" content="eltOnly" order="seq" >
+		<AttributeType name="tension" required="yes" dt:type="float" />
+		<AttributeType name="closed" required="yes" dt:type="ui1" />
+		<AttributeType name="offset" required="yes" dt:type="float" />
+		<attribute type="tension" />
+		<attribute type="closed" />
+		<attribute type="offset" />
+		<!--DECLARE ALL ELEMENTS (PATH)-->
+		<element type="point" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="segment" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ALL ELEMENTS (SEG)-->
+		<element type="enable" minOccurs="1" maxOccurs="1" />
+		<element type="mode" minOccurs="1" maxOccurs="1" />
+		<element type="segment_time" minOccurs="1" maxOccurs="1" />
+		<element type="slope" minOccurs="1" maxOccurs="1" />
+		<element type="travel_angle" minOccurs="1" maxOccurs="1" />
+		<element type="sync_mode" minOccurs="1" maxOccurs="1" />
+		<element type="pri_ahc" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_ahc" minOccurs="1" maxOccurs="1" />
+		<element type="volts" minOccurs="1" maxOccurs="1" />
+		<element type="pri_amp" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_amp" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_freq" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_width" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_freq" minOccurs="1" maxOccurs="1" />
+		<element type="motion_pulse_width" minOccurs="1" maxOccurs="1" />
+		<element type="pri_travel" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_travel" minOccurs="1" maxOccurs="1" />
+		<element type="pri_wire" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_wire" minOccurs="1" maxOccurs="1" />
+		<element type="pri_wire2" minOccurs="1" maxOccurs="1" />
+		<element type="bkg_wire2" minOccurs="1" maxOccurs="1" />
+		<element type="avc_mode" minOccurs="1" maxOccurs="1" />
+		<element type="theta_width" minOccurs="1" maxOccurs="1" />
+		<element type="osc_width" minOccurs="1" maxOccurs="1" />
+		<element type="indwell" minOccurs="1" maxOccurs="1" />
+		<element type="outdwell" minOccurs="1" maxOccurs="1" />
+		<element type="excursion" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_amps" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2_amps" minOccurs="1" maxOccurs="1" />
+		<element type="mig_mode" minOccurs="1" maxOccurs="1" />
+		<element type="workpoint" minOccurs="1" maxOccurs="1" />
+		<element type="trim" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control1" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control2" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control3" minOccurs="1" maxOccurs="1" />
+		<element type="wave_control4" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_mode" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_sensitivity" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_smoothing" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_max_correction" minOccurs="1" maxOccurs="1"/>
+		<element type="groovetrack_bias" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_width_min" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_width_max" minOccurs="1" maxOccurs="1"/>
+		<element type="blast_amps" minOccurs="1" maxOccurs="1"/>
+		<element type="compound_steering_angle_offset" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_sensitivity" minOccurs="1" maxOccurs="1" />
+		<element type="detachment_amps" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_burn_back_amps" minOccurs="1" maxOccurs="1"/>
+		<element type="wetting_amps" minOccurs="1" maxOccurs="1"/>
+		<element type="wetting_time_1" minOccurs="1" maxOccurs="1"/>
+		<element type="wetting_time_2" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_min_burn_back_time" minOccurs="1" maxOccurs="1"/>
+		<element type="clear_short_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="detect_short_threshold" minOccurs="1" maxOccurs="1"/>
+		<element type="clear_short_threshold" minOccurs="1" maxOccurs="1"/>
+		<element type="detach_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_burn_back_decay_period" minOccurs="1" maxOccurs="1"/>
+		<element type="clear_short_max_current" minOccurs="1" maxOccurs="1"/>
+		<element type="wetting_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_dynamics_enable_voltage" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_blast_current_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_burnback_current_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="layer_diameter" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_pre_detachment_ramp_rate" minOccurs="1" maxOccurs="1"/>
+		<element type="dip_energy" minOccurs="1" maxOccurs="1"/>
+		<element type="shield_flow" minOccurs="1" maxOccurs="1"/>
+		<element type="trail_flow" minOccurs="1" maxOccurs="1"/>
+		<element type="plasma_flow" minOccurs="1" maxOccurs="1"/>
+		<element type="backup_flow" minOccurs="1" maxOccurs="1"/>
+		<element type="cv_min_current" minOccurs="1" maxOccurs="1"/>
+		<element type="cv_max_current" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_deadband" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_slowband" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_low_sensitivity" minOccurs="1" maxOccurs="1"/>
+		<element type="mig_pulse_high_sensitivity" minOccurs="1" maxOccurs="1"/>
+		<element type="wire_manipulator_in_out_width" minOccurs="1" maxOccurs="1"/>
+		<element type="tungsten_width" minOccurs="1" maxOccurs="1"/>
+		<element type="reverse_travel" minOccurs="1" maxOccurs="1"/>
+		<element type="tilt_position" minOccurs="1" maxOccurs="1"/>
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="signature" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS(DESC)-->
+	<ElementType name="outer_diameter" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groove_depth" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="custom_search_tag" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="note" model="closed" content="eltOnly" order="seq">
+		<element type="entry" minOccurs="0" maxOccurs="*"/>
+	</ElementType>
+	<ElementType name="entry" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="user" required="yes" dt:type="string" />
+		<AttributeType name="timestamp" required="yes" dt:type="string" />
+		<attribute type="user" />
+		<attribute type="timestamp" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS(GLOBAL)-->
+	<ElementType name="arc_type" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="excursion_mode" model="closed"  dt:type="ui1" content="textOnly"/>
+	<ElementType name="datalog_mode" model="closed"  dt:type="ui1" content="textOnly"/>
+	<ElementType name="prepurge" model="closed"  dt:type="float" content="textOnly"/>
+	<ElementType name="postpurge" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trail_gas" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="backup_gas" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="plasma_gas" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="auto_disable_pilot_arc" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="pilot_arc_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="initial_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="final_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="impulse_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="impulse_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="downslope" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="downslope_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="theta_torch_height" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_direction" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="ahc_gap" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_high_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_deadband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_slowband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_high_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_deadband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_slowband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_retract" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_retract" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="hotwire2_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="travel_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_stop_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_delay" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_jog_fwd" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_jog_rev" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_jog_fwd" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_jog_rev" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux0_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux1_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux2_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux3_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux4_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux5_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux6_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux7_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux8_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux9_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux0_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux1_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux2_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux3_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux4_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux5_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux6_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux7_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux8_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux9_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_auto_center" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="osc_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_auto_zero" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="travel_auto_home" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="cut_angle" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="electrode_diameter" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="burn_back_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="seamtrack_x_tracking_on" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="seamtrack_z_tracking_on" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="seamtrack_width_tracking_on" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="seamtrack_x_channel" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="seamtrack_z_channel" model="closed"  dt:type="ui1" content="textOnly"/>
+	<ElementType name="seamtrack_width_channel" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="seamtrack_program" model="closed"  dt:type="ui2" content="textOnly" />
+	<ElementType name="seamtrack_angle" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_max_correction_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="groovetrack_sensitivity_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="groovetrack_axis" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="travel_home_enable" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="loop_count" model="closed"  dt:type="ui2" content="textOnly" />
+	<ElementType name="loop_to" model="closed"  dt:type="ui2" content="textOnly" />
+	<ElementType name="mig_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="crater_fill_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_runin_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="initial_amps_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="initial_wire_speed" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_compound_angle" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux_0_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux_1_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="layer_diameter_edit_mode" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="torch_centering_height" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_tool_center_point" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="travel_speed_compensated_by_height" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="osc_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="ahc_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="flying_start" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="gas_flow_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="travel_speed_compensated_by_width" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="initial_travel_speed" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="initial_volts" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_up_down_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_up_down_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_auto_preposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_auto_postposition" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="reverse_downslope" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="tilt_jog" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tilt_step" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_select_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="pulse_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="initial_wire2_speed" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_centre_position_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_centre_position_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_centre_position_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_centre_position_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux_0_pre_position" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="aux_1_pre_position" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tilt_pre_position" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tilt_post_position" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="is_weld_closed" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="groovetrack_real_time_id" model="closed"  dt:type="ui4" content="textOnly" />
+	<ElementType name="is_residue_chipper_enabled" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="is_layer_diameter_detection_enabled" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="layer_diameter_lift_gap" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="layer_diameter_touch_gap" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="is_layer_diameter_pipe_touch_enabled" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="residue_chipper_wire_speed" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="residue_chipper_wire_retract" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="jog_speed_edit_mode" model="closed"  dt:type="ui1" content="textOnly" />
+
+	<!--DEFINE ELEMENTS(LIMITS)-->
+	<ElementType name="pri_amp_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_amp_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_error" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_fault" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="voltage_low" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="voltage_high" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_amp_fault_low" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_amp_fault_high" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="heat_input_fault_low" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="heat_input_fault_high" model="closed"  dt:type="float" content="textOnly" />
+
+	<!--DEFINE ELEMENTS(OVERRIDES)-->
+	<ElementType name="pri_amp_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_amp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_retract_distance_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_retract_distance_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_wire_speed_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_wire_speed_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_retract_distance_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire2_retract_distance_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_wire2_speed_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avg_wire2_speed_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire_amps_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire_amps_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire2_amps_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire2_amps_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="volt_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="volt_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="theta_width_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_width_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dwell_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dwell_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="excursion_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="excursion_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="acc_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="workpoint_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="workpoint_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trim_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trim_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_1_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_1_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_2_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_2_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_3_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_3_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_4_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control_4_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_sensitivity_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_sensitivity_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_min_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_min_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_max_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_max_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="blast_amps_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="blast_amps_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_freq_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_freq_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_width_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_width_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_width_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_width_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_freq_override_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_freq_override_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="compound_steering_angle_offset_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="compound_steering_angle_offset_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_width_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_width_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_time_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_time_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_time_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_time_rate" model="closed"  dt:type="float" content="textOnly" />
+
+	<!--DEFINE ELEMENTS(PATH)-->
+	<ElementType name="point" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="x" required="yes" dt:type="float" />
+		<AttributeType name="y" required="yes" dt:type="float" />
+		<attribute type="x" />
+		<attribute type="y" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS(SEG)-->
+	<ElementType name="enable" model="closed"  dt:type="boolean" content="textOnly" />
+	<ElementType name="mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="segment_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="slope" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="travel_angle" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="sync_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="pri_ahc" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_ahc" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_amp" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_amp" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_freq" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pulse_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_freq" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="motion_pulse_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_travel" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_travel" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_wire" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_wire" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pri_wire2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="bkg_wire2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="volts" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="avc_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="theta_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="osc_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="indwell" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="outdwell" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="excursion" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="hotwire2_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_mode" model="closed"  dt:type="ui2" content="textOnly" />
+	<ElementType name="workpoint" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trim" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control1" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control3" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wave_control4" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_mode" model="closed"  dt:type="ui1" content="textOnly" />
+	<ElementType name="groovetrack_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_smoothing" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_max_correction" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="groovetrack_bias" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_min" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_width_max" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="blast_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="compound_steering_angle_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="detachment_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_burn_back_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wetting_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wetting_time_1" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wetting_time_2" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_min_burn_back_time" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="clear_short_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="detect_short_threshold" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="clear_short_threshold" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="detach_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_burn_back_decay_period" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="clear_short_max_current" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wetting_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_dynamics_enable_voltage" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_blast_current_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_burnback_current_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="layer_diameter" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_pre_detachment_ramp_rate" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="dip_energy" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="shield_flow" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="trail_flow" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="plasma_flow" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="backup_flow" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="cv_min_current" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="cv_max_current" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_deadband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_slowband" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_low_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="mig_pulse_high_sensitivity" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="wire_manipulator_in_out_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tungsten_width" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="reverse_travel" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="tilt_position" model="closed"  dt:type="float" content="textOnly" />
+</Schema>

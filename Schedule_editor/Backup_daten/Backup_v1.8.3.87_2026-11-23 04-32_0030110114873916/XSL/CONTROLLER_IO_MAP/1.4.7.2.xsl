@@ -1,0 +1,21 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:output indent="no" omit-xml-declaration="yes"/>
+	<xsl:preserve-space elements="*" />
+	<!-- Add your XSL Transformations below this line -->
+
+	<xsl:template match="iomap/system/io[@module='COPLEY']/properties/read_input_period_ms">
+		<read_input_period_ms>200</read_input_period_ms>
+	</xsl:template>
+
+	<xsl:template match="iomap/system/io[@module='ICPDAS']/properties/read_input_period_ms">
+		<read_input_period_ms>200</read_input_period_ms>
+	</xsl:template>
+
+	<!-- Do not change the template below-->
+	<xsl:template match="node()|@*" name="identity">
+		<xsl:copy>
+			<xsl:apply-templates select="node()|@*"/>
+		</xsl:copy>
+	</xsl:template>
+
+</xsl:stylesheet>

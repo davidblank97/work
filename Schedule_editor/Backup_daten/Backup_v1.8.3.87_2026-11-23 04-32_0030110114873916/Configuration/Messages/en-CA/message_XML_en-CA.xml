@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="XML" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>An error occurred while accessing '%1'. Check the system logs.</text>
+		<desc>File access error. %1 = filename</desc>
+	</str>
+	<str id="2">
+		<text>An error occurred while referencing the schema '%1'. Check the system logs.</text>
+		<desc>XML schema error. %1 = filename</desc>
+	</str>
+	<str id="3">
+		<text>An error occurred while parsing '%1'|Line %2: %3|Reason: %4</text>
+		<desc>XML parser error. %1 = filename. %2 = line number. %3 = source text. %4 = reason for error</desc>
+	</str>
+	<str id="4">
+		<text>An error occurred while reading from or writing to %1. (Query = %2) Check the system logs.</text>
+		<desc>XPath query on an XML document failed. %1 = filename %2 = query.</desc>
+	</str>
+</language>

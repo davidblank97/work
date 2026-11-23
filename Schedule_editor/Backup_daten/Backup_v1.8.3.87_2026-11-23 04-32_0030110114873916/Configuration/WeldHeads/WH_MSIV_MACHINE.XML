@@ -1,0 +1,133 @@
+<head model="MSIV MACHINE">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.1</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:39</date>
+		<signature/>
+	</metadata>
+	<properties>
+		<arc_start>0</arc_start>
+		<avc_sense>1</avc_sense>
+		<max_amps>300.0000</max_amps>
+		<trail_fault>0</trail_fault>
+		<cool_flow>3.6</cool_flow>
+		<cool_fault>1</cool_fault>
+		<gas_fault>1</gas_fault>
+		<avc_max>1</avc_max>
+		<step_max>1</step_max>
+		<IPM_convert>0</IPM_convert>
+		<estop_mode_switch>0</estop_mode_switch>
+		<service_motor_period>0.1</service_motor_period>
+		<jog_toggle_switch>0</jog_toggle_switch>
+		<seq_control>0</seq_control>
+		<wire_toggle>0</wire_toggle>
+		<tuning_revision>1</tuning_revision>
+	</properties>
+	<axis name="aux2" optional_name="R1" type="3" io_index="6">
+		<max_speed>5.8</max_speed>
+		<acceleration>0</acceleration>
+		<hard_limits>0</hard_limits>
+		<curr_limit>3.0</curr_limit>
+		<peak_current>4.0</peak_current>
+		<peak_current_time>0.25</peak_current_time>
+		<vlp>2500</vlp>
+		<vli>15</vli>
+		<clp>205</clp>
+		<cli>4</cli>
+		<back_emf_current_component>0</back_emf_current_component>
+		<pos type="1" channel="0">
+			<cpi>-2740000</cpi>
+			<fwd_counts>0</fwd_counts>
+			<rev_counts>4110000</rev_counts>
+			<offset>0</offset>
+			<loop divisor="1">
+				<p>500.0</p>
+				<i>10.0</i>
+				<d>100.0</d>
+				<deadband>0</deadband>
+				<disableband>0.0</disableband>
+				<vff>80</vff>
+				<follow_err>0.005</follow_err>
+			</loop>
+		</pos>
+		<pulse>0</pulse>
+		<must_be_zeroed>1</must_be_zeroed>
+		<bump_sense>0</bump_sense>
+		<home_state>0</home_state>
+		<home_dir>1</home_dir>
+		<direction>1</direction>
+		<home_switch_index>1</home_switch_index>
+		<home_switch_type>1</home_switch_type>
+	</axis>
+	<axis name="aux3" optional_name="R2" type="3" io_index="7">
+		<max_speed>5.8</max_speed>
+		<acceleration>0</acceleration>
+		<hard_limits>0</hard_limits>
+		<curr_limit>3.0</curr_limit>
+		<peak_current>4.0</peak_current>
+		<peak_current_time>0.25</peak_current_time>
+		<vlp>2500</vlp>
+		<vli>15</vli>
+		<clp>205</clp>
+		<cli>4</cli>
+		<back_emf_current_component>0</back_emf_current_component>
+		<pos type="1" channel="1">
+			<cpi>-2740000</cpi>
+			<fwd_counts>0</fwd_counts>
+			<rev_counts>4110000</rev_counts>
+			<offset>0</offset>
+			<loop divisor="1">
+				<p>500.0</p>
+				<i>10.0</i>
+				<d>100.0</d>
+				<deadband>0</deadband>
+				<disableband>0.0</disableband>
+				<vff>80</vff>
+				<follow_err>0.005</follow_err>
+			</loop>
+		</pos>
+		<pulse>0</pulse>
+		<must_be_zeroed>1</must_be_zeroed>
+		<bump_sense>0</bump_sense>
+		<home_state>0</home_state>
+		<home_dir>1</home_dir>
+		<direction>1</direction>
+		<home_switch_index>2</home_switch_index>
+		<home_switch_type>1</home_switch_type>
+	</axis>
+	<axis name="aux0" optional_name="Z" type="13" com_index="5" degrees="0">
+		<max_speed>20</max_speed>
+		<acceleration>900.0</acceleration>
+		<hard_limits>0</hard_limits>
+		<pos type="1" degrees="0">
+			<cpi>200000</cpi>
+			<fwd_counts>0</fwd_counts>
+			<rev_counts>0</rev_counts>
+		</pos>
+		<pulse>1</pulse>
+		<must_be_zeroed>1</must_be_zeroed>
+		<smart_address>13</smart_address>
+		<hasBrake>0</hasBrake>
+		<bump_sense>1</bump_sense>
+		<rem_emf>0</rem_emf>
+	</axis>
+	<axis name="aux1" optional_name="THETA" type="12" com_index="5" degrees="1">
+		<max_speed>39.574</max_speed>
+		<units_rpm>1</units_rpm>
+		<acceleration>4000.0</acceleration>
+		<hard_limits>0</hard_limits>
+		<pos type="1" degrees="0">
+			<cpi>4933</cpi>
+			<fwd_counts>0</fwd_counts>
+			<rev_counts>0</rev_counts>
+		</pos>
+		<pulse>1</pulse>
+		<must_be_zeroed>0</must_be_zeroed>
+		<diameter_inch>18.5</diameter_inch>
+		<smart_address>11</smart_address>
+		<hasBrake>0</hasBrake>
+		<bump_sense>1</bump_sense>
+		<rem_emf>0</rem_emf>
+	</axis>
+</head>

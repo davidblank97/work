@@ -1,0 +1,20 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+04:48:57:907|0|USER LOGIN|ADMIN
+
+04:48:57:909|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:51:33:505|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+04:51:33:563|3|SCHEDULE LOADED|0404-Fill-OUT
+
+04:52:01:389|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+04:52:49:596|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:52:49:613|1|ALARM|[MOT004] Following Error: osc
+

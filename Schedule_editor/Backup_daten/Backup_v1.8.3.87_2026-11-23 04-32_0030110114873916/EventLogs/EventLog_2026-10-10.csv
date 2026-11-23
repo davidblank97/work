@@ -1,0 +1,143 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+03:44:38:600|11|USER LOGOUT|
+
+03:44:43:603|1|ALARM|[SEC002] Incorrect password.
+
+
+03:44:54:442|0|USER LOGIN|ADMIN
+
+03:44:54:443|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:59:824|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+03:44:59:887|3|SCHEDULE LOADED|0403-Hotpass2
+
+03:44:59:903|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+03:45:03:697|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+03:46:00:000|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:46:00:524|11|USER LOGOUT|ADMIN
+
+03:46:07:440|0|USER LOGIN|ADMIN
+
+03:46:07:440|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:46:09:799|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+03:46:22:400|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:46:23:160|11|USER LOGOUT|ADMIN
+
+03:46:30:656|0|USER LOGIN|David Blank BHR151
+
+03:46:30:658|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:46:30:678|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:46:32:199|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+03:50:14:000|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:50:14:457|11|USER LOGOUT|David Blank BHR151
+
+03:50:30:402|0|USER LOGIN|Welder
+
+03:50:30:404|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:50:32:900|1|ALARM|[MOT002] The wire axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.
+
+03:50:32:906|1|ALARM|[MOT009] Negative limit reached: osc
+
+
+03:50:32:936|1|ALARM|[MOT004] Following Error: wm-inout
+
+03:50:32:954|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+03:55:02:081|0|USER LOGIN|Welder
+
+03:55:02:083|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:55:18:643|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+03:55:18:698|3|SCHEDULE LOADED|0403-Hotpass2
+
+03:55:18:726|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+03:55:22:428|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+03:55:35:512|3|SCHEDULE LOADED|0402-Hotpass1
+
+03:55:35:512|1|ALARM|[SCH006] Loaded schedule 0402-Hotpass1.
+
+04:23:28:743|3|SCHEDULE LOADED|0402-Hotpass1
+
+04:23:31:023|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:23:31:481|11|USER LOGOUT|Welder
+
+04:23:40:060|0|USER LOGIN|David Blank BHR151
+
+04:23:40:062|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:23:40:084|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+04:23:41:422|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+04:24:01:134|1|ALARM|[SYS028] Changes to the system's settings require a full restart. Please power down and restart the system.
+
+04:24:05:324|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:25:07:526|0|USER LOGIN|David Blank BHR151
+
+04:25:07:531|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:25:07:560|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+04:25:11:713|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+04:25:11:768|3|SCHEDULE LOADED|0402-Hotpass1
+
+04:25:11:800|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+04:25:15:592|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+04:41:52:896|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:41:53:412|11|USER LOGOUT|David Blank BHR151
+

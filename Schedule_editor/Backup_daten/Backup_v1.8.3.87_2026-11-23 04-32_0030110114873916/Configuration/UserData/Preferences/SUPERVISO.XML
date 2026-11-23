@@ -1,0 +1,20 @@
+<user_preferences>
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.5</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:58</date>
+	</metadata>
+	<preference tag="favourite_schedules"/>
+	<preference tag="tig_heat_input_efficiency_factor" value="0.6"/>
+	<preference tag="mig_heat_input_efficiency_factor" value="0.8"/>
+	<preference tag="mig_pulse_start_delay" value="0.05"/>
+	<preference tag="mig_pulse_stop_delay" value="0"/>
+	<preference tag="mig_pulse_exponential_smoothing" value="0.5"/>
+	<preference tag="mig_pulse_p_gain" value="12.0"/>
+	<preference tag="mig_pulse_i_gain" value="0.5"/>
+	<preference tag="mig_pulse_d_gain" value="4.0"/>
+	<preference tag="mig_pulse_use_voltage_for_initial_pulse_width" value="false"/>
+	<preference tag="mig_pulse_voltage_slope" value="19.6"/>
+	<preference tag="mig_pulse_voltage_offset" value="-295.0"/>
+</user_preferences>

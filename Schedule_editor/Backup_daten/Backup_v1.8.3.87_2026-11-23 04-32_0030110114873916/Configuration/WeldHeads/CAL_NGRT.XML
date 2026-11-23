@@ -1,0 +1,42 @@
+<cal model="NGRT">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.13.0</config_version>
+		<author>ADMIN</author>
+		<date>2026/01/07 11:11:40</date>
+	</metadata>
+	<axis name="travel">
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+		<rev_gain timestamp="">1.0000</rev_gain>
+		<rev_offset>0.0000</rev_offset>
+		<rev_tel_gain>1.0000</rev_tel_gain>
+		<rev_tel_offset>0.0000</rev_tel_offset>
+	</axis>
+	<axis name="wire">
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+	</axis>
+	<axis name="osc">
+		<pos_limit timestamp="">0.8999</pos_limit>
+		<neg_limit>-0.9004</neg_limit>
+		<vpi>10.5556</vpi>
+		<zero>0.0024</zero>
+	</axis>
+	<axis name="wm-inout">
+		<pos_limit timestamp="">0.2296</pos_limit>
+		<neg_limit>-0.2300</neg_limit>
+		<vpi>12.7000</vpi>
+		<zero>0.0024</zero>
+	</axis>
+	<axis name="tungsten">
+		<pos_limit timestamp="">0.2813</pos_limit>
+		<neg_limit>-0.2815</neg_limit>
+		<vpi>26.6500</vpi>
+		<zero>0.0024</zero>
+	</axis>
+</cal>

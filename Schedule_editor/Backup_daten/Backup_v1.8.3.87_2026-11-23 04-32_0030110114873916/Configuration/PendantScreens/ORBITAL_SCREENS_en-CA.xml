@@ -1,0 +1,72 @@
+<screens>
+	<metadata>
+		<schema_version/>
+		<config_version>1.5.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<screen index='0'>
+		<row index='0'>LIBURDI</row>
+		<row index='1'>V2.0</row>
+	</screen>
+	<screen index='1'>
+		<row index='0'>READY</row>
+		<row index='1'></row>
+	</screen>
+	<screen index='2'>
+		<row index='0'>E-STOP!</row>
+		<row index='1'>STANDBY</row>
+	</screen>
+	<screen index='3'>
+		<row index='0'>MESSAGE</row>
+		<row index='1'>WAITING</row>
+	</screen>
+	<screen index='4'>
+		<row index='0'>LOAD:</row>
+		<row index='1'></row>
+	</screen>
+	<screen index='5'>
+		<row index='0'>S:</row>
+		<row index='1'>P:</row>
+	</screen>
+	<screen index='6'>
+		<row index='0'>TEST IN</row>
+		<row index='1'>PROGRESS</row>
+	</screen>
+	<screen index='7'>
+		<row index='0'>PURGE</row>
+		<row index='1'></row>
+	</screen>
+	<screen index='8'>
+		<row index='0'>A:</row>
+		<row index='1'>V:</row>
+	</screen>
+	<screen index='9'>
+		<row index='0'>VALUE:</row>
+		<row index='1'></row>
+	</screen>
+	<screen index='10'>
+		<row index='0'>SPEED</row>
+		<row index='1'></row>
+	</screen>
+	<screen index='11'>
+		<row index='0'>DISTANCE</row>
+		<row index='1'></row>
+	</screen>
+	<screen index='12'>
+		<row index='0'>MEASURED</row>
+		<row index='1'></row>
+	</screen>
+	<screen index='13'>
+		<row index='0'>CHECK</row>
+		<row index='1'>RESULTS</row>
+	</screen>
+	<screen index='14'>
+		<row index='0'>JOG TO</row>
+		<row index='1'>LIMIT</row>
+	</screen>
+	<screen index='15'>
+		<row index='0'>JOG TO</row>
+		<row index='1'>CENTRE</row>
+	</screen>
+</screens>

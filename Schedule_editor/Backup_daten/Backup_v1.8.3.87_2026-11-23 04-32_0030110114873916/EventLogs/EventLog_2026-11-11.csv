@@ -1,0 +1,125 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+02:54:19:534|0|USER LOGIN|ADMIN
+
+02:54:19:536|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+02:54:24:841|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+02:54:24:899|3|SCHEDULE LOADED|0405-Fill-IN
+
+02:54:40:676|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+03:06:16:737|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+03:06:16:738|1|ALARM|[SCH006] Loaded schedule 9997-VERIFICATION 60SEC.
+
+03:06:37:537|7|WELD STARTED|
+
+03:28:16:730|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:28:16:730|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+03:28:34:199|10|WELD MODE CHANGED|WELD
+
+03:30:47:714|7|WELD STARTED|
+
+04:02:35:899|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+04:06:02:011|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: UNSPECIFIED
+
+04:21:38:719|7|WELD STARTED|
+
+04:54:06:111|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+05:02:27:149|3|SCHEDULE LOADED|0405-Fill-IN
+
+05:02:27:150|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+05:04:45:993|3|SCHEDULE LOADED|0404-Fill-OUT
+
+05:04:45:993|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+05:11:07:617|10|WELD MODE CHANGED|TEST
+
+05:11:18:007|10|WELD MODE CHANGED|WELD
+
+05:13:19:542|7|WELD STARTED|
+
+05:45:42:761|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+05:58:09:515|3|SCHEDULE LOADED|0405-Fill-IN
+
+05:58:09:517|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+06:00:35:481|7|WELD STARTED|
+
+06:33:01:161|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+06:43:51:391|7|WELD STARTED|
+
+06:43:53:642|9|WELD ABORTED|
+
+06:44:05:789|3|SCHEDULE LOADED|0404-Fill-OUT
+
+06:44:05:790|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+06:45:02:910|7|WELD STARTED|
+
+07:17:18:601|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+07:22:37:473|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: UNSPECIFIED
+
+07:33:41:497|1|ALARM|[DEV008] Electrode touched the work piece.
+
+07:33:44:495|1|ALARM|[DEV008] Electrode touched the work piece.
+
+07:33:45:195|1|ALARM|[DEV008] Electrode touched the work piece.
+
+07:37:28:496|1|ALARM|[DEV008] Electrode touched the work piece.
+
+07:38:43:127|3|SCHEDULE LOADED|0405-Fill-IN
+
+07:38:43:129|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+07:44:40:963|7|WELD STARTED|
+
+08:17:03:830|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+08:26:49:546|1|ALARM|[DEV008] Electrode touched the work piece.
+
+08:27:46:579|3|SCHEDULE LOADED|0404-Fill-OUT
+
+08:27:46:580|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+08:31:08:572|7|WELD STARTED|
+
+09:03:40:907|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+09:18:25:786|10|WELD MODE CHANGED|TEST
+
+09:21:16:767|3|SCHEDULE LOADED|0405-Fill-IN
+
+09:21:16:768|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+09:22:13:119|10|WELD MODE CHANGED|WELD
+
+09:23:44:340|1|ALARM|[DEV030] The system could not detect a work or ground cable connected to the part.
+
+
+09:24:08:663|7|WELD STARTED|
+
+09:56:56:117|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+09:58:22:612|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: UNSPECIFIED
+
+10:08:52:866|3|SCHEDULE LOADED|0405-Fill-IN
+
+10:08:54:922|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+10:08:55:480|11|USER LOGOUT|ADMIN
+

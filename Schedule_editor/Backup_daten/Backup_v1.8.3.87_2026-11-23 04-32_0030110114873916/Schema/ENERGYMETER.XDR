@@ -1,0 +1,47 @@
+<Schema name="ENERGYMETER" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.7.1.0">
+
+	<ElementType name="energymeter" model="closed" content="eltOnly" order="seq">
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="input_voltage" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="input_voltage" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="value" required="yes" dt:type="string" />
+		<attribute type="value" />
+		<element type="pulse_a_register_offset" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_a_trigger_type" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_a_upper_bound" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_a_lower_bound" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_a_min_duration" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_a_active_mode" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_b_register_offset" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_b_trigger_type" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_b_upper_bound" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_b_lower_bound" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_b_min_duration" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_b_active_mode" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="pulse_a_register_offset" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_a_trigger_type" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_a_upper_bound" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_a_lower_bound" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_a_min_duration" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_a_active_mode" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_b_register_offset" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_b_trigger_type" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_b_upper_bound" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_b_lower_bound" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_b_min_duration" model="closed" dt:type="int" content="textOnly" />
+	<ElementType name="pulse_b_active_mode" model="closed" dt:type="int" content="textOnly" />
+				 
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+</Schema>

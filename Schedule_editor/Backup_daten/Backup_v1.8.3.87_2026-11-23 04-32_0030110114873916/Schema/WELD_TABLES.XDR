@@ -1,0 +1,82 @@
+<Schema name="WeldTable" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+
+  <ElementType name="WeldTable" model="closed" content="eltOnly" order="seq">
+    <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="ProcessTypes" minOccurs="1" maxOccurs="1" />
+    <element type="WireTypes" minOccurs="1" maxOccurs="1" />
+    <element type="WireSizes" minOccurs="1" maxOccurs="1" />
+    <element type="UnitCodes" minOccurs="1" maxOccurs="1" />
+    <element type="GasTypes" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (METADATA)-->
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+  
+  <ElementType name="ProcessTypes" model="closed" content="eltOnly" order="seq">
+    <element type="ProcessType" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="ProcessType" model="closed" content="empty" order="seq">
+    <AttributeType name="index" required="yes" dt:type="ui2" />
+    <AttributeType name="key" required="yes" dt:type="string" />
+    <AttributeType name="description" required="yes" dt:type="string" />
+    <attribute type="index" />
+    <attribute type="key" />
+    <attribute type="description" />
+  </ElementType>
+
+  <ElementType name="WireTypes" model="closed" content="eltOnly" order="seq">
+    <element type="WireType" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="WireType" model="closed" content="empty" order="seq">
+    <AttributeType name="index" required="yes" dt:type="ui2" />
+    <AttributeType name="description" required="yes" dt:type="string" />
+    <attribute type="index" />
+    <attribute type="description" />
+  </ElementType>
+
+  <ElementType name="WireSizes" model="closed" content="eltOnly" order="seq">
+    <element type="WireSize" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="WireSize" model="closed" content="empty" order="seq">
+    <AttributeType name="index" required="yes" dt:type="ui2" />
+    <AttributeType name="description" required="yes" dt:type="string" />
+    <attribute type="index" />
+    <attribute type="description" />
+  </ElementType>
+
+  <ElementType name="UnitCodes" model="closed" content="eltOnly" order="seq">
+    <element type="UnitCode" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="GasTypes" model="closed" content="eltOnly" order="seq">
+    <element type="GasType" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="UnitCode" model="closed" content="empty" order="seq">
+    <AttributeType name="index" required="yes" dt:type="ui2" />
+    <AttributeType name="description" required="yes" dt:type="string" />
+    <attribute type="index" />
+    <attribute type="description" />
+  </ElementType>
+
+  <ElementType name="GasType" model="closed" content="empty" order="seq">
+    <AttributeType name="index" required="yes" dt:type="ui2" />
+    <AttributeType name="description" required="yes" dt:type="string" />
+    <attribute type="index" />
+    <attribute type="description" />
+  </ElementType>
+  
+</Schema>

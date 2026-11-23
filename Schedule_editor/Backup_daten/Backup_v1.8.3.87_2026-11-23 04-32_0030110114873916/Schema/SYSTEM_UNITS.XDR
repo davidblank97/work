@@ -1,0 +1,280 @@
+<Schema name="system_units" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.7.2.0">
+	<ElementType name="system_user_units" model="closed" content="eltOnly" order="seq">
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="defaults" minOccurs="1" maxOccurs="1" />
+		<element type="groups" minOccurs="1" maxOccurs="1" />
+		<element type="parameters" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="defaults" model="closed" content="eltOnly" order="seq">
+		<element type="linear_distance" minOccurs="1" maxOccurs="1" />
+		<element type="rotation_distance" minOccurs="1" maxOccurs="1" />
+		<element type="time" minOccurs="1" maxOccurs="1" />
+		<element type="current" minOccurs="1" maxOccurs="1" />
+		<element type="voltage" minOccurs="1" maxOccurs="1" />
+		<element type="linear_speed" minOccurs="1" maxOccurs="1" />
+		<element type="rotation_speed" minOccurs="1" maxOccurs="1" />
+		<element type="percentage" minOccurs="1" maxOccurs="1" />
+		<element type="frequency" minOccurs="1" maxOccurs="1" />
+		<element type="io" minOccurs="1" maxOccurs="1" />
+		<element type="power" minOccurs="1" maxOccurs="1" />
+		<element type="energy" minOccurs="1" maxOccurs="1" />
+		<element type="flow" minOccurs="1" maxOccurs="1" />
+		<element type="heat_input" minOccurs="1" maxOccurs="1" />
+		<element type="resolution" minOccurs="1" maxOccurs="1" />
+		<element type="amps_rate" minOccurs="1" maxOccurs="1" />
+		<element type="volts_rate" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_rate" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="groups" model="closed" content="eltOnly" order="seq">
+		<element type="travel_speed" minOccurs="1" maxOccurs="1" />
+		<element type="travel_distance" minOccurs="1" maxOccurs="1" />
+		<element type="wire_speed" minOccurs="1" maxOccurs="1" />
+		<element type="wire_distance" minOccurs="1" maxOccurs="1" />
+		<element type="osc_speed" minOccurs="1" maxOccurs="1" />
+		<element type="osc_distance" minOccurs="1" maxOccurs="1" />
+		<element type="theta_speed" minOccurs="1" maxOccurs="1" />
+		<element type="theta_distance_setpoint" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_speed" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_distance" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_amps" minOccurs="1" maxOccurs="1" />
+		<element type="arc_amps" minOccurs="1" maxOccurs="1" />
+		<element type="arc_volts" minOccurs="1" maxOccurs="1" />
+		<element type="shunt_volts" minOccurs="1" maxOccurs="1" />
+		<element type="pilot_arc_amps" minOccurs="1" maxOccurs="1" />
+		<element type="segment_duration" minOccurs="1" maxOccurs="1" />
+		<element type="calibration_resolution" minOccurs="1" maxOccurs="1" />
+		<element type="groove_depth" minOccurs="1" maxOccurs="1" />
+		<element type="pipe_diameter" minOccurs="1" maxOccurs="1" />
+		<element type="gas_flow" minOccurs="1" maxOccurs="1" />
+		<element type="theta_distance_telemetry" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_speed" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_distance" minOccurs="1" maxOccurs="1" />
+		<element type="rotating_tungsten_speed" minOccurs="1" maxOccurs="1" />
+		<element type="rotating_tungsten_distance_setpoint" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_speed" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_distance" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_time" minOccurs="1" maxOccurs="1" />
+		<element type="rotating_tungsten_distance_telemetry" minOccurs="1" maxOccurs="1" />
+		<element type="motor_current" minOccurs="1" maxOccurs="1" />
+		<element type="motor_peak_current_time" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="parameters" model="closed" content="eltOnly" order="seq">
+		<element type="parameter" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+	<ElementType name="linear_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="rotation_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="time" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="current" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="voltage" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="linear_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="rotation_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="percentage" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="frequency" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="io" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="power" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="energy" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="flow" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="heat_input" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="resolution" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="travel_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="travel_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="wire_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="wire_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="osc_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="osc_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="theta_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="theta_distance_setpoint" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="theta_distance_telemetry" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="ahc_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="ahc_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="hotwire_amps" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="arc_amps" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="arc_volts" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="shunt_volts" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="pilot_arc_amps" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="segment_duration" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="calibration_resolution" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="gas_flow" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="amps_rate" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="volts_rate" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="hotwire_rate" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="groove_depth" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="pipe_diameter" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="wire_manipulator_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="wire_manipulator_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="rotating_tungsten_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="rotating_tungsten_distance_setpoint" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="tilt_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="tilt_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="pulse_time" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="rotating_tungsten_distance_telemetry" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="motor_current" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="motor_peak_current_time" model="closed" content="empty" order="seq">
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="unit" />
+	</ElementType>
+	<ElementType name="parameter" model="closed" content="empty" order="seq">
+		<AttributeType name="id" required="yes" dt:type="int" />
+		<AttributeType name="mode" required="yes" dt:type="string" />
+		<AttributeType name="unit" required="yes" dt:type="string" />
+		<attribute type="id" />
+		<attribute type="mode" />
+		<attribute type="unit" />
+	</ElementType>
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+</Schema>

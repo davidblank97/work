@@ -1,0 +1,3666 @@
+<Schema name="CONTROLLER_IO_MAP" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.2">
+
+	<ElementType name="iomap" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (IOMAP)-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="firmware_version" minOccurs="0" maxOccurs="1" />
+		<element type="system" minOccurs="0" maxOccurs="1" />
+		<element type="power" minOccurs="0" maxOccurs="1" />
+		<element type="auxiliary_power" minOccurs="0" maxOccurs="*" />
+		<element type="gas_controller" minOccurs="0" maxOccurs="1" />
+		<element type="proximity_sensor" minOccurs="0" maxOccurs="1" />
+		<element type="coolant" minOccurs="0" maxOccurs="1" />
+		<element type="wire_manipulator" minOccurs="0" maxOccurs="1" />
+		<element type="weldhead" minOccurs="0" maxOccurs="1" />
+		<element type="keypad" minOccurs="0" maxOccurs="1" />
+		<element type="pendant" minOccurs="0" maxOccurs="1" />
+		<element type="timer" minOccurs="0" maxOccurs="*" />
+		<element type="home_switch" minOccurs="0" maxOccurs="*" />
+		<element type="wire_spool" minOccurs="0" maxOccurs="1" />
+		<element type="digital_servo" minOccurs="0" maxOccurs="*" />
+		<element type="digital_stepper" minOccurs="0" maxOccurs="*" />
+		<element type="smart_servo" minOccurs="0" maxOccurs="*" />
+		<element type="position" minOccurs="0" maxOccurs="*" />
+		<element type="spares" minOccurs="0" maxOccurs="1" />
+		<element type="hardware_detection" minOccurs="0" maxOccurs="1" />
+		<element type="external" minOccurs="0" maxOccurs="1" />
+		<element type="high_speed_data" minOccurs="0" maxOccurs="1" />
+		<element type="firmware_test" minOccurs="0" maxOccurs="1" />
+		<element type="hard_limits" minOccurs="0" maxOccurs="*" />
+		<element type="analog_servo" minOccurs="0" maxOccurs="*" />
+
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IOMAP)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (METADATA)-->
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="0" maxOccurs="1" />
+		<element type="date" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="firmware_version" model="closed" content="eltOnly" order="seq">
+		<element type="control_board" minOccurs="0" maxOccurs="1" />
+		<element type="servo_board" minOccurs="0" maxOccurs="1" />
+		<element type="stepper_board" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="system" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (SYSTEM)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="power" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (POWER)-->
+		<element type="timer_index" minOccurs="0" maxOccurs="1" />
+		<element type="io" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="auxiliary_power" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ELEMENTS (AUX POWER)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="gas_controller" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (GAS CONTROLLER)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="proximity_sensor" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (PROXIMITY SENSOR)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="coolant" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (COOLANT)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="wire_manipulator" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (WIRE MANIPULATOR)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="weldhead" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (WELDHEAD)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="keypad" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (KEYPAD)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="pendant" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (PENDANT)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="timer" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ELEMENTS (TIMER)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="digital_servo" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ELEMENTS (SERVO)-->
+		<element type="io" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="digital_stepper" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ELEMENTS (STEPPER)-->
+		<element type="io" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="smart_servo" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ELEMENTS (STEPPER)-->
+		<element type="io" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="position" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<element type="io" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="hard_limits" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<element type="io" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="wire_spool" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (WIRE SPOOL)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="spares" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (WIRE SPOOL)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="hardware_detection" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (WIRE SPOOL)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="external" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (WIRE SPOOL)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="high_speed_data" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (WIRE SPOOL)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="firmware_test" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (FIRMWARE TEST)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="home_switch" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ELEMENTS (HOME SWITCH)-->
+		<element type="io" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+	
+	<ElementType name="analog_servo" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<!--DECLARE ELEMENTS (SERVO)-->
+		<element type="io" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (POWER)-->
+	<ElementType name="timer_index" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+	<ElementType name="control_board" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="servo_board" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="stepper_board" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (IO)-->
+	<ElementType name="io" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="module" required="yes" dt:type="string" />
+		<attribute type="module" />
+		<!--DECLARE ELEMENTS (IO)-->
+		<group order="one">
+			<group order="seq">
+				<!--system-->
+				<element type="properties" minOccurs="1" maxOccurs="1" />
+				<element type="camera_light_enable" minOccurs="0" maxOccurs="1" />
+				<element type="power_up_type" minOccurs="0" maxOccurs="1" />
+				<element type="power_enable" minOccurs="0" maxOccurs="1" />
+				<element type="fan_enable" minOccurs="0" maxOccurs="1" />
+				<element type="wire_stuck_check_enable" minOccurs="0" maxOccurs="1" />
+				<element type="wire_stuck_check_status" minOccurs="0" maxOccurs="1" />
+				<element type="avc_sense_select" minOccurs="0" maxOccurs="1" />
+				<element type="beeper" minOccurs="0" maxOccurs="1" />
+				<element type="watchdog" minOccurs="0" maxOccurs="1" />
+				<element type="estop" minOccurs="0" maxOccurs="1" />
+				<element type="lockout_mode" minOccurs="0" maxOccurs="1" />
+				<element type="chopper_overtemp" minOccurs="0" maxOccurs="1" />
+				<element type="work_detect" minOccurs="0" maxOccurs="1" />
+				<element type="servo_fault" minOccurs="0" maxOccurs="1" />
+				<element type="foot_pedal_enable" minOccurs="0" maxOccurs="1" />
+				<element type="foot_pedal_control" minOccurs="0" maxOccurs="1" />
+				<element type="dacMode" minOccurs="0" maxOccurs="1" />
+				<element type="critical_fault_circuit" minOccurs="0" maxOccurs="1" />
+				<element type="weldhead_switch_active" minOccurs="0" maxOccurs="1" />
+				<element type="version" minOccurs="0" maxOccurs="1" />
+				<element type="digital_head_ID" minOccurs="0" maxOccurs="1" />
+				<element type="hotwire_plasma_contactor" minOccurs="0" maxOccurs="1" />
+				<element type="cs300_temperature_fault" minOccurs="0" maxOccurs="1" />
+				<element type="control_board_firmware_version" minOccurs="0" maxOccurs="1" />
+				<element type="servo_board_firmware_version" minOccurs="0" maxOccurs="1" />
+				<element type="stepper_board_firmware_version" minOccurs="0" maxOccurs="1" />
+				<element type="control_board_firmware_revision" minOccurs="0" maxOccurs="1" />
+				<element type="servo_board_firmware_revision" minOccurs="0" maxOccurs="1" />
+				<element type="stepper_board_firmware_revision" minOccurs="0" maxOccurs="1" />
+				<element type="camera_sync_trigger_mode" minOccurs="0" maxOccurs="1" />
+				<element type="camera_sync_trigger_period" minOccurs="0" maxOccurs="1" />
+				<element type="camera_sync_trigger_transition_delay" minOccurs="0" maxOccurs="1" />
+				<element type="camera_sync_trigger_multiplier" minOccurs="0" maxOccurs="1" />
+				<element type="motion_pulse_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="beeper_external" minOccurs="0" maxOccurs="1" />
+				<element type="camera_frames_per_pulse" minOccurs="0" maxOccurs="1" />
+				<element type="camera_frames_per_second_remainder" minOccurs="0" maxOccurs="1" />
+				<element type="camera_frame_grab_period" minOccurs="0" maxOccurs="1" />
+				<element type="camera_frame_grab_period_multiplier" minOccurs="0" maxOccurs="1" />
+				<element type="camera_frame_grab_on_time" minOccurs="0" maxOccurs="1" />
+				<element type="camera_arc_on" minOccurs="0" maxOccurs="1" />
+				<element type="pipe_head_lights" minOccurs="0" maxOccurs="1" />
+				<element type="servo_velocity_smoothing_constant" minOccurs="0" maxOccurs="1" />
+				<element type="power_monitoring_fault" minOccurs="0" maxOccurs="1" />
+				<element type="servo_velocity_rise_time_smoothing_constant" minOccurs="0" maxOccurs="1" />
+				<element type="pump_input_power" minOccurs="0" maxOccurs="1" />
+				<element type="is_input_power_110" minOccurs="0" maxOccurs="*" />
+				<element type="software_estop_reset" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--power-->
+				<element type="touch_sense_enable" minOccurs="0" maxOccurs="1" />
+				<element type="is_short_circuit" minOccurs="0" maxOccurs="1" />
+				<element type="vp_enable" minOccurs="0" maxOccurs="1" />
+				<element type="arc_starter_enable" minOccurs="0" maxOccurs="*" />
+				<element type="arc_enable" minOccurs="0" maxOccurs="*" />
+				<element type="amperage_telemetry_input" minOccurs="0" maxOccurs="1" />
+				<element type="avc_sense_connector_select" minOccurs="0" maxOccurs="1" />
+				<element type="mig_relay_switch" minOccurs="0" maxOccurs="1" />
+				<element type="arc_on" minOccurs="0" maxOccurs="*" />
+				<element type="hot_wire_temp_fault" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_primary_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_background_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_setpoint" minOccurs="1" maxOccurs="1" />
+				<element type="amperage_primary_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_background_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_telemetry" minOccurs="1" maxOccurs="1" />
+				<element type="voltage_primary_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_background_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_telemetry" minOccurs="1" maxOccurs="1" />
+				<element type="voltage_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_deadband" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_square_wave_period" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_square_wave_period_multiplier" minOccurs="0" maxOccurs="1" />
+				<element type="mig_pulse_settings" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_p_term" minOccurs="0" maxOccurs="1" />
+				<element type="open_loop_on_time" minOccurs="0" maxOccurs="1" />
+				<element type="open_loop_on_time_multiplier" minOccurs="0" maxOccurs="1" />
+				<element type="min_on_time" minOccurs="0" maxOccurs="1" />
+				<element type="max_on_time" minOccurs="0" maxOccurs="1" />
+				<element type="mig_process_select" minOccurs="0" maxOccurs="1" />
+				<element type="dt_current" minOccurs="0" maxOccurs="1" />
+				<element type="dt_current_time" minOccurs="0" maxOccurs="1" />
+				<element type="pulse_average_voltage_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="detect_short_voltage" minOccurs="0" maxOccurs="1" />
+				<element type="clear_short_voltage" minOccurs="0" maxOccurs="1" />
+				<element type="clear_short_ramp_rate" minOccurs="0" maxOccurs="1" />
+				<element type="mig_pulse_exponential_decay_factor" minOccurs="0" maxOccurs="1" />
+				<element type="dynamics_threshold_voltage" minOccurs="0" maxOccurs="1" />
+				<element type="dynamics_wetting_amps" minOccurs="0" maxOccurs="1" />
+				<element type="dynamics_wetting_time" minOccurs="0" maxOccurs="1" />
+				<element type="dynamics_wetting_ramp_rate" minOccurs="0" maxOccurs="1" />
+				<element type="mig_arc_start_mode" minOccurs="0" maxOccurs="1" />
+				<element type="mig_arc_start_initial_amps" minOccurs="0" maxOccurs="1" />
+				<element type="mig_arc_start_initial_amps_time" minOccurs="0" maxOccurs="1" />
+				<element type="mig_arc_start_initial_amps_multiplier" minOccurs="0" maxOccurs="1" />
+				<element type="mig_process_enabled" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dynamics_short_status" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dynamics_start_delay" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dynamics_max_current" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_detachment_current" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_burnback_current" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_detachment_wetting_time" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_min_burnback_time" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_detachment_ramp_rate" minOccurs="0" maxOccurs="1" />
+				<element type="pulse_average_current_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="pulse_is_telemetry_valid" minOccurs="0" maxOccurs="1" />
+				<element type="mig_open_circuit_current" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_blast_ramp_rate" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_burnback_ramp_rate" minOccurs="0" maxOccurs="1" />
+				<element type="software_arc_pulse_state" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_pre_detachment_ramp_rate" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_energy_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_energy_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="mig_cv_average_period" minOccurs="0" maxOccurs="1" />
+				<element type="mig_dip_detachment_wait_time" minOccurs="0" maxOccurs="1" />
+				<element type="exponential_decay_period" minOccurs="0" maxOccurs="1" />
+				<element type="power_telemetry_1" minOccurs="0" maxOccurs="1" />
+				<element type="power_telemetry_2" minOccurs="0" maxOccurs="1" />
+				<element type="power_telemetry_3" minOccurs="0" maxOccurs="1" />
+				<element type="power_telemetry_4" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_telemetry_gain" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_telemetry_offset" minOccurs="0" maxOccurs="1" />
+				<element type="current_telemetry_gain" minOccurs="0" maxOccurs="1" />
+				<element type="current_telemetry_offset" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--gas_controller-->
+				<element type="shield_enable" minOccurs="0" maxOccurs="1" />
+				<element type="shield_flow_rate" minOccurs="0" maxOccurs="1" />
+				<element type="shield_flow_in" minOccurs="0" maxOccurs="1" />
+				<element type="trail_enable" minOccurs="0" maxOccurs="1" />
+				<element type="trail_flow_rate" minOccurs="0" maxOccurs="1" />
+				<element type="trail_flow_in" minOccurs="0" maxOccurs="1" />
+				<element type="plasma_enable" minOccurs="0" maxOccurs="1" />
+				<element type="plasma_flow_rate" minOccurs="0" maxOccurs="1" />
+				<element type="plasma_flow_in" minOccurs="0" maxOccurs="1" />
+				<element type="backup_enable" minOccurs="0" maxOccurs="1" />
+				<element type="backup_flow_rate" minOccurs="0" maxOccurs="1" />
+				<element type="backup_flow_in" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--proximity_sensor-->
+				<element type="warning" minOccurs="1" maxOccurs="1" />
+				<element type="error" minOccurs="1" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--coolant-->
+				<element type="cooler_enable" minOccurs="0" maxOccurs="1" />
+				<element type="water_flow_in" minOccurs="0" maxOccurs="1" />
+				<element type="water_flow_sense" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--wire_manipulator-->
+				<element type="enable_up_down" minOccurs="0" maxOccurs="1" />
+				<element type="direction_up_down" minOccurs="0" maxOccurs="1" />
+				<element type="enable_in_out" minOccurs="0" maxOccurs="1" />
+				<element type="direction_in_out" minOccurs="0" maxOccurs="1" />
+				<element type="side_switch" minOccurs="1" maxOccurs="1" />
+				<element type="servo_side_switch" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--auxiliary_power-->
+				<element type="enable" minOccurs="1" maxOccurs="1" />
+				<element type="overtemp" minOccurs="0" maxOccurs="1" />
+				<element type="is_enabled" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_primary_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_background_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_primary_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_background_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="amperage_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_primary_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_background_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="voltage_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="contactor_status" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--weldhead-->
+				<element type="travel_jog_pos" minOccurs="0" maxOccurs="1" />
+				<element type="travel_jog_neg" minOccurs="0" maxOccurs="1" />
+				<element type="wire_jog_pos" minOccurs="0" maxOccurs="1" />
+				<element type="wire_jog_neg" minOccurs="0" maxOccurs="1" />
+				<element type="avc_jog_pos" minOccurs="0" maxOccurs="1" />
+				<element type="avc_jog_neg" minOccurs="0" maxOccurs="1" />
+				<element type="osc_jog_pos" minOccurs="0" maxOccurs="1" />
+				<element type="osc_jog_neg" minOccurs="0" maxOccurs="1" />
+				<element type="seq_start" minOccurs="0" maxOccurs="1" />
+				<element type="seq_stop" minOccurs="0" maxOccurs="1" />
+				<element type="seq_adv" minOccurs="0" maxOccurs="1" />
+				<element type="wire_enable" minOccurs="0" maxOccurs="1" />
+				<element type="sel_0" minOccurs="0" maxOccurs="1" />
+				<element type="sel_1" minOccurs="0" maxOccurs="1" />
+				<element type="sel_2" minOccurs="0" maxOccurs="1" />
+				<element type="steering_control" minOccurs="0" maxOccurs="1" />
+				<element type="fault_active" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--keypad-->
+				<element type="led_power" minOccurs="1" maxOccurs="1" />
+				<element type="led_seq_start" minOccurs="1" maxOccurs="1" />
+				<element type="tube_head_led_pseq_start" minOccurs="1" maxOccurs="1" />
+				<element type="led_seq_stop" minOccurs="1" maxOccurs="1" />
+				<element type="led_purge" minOccurs="1" maxOccurs="1" />
+				<element type="led_homing" minOccurs="1" maxOccurs="1" />
+				<element type="led_weld_test" minOccurs="1" maxOccurs="1" />
+				<element type="led_teach" minOccurs="1" maxOccurs="1" />
+				<element type="c0" minOccurs="1" maxOccurs="1" />
+				<element type="r0" minOccurs="1" maxOccurs="1" />
+				<element type="encoder_A" minOccurs="1" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--pendant-->
+				<element type="start" minOccurs="0" maxOccurs="1" />
+				<element type="stop" minOccurs="0" maxOccurs="1" />
+				<element type="home" minOccurs="0" maxOccurs="1" />
+				<element type="interlock" minOccurs="0" maxOccurs="1" />
+				<element type="jog" minOccurs="0" maxOccurs="1" />
+				<element type="gas" minOccurs="0" maxOccurs="1" />
+				<element type="osc" minOccurs="0" maxOccurs="1" />
+				<element type="led" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--timer IO-->
+				<element type="on" minOccurs="1" maxOccurs="1" />
+				<element type="off" minOccurs="1" maxOccurs="1" />
+				<element type="multiplier_telemetry" minOccurs="1" maxOccurs="1" />
+				<element type="multiplier_setpoint" minOccurs="1" maxOccurs="1" />
+				<element type="control_telemetry" minOccurs="1" maxOccurs="1" />
+				<element type="control_setpoint" minOccurs="1" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--wire_spool-->
+				<element type="enable_solenoid" minOccurs="1" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--home_switch-->
+				<element type="home_switch_input" minOccurs="1" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--servo-->
+				<element type="brakes" minOccurs="0" maxOccurs="1" />
+				<element type="enable_fwd" minOccurs="0" maxOccurs="1" />
+				<element type="enable_rev" minOccurs="0" maxOccurs="1" />
+				<element type="back_emf" minOccurs="0" maxOccurs="1" />
+				<element type="velocity_primary_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="velocity_background_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="current_limit" minOccurs="0" maxOccurs="1" />
+				<element type="enable" minOccurs="0" maxOccurs="1" />
+				<element type="feedback_select" minOccurs="0" maxOccurs="1" />
+				<element type="pulse_enable" minOccurs="0" maxOccurs="1" />
+				<element type="velocity_p_term" minOccurs="0" maxOccurs="1" />
+				<element type="velocity_i_term" minOccurs="0" maxOccurs="1" />
+				<element type="current_i_term" minOccurs="0" maxOccurs="1" />
+				<element type="velocity_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="capacitor_select" minOccurs="0" maxOccurs="1" />
+				<element type="current_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="open_loop_duty" minOccurs="0" maxOccurs="1" />
+				<element type="open_loop_enable" minOccurs="0" maxOccurs="1" />
+				<element type="open_loop_direction" minOccurs="0" maxOccurs="1" />
+				<element type="current_p_term" minOccurs="0" maxOccurs="1" />
+				<element type="brake_relay" minOccurs="0" maxOccurs="1" />
+				<element type="reverse_velocity_telemetry" minOccurs="0" maxOccurs="1" />
+				<element type="current_component" minOccurs="0" maxOccurs="1" />
+				<element type="brake_active" minOccurs="0" maxOccurs="1" />
+				<element type="current_p_multiplier" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--stepper-->
+				<element type="brakes" minOccurs="0" maxOccurs="1" />
+				<element type="high_period_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="low_period_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="high_period_setpoint_multiplier" minOccurs="0" maxOccurs="1" />
+				<element type="low_period_setpoint_multiplier" minOccurs="0" maxOccurs="1" />
+				<element type="enable" minOccurs="0" maxOccurs="1" />
+				<element type="step_clock_enable" minOccurs="0" maxOccurs="1" />
+				<element type="direction" minOccurs="0" maxOccurs="1" />
+				<element type="pulse_enable" minOccurs="0" maxOccurs="1" />
+				<element type="acceleration_time_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="acceleration_time_setpoint_multiplier" minOccurs="0" maxOccurs="1" />
+				<element type="microstepping_resolution" minOccurs="0" maxOccurs="1" />
+				<element type="current_adjust_resistor" minOccurs="0" maxOccurs="1" />
+				<element type="current_reduction_resistor" minOccurs="0" maxOccurs="1" />
+				<element type="step_counts" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--position-->
+				<element type="potentiometer" minOccurs="0" maxOccurs="1" />
+				<element type="encoder" minOccurs="0" maxOccurs="1" />
+				<element type="encoder_counts_per_period" minOccurs="0" maxOccurs="1" />
+				<element type="encoder_count_period" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--hard_limits-->
+				<element type="limit_input" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--spares-->
+				<element type="spare_analog_output_1" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_output_2" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_output_3" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_output_4" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_output_5" minOccurs="0" maxOccurs="1" />
+
+				<element type="spare_analog_input_0" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_input_1" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_input_2" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_input_3" minOccurs="0" maxOccurs="1" />
+
+				<element type="spare_analog_input_4" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_input_5" minOccurs="0" maxOccurs="1" />
+
+				<element type="spare_analog_input_6" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_input_7" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_input_8" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_input_9" minOccurs="0" maxOccurs="1" />
+				<element type="spare_analog_input_10" minOccurs="0" maxOccurs="1" />
+
+				<element type="spare_digital_output_0" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_1" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_2" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_3" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_4" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_5" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_6" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_7" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_8" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_9" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_10" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_11" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_12" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_13" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_14" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_output_15" minOccurs="0" maxOccurs="1" />
+
+				<element type="spare_digital_input_0" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_input_1" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_input_2" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_input_3" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_input_4" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_input_5" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_input_6" minOccurs="0" maxOccurs="1" />
+				<element type="spare_digital_input_7" minOccurs="0" maxOccurs="1" />
+
+				<element type="gpio_digital_input_3" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_input_8" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_input_9" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_input_10" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_input_11" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_input_14" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_input_15" minOccurs="0" maxOccurs="1" />
+
+				<element type="gpio_digital_output_0" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_output_1" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_output_2" minOccurs="0" maxOccurs="1" />
+				<element type="gpio_digital_output_3" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--hardware detection-->
+				<element type="has_arc_starter" minOccurs="0" maxOccurs="1" />
+				<element type="has_hotwire" minOccurs="0" maxOccurs="1" />
+				<element type="has_external_estop" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--external-->
+				<element type="external_digital_input_0" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_1" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_2" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_3" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_4" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_5" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_6" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_7" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_8" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_9" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_10" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_11" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_12" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_13" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_14" minOccurs="0" maxOccurs="1" />
+				<element type="external_digital_input_15" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--high_speed_data-->
+				<element type="control" minOccurs="0" maxOccurs="1" />
+				<element type="is_busy" minOccurs="0" maxOccurs="1" />
+				<element type="is_last_page" minOccurs="0" maxOccurs="1" />
+				<element type="is_full" minOccurs="0" maxOccurs="1" />
+				<element type="bytes_1_0" minOccurs="0" maxOccurs="1" />
+				<element type="bytes_3_2" minOccurs="0" maxOccurs="1" />
+				<element type="bytes_5_4" minOccurs="0" maxOccurs="1" />
+				<element type="bytes_7_6" minOccurs="0" maxOccurs="1" />
+				<element type="bytes_9_8" minOccurs="0" maxOccurs="1" />
+				<element type="bytes_11_10" minOccurs="0" maxOccurs="1" />
+				<element type="bytes_13_12" minOccurs="0" maxOccurs="1" />
+				<element type="bytes_15_14" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--firmware_test-->
+				<element type="register_0" minOccurs="0" maxOccurs="1" />
+				<element type="register_1" minOccurs="0" maxOccurs="1" />
+				<element type="register_2" minOccurs="0" maxOccurs="1" />
+				<element type="register_3" minOccurs="0" maxOccurs="1" />
+				<element type="register_4" minOccurs="0" maxOccurs="1" />
+				<element type="register_5" minOccurs="0" maxOccurs="1" />
+				<element type="register_6" minOccurs="0" maxOccurs="1" />
+				<element type="register_7" minOccurs="0" maxOccurs="1" />
+				<element type="register_8" minOccurs="0" maxOccurs="1" />
+				<element type="register_9" minOccurs="0" maxOccurs="1" />
+			</group>
+			<group order="seq">
+				<!--analog servo-->
+				<element type="enable_forward" minOccurs="0" maxOccurs="1" />
+				<element type="enable_reverse" minOccurs="0" maxOccurs="1" />
+				<element type="direction_selection" minOccurs="0" maxOccurs="1" />
+				<element type="velocity_primary_setpoint" minOccurs="0" maxOccurs="1" />
+				<element type="velocity_background_setpoint" minOccurs="0" maxOccurs="1" />
+			</group>
+		</group>
+	</ElementType>
+	<!--DEFINE ELEMENTS (SYSTEM-IO)-->
+	<ElementType name="properties" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (CHANNEL)-->
+		<element type="channel" minOccurs="0" maxOccurs="1" />
+		<element type="read_input_period_ms" minOccurs="0" maxOccurs="1" />
+		<element type="min_interval_between_writes_ms" minOccurs="0" maxOccurs="1" />
+		<element type="device_address" minOccurs="0" maxOccurs="*" />
+		<element type="base" minOccurs="0" maxOccurs="1" />
+		<element type="count" minOccurs="0" maxOccurs="1" />
+		<element type="limit" minOccurs="0" maxOccurs="1" />
+		<element type="enabled_pins" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="camera_light_enable" model="closed"  dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="power_up_type" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="power_enable" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="fan_enable" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="wire_stuck_check_enable" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="wire_stuck_check_status" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="avc_sense_select" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="beeper" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="touch_sense_enable" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="is_short_circuit" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="watchdog" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="cs300_temperature_fault" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="checkType" />
+	</ElementType>
+	<ElementType name="estop" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="lockout_mode" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="chopper_overtemp" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="work_detect" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="servo_fault" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="foot_pedal_enable" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="checkType" />
+	</ElementType>
+	<ElementType name="foot_pedal_control" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+	<ElementType name="dacMode" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="critical_fault_circuit" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="weldhead_switch_active" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="version" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="digital_head_ID" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="overtemp" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="is_enabled" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="contactor_status" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="hotwire_plasma_contactor" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="control_board_firmware_version" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="servo_board_firmware_version" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="stepper_board_firmware_version" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="control_board_firmware_revision" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="servo_board_firmware_revision" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="stepper_board_firmware_revision" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="camera_sync_trigger_mode" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="camera_sync_trigger_period" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="camera_sync_trigger_transition_delay" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="camera_sync_trigger_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="motion_pulse_setpoint" model="closed"  dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="camera_frames_per_pulse" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="camera_frames_per_second_remainder" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="camera_frame_grab_period" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="camera_frame_grab_period_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="camera_frame_grab_on_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="camera_arc_on" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="pipe_head_lights" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="servo_velocity_smoothing_constant" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="power_monitoring_fault" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="servo_velocity_rise_time_smoothing_constant" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="pump_input_power" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="beeper_external" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<!--DEFINE ELEMENTS (SYSTEM-IO-PROPERTIES)-->
+	<ElementType name="channel" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="read_input_period_ms" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="min_interval_between_writes_ms" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="device_address" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="base" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (BASE)-->
+		<element type="digital_out" minOccurs="0" maxOccurs="1" />
+		<element type="digital_in" minOccurs="0" maxOccurs="1" />
+		<element type="analog_out" minOccurs="0" maxOccurs="1" />
+		<element type="analog_in" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="count" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (COUNT)-->
+		<element type="digital_out" minOccurs="1" maxOccurs="1" />
+		<element type="digital_in" minOccurs="1" maxOccurs="1" />
+		<element type="analog_out" minOccurs="1" maxOccurs="1" />
+		<element type="analog_in" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="limit" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (LIMIT)-->
+		<element type="input" minOccurs="1" maxOccurs="1" />
+		<element type="output" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="input" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (INPUT)-->
+		<element type="digital_high" minOccurs="1" maxOccurs="1" />
+		<element type="digital_low" minOccurs="1" maxOccurs="1" />
+		<element type="analog_high" minOccurs="1" maxOccurs="1" />
+		<element type="analog_low" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="output" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (OUTPUT)-->
+		<element type="digital_high" minOccurs="1" maxOccurs="1" />
+		<element type="digital_low" minOccurs="1" maxOccurs="1" />
+		<element type="analog_high" minOccurs="1" maxOccurs="1" />
+		<element type="analog_low" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="enabled_pins" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (ENABLED_PINS)-->
+		<element type="pin" minOccurs="1" maxOccurs="*" />
+		<element type="gpio" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+	<ElementType name="digital_high" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="digital_low" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="analog_high" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="analog_low" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="digital_out" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="digital_in" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="analog_out" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="analog_in" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="pin" model="closed" dt:type="string" content="textOnly"/>
+	<ElementType name="gpio" model="closed" dt:type="string" content="textOnly"/>
+
+	<!--DEFINE ELEMENTS (IO/POWER)-->
+	<ElementType name="vp_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="arc_starter_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="checkType" />
+	</ElementType>
+	<ElementType name="arc_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="amperage_telemetry_input" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="avc_sense_connector_select" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="mig_relay_switch" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="arc_on" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="hot_wire_temp_fault" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+
+	<ElementType name="amperage_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="amperage_primary_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="amperage_background_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="amperage_primary_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="amperage_background_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="amperage_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="voltage_primary_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="voltage_background_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="voltage_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+
+		<attribute type="offset" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+
+	<ElementType name="voltage_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="voltage_deadband" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="voltage_square_wave_period" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="voltage_square_wave_period_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_pulse_settings" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="voltage_p_term" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="open_loop_on_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="open_loop_on_time_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="min_on_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="max_on_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_process_select" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="dt_current" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="dt_current_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="pulse_average_voltage_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="detect_short_voltage" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="clear_short_voltage" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="clear_short_ramp_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_pulse_exponential_decay_factor" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="dynamics_threshold_voltage" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="dynamics_wetting_amps" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="dynamics_wetting_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="dynamics_wetting_ramp_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_arc_start_mode" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_arc_start_initial_amps" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_arc_start_initial_amps_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_arc_start_initial_amps_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_process_enabled" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="mig_dynamics_short_status" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dynamics_start_delay" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dynamics_max_current" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_detachment_current" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_burnback_current" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_detachment_wetting_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_min_burnback_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_detachment_ramp_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="pulse_average_current_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="pulse_is_telemetry_valid" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_open_circuit_current" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_blast_ramp_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_burnback_ramp_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="software_arc_pulse_state" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="mig_dip_pre_detachment_ramp_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_energy_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_energy_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_cv_average_period" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="mig_dip_detachment_wait_time" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="exponential_decay_period" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="power_telemetry_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="power_telemetry_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="power_telemetry_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="power_telemetry_4" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="voltage_telemetry_gain" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="voltage_telemetry_offset" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="current_telemetry_gain" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="current_telemetry_offset" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="is_input_power_110" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="software_estop_reset" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<!--DEFINE ELEMENTS (IO/GAS CONTROLLER)-->
+	<ElementType name="shield_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="shield_flow_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+
+		<attribute type="offset" />
+	</ElementType>
+
+	<ElementType name="shield_flow_in" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="trail_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="trail_flow_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="trail_flow_in" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="plasma_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="plasma_flow_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="plasma_flow_in" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="backup_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="backup_flow_rate" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="backup_flow_in" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/PROXIMITY SENSOR)-->
+	<ElementType name="warning" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="yes" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="error" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/COOLANT)-->
+	<ElementType name="cooler_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="water_flow_in" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="water_flow_sense" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/WIRE MANIPULATOR)-->
+	<ElementType name="enable_up_down" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="direction_up_down" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="enable_in_out" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="direction_in_out" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="side_switch" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="servo_side_switch" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/HOTWIRE)-->
+	<ElementType name="enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/WELD HEAD)-->
+	<ElementType name="travel_jog_pos" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="travel_jog_neg" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="wire_jog_pos" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="wire_jog_neg" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="avc_jog_pos" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="avc_jog_neg" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="osc_jog_pos" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="osc_jog_neg" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="seq_start" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="seq_stop" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="seq_adv" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="wire_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="sel_0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="sel_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="sel_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="steering_control" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+	</ElementType>
+	<ElementType name="fault_active" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/KEYPAD)-->
+	<ElementType name="led_power" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="led_seq_start" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="tube_head_led_pseq_start" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="led_seq_stop" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="led_purge" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="led_homing" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="led_weld_test" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="led_teach" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="c0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="r0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="encoder_A" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/PENDANT)-->
+	<ElementType name="start" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="stop" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="checkType" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="home" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="interlock" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="jog" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gas" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="osc" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="led" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/TIMER)-->
+	<ElementType name="on" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="off" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="multiplier_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="multiplier_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="control_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="control_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/SERVO)-->
+	<ElementType name="brakes" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="enable_fwd" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="enable_rev" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="back_emf" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="velocity_primary_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="velocity_background_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="velocity_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="current_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="open_loop_duty" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="open_loop_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="open_loop_direction" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="current_limit" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="feedback_select" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="pulse_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="capacitor_select" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="velocity_p_term" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="velocity_i_term" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="current_i_term" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="current_p_term" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="brake_relay" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="brake_active" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="checkType" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+		<attribute type="checkType" />
+	</ElementType>
+	<ElementType name="reverse_velocity_telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="current_p_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="current_component" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/STEPPER)-->
+	<ElementType name="high_period_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="low_period_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="high_period_setpoint_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="low_period_setpoint_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="step_clock_enable" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="direction" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="acceleration_time_setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="acceleration_time_setpoint_multiplier" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="microstepping_resolution" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="current_adjust_resistor" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="current_reduction_resistor" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="step_counts" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="is_twos_complemented" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+		<attribute type="is_twos_complemented" />
+	</ElementType>
+
+	<ElementType name="potentiometer" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="encoder" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="is_twos_complemented" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+		<attribute type="is_twos_complemented" />
+	</ElementType>
+	<ElementType name="encoder_counts_per_period" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="encoder_count_period" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<!--DEFINE ELEMENTS (HARDLIMITS)-->
+	<ElementType name="limit_input" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/SPARES)-->
+	<ElementType name="spare_analog_output_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_output_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_output_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_output_4" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_output_5" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_4" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_5" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_6" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_7" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_8" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_9" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_analog_input_10" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="analog_high" required="no" dt:type="string" />
+		<AttributeType name="analog_low" required="no" dt:type="string" />
+		<AttributeType name="digital_high" required="no" dt:type="string" />
+		<AttributeType name="digital_low" required="no" dt:type="string" />
+		<attribute type="digital_high" />
+		<attribute type="digital_low" />
+		<attribute type="analog_high" />
+		<attribute type="analog_low" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="spare_digital_output_0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_4" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_5" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_6" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_7" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_8" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_9" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_10" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_11" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_12" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_13" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_14" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_output_15" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_input_0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="spare_digital_input_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_input_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_input_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_input_4" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_input_5" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_input_6" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="spare_digital_input_7" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<AttributeType name="mask" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+		<attribute type="mask" />
+	</ElementType>
+	<ElementType name="gpio_digital_input_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_input_8" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_input_9" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_input_10" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_input_11" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_input_14" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_input_15" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_output_0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_output_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_output_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="gpio_digital_output_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="external_digital_input_0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_4" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_5" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_6" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_7" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_8" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_9" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_10" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_11" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_12" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_13" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_14" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="external_digital_input_15" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="register_0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_1" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_3" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_4" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_5" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_6" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_7" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_8" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+	<ElementType name="register_9" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+	</ElementType>
+
+	<ElementType name="has_arc_starter" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="has_hotwire" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="has_external_estop" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="control" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="is_busy" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="is_last_page" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="is_full" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="bytes_1_0" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="bytes_3_2" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="bytes_5_4" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="bytes_7_6" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="bytes_9_8" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="bytes_11_10" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="bytes_13_12" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<ElementType name="bytes_15_14" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/WIRE SPOOL)-->
+	<ElementType name="enable_solenoid" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (IO/HOME SWITCH)-->
+	<ElementType name="home_switch_input" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<AttributeType name="bit" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<attribute type="bit" />
+	</ElementType>
+	
+	<!--DEFINE ELEMENTS (ANALOG SERVO)-->
+	<ElementType name="enable_forward" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="enable_reverse" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+	<ElementType name="direction_selection" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="offset" required="yes" dt:type="string" />
+		<attribute type="offset" />
+		<AttributeType name="bit" required="no" dt:type="string" />
+		<attribute type="bit" />
+	</ElementType>
+</Schema>

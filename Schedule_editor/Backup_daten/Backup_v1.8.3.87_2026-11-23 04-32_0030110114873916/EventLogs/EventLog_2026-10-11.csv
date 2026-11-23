@@ -1,0 +1,186 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+04:07:22:431|0|USER LOGIN|ADMIN
+
+04:07:22:433|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:07:30:332|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+04:07:30:433|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+04:07:30:534|3|SCHEDULE LOADED|0402-Hotpass1
+
+04:07:34:175|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+04:30:13:162|1|ALARM|[AXI012] The wm-inout axis failed to jog. Reason: [AXI021] The system failed to move the axis' motor.
+[AXI028] The direction of motion was towards the standing limit. Try to move away from this limit.
+
+
+
+
+04:30:18:423|1|ALARM|[AXI012] The wm-inout axis failed to jog. Reason: [AXI021] The system failed to move the axis' motor.
+[AXI028] The direction of motion was towards the standing limit. Try to move away from this limit.
+
+
+
+
+04:40:14:615|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:41:59:918|1|ALARM|[MOT008] Positive limit reached: wm-inout
+
+
+04:42:00:720|1|ALARM|[AXI012] The wm-inout axis failed to jog. Reason: [AXI021] The system failed to move the axis' motor.
+[AXI028] The direction of motion was towards the standing limit. Try to move away from this limit.
+
+
+
+
+04:44:17:396|10|WELD MODE CHANGED|WELD
+
+04:44:18:424|10|WELD MODE CHANGED|TEST
+
+04:52:07:503|3|SCHEDULE LOADED|0404-Fill-OUT
+
+04:52:07:503|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+04:52:19:103|7|WELD STARTED|
+
+04:56:13:959|8|WELD STOPPED|
+
+05:06:16:913|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+05:06:26:811|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+05:16:11:412|1|ALARM|[MOT008] Positive limit reached: osc
+
+
+05:16:13:192|1|ALARM|[AXI012] The osc axis failed to jog. Reason: [AXI021] The system failed to move the axis' motor.
+[AXI028] The direction of motion was towards the standing limit. Try to move away from this limit.
+
+
+
+
+05:16:22:612|1|ALARM|[MOT009] Negative limit reached: osc
+
+
+05:16:22:952|1|ALARM|[AXI012] The osc axis failed to jog. Reason: [AXI021] The system failed to move the axis' motor.
+[AXI028] The direction of motion was towards the standing limit. Try to move away from this limit.
+
+
+
+
+05:16:36:841|3|SCHEDULE LOADED|0404-Fill-OUT
+
+05:16:47:629|3|SCHEDULE LOADED|0404-Fill-OUT
+
+05:18:19:812|1|ALARM|[MOT002] The osc axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.
+
+05:29:20:556|1|ALARM|[CAL021] Calibration results saved successfully.
+
+05:29:26:613|1|ALARM|[MOT008] Positive limit reached: osc
+
+
+05:29:35:629|3|SCHEDULE LOADED|0404-Fill-OUT
+
+05:29:42:020|1|ALARM|[MOT009] Negative limit reached: osc
+
+
+05:30:54:413|1|ALARM|[MOT002] The osc axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.
+
+05:32:05:412|1|ALARM|[MOT002] The osc axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.
+
+05:33:09:070|1|ALARM|[CAL021] Calibration results saved successfully.
+
+05:33:12:155|3|SCHEDULE LOADED|0404-Fill-OUT
+
+05:33:18:612|1|ALARM|[MOT008] Positive limit reached: osc
+
+
+05:33:49:792|1|ALARM|[AXI012] The osc axis failed to jog. Reason: [AXI021] The system failed to move the axis' motor.
+[AXI028] The direction of motion was towards the standing limit. Try to move away from this limit.
+
+
+
+
+05:33:59:342|1|ALARM|[AXI012] The osc axis failed to jog. Reason: [AXI021] The system failed to move the axis' motor.
+[AXI028] The direction of motion was towards the standing limit. Try to move away from this limit.
+
+
+
+
+05:34:07:412|1|ALARM|[MOT009] Negative limit reached: osc
+
+
+05:36:04:330|1|ALARM|[CAL021] Calibration results saved successfully.
+
+05:37:35:477|1|ALARM|[CAL021] Calibration results saved successfully.
+
+05:37:38:886|3|SCHEDULE LOADED|0404-Fill-OUT
+
+05:40:04:812|1|ALARM|[MOT008] Positive limit reached: osc
+
+
+05:40:24:012|1|ALARM|[MOT009] Negative limit reached: osc
+
+
+05:40:32:812|1|ALARM|[MOT009] Negative limit reached: osc
+
+
+06:45:38:305|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:45:38:344|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:57:47:199|1|ALARM|[DEV007] Failed to enable the touch sensor.
+
+06:57:47:210|1|ALARM|[AXI012] The wire axis failed to jog. Reason: [AXI024] The system failed to enable the touch sensor.
+
+
+
+
+06:57:47:231|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:58:11:090|3|SCHEDULE LOADED|0404-Fill-OUT
+
+07:04:15:747|7|WELD STARTED|
+
+07:04:43:973|9|WELD ABORTED|
+
+07:08:47:096|9|WELD ABORTED|
+
+07:09:48:234|7|WELD STARTED|
+
+07:14:39:944|7|WELD STARTED|
+
+07:15:34:089|9|WELD ABORTED|
+
+07:15:34:131|1|ALARM|[CAL021] Calibration results saved successfully.
+
+07:15:37:982|9|WELD ABORTED|
+
+07:15:38:418|3|SCHEDULE LOADED|0404-Fill-OUT
+
+07:15:45:782|1|ALARM|[API002] PRI WIRE (SEGMENT 1) can not be set to 1000.00000cm/min since the maximum acceptable value is 253.99986cm/min. Please enter a value of 253.99986cm/min or less.
+
+
+07:16:06:281|7|WELD STARTED|
+
+07:17:52:555|3|SCHEDULE LOADED|0404-Fill-OUT
+
+07:33:17:248|4|SCHEDULE SAVED|0404-Fill-OUT
+
+07:33:17:249|1|ALARM|[SCH008] Saved schedule 0404-Fill-OUT.
+
+07:33:22:412|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+07:33:22:889|11|USER LOGOUT|ADMIN
+

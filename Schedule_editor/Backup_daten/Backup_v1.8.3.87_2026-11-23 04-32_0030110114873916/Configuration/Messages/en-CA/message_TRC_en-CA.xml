@@ -1,0 +1,16 @@
+<language fileType="TRC" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>Groove tracking sensitivity value is less than zero. Choose a value between 0 and 1 to begin a weld with groove tracking.</text>
+		<desc>Tracking sensitivity can only have values between 0.0 and 1.0.</desc>
+	</str>
+	<str id="2">
+		<text>Groove tracking could not begin in replay mode since no corrections are available from the previous pass. Record a pass in amperage mode before using replay.</text>
+		<desc>To enable groove tracker in 'replay' mode a previous pass should have been run in 'amperage' mode to store corrections for that pass.</desc>
+	</str>
+</language>

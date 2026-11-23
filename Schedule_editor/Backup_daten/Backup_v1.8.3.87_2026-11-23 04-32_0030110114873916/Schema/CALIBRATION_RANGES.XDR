@@ -1,0 +1,58 @@
+<Schema name="CalibrationRanges" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+
+	<ElementType name="calibration_ranges" model="closed" content="eltOnly" order="seq">
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="enabled" minOccurs="1" maxOccurs="1" />
+		<element type="setpoint" minOccurs="1" maxOccurs="1" />
+		<element type="telemetry" minOccurs="1" maxOccurs="1" />
+		<element type="vpi" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+	<ElementType name="enabled" model="closed" dt:type="string" content="textOnly" />
+
+	<ElementType name="setpoint" model="closed" content="eltOnly" order="seq">
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	
+	<ElementType name="telemetry" model="closed" content="eltOnly" order="seq">
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="gain" model="closed" content="eltOnly" order="seq">
+		<element type="range" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="offset" model="closed" content="eltOnly" order="seq">
+		<element type="range" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="vpi" model="closed" content="eltOnly" order="seq">
+		<element type="range" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="range" model="closed" content="empty" order="seq">
+		<AttributeType name="type" required="yes" dt:type="string" />
+		<AttributeType name="max" required="yes" dt:type="float" />
+		<AttributeType name="inclusive" required="yes" dt:type="string" />
+		<attribute type="type" />
+		<attribute type="max" />
+		<attribute type="inclusive" />
+	</ElementType>
+
+</Schema>

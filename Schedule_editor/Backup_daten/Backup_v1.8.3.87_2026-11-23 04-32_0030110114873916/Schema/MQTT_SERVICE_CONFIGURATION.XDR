@@ -1,0 +1,51 @@
+<Schema name="mqtt_service_configuration" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+
+  <ElementType name="mqtt_service_configuration" model="closed" content="eltOnly" order="seq">
+    <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="subscribed_topics" minOccurs="1" maxOccurs="1" />
+    <element type="published_topics" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (METADATA)-->
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="subscribed_topics" model="closed" content="eltOnly" order="seq">
+    <element type="topic" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="published_topics" model="closed" content="eltOnly" order="seq">
+    <AttributeType name="publish_interval_ms" required="yes" dt:type="string" />
+    <attribute type="publish_interval_ms" />
+    <element type="topic" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+  
+  <!--DEFINE ELEMENTS (METADATA)-->
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+  
+  <ElementType name="topic" model="closed" content="eltOnly" order="seq">
+    <AttributeType name="enable" required="yes" dt:type="string" />
+    <AttributeType name="qosLevel" required="no" dt:type="string" />
+    <AttributeType name="storeOffline" required="no" dt:type="string" />
+    <AttributeType name="updateOnlyOnValueChange" required="no" dt:type="string" />
+    <AttributeType name="retainOnServer" required="no" dt:type="string" />
+    <attribute type="enable" />
+    <attribute type="qosLevel" />
+    <attribute type="storeOffline" />
+    <attribute type="updateOnlyOnValueChange" />
+    <attribute type="retainOnServer" />
+    <element type="id" minOccurs="1" maxOccurs="1" />
+    <element type="name" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+  
+  <ElementType name="id" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="name" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

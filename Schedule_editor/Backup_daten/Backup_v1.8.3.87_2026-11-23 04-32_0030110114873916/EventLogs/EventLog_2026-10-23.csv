@@ -1,0 +1,155 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+03:43:08:101|0|USER LOGIN|David Blank BHR151
+
+03:43:08:105|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:43:08:147|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:43:13:513|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+03:43:13:576|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:43:17:331|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+03:43:27:097|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:43:27:591|11|USER LOGOUT|David Blank BHR151
+
+03:43:29:827|0|USER LOGIN|David Blank BHR151
+
+03:43:29:829|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:43:29:850|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:43:47:697|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:43:48:910|11|USER LOGOUT|David Blank BHR151
+
+03:43:54:110|0|USER LOGIN|David Blank BHR151
+
+03:43:54:111|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:43:54:129|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:44:03:597|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:04:134|11|USER LOGOUT|David Blank BHR151
+
+03:44:06:248|0|USER LOGIN|David Blank BHR151
+
+03:44:06:250|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:06:340|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:44:15:097|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:15:627|11|USER LOGOUT|David Blank BHR151
+
+03:44:17:433|0|USER LOGIN|David Blank BHR151
+
+03:44:17:434|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:17:454|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:44:23:097|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:23:611|11|USER LOGOUT|David Blank BHR151
+
+03:44:24:867|0|USER LOGIN|David Blank BHR151
+
+03:44:24:869|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:24:890|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:44:31:197|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:31:708|11|USER LOGOUT|David Blank BHR151
+
+03:44:33:409|0|USER LOGIN|David Blank BHR151
+
+03:44:33:411|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:44:33:431|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:46:53:103|0|USER LOGIN|David Blank BHR151
+
+03:46:53:107|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:46:53:136|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:46:57:490|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+03:46:57:546|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:48:51:125|0|USER LOGIN|David Blank BHR151
+
+03:48:51:130|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:48:51:156|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:48:55:530|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+03:48:55:585|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:48:59:393|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+03:52:10:620|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:52:10:643|1|ALARM|[MOT004] Following Error: osc
+
+03:54:53:965|0|USER LOGIN|David Blank BHR151
+
+03:54:53:969|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:54:53:998|1|ALARM|[SEC016] User David Blank BHR151 logged in with USB key.
+
+03:54:58:401|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+03:54:58:456|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:55:02:260|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+04:58:34:285|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+04:58:34:300|1|ALARM|[MOT008] Positive limit reached: osc
+
+
+04:58:34:321|1|ALARM|[MOT004] Following Error: wm-inout
+

@@ -1,0 +1,16 @@
+<language fileType="PID" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>Save the PID gain values for the %1 axis?</text>
+		<desc/>
+	</str>
+	<str id="2">
+		<text>Failed to save PID values for the %1 axis.</text>
+		<desc>%1 = axis name</desc>
+	</str>
+</language>

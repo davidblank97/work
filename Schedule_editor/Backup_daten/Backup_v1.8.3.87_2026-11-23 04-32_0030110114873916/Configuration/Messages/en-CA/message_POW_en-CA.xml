@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="POW" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>The system sensed a voltage of %1 which is too low when enabling an open circuit. The open circuit voltage should be more than %2.</text>
+		<desc>Power supply voltage too low when enabling open circuit. %1 = arc voltage. %2 = open circuit voltage.</desc>
+	</str>
+	<str id="2">
+		<text>The system sensed a voltage of %1 which is too high when enabling a short circuit. The short circuit voltage should be less than %2.</text>
+		<desc>Power supply voltage too high when enabling short circuit. %1 = arc voltage. %2 = short circuit voltage.</desc>
+	</str>
+	<str id="3">
+		<text>The arc start was aborted.</text>
+		<desc>Error occurred when starting arc.</desc>
+	</str>
+	<str id="4">
+		<text>There was an error when servicing the arc. Please check trace-logs for more details.</text>
+		<desc>Error occurred when servicing the arc.</desc>
+	</str>
+	<str id="5">
+		<text>Unable to establish an arc within %1 ms.</text>
+		<desc>Unable to establish arc within specified time frame. %1 = timeout time (ms).</desc>
+	</str>
+	<str id="6">
+		<text>Arc out.</text>
+		<desc>Arc was established and then stopped unexpectedly.</desc>
+	</str>
+	<str id="7">
+		<text>Arclink failed to initialize.</text>
+		<desc>Error occurred when initializing power supply</desc>
+	</str>
+	<str id="8">
+		<text>Power Wave is not ready.</text>
+		<desc>Could not start arc because Power Wave was not ready</desc>
+	</str>
+	<str id="10">
+		<text>Wire feeder start sequence failed.</text>
+		<desc>Error occurred when starting wire feeder sequence</desc>
+	</str>
+	<str id="11">
+		<text>Pilot Arc timeout.</text>
+		<desc>Pilot Arc took too long to strike</desc>
+	</str>
+	<str id="12">
+		<text>The arc type specified in the schedule (%1) is unknown or incompatible with the system.</text>
+		<desc>%1 = the arc type specified in the schedule. The arc type specified in the loaded schedule cannot strike on the system.</desc>
+	</str>
+	<str id="13">
+		<text>The Pilot Arc is currently not enabled. Do you want to enable the Pilot Arc?</text>
+		<desc>Pilot arc is not enabled when starting a weld. The user has the option to enable it.</desc>
+	</str>
+	<str id="14">
+		<text>Pilot Arc out.</text>
+		<desc>Pilot Arc was established and then stopped unexpectedly.</desc>
+	</str>
+	<str id="15">
+		<text>A critical fault has been detected, the system may require service. Amperage telemetry of %1 was not within the allowable range of set point %2. A user with an ADMIN or TECHNICIAN security level may login and diagnose the issue.</text>
+		<desc>Amperage telemetry went out of allowable range. Critical fault has occurred. %1 = amperage telemetry %2 = amperage set point</desc>
+	</str>
+	<str id="16">
+		<text>A critical fault has been detected, the system may require service. Voltage telemetry of %1 was not within the allowable range of set point %2. A user with an ADMIN or TECHNICIAN security level may login and diagnose the issue.</text>
+		<desc>Voltage telemetry went out of allowable range. Critical fault has occurred. %1 = voltage telemetry %2 = voltage set point</desc>
+	</str>
+	<str id="17">
+		<text>A critical fault has been detected, the system may require service. The system has detected an imbalance between the power supply modules. A user with an ADMIN or TECHNICIAN security level may login and diagnose the issue.</text>
+		<desc>System has detected an imbalance between power supply modules. Critical fault has occurred.</desc>
+	</str>
+	<str id="18">
+		<text>All critical faults have been cleared.</text>
+		<desc>All critical faults have been cleared.</desc>
+	</str>
+	<str id="19">
+		<text>Use caution, critical fault is active.</text>
+		<desc>Use caution, critical fault is active.</desc>
+	</str>
+	<str id="20">
+		<text>Verify that all connections are made according to the system connection diagrams prior to arc initiation. Failure to do so could result in a serious shock. Press %1 to enable the pilot arc.</text>
+		<desc>Warning when enabling the pilot arc. %1 = name of button to enable the pilot arc.</desc>
+	</str>
+	<str id="21">
+		<text>A critical Input Power fault has been detected on POWER MONITOR DEVICE DI, check:|1.Input power from Power source|2.Input fuses on each phase</text>
+		<desc>A critical Input Power fault has been detected on POWER_MONITOR_DEVICE DI, check input power from Power source.</desc>
+	</str>
+	<str id="22">
+		<text>A critical fault has been detected, the system may require service. The system has detected %1 on the power supply modules when the modules were disabled. A user with an ADMIN or TECHNICIAN security level may login and diagnose the issue.</text>
+		<desc>System has detected voltage on disabled power supply modules. Critical fault has occurred.%1 = voltage telemetry</desc>
+	</str>	
+</language>

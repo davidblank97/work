@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<WeldTable>
+	<metadata>
+		<schema_version/>
+		<config_version>1.5.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+  <ProcessTypes>
+    <ProcessType index="0" key="SMAW" description="Shielded Metal Arc Welding" />
+    <ProcessType index="1" key="FCAW-S" description="Self Shielded Flux Cored Arc Welding" />
+    <ProcessType index="2" key="GTAW" description="Gas Tungsten Arc Welding (pulsed and non-pulsed)" />
+    <ProcessType index="3" key="GMAW" description="Gas Metal Arc Welding (pulsed and short circuit)" />
+    <ProcessType index="4" key="GOUGE" description="Arc Gouging" />
+    <ProcessType index="5" key="PAW" description="Plasm Arc Welding" />
+    <ProcessType index="6" key="SAW" description="Submerged Arc Welding (series and non-series)" />
+    <ProcessType index="7" key="TSENSE" description="Touch Sensing" />
+    <ProcessType index="8" key="FCAW" description="Flux Cored Arc Welding (self and gas shielded)" />
+    <ProcessType index="9" key="FCAW-G" description="Gas Shielded Flux Cored Arc Welding" />
+    <ProcessType index="10" key="GTAW-P" description="Pulsed Gas Tungsten Arc Welding" />
+    <ProcessType index="11" key="GMAW-P" description="Pulsed Gas Metal Arc Welding" />
+    <ProcessType index="12" key="GMAW-S" description="Short Circuit Gas Metal Arc Welding" />
+    <ProcessType index="13" key="SAW-S" description="Series Submerged Arc Welding" />
+  </ProcessTypes>
+  <WireTypes>
+    <WireType index="0" description="------" />
+    <WireType index="1" description="N/A" />
+    <WireType index="2" description="Steel" />
+    <WireType index="3" description="Stainless" />
+    <WireType index="4" description="Aluminum" />
+    <WireType index="5" description="CrNi Alloy" />
+    <WireType index="6" description="Ni Alloy" />
+    <WireType index="7" description="NiCr Alloy" />
+    <WireType index="8" description="Copper Ni" />
+    <WireType index="9" description="Si Bronze" />
+    <WireType index="10" description="Al Bronze" />
+    <WireType index="11" description="Stick" />
+    <WireType index="12" description="Cored Wire" />
+    <WireType index="13" description="Metal Core" />
+    <WireType index="14" description="SelfShield" />
+    <WireType index="15" description="Gas Shield" />
+    <WireType index="16" description="Carbon Arc" />
+    <WireType index="17" description="L-50/L-56" />
+    <WireType index="18" description="L-50" />
+    <WireType index="19" description="L-54" />
+    <WireType index="20" description="L-56" />
+    <WireType index="21" description="L-60" />
+    <WireType index="22" description="L-70" />
+    <WireType index="23" description="L-50 Steel" />
+    <WireType index="24" description="L-54 Steel" />
+    <WireType index="25" description="L-56 Steel" />
+    <WireType index="26" description="LA-71" />
+    <WireType index="27" description="LA-75" />
+    <WireType index="28" description="LA-81" />
+    <WireType index="29" description="LA-90" />
+    <WireType index="30" description="LA-100" />
+    <WireType index="31" description="ER70S-X" />
+    <WireType index="32" description="ER70S-3" />
+    <WireType index="33" description="ER70S-4" />
+    <WireType index="34" description="ER70S-6" />
+    <WireType index="35" description="Steel SG-1" />
+    <WireType index="36" description="Steel SG-2" />
+    <WireType index="37" description="Steel SG-3" />
+    <WireType index="38" description="2xx Stnles" />
+    <WireType index="39" description="3xx Stnles" />
+    <WireType index="40" description="4xx Stnles" />
+    <WireType index="41" description="Soft Alum" />
+    <WireType index="42" description="Hard Alum" />
+    <WireType index="43" description="1100 Al" />
+    <WireType index="44" description="2319 Al" />
+    <WireType index="45" description="4043 Al" />
+    <WireType index="46" description="4047 Al" />
+    <WireType index="47" description="4145 Al" />
+    <WireType index="48" description="5183 Al" />
+    <WireType index="49" description="5356 Al" />
+    <WireType index="50" description="AlMg 5" />
+    <WireType index="51" description="AlMg4.5Mn" />
+    <WireType index="52" description="AlMg 3" />
+    <WireType index="53" description="AlSi 5" />
+    <WireType index="54" description="Al 99.5" />
+    <WireType index="55" description="NiMo-1" />
+    <WireType index="56" description="NiMo-2" />
+    <WireType index="57" description="NiMo-3" />
+    <WireType index="58" description="NiMo-7" />
+    <WireType index="59" description="NiCrMo-1" />
+    <WireType index="60" description="NiCrMo-2" />
+    <WireType index="61" description="NiCrMo-3" />
+    <WireType index="62" description="NiCrMo-4" />
+    <WireType index="63" description="NiCrMo-7" />
+    <WireType index="64" description="NiCrMo-8" />
+    <WireType index="65" description="NiCrMo-9" />
+    <WireType index="66" description="C-276" />
+    <WireType index="67" description="Copper" />
+    <WireType index="68" description="CuSi" />
+    <WireType index="69" description="CuSn" />
+    <WireType index="70" description="CuNi" />
+    <WireType index="71" description="CuAl" />
+    <WireType index="72" description="NR-5" />
+    <WireType index="73" description="NR-131" />
+    <WireType index="74" description="NR-151" />
+    <WireType index="75" description="NR-152" />
+    <WireType index="76" description="NR-202" />
+    <WireType index="77" description="NR-203 M" />
+    <WireType index="78" description="NR-203 Ni" />
+    <WireType index="79" description="NR-203NiC" />
+    <WireType index="80" description="NR-204" />
+    <WireType index="81" description="NR-207" />
+    <WireType index="82" description="NR-211 MP" />
+    <WireType index="83" description="NR-232" />
+    <WireType index="84" description="NR-305" />
+    <WireType index="85" description="NR-311" />
+    <WireType index="86" description="NR-311 Ni" />
+    <WireType index="87" description="NR-314" />
+    <WireType index="88" description="NR-400" />
+    <WireType index="89" description="NS-3M" />
+    <WireType index="90" description="OS-70" />
+    <WireType index="91" description="OS HD-70" />
+    <WireType index="92" description="OS-71" />
+    <WireType index="93" description="OS-71M" />
+    <WireType index="94" description="OS 81B2-H" />
+    <WireType index="95" description="OS 81K2-H" />
+    <WireType index="96" description="OS 81Nil-H" />
+    <WireType index="97" description="OS 91K2-H" />
+    <WireType index="98" description="MC-100" />
+    <WireType index="99" description="MC-120-55" />
+    <WireType index="100" description="MC-409" />
+    <WireType index="101" description="MC702" />
+    <WireType index="102" description="MC710" />
+    <WireType index="103" description="MC-710-H" />
+    <WireType index="104" description="Other" />
+  </WireTypes>
+  <WireSizes>
+    <WireSize index="0" description="------" />
+    <WireSize index="1" description="N/A" />
+    <WireSize index="2" description="0.025" />
+    <WireSize index="3" description="0.030" />
+    <WireSize index="4" description="0.035" />
+    <WireSize index="5" description="0.045" />
+    <WireSize index="6" description="3/64" />
+    <WireSize index="7" description="0.052" />
+    <WireSize index="8" description="1/16" />
+    <WireSize index="9" description="0.068" />
+    <WireSize index="10" description="0.072" />
+    <WireSize index="11" description="5/64" />
+    <WireSize index="12" description="3/32" />
+    <WireSize index="13" description="7/64" />
+    <WireSize index="14" description="0.120" />
+    <WireSize index="15" description="1/8" />
+    <WireSize index="16" description="5/32" />
+    <WireSize index="17" description="3/16" />
+    <WireSize index="18" description="7/32" />
+    <WireSize index="19" description="1/4" />
+    <WireSize index="20" description="5/16" />
+    <WireSize index="21" description="3/8" />
+    <WireSize index="22" description="0.8mm" />
+    <WireSize index="23" description="0.9mm" />
+    <WireSize index="24" description="1.0mm" />
+    <WireSize index="25" description="1.2mm" />
+    <WireSize index="26" description="1.4mm" />
+    <WireSize index="27" description="1.6mm" />
+    <WireSize index="28" description="2.0mm" />
+    <WireSize index="29" description="2.4mm" />
+    <WireSize index="30" description="2.5mm" />
+    <WireSize index="31" description="3.2mm" />
+    <WireSize index="32" description="4.0mm" />
+    <WireSize index="33" description="5.0mm" />
+    <WireSize index="34" description="5.6mm" />
+    <WireSize index="35" description="6.0mm" />
+    <WireSize index="36" description="6.3mm" />
+	<WireSize index="37" description="0.040" />
+	<WireSize index="38" description="0.6mm" />
+  </WireSizes>
+  <UnitCodes>
+    <UnitCode index="0" description="" />
+    <UnitCode index="1" description="" />
+    <UnitCode index="2" description="Meters" />
+    <UnitCode index="3" description="Kilograms" />
+    <UnitCode index="4" description="Seconds" />
+    <UnitCode index="5" description="A" />
+    <UnitCode index="6" description="Kelvin" />
+    <UnitCode index="7" description="Moles" />
+    <UnitCode index="8" description="Candela" />
+    <UnitCode index="9" description="Farads" />
+    <UnitCode index="10" description="Hertz" />
+    <UnitCode index="11" description="Joules" />
+    <UnitCode index="12" description="Newtons" />
+    <UnitCode index="13" description="Ohms" />
+    <UnitCode index="14" description="Pascals" />
+    <UnitCode index="15" description="V" />
+    <UnitCode index="16" description="Watts" />
+    <UnitCode index="17" description="Milliseconds" />
+    <UnitCode index="18" description="Minutes" />
+    <UnitCode index="19" description="Hours" />
+    <UnitCode index="20" description="Days" />
+    <UnitCode index="21" description="Months" />
+    <UnitCode index="22" description="Years" />
+    <UnitCode index="23" description="Centimeters" />
+    <UnitCode index="24" description="Kilometers" />
+    <UnitCode index="25" description="Inches" />
+    <UnitCode index="26" description="Feet" />
+    <UnitCode index="27" description="Yards" />
+    <UnitCode index="28" description="Miles" />
+    <UnitCode index="29" description="CM/Second" />
+    <UnitCode index="30" description="CM/Minute" />
+    <UnitCode index="31" description="M/Second" />
+    <UnitCode index="32" description="M/Minute" />
+    <UnitCode index="33" description="ips" />
+    <UnitCode index="34" description="ipm" />
+    <UnitCode index="35" description="Feet/Second" />
+    <UnitCode index="36" description="Feet/Minute" />
+    <UnitCode index="37" description="Bars" />
+    <UnitCode index="38" description="Lbs/Square Foot" />
+    <UnitCode index="39" description="HP" />
+    <UnitCode index="40" description="KW" />
+    <UnitCode index="41" description="Degrees Centigrade" />
+    <UnitCode index="42" description="Amps/MS" />
+    <UnitCode index="43" description="Volts/MS" />
+    <UnitCode index="44" description="KW/MS" />
+    <UnitCode index="45" description="Amps MS" />
+    <UnitCode index="46" description="Volts MS" />
+    <UnitCode index="47" description="KW MS" />
+    <UnitCode index="48" description="Percent" />
+    <UnitCode index="49" description="CM/s²" />
+    <UnitCode index="50" description="Liters/Minute" />
+    <UnitCode index="51" description="KiloPascals" />
+    <UnitCode index="52" description="Grams/Liter" />
+    <UnitCode index="53" description="Liters/Mole" />
+    <UnitCode index="54" description="Newton Meters" />
+    <UnitCode index="55" description="Henries" />
+    <UnitCode index="56" description="LBS" />
+    <UnitCode index="57" description="Microseconds/Tick" />
+    <UnitCode index="58" description="Millimeters" />
+    <UnitCode index="59" description="MM/Second" />
+    <UnitCode index="60" description="Joules/MM" />
+    <UnitCode index="61" description="Degrees" />
+    <UnitCode index="62" description="LB/IN3" />
+    <UnitCode index="63" description="us" />
+    <UnitCode index="64" description="Amps/50US" />
+    <UnitCode index="65" description="Volts/50US" />
+    <UnitCode index="66" description="KW/50US" />
+    <UnitCode index="67" description="Amps/10V" />
+    <UnitCode index="68" description="Volts/100A" />
+    <UnitCode index="69" description="IPM/Second" />
+  </UnitCodes>
+  <GasTypes>
+    <GasType index="0" description="N/A"/>
+    <GasType index="1" description="M3"/>
+    <GasType index="2" description="M2"/>
+    <GasType index="4" description="M1"/>
+    <GasType index="8" description="He"/>
+    <GasType index="16" description="H"/>
+    <GasType index="32" description="CO2"/>
+    <GasType index="64" description="O2"/>
+    <GasType index="128" description="Ar"/>
+  </GasTypes>
+</WeldTable>

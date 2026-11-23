@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="COM" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>La fonction Série %1 a échoué. Motif : %2</text>
+		<desc>%1 = Serial function that failed. %2 = reason for error.</desc>
+	</str>
+	<str id="2">
+		<text>L&apos;initialisation Ethernet a échoué.</text>
+		<desc>Ethernet was not initialized.</desc>
+	</str>
+	<str id="3">
+		<text>La liaison au socket a échoué. Motif : %1</text>
+		<desc>Failed to bind to socket. %1 = reason for error.</desc>
+	</str>
+	<str id="4">
+		<text>L&apos;écoute du socket a échoué. Motif : %1</text>
+		<desc>Failed to listen to socket. %1 = reason for error.</desc>
+	</str>
+	<str id="5">
+		<text>La connexion au socket a échoué. Motif : %1.</text>
+		<desc>Failed to connect to socket. %1 = reason for error.</desc>
+	</str>
+	<str id="6">
+		<text>Le démarrage du socket Ethernet a échoué. Motif : %1.</text>
+		<desc>Failed to startup the Ethernet socket. %1 = reason for error.</desc>
+	</str>
+	<str id="7">
+		<text>La création du socket a échoué. Motif : %1.</text>
+		<desc>Failed to create socket. %1 = reason for error.</desc>
+	</str>
+	<str id="8">
+		<text>La création de l&apos;événement Ethernet a échoué. Motif : %1.</text>
+		<desc>Failed to create Ethernet event. %1 = reason for error.</desc>
+	</str>
+	<str id="9">
+		<text>La sélection de l&apos;événement Ethernet a échoué. Motif : %1.</text>
+		<desc>Failed to select ethernet event. %1 = reason for error.</desc>
+	</str>
+	<str id="10">
+		<text>La désactivation de l&apos;algorithme Ethernet de Nagle a échoué. Motif : %1.</text>
+		<desc>Failed disable Ethernet nagal algorithm. %1 = reason for error.</desc>
+	</str>
+	<str id="11">
+		<text>La fonction WSASendTo a échoué. Motif : %1.</text>
+		<desc>Ethernet function WSASendTo failed. %1 = reason for error.</desc>
+	</str>
+	<str id="12">
+		<text>La fonction WSARecvFrom a échoué. Motif : %1.</text>
+		<desc>Ethernet function WSARecvFrom failed. %1 = reason for error.</desc>
+	</str>
+	<str id="13">
+		<text>Une erreur s&apos;est produite lors de l&apos;attente des données reçues.</text>
+		<desc>Failed to receive data on communication server.</desc>
+	</str>
+	<str id="14">
+		<text>Vérifiez la connexion du port %1 puis redémarrez le système.</text>
+		<desc>Communication lost connection. %1 = description of port</desc>
+	</str>
+	<str id="15">
+		<text>Vérifiez la connexion du port %1.</text>
+		<desc>Communication lost connection but able to reconnect. %1 = description of port</desc>
+	</str>
+	<str id="16">
+		<text>Le bus de données CAN a échoué. Motif : %1</text>
+		<desc>Serial function failed. %1 = reason for error.</desc>
+	</str>
+	<str id="17">
+		<text>Le canal de communication n&apos;a pu s&apos;initialiser. Motif : %1</text>
+		<desc>Communication channel failed to initialize. %1 = reason for error.</desc>
+	</str>
+  <str id="18">
+		<text>Le canal de communication n&apos;a pu définir les adresses. Motif : %1</text>
+		<desc>Communication channel failed to set addresses. %1 = reason for error.</desc>
+	</str>
+	<str id="19">
+		<text>Le canal de communication a répondu avec des données non valides : %1.</text>
+		<desc>Communication channel received data that was invalid to process. %1 = invalid data.</desc>
+	</str>
+	<str id="20">
+		<text>Index de canal %1 non valide pour %2.</text>
+		<desc>Communication channel failed to initialize due to an invalid channel index. %1 = channel index. %2 description of channel.</desc>
+	</str>
+	<str id="21">
+		<text>Une erreur s&apos;est produite sur le canal de communication CANOpen. (Code d&apos;erreur CANOpen : 0x%1)</text>
+		<desc>An error occurred on the CANOpen communication channel. %1 = Error code in hexadecimal.</desc>
+	</str>
+	<str id="22">
+		<text>Le format de l&apos;adresse %1 n&apos;est pas correct. Le format doit être XXX.XXX.XXX.XXX, chaque valeur de composant étant comprise entre 0 et 255.</text>
+		<desc>The address entered by the user is invalid. %1 = address.</desc>
+  </str>    
+  <str id="23">
+    <text>Toggle bit non alterné. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort.</desc>
+  </str>
+  <str id="24">
+    <text>Le protocole SDO a expiré. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="25">
+    <text>Le spécificateur de commande n&apos;est pas valide. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="26">
+    <text>La taille du bloc n&apos;est pas valide. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="27">
+    <text>Le numéro de séquence n&apos;est pas valide. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="28">
+    <text>Erreur CRC. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="29">
+    <text>Mémoire insuffisante. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code.</desc>
+  </str>
+  <str id="30">
+    <text>L&apos;accès à un objet n&apos;est pas pris en charge. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="31">
+    <text>Tentative de lecture d&apos;un objet en écriture seule. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="32">
+    <text>Tentative d&apos;écriture d&apos;un objet en lecture seule. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="33">
+    <text>L&apos;objet n&apos;existe pas dans le dictionnaire d&apos;objets. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="34">
+    <text>L&apos;objet ne peut pas être mappé vers l&apos;objet de périphérique physique. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="35">
+    <text>Le nombre et la longueur des objets à mapper dépasserait la longueur de l&apos;objet de périphérique physique. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="36">
+    <text>Motif d&apos;incompatibilité de paramètre général. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="37">
+    <text>Incompatibilité interne générale du périphérique. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="38">
+    <text>L&apos;accès a échoué en raison d&apos;une erreur matérielle. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="39">
+    <text>Le type de données ne correspond pas, la longueur du paramètre de service ne correspond pas. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="40">
+    <text>Le type de données ne correspond pas, la longueur du paramètre de service est trop élevée. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="41">
+    <text>Le type de données ne correspond pas, la longueur du paramètre de service est trop faible. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="42">
+    <text>Le sous-index n&apos;existe pas. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="43">
+    <text>Plage de valeurs du paramètre dépassée (uniquement pour l&apos;accès en écriture). Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="44">
+    <text>La valeur du paramètre écrite est trop élevée. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="45">
+    <text>La valeur du paramètre écrite est trop faible. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="46">
+    <text>La valeur maximum est inférieure à la valeur minimum. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="47">
+    <text>Erreur générale. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="48">
+    <text>Les données ne peuvent pas être transférées ou stockées dans l&apos;application. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="49">
+    <text>Les données ne peuvent pas être transférées ou stockées dans l&apos;application en raison d&apos;une commande locale. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="50">
+    <text>Les données ne peuvent pas être transférées ou stockées dans l&apos;application en raison de l&apos;état du périphérique. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="51">
+    <text>La génération dynamique du dictionnaire d&apos;objets a échoué ou aucun dictionnaire d&apos;objets n&apos;existe. Index : %1. SubIndex: %2.</text>
+    <desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="52">
+	<text>Unknown CANopen error. Index: %1. Subindex: %2.</text>
+	<desc>CANopen Abort Code. %1 = object index of abort. %2 = sub index.</desc>
+  </str>
+  <str id="53">
+	<text>Les connexions avec %1 (ID CANopen : %2) ont été perdues. Vérifiez les connexions des câbles. Une fois la connexion établie, cette erreur disparaîtra automatiquement.</text>
+	<desc>CANopen watchdog communication has timed out. %1 = Axis or IO name %2 = Device NodeID.</desc>
+  </str>
+</language>

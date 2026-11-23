@@ -1,0 +1,659 @@
+<Schema name="units" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.0">
+	<ElementType name="UnitData" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="localeID" required="yes" dt:type="string" />
+		<attribute type="localeID" />
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="groups" minOccurs="1" maxOccurs="1" />
+		<element type="types" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="groups" model="closed" content="eltOnly" order="seq">
+		<element type="travel_speed" minOccurs="1" maxOccurs="1" />
+		<element type="travel_distance" minOccurs="1" maxOccurs="1" />
+		<element type="wire_speed" minOccurs="1" maxOccurs="1" />
+		<element type="wire_distance" minOccurs="1" maxOccurs="1" />
+		<element type="osc_speed" minOccurs="1" maxOccurs="1" />
+		<element type="osc_distance" minOccurs="1" maxOccurs="1" />
+		<element type="theta_speed" minOccurs="1" maxOccurs="1" />
+		<element type="theta_distance_setpoint" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_speed" minOccurs="1" maxOccurs="1" />
+		<element type="ahc_distance" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_amps" minOccurs="1" maxOccurs="1" />
+		<element type="arc_amps" minOccurs="1" maxOccurs="1" />
+		<element type="arc_volts" minOccurs="1" maxOccurs="1" />
+		<element type="shunt_volts" minOccurs="1" maxOccurs="1" />
+		<element type="pilot_arc_amps" minOccurs="1" maxOccurs="1" />
+		<element type="segment_duration" minOccurs="1" maxOccurs="1" />
+		<element type="calibration_resolution" minOccurs="1" maxOccurs="1" />
+		<element type="groove_depth" minOccurs="1" maxOccurs="1" />
+		<element type="pipe_diameter" minOccurs="1" maxOccurs="1" />
+		<element type="gas_flow" minOccurs="1" maxOccurs="1" />
+		<element type="theta_distance_telemetry" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_speed" minOccurs="1" maxOccurs="1" />
+		<element type="wire_manipulator_distance" minOccurs="1" maxOccurs="1" />
+		<element type="rotating_tungsten_speed" minOccurs="1" maxOccurs="1" />
+		<element type="rotating_tungsten_distance_setpoint" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_speed" minOccurs="1" maxOccurs="1" />
+		<element type="tilt_distance" minOccurs="1" maxOccurs="1" />
+		<element type="pulse_time" minOccurs="1" maxOccurs="1" />
+		<element type="rotating_tungsten_distance_telemetry" minOccurs="1" maxOccurs="1" />
+		<element type="motor_current" minOccurs="1" maxOccurs="1" />
+		<element type="motor_peak_current_time" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="types" model="closed" content="eltOnly" order="seq">
+		<element type="linear_distance" minOccurs="1" maxOccurs="1" />
+		<element type="rotation_distance" minOccurs="1" maxOccurs="1" />
+		<element type="time" minOccurs="1" maxOccurs="1" />
+		<element type="current" minOccurs="1" maxOccurs="1" />
+		<element type="voltage" minOccurs="1" maxOccurs="1" />
+		<element type="linear_speed" minOccurs="1" maxOccurs="1" />
+		<element type="rotation_speed" minOccurs="1" maxOccurs="1" />
+		<element type="percentage" minOccurs="1" maxOccurs="1" />
+		<element type="frequency" minOccurs="1" maxOccurs="1" />
+		<element type="io" minOccurs="1" maxOccurs="1" />
+		<element type="power" minOccurs="1" maxOccurs="1" />
+		<element type="energy" minOccurs="1" maxOccurs="1" />
+		<element type="flow" minOccurs="1" maxOccurs="1" />
+		<element type="heat_input" minOccurs="1" maxOccurs="1" />
+		<element type="resolution" minOccurs="1" maxOccurs="1" />
+		<element type="amps_rate" minOccurs="1" maxOccurs="1" />
+		<element type="volts_rate" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire_rate" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<!--GROUPS-->
+	<ElementType name="travel_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="travel_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="wire_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="wire_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="osc_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="osc_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="theta_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="theta_distance_setpoint" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="theta_distance_telemetry" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="ahc_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="ahc_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="hotwire_amps" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="arc_amps" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="arc_volts" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="shunt_volts" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="pilot_arc_amps" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="segment_duration" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="calibration_resolution" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="groove_depth" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="pipe_diameter" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="gas_flow" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="wire_manipulator_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="wire_manipulator_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="rotating_tungsten_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="rotating_tungsten_distance_setpoint" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="tilt_speed" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="tilt_distance" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="pulse_time" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="rotating_tungsten_distance_telemetry" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="motor_current" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<ElementType name="motor_peak_current_time" model="closed" content="empty" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+	</ElementType>
+	<!--TYPES-->
+	<ElementType name="linear_distance" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="inches" minOccurs="1" maxOccurs="1" />
+		<element type="meters" minOccurs="1" maxOccurs="1" />
+		<element type="millimeters" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="rotation_distance" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="degrees" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="time" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="seconds" minOccurs="1" maxOccurs="1" />
+		<element type="milliseconds" minOccurs="1" maxOccurs="1" />
+		<element type="microseconds" minOccurs="1" maxOccurs="1" />
+		<element type="minutes" minOccurs="1" maxOccurs="1" />
+		<element type="hours" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="current" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="amps" minOccurs="1" maxOccurs="1" />
+		<element type="milliamps" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="voltage" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="volts" minOccurs="1" maxOccurs="1" />
+		<element type="millivolts" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="linear_speed" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="inches_per_minute" minOccurs="1" maxOccurs="1" />
+		<element type="metres_per_second" minOccurs="1" maxOccurs="1" />
+		<element type="centimeters_per_second" minOccurs="1" maxOccurs="1" />
+		<element type="metres_per_minute" minOccurs="1" maxOccurs="1" />
+		<element type="centimeters_per_minute" minOccurs="1" maxOccurs="1" />
+		<element type="millimeters_per_second" minOccurs="1" maxOccurs="1" />
+		<element type="millimeters_per_minute" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="rotation_speed" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="rotations_per_minute" minOccurs="1" maxOccurs="1" />
+		<element type="degrees_per_second" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="percentage" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="percent" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="frequency" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="hertz" minOccurs="1" maxOccurs="1" />
+		<element type="kilohertz" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="io" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="counts" minOccurs="1" maxOccurs="1" />
+		<element type="analog_voltage" minOccurs="1" maxOccurs="1" />
+		<element type="masked_counts" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="power" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="watts" minOccurs="1" maxOccurs="1" />
+		<element type="kilowatts" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="energy" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="joules" minOccurs="1" maxOccurs="1" />
+		<element type="kilojoules" minOccurs="1" maxOccurs="1" />
+		<element type="kilowatt_hours" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="flow" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="gallons_per_hour" minOccurs="1" maxOccurs="1" />
+		<element type="gallons_per_minute" minOccurs="1" maxOccurs="1" />
+		<element type="liters_per_hour" minOccurs="1" maxOccurs="1" />
+		<element type="liters_per_minute" minOccurs="1" maxOccurs="1" />
+		<element type="cubic_feet_per_hour" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="heat_input" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="joules_per_inch" minOccurs="1" maxOccurs="1" />
+		<element type="kilojoules_per_inch" minOccurs="1" maxOccurs="1" />
+		<element type="kilojoules_per_centimeter" minOccurs="1" maxOccurs="1" />
+		<element type="kilojoules_per_millimeter" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="resolution" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="volts_per_inch" minOccurs="1" maxOccurs="1" />
+		<element type="millivolts_per_inch" minOccurs="1" maxOccurs="1" />
+		<element type="volts_per_centimeter" minOccurs="1" maxOccurs="1" />
+		<element type="millivolts_per_centimeter" minOccurs="1" maxOccurs="1" />
+		<element type="volts_per_meter" minOccurs="1" maxOccurs="1" />
+		<element type="millivolts_per_meter" minOccurs="1" maxOccurs="1" />
+		<element type="millivolts_per_millimeter" minOccurs="1" maxOccurs="1" />
+		<element type="volts_per_millimeter" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="amps_rate" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="amps_per_ms" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="volts_rate" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="volts_per_ms" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="hotwire_rate" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="amps_per_ipm" minOccurs="1" maxOccurs="1" />
+		<element type="amps_per_meter_per_minute" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<!--UNITS-->
+	<ElementType name="inches" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="meters" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="millimeters" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="degrees" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="seconds" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="milliseconds" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="microseconds" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="minutes" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="hours" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="amps" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="milliamps" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="volts" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="millivolts" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="inches_per_minute" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="metres_per_second" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="centimeters_per_second" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="metres_per_minute" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="centimeters_per_minute" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="millimeters_per_second" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="millimeters_per_minute" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="rotations_per_minute" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="degrees_per_second" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="percent" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="hertz" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="kilohertz" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="counts" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="analog_voltage" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="masked_counts" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="watts" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="kilowatts" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="joules" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="kilojoules" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="kilowatt_hours" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="gallons_per_hour" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="gallons_per_minute" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="liters_per_hour" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="liters_per_minute" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="cubic_feet_per_hour" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="joules_per_inch" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="kilojoules_per_inch" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="kilojoules_per_centimeter" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="kilojoules_per_millimeter" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="kilojoules_per_millimeter_0.6" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="volts_per_inch" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="millivolts_per_inch" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="volts_per_centimeter" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="millivolts_per_centimeter" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="volts_per_meter" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="millivolts_per_meter" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="millivolts_per_millimeter" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="volts_per_millimeter" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="amps_per_ms" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="volts_per_ms" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="amps_per_ipm" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="amps_per_meter_per_minute" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<element type="conversion" minOccurs="1" maxOccurs="1" />
+		<element type="symbol" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<!--UNIT ELEMENTS-->
+	<ElementType name="conversion" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="symbol" model="closed"  dt:type="string" content="textOnly" />
+	<!--METADATA ELEMENTS-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+</Schema>

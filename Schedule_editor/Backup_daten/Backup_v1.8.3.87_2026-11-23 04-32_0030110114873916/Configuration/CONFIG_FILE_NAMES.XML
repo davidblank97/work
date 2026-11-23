@@ -1,0 +1,13 @@
+<files system="GT7">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.1</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:19</date>
+	</metadata>
+	<config>CFG_GT7_STD.XML</config>
+	<calibration>POWERCAL.XML</calibration>
+	<io>CONTROLLER_IO_MAP_STD.xml</io>
+	<peripheral>PERIPH.XML</peripheral>
+	<power_supply_serial_number>254201</power_supply_serial_number>
+</files>

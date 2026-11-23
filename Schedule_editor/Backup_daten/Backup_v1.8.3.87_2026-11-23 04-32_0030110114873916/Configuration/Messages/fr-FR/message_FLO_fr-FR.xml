@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="FLO" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Erreur de communication sur le port %1. Erreur d&apos;envoi des données.</text>
+		<desc>Error sending data. %1 = description of port.</desc>
+	</str>
+	<str id="2">
+		<text>Erreur de communication sur le port %1. Le système n&apos;a pas encore initialisé les services de communication.</text>
+		<desc>Failed to perform functionality since flow control is not initialized. %1 = description of port.</desc>
+	</str>
+	<str id="3">
+		<text>Erreur de communication sur le port %1. La mémoire d&apos;envoi est pleine.</text>
+		<desc>Failed to send data due to max buffer size being reached. %1 = description of port.</desc>
+	</str>
+	<str id="4">
+		<text>Erreur de communication sur le port %2. Un paquet avec l&apos;ID %1 a expiré.</text>
+		<desc>A packet timed out when waiting for a response. %1 = packet identifier. %2 = description of port</desc>
+	</str>
+	<str id="5">
+		<text>Communication error on port %1. An error has occurred while processing received data. %2</text>
+		<desc>Failed to process data received on the port. %1 = description of port. %2 = Further details about the error.</desc>
+	</str>
+</language>

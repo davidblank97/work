@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="SYS" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.3</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Le paramètre %1 ne peut pas être affecté à la valeur %2.</text>
+		<desc>Invalid parameter value error. %1 = parameter name. %2 = value</desc>
+	</str>
+	<str id="2">
+		<text>Le fichier &quot;%1&quot; n&apos;a pas pu être trouvé.</text>
+		<desc>File not found error. %1 = file name</desc>
+	</str>
+	<str id="3">
+		<text>Le fichier &quot;%1&quot; n&apos;a pas pu être lu.</text>
+		<desc>File read error. %1 = file name</desc>
+	</str>
+	<str id="4">
+		<text>Le fichier &quot;%1&quot; n&apos;a pas pu être enregistré.</text>
+		<desc>File save error. %1 = file name</desc>
+	</str>
+	<str id="5">
+		<text>Les chaînes de message ne sont pas disponibles pour la catégorie &quot;%1&quot;.</text>
+		<desc>Message strings have not been loaded. %1 = category</desc>
+	</str>
+	<str id="6">
+		<text>Le dossier &quot;%1&quot; n&apos;a pas pu être trouvé.</text>
+		<desc>Folder not found error. %1 = folder name</desc>
+	</str>
+	<str id="7">
+		<text>Le dossier &quot;%1&quot; est vide.</text>
+		<desc>Folder empty error. %1 = folder name</desc>
+	</str>
+	<str id="8">
+		<text>Le système n&apos;a pas pu créé le dossier &quot;%1&quot;.</text>
+		<desc>Folder cannot be created. %1 = folder name</desc>
+	</str>
+	<str id="9">
+		<text>Le système n&apos;a pas pu créé de sauvegarde.</text>
+		<desc>System could not create a backup directory before updating application.</desc>
+	</str>
+	<str id="10">
+		<text>Le système n&apos;a pas pu mettre à jour l&apos;application. Vérifiez que le format du package de mise à jour fourni est correct.</text>
+		<desc>System could not update application.</desc>
+	</str>
+	<str id="11">
+		<text>Restauration de l&apos;application à partir de la dernière sauvegarde en cours. Veuillez patienter.</text>
+		<desc>System is restoring application files from the latest backup.</desc>
+	</str>
+	<str id="12">
+		<text>Le fichier &quot;%1&quot; n&apos;a pas pu être créé car un fichier avec le même nom existe déjà.</text>
+		<desc>Could not create file since the a file with the same path already exists. %1 = file name</desc>
+	</str>
+	<str id="13">
+		<text>Le dossier &quot;%1&quot; n&apos;a pas pu être créé car un dossier avec le même nom existe déjà.</text>
+		<desc>Could not create folder since the a folder with the same path already exists. %1 = folder name</desc>
+	</str>
+	<str id="14">
+		<text>Le fichier &quot;%1&quot; existe déjà. Ecraser le fichier ?</text>
+		<desc>A file with the same path already exists, does the user want to overwrite the file. %1 = file name</desc>
+	</str>
+	<str id="15">
+		<text>Le fichier &quot;%1&quot; n&apos;a pas pu être modifié car il est actuellement chargé.</text>
+		<desc>The file is currently loaded and cannot be loaded. %1 = file name</desc>
+	</str>
+	<str id="16">
+		<text>Le dossier &quot;%1&quot; ne peut pas être modifié car il contient un fichier actuellement chargé.</text>
+		<desc>Folder could not be edited since it contains a currently loaded file. %1 = folder name</desc>
+	</str>
+	<str id="17">
+		<text>La tablette est déconnectée. Connectez la tablette pour reprendre ou mettez le contrôleur de soudage sous tension pour exécuter le système en mode commande à distance uniquement.</text>
+		<desc>Tablet has lost communication with the welding controller.</desc>
+	</str>
+	<str id="18">
+		<text>Le fichier &quot;%1&quot; n&apos;est pas pris en charge. La version du fichier doit être &quot;%2&quot;.</text>
+		<desc>Version of the &apos;%1&apos; file is not supported. It must be at least version: &apos;%2&apos;</desc>
+	</str>
+	<str id="19">
+		<text>La clé du produit du fichier de licence ne correspond pas à la clé du produit du système de soudage.</text>
+		<desc>Product key in the license file does not match the welding system&apos;s product key.</desc>
+	</str>
+	<str id="20">
+		<text>La signature numérique n&apos;est pas valide pour le fichier &quot;%1&quot;</text>
+		<desc>Digital Signature validation failed for file:&apos;%1&apos;</desc>
+	</str>
+	<str id="21">
+		<text>Impossible d&apos;ajouter une signature numérique au fichier &quot;%1&quot;</text>
+		<desc>Adding digital signature failed for file:&apos;%1</desc>
+	</str>
+	<str id="22">
+		<text>Le fichier n&apos;a pas pu être créé car le nom doit être renseigné. Entrez un nom de fichier et réessayez.</text>
+		<desc>Cannot create a file with a blank name.</desc>
+	</str>
+	<str id="23">
+		<text>%1 IMPORTES</text>
+		<desc>Files imported. %1 = file type</desc>
+	</str>
+	<str id="24">
+		<text>%1 EXPORTES</text>
+		<desc>Files exported. %1 = file type</desc>
+	</str>
+	<str id="25">
+		<text>Il n&apos;existe aucune sauvegarde sur ce système.</text>
+		<desc>No backups found.</desc>
+	</str>
+	<str id="26">
+		<text>Le chemin de fichier &quot;%1&quot; est trop long.</text>
+		<desc>Specified file path is too long. %1 = file path.</desc>
+	</str>
+	<str id="27">
+		<text>Consultez les journaux système pour en savoir plus.</text>
+		<desc>Check the logs on the system for further details on the error.</desc>
+	</str>
+	<str id="28">
+		<text>Les modifications apportées aux paramètres système nécessitent un redémarrage. Eteignez le système et redémarrez-le.</text>
+		<desc>A change to the settings has been made which requires the system to be restarted.</desc>
+	</str>
+	<str id="29">
+		<text>Il existe %1 conflits de fichiers qui doivent être résolus avant de continuer.</text>
+		<desc>%1 = number of file conflicts</desc>
+	</str>
+	<str id="30">
+		<text>Il existe %1 fichiers à importer dont %2 sont en conflit. Voulez-vous résoudre les conflits, importer uniquement les fichiers qui ne sont pas en conflit ou annuler toute l&apos;opération d&apos;importation ?</text>
+		<desc>%1 = number of file to import %2 = number of file conflicts</desc>
+	</str>
+	<str id="31">
+		<text>Un total de %1 %2 ont été importés avec succès. %3 conflits ont été résolus et %4 %2 ont été ignorés.</text>
+		<desc>%1 = number of files imported %2 = file type %3 = number of conflicts %4 = number of files skipped</desc>
+	</str>
+	<str id="32">
+		<text>Le fichier &quot;%1&quot; ne peut pas être converti en un fichier &quot;%2&quot;. Voulez-vous supprimer ce fichier ?</text>
+		<desc>%1 = file name that could not be converted %2 = file type</desc>
+	</str>
+	<str id="33">
+		<text>Une erreur logicielle inattendue s&apos;est produite. Contactez l&apos;assistance Liburdi si ce problème persiste.</text>
+		<desc></desc>
+	</str>
+	<str id="34">
+		<text>Aucun périphérique USB n&apos;est connecté. Connectez un périphérique USB au système et réessayez.</text>
+		<desc></desc>
+	</str>
+	<str id="35">
+		<text>Il existe des conflits de fichiers qui n&apos;ont pas été résolus car les ID affectés existent déjà dans le système. Affectez des ID disponibles aux conflits restants et réessayez. Les conflits de fichiers suivants n&apos;ont pas été résolus : |%1</text>
+		<desc>%1 = A list of file conflicts that failed to resolve.</desc>
+	</str>
+	<str id="36">
+		<text>The file %1 failed to export to a USB.</text>
+		<desc>%1 = File Name.</desc>
+	</str>
+	<str id="37">
+		<text>Failed to import files from %1.</text>
+		<desc>%1 = Folder Name.</desc>
+	</str>
+	<str id="38">
+		<text>The file type %1 has exceeded its maximum allowed storage space of %2 MB. Export or delete all files of this type.</text>
+		<desc>%1 = File Type. %2 = maximum allowed space in MB</desc>
+	</str>
+	<str id="39">
+		<text>SD storage device not connected. Please connect a SD storage device to the system and try again.</text>
+		<desc></desc>
+	</str>
+	<str id="40">
+		<text>The free storage space on the local storage device is less than %1 percent of maximum allowed space of %2 MB. Export and delete all log files to free up space.</text>
+		<desc></desc>
+	</str>
+	<str id="41">
+		<text>The free storage space on the local storage device is less than %1 percent of maximum allowed space of %2 MB. All log files have to be exported or deleted.</text>
+		<desc></desc>
+	</str>
+	<str id="42">
+		<text>The BACKUP TO USB button will copy the current (failed) software to a USB to be sent to Liburdi support.|Reason for failure:|%1</text>
+		<desc>%1 = failure reason</desc>
+	</str>
+	<str id="43">
+		<text>The system is unable to determine what version of servo boards are installed. The io file must be configured to the correct system configuration.</text>
+		<desc></desc>
+	</str>
+	<str id="44">
+		<text>A valid developer key file is required to perform this restore due to firmware version incompatibility. The installed %1 firmware is %2 and the backup is expecting version %3.</text>
+		<desc>%1 = firmware name. %2 = installed firmware version. %3 = backup firmware version.</desc>
+	</str>
+	<str id="45">
+		<text>A valid developer key file is required to perform this update due to firmware version incompatibility. The installed %1 firmware is %2 and the update is expecting version %3.</text>
+		<desc>%1 = firmware name. %2 = installed firmware version. %3 = update firmware version.</desc>
+	</str>
+</language>

@@ -1,0 +1,101 @@
+<peripheral name="GTVII 2 SST">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<ports>
+		<comport channel='2'>
+			<name>PENDANT</name>
+			<port>3</port>
+			<baud>19200</baud>
+			<parity>2</parity>
+			<stopbits>1</stopbits>
+			<databits>7</databits>
+		</comport>
+		<comport channel='3'>
+			<name>POWER MONITOR DEVICE</name>
+			<port>1</port>
+			<baud>9600</baud>
+			<parity>0</parity>
+			<stopbits>1</stopbits>
+			<databits>8</databits>
+			<handshake>RTS</handshake>
+		</comport>
+		<comport channel='4'>
+			<name>SMART TRAK MFC</name>
+			<port>2</port>
+			<baud>9600</baud>
+			<parity>0</parity>
+			<stopbits>1</stopbits>
+			<databits>8</databits>
+			<handshake>RTS</handshake>
+		</comport>
+		<ethernet channel='1'>
+			<name>modbus_server</name>
+			<client>false</client>
+			<port>502</port>
+			<protocol>TCP</protocol>
+		    <timeout>2</timeout>
+			<unitid>1</unitid>
+		</ethernet>
+		<canbus channel='5'>
+			<name>CAN</name>
+			<canbaud>500000</canbaud>
+		</canbus>
+		<pipe channel='6'>
+			<name>wkAPI</name>
+		</pipe>
+	</ports>
+	<devices>
+		<seamtracker enable="false" channel='5'>
+			<correction_direction_x>1</correction_direction_x>
+			<correction_direction_z>1</correction_direction_z>
+			<moves_with_x>1</moves_with_x>
+			<moves_with_z>1</moves_with_z>
+			<offset_x>10.25</offset_x>
+			<offset_y>0</offset_y>
+			<offset_z>0</offset_z>
+			<min_correction_delta>0.000</min_correction_delta>
+			<max_correction_delta>0.010</max_correction_delta>
+		</seamtracker>
+		<pendant enable="true" channel='2' />
+		<energy_meter channel='3'/>
+		<wire_manipulator enable="false"/>
+		<gas_controller enable="true">
+			<shield solenoid="false">
+				<setpoint type="SST" channel="4" address="1" />
+			</shield>
+			<trail>
+				<telemetry type="OMRON-MEMS" />
+			</trail>
+			<plasma solenoid="false">
+				<setpoint type="SST" channel="4" address="2" />
+			</plasma>
+		</gas_controller>
+		<cooler enable="true" />
+		<proximity_sensor enable="false"/>
+		<camera light_enable="false" />
+		<weldhead_switch enable="false"/>
+		<printer type="NONE"/>
+		<fan enable="true"/>
+		<thermostat enable="true"/>
+	</devices>
+	<services>
+		<ota enable="false">
+			<host_name>10.5.5.2</host_name>
+			<port>21</port>
+			<username>softdev</username>
+			<password>GoldTrak6</password>
+			<remote_update_directory>//</remote_update_directory>
+			<remote_backup_directory>//Backups</remote_backup_directory>
+		</ota>
+		<whiteking_api enable="false">
+			<channel>6</channel>
+		</whiteking_api>
+		<modbus enable="true">
+			<channel>1</channel>
+		</modbus>
+	</services>
+</peripheral>

@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="TTL" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>POWERWAVE</text>
+		<desc>Title for Powerwave messages</desc>
+	</str>
+	<str id="2">
+		<text>COOLER FAULT</text>
+		<desc>Title for Cooler Fault message</desc>
+	</str>
+	<str id="3">
+		<text>CONNECTION ERROR</text>
+		<desc>Title for connection error message</desc>
+	</str>
+	<str id="4">
+		<text>WARNING</text>
+		<desc>Title for warning message</desc>
+	</str>
+	<str id="5">
+		<text>ERROR</text>
+		<desc>Title for error message</desc>
+	</str>
+	<str id="6">
+		<text>E-STOP</text>
+		<desc>Title for E-STOP message</desc>
+	</str>
+	<str id="8">
+		<text>GRYPHON ALARM</text>
+		<desc>Title for Gryphon alarm message</desc>
+	</str>
+	<str id="9">
+		<text>NO PILOT ARC</text>
+		<desc>Title for enable pilot arc message</desc>
+	</str>
+	<str id="10">
+		<text>SWITCH WELD HEAD</text>
+		<desc>Title for switch weld head message</desc>
+	</str>
+	<str id="11">
+		<text>CENTER POSITIONING</text>
+		<desc>Title for center positioning messages</desc>
+	</str>
+	<str id="12">
+		<text>WIDTH DETECTION</text>
+		<desc>Title for width detection messages</desc>
+	</str>
+	<str id="13">
+		<text>HOMING</text>
+		<desc>Title for homing messages</desc>
+	</str>
+	<str id="14">
+		<text>SUCCESS</text>
+		<desc>Title for success messages</desc>
+	</str>
+	<str id="15">
+		<text>CLEAR</text>
+		<desc>Title for clear button</desc>
+	</str>
+	<str id="16">
+		<text>OK</text>
+		<desc>Title for ok button</desc>
+	</str>
+	<str id="17">
+		<text>YES</text>
+		<desc>Title for yes button</desc>
+	</str>
+	<str id="18">
+		<text>NO</text>
+		<desc>Title for no button</desc>
+	</str>
+	<str id="19">
+		<text>CANCEL</text>
+		<desc>Title for cancel button</desc>
+	</str>
+	<str id="20">
+		<text>RESTART</text>
+		<desc>Title for restart weld message</desc>
+	</str>
+	<str id="21">
+		<text>ACCEPT</text>
+		<desc>Title for accept message</desc>
+	</str>
+	<str id="22">
+		<text>REJECT</text>
+		<desc>Title for reject message</desc>
+	</str>
+	<str id="23">
+		<text>SAVE</text>
+		<desc>Title for save message</desc>
+	</str>
+	<str id="24">
+		<text>RESET</text>
+		<desc>Title for reject message</desc>
+	</str>
+	<str id="25">
+		<text>START</text>
+		<desc>Title for start button</desc>
+	</str>
+	<str id="26">
+		<text>DELETE</text>
+		<desc>Title for delete button</desc>
+	</str>
+	<str id="27">
+		<text>MIGRATE</text>
+		<desc>Title for migrate button</desc>
+	</str>
+	<str id="28">
+		<text>CLEAR CUSTOM UNITS</text>
+		<desc>Title for clear custom units message</desc>
+	</str>
+	<str id="29">
+		<text>CRITICAL FAULT</text>
+		<desc>Title for critical fault alarm</desc>
+	</str>
+	<str id="30">
+		<text>RESOLVE</text>
+		<desc>Title for resolve button</desc>
+	</str>
+	<str id="31">
+		<text>SKIP ALL</text>
+		<desc>Title for skip conflicts button</desc>
+	</str>
+	<str id="32">
+		<text>CONFIRM HEIGHT TO MEASURE AT</text>
+		<desc>Title for confirm height to measure at message</desc>
+	</str>
+	<str id="33">
+		<text>DANGER HIGH VOLTAGE PRESENT AT TORCH</text>
+		<desc>Title for high voltage warning</desc>
+	</str>
+	<str id="34">
+		<text>USB KEY LOGIN</text>
+		<desc>Title for USB key login.</desc>
+	</str>
+	<str id="7">
+		<text>LOCKOUT MODE</text>
+		<desc>Title for Lockout Mode message</desc>
+	</str>
+	<str id="37">
+		<text>RESIDUE CHIPPER</text>
+		<desc>Title for residue chipper messages</desc>
+	</str>
+	<str id="38">
+		<text>LAYER DIAMETER DETECTION</text>
+		<desc>Title for layer diameter detection messages</desc>
+	</str>
+	<str id="39">
+		<text>POWER-UP SAFETY CHECK</text>
+		<desc>Title for power up safety check messages</desc>
+	</str>
+</language>

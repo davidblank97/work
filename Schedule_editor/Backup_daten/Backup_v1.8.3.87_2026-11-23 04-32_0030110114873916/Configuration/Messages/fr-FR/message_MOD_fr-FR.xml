@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="MOD" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Le client Modbus n&apos;a pas pu initialiser la communication.</text>
+		<desc>Modbus was not initialized</desc>
+	</str>
+	<str id="2">
+		<text>La demande de lecture des bobines par le protocole Modbus a échoué.</text>
+		<desc>Error reading coils.</desc>
+	</str>
+	<str id="3">
+		<text>La demande d&apos;écriture des bobines par le protocole Modbus a échoué.</text>
+		<desc>Error writing coils.</desc>
+	</str>
+	<str id="4">
+		<text>La demande d&apos;écriture d&apos;un registre individuel par le protocole Modbus a échoué.</text>
+		<desc>Error writing single registers.</desc>
+	</str>
+	<str id="5">
+		<text>La demande d&apos;écriture de plusieurs registres par le protocole Modbus a échoué.</text>
+		<desc>Error writing multiple registers.</desc>
+	</str>
+	<str id="6">
+		<text>La demande d&apos;écriture de plusieurs bobines par le protocole Modbus a échoué.</text>
+		<desc>Error writing multiple coils.</desc>
+	</str>
+	<str id="7">
+		<text>La demande de lecture des entrées discrètes par le protocole Modbus a échoué.</text>
+		<desc>Error reading input discretes.</desc>
+	</str>
+	<str id="8">
+		<text>La demande de lecture de plusieurs registres par le protocole Modbus a échoué.</text>
+		<desc>Error reading multiple registers.</desc>
+	</str>
+	<str id="9">
+		<text>La demande de lecture de registres d&apos;entrée par le protocole Modbus a échoué.</text>
+		<desc>Error reading input registers.</desc>
+	</str>
+	<str id="10">
+		<text>La demande de lecture du statut d&apos;exception par le protocole Modbus a échoué.</text>
+		<desc>Error reading exception status.</desc>
+	</str>
+  <str id="11">
+    <text>Le minuteur de surveillance Modbus a expiré.</text>
+    <desc>The modbus watchdog timer has expired.</desc>
+  </str>
+  <str id="12">
+    <text>La réponse avec une exception Modbus a échoué.</text>
+    <desc>Error sending response with exception packet.</desc>
+  </str>
+</language>

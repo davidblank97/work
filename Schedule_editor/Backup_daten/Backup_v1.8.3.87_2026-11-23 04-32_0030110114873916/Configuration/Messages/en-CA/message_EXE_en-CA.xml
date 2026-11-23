@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="EXE" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>The sequence has been aborted. Reason: %1</text>
+		<desc>Weld stopped or aborted. %1 = reason for stop/abort.</desc>
+	</str>
+	<str id="2">
+		<text>The sequence failed during step: %1. Reason: %2</text>
+		<desc>The sequence failed while trying to execute an instruction. %1 = instruction name. %2 = reason for failure</desc>
+	</str>
+	<str id="3">
+		<text>The electrode made contact with the work piece.</text>
+		<desc>The execution engine will abort because electrode touched the part.</desc>
+	</str>
+	<str id="4">
+		<text>The arc went out.</text>
+		<desc>The execution engine will abort because arc went out.</desc>
+	</str>
+	<str id="5">
+		<text>The electrode could not charge.</text>
+		<desc>The execution engine will abort because electrode could not charge.</desc>
+	</str>
+	<str id="6">
+		<text>The system did not sense any trail gas flow.</text>
+		<desc>The execution engine will stop because there is no trail gas.</desc>
+	</str>	
+	<str id="7">
+		<text>The system did not sense any backup gas flow.</text>
+		<desc>The execution engine will stop because there is no backup gas.</desc>
+	</str>	
+	<str id="8">
+		<text>The system did not sense any plasma gas flow.</text>
+		<desc>The execution engine will stop because there is no plasma gas.</desc>
+	</str>	
+	<str id="9">
+		<text>The system did not sense any shield gas flow.</text>
+		<desc>The execution engine will abort because there is no shield gas.</desc>
+	</str>
+	<str id="10">
+		<text>The system did not sense any coolant flow.</text>
+		<desc>The execution engine will stop because there is no cooler flow.</desc>
+	</str>	
+	<str id="11">
+		<text>No Hotwire Amps.</text>
+		<desc>A detail to be added to another message. The execution engine will stop because there is no hotwire amps.</desc>
+	</str>			
+	<str id="12">
+		<text>The pre-start check has failed. Reason: %1</text>
+		<desc>A pre weld check failed to weld could not start. %1 = reason for not starting</desc>
+	</str>
+	<str id="13">
+		<text>The %1 telemetry (%2) went outside of the acceptable range of %3 to %4. To view and adjust the acceptable ranges, use the LIMITS screen.</text>
+		<desc>The execution engine will stop because the parameter telemetry deviated from the fault threshold values. %1 = parameter name. %2 =  parameter telemetry. %3 = fault threshold lower limit. %4 =  fault threshold upper limit.</desc>
+	</str>
+	<str id="14">
+		<text>Please navigate to the weld area to begin a weld.</text>
+		<desc>Navigate to the weld area to begin a weld.</desc>
+	</str>
+	<str id="15">
+		<text>The internal temperature of the power supply is too hot to safely weld.</text>
+		<desc>The execution engine will stop because the power supply's internal temperature exceeded the max threshold allowed for welding.</desc>
+	</str>
+	<str id="16">
+		<text>There are no segments enabled in the schedule. Enable at least one segment before starting again.</text>
+		<desc></desc>
+	</str>
+	<str id="17">
+		<text>A weld has been started while Trace Logs are enabled. Welding performance may be heavily impacted.</text>
+		<desc>The user has started a weld while the system is collecting Trace Log diagnostics data. This can lead to performance issues with the weld.</desc>
+	</str>
+	<str id="18">
+		<text>There are too many instructions included in the weld schedule. Please reduce the loop count or the number of enabled segments in the schedule and start again.</text>
+		<desc>The user has included more segments than the system can handle. They need to reduce the number of segments before they can attempt to start the weld again.</desc>
+	</str>
+	<str id="19">
+		<text>Unable to establish an arc.</text>
+		<desc>The execution engine will fail because arc was not established.</desc>
+	</str>
+	<str id="20">
+		<text>A weld has been started with a scratch/manual arc start.</text>
+		<desc>The user has started a weld with arc start type selected as Scratch arc.</desc>
+	</str>	
+</language>

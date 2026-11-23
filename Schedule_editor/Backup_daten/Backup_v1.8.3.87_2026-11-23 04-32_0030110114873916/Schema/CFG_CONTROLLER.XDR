@@ -1,0 +1,238 @@
+<Schema name="CFG_LCX" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.0">
+
+	<ElementType name="config" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="model" required="yes" dt:type="string" />
+		<attribute type="model" />
+		<!--DECLARE ELEMENTS (CONFIG)-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="system" minOccurs="1" maxOccurs="1" />
+		<element type="display" minOccurs="0" maxOccurs="1" />
+		<element type="power" minOccurs="1" maxOccurs="*" />
+		<element type="groovetrack" minOccurs="0" maxOccurs="1" />
+		<element type="hotwire" minOccurs="0" maxOccurs="*" />
+		<element type="pilot" minOccurs="0" maxOccurs="1" />
+		<element type="avc" minOccurs="1" maxOccurs="1" />
+		<element type="directory_paths" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="0" maxOccurs="1" />
+		<element type="date" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<!--*****DEFINE ELEMENTS (CONFIG)*****-->
+	<ElementType name="system" model="closed" content="eltOnly" order="seq" >
+		<!--DECLARE ELEMENTS (SYSTEM)-->
+		<element type="locale_id" minOccurs="0" maxOccurs="1" />
+		<element type="splashtimer" minOccurs="0" maxOccurs="1" />
+		<element type="dist_scale" minOccurs="0" maxOccurs="1" />
+		<element type="speed_scale" minOccurs="0" maxOccurs="1" />
+		<element type="indep_purge" minOccurs="0" maxOccurs="1" />
+		<element type="keypad" minOccurs="0" maxOccurs="1" />
+		<element type="kashmir_installed" minOccurs="0" maxOccurs="1" />
+		<element type="prox_sense" minOccurs="0" maxOccurs="1" />
+		<element type="restart_seq" minOccurs="0" maxOccurs="1" />
+		<element type="tungsten_chg_warn" minOccurs="0" maxOccurs="1" />
+		<element type="display_tungs_info" minOccurs="0" maxOccurs="1" />
+		<element type="calib" minOccurs="0" maxOccurs="1" />
+		<element type="teach_mode" minOccurs="0" maxOccurs="1" />
+		<element type="velocity_fault" minOccurs="0" maxOccurs="1" />
+		<element type="is_estop_user_clearable" minOccurs="0" maxOccurs="1" />		
+	</ElementType>
+
+	<ElementType name="display" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="type" required="yes" dt:type="string" />
+		<attribute type="type" />
+		<!--DECLARE ELEMENTS (DISPLAY)-->
+		<element type="x" minOccurs="0" maxOccurs="1" />
+		<element type="y" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="power" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="type" required="yes" dt:type="string" />
+		<attribute type="type" />
+		<!--DECLARE ELEMENTS (POWER)-->
+		<element type="channel" minOccurs="0" maxOccurs="1" />
+		<element type="amps" minOccurs="1" maxOccurs="1" />
+		<element type="avg_amps" minOccurs="1" maxOccurs="1" />
+		<element type="volts" minOccurs="1" maxOccurs="1" />
+		<element type="amps_cmd_volts" minOccurs="0" maxOccurs="1" />
+		<element type="amps_telem_volts" minOccurs="0" maxOccurs="1" />
+		<element type="volt_telem_volts" minOccurs="0" maxOccurs="1" />
+		<element type="plasma_timeout" minOccurs="0" maxOccurs="1" />
+		<element type="scratch_timeout" minOccurs="0" maxOccurs="1" />
+		<element type="high_freq_timeout" minOccurs="0" maxOccurs="1" />
+		<element type="mig_timeout" minOccurs="0" maxOccurs="1" />
+		<element type="vp" minOccurs="0" maxOccurs="1" />
+		<element type="critical_fault" minOccurs="0" maxOccurs="1" />
+		<element type="allowable_critical_fault_count" minOccurs="0" maxOccurs="1" />
+		<element type="allowable_telemetry_deviation_percent" minOccurs="0" maxOccurs="1" />
+		<element type="open_circuit_volts" minOccurs="1" maxOccurs="1" />
+		<element type="short_circuit_volts" minOccurs="1" maxOccurs="1" />
+    <element type="check_short_circuit_volts" minOccurs="0" maxOccurs="1" />
+		<element type="freq" minOccurs="1" maxOccurs="1" />
+		<element type="lem_volts" minOccurs="0" maxOccurs="1" />
+		<element type="has_hf_arc_starter" minOccurs="0" maxOccurs="1" />
+		<element type="arc_start_retries" minOccurs="0" maxOccurs="1" />
+		<element type="mig_sensitivity" minOccurs="0" maxOccurs="1" />
+		<element type="operating_amps" minOccurs="0" maxOccurs="1" />
+		<element type="operating_volts" minOccurs="0" maxOccurs="1" />
+    <element type="open_circuit_amps" minOccurs="0" maxOccurs="1" />
+    <element type="allowed_arc_out_counts" minOccurs="0" maxOccurs="1" />
+    <element type="telem_amps" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="groovetrack" model="closed" content="eltOnly" order="seq">
+		<element type="smoothing" minOccurs="0" maxOccurs="1" />
+		<element type="logs_enabled" minOccurs="0" maxOccurs="1" />
+		<element type="cut_off_frequency" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="hotwire" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="index" required="yes" dt:type="string" />
+		<AttributeType name="io_index" required="yes" dt:type="string" />
+		<AttributeType name="communication_type" required="yes" dt:type="string" />
+		<attribute type="index" />
+		<attribute type="io_index" />
+		<attribute type="communication_type" />
+		<!--DECLARE ELEMENTS (HOTWIRE)-->
+		<element type="amps" minOccurs="1" maxOccurs="1" />
+		<element type="volts" minOccurs="0" maxOccurs="1" />
+		<element type="amps_telem_volts" minOccurs="1" maxOccurs="1" />
+		<element type="amps_cmd_volts" minOccurs="1" maxOccurs="1" />
+		<element type="should_alarm" minOccurs="1" maxOccurs="1" />
+    <element type="telem_amps" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="pilot" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="io_index" required="yes" dt:type="string" />
+		<attribute type="io_index" />
+		<!--DECLARE ELEMENTS (PILOT)-->
+		<element type="amps" minOccurs="1" maxOccurs="1" />
+		<element type="min_amps" minOccurs="0" maxOccurs="1" />
+		<element type="amps_telem_volts" minOccurs="0" maxOccurs="1" />
+		<element type="amps_cmd_volts" minOccurs="0" maxOccurs="1" />
+		<element type="enable_timeout" minOccurs="0" maxOccurs="1" />
+    <element type="telem_amps" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="avc" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (AVC)-->
+		<element type="chargevolts" minOccurs="1" maxOccurs="1" />
+		<element type="touchspeed" minOccurs="1" maxOccurs="1" />
+		<element type="touchvolts" minOccurs="1" maxOccurs="1" />
+		<element type="liftspeed" minOccurs="1" maxOccurs="1" />
+		<element type="touchsense" minOccurs="1" maxOccurs="1" />
+		<element type="smoothing" minOccurs="0" maxOccurs="1" />
+		<element type="touch_clear_retries" minOccurs="0" maxOccurs="1" />
+		<element type="touch_clear_retract_distance" minOccurs="0" maxOccurs="1" />
+		<element type="should_wiggle_electrode" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="directory_paths" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS (directory_paths)-->
+		<element type="sched" minOccurs="0" maxOccurs="1" />
+		<element type="chainset" minOccurs="0" maxOccurs="1" />
+		<element type="log" minOccurs="0" maxOccurs="1" />
+		<element type="event" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--*****DEFINE ELEMENTS (SYSTEM)*****-->
+	<ElementType name="locale_id" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="splashtimer" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="dist_scale" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="speed_scale" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="indep_purge" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="keypad" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="kashmir_installed" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="prox_sense" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="restart_seq" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tungsten_chg_warn" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="display_tungs_info" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="calib" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="teach_mode" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="velocity_fault" model="closed"  dt:type="int" content="textOnly" />
+	<ElementType name="is_estop_user_clearable" model="closed"  dt:type="int" content="textOnly" />	
+
+	<!--*****DEFINE ELEMENTS (DISPLAY)*****-->
+	<ElementType name="x" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="y" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--*****DEFINE ELEMENTS (POWER)*****-->
+	<ElementType name="channel" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="amps" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="telem_amps" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="avg_amps" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="amps_cmd_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="amps_telem_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="volt_telem_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="plasma_timeout" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="scratch_timeout" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="high_freq_timeout" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="mig_timeout" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="vp" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="critical_fault" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="allowable_critical_fault_count" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="allowable_telemetry_deviation_percent" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="open_circuit_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="short_circuit_volts" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="check_short_circuit_volts" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="open_circuit_amps" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="freq" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="lem_volts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="has_hf_arc_starter" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="arc_start_retries" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="allowed_arc_out_counts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="mig_sensitivity" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="operating_amps" model="closed"  dt:type="float">
+		<AttributeType name="min" required="yes" dt:type="float" />
+		<attribute type="min" />
+		<AttributeType name="max" required="yes" dt:type="float" />
+		<attribute type="max" />
+	</ElementType>
+	<ElementType name="operating_volts" model="closed"  dt:type="float">
+		<AttributeType name="min" required="yes" dt:type="float" />
+		<attribute type="min" />
+		<AttributeType name="max" required="yes" dt:type="float" />
+		<attribute type="max" />
+	</ElementType>
+	
+	<!--DEFINE ELEMENTS (GROOVETRACK)-->
+	<ElementType name="smoothing" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="logs_enabled" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="cut_off_frequency" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (HOTWIRE)-->
+	<ElementType name="should_alarm" model="closed"  dt:type="string" content="textOnly" />
+
+	<ElementType name="min_amps" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="enable_timeout" model="closed"  dt:type="float" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (AVC)-->
+	<ElementType name="chargevolts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="touchspeed" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="touchvolts" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="liftspeed" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="touchsense" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="touch_clear_retries" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="touch_clear_retract_distance" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="should_wiggle_electrode" model="closed"  dt:type="string" content="textOnly" />
+
+	
+	<!--DEFINE ELEMENTS (directory_paths)-->
+	<ElementType name="sched" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="chainset" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="log" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="event" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

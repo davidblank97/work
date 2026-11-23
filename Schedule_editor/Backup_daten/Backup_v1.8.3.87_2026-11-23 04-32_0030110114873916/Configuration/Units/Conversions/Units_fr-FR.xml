@@ -1,0 +1,295 @@
+<UnitData localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<groups>
+		<travel_speed name="TRAVEL SPEED"/>
+		<travel_distance name="TRAVEL DISTANCE"/>
+		<wire_speed name="WIRE SPEED"/>
+		<wire_distance name="WIRE DISTANCE"/>
+		<osc_speed name="OSCILLATION SPEED"/>
+		<osc_distance name="OSCILLATION DISTANCE"/>
+		<theta_speed name="THETA SPEED"/>
+		<theta_distance_setpoint name="THETA DISTANCE SETPOINT"/>
+		<ahc_speed name="AHC SPEED"/>
+		<ahc_distance name="AHC DISTANCE"/>
+		<hotwire_amps name="HOTWIRE AMPS"/>
+		<arc_amps name="ARC AMPS"/>
+		<arc_volts name="ARC VOLTS"/>
+		<shunt_volts name="SHUNT VOLTS"/>
+		<pilot_arc_amps name="PILOT ARC AMPS"/>
+		<segment_duration name="SEGMENT DURATION"/>
+		<calibration_resolution name="CALIBRATION RESOLUTION"/>
+		<groove_depth name="GROOVE DEPTH"/>
+		<pipe_diameter name="PIPE DIAMETER"/>
+		<gas_flow name="GAS FLOW"/>
+		<theta_distance_telemetry name="THETA DISTANCE TELEMETRY"/>
+		<wire_manipulator_speed name="WIRE MANIPULATOR SPEED"/>
+		<wire_manipulator_distance name="WIRE MANIPULATOR DISTANCE"/>
+		<rotating_tungsten_speed name="TUNGSTEN SPEED"/>
+		<rotating_tungsten_distance_setpoint name="TUNGSTEN DISTANCE SETPOINT"/>
+		<tilt_speed name="TILT SPEED"/>
+		<tilt_distance name="TILT DISTANCE"/>
+		<pulse_time name="PULSE TIME"/>
+		<rotating_tungsten_distance_telemetry name="TUNGSTEN DISTANCE TELEMETRY"/>
+		<motor_current name="MOTOR CURRENT"/>
+		<motor_peak_current_time name="MOTOR PEAK CURRENT TIME"/>
+	</groups>
+	<types>
+		<linear_distance name="LINEAR DISTANCE">
+			<inches name="INCHES">
+				<conversion>1</conversion>
+				<symbol>in</symbol>
+			</inches>
+			<meters name="METERS">
+				<conversion>39.3701</conversion>
+				<symbol>m</symbol>
+			</meters>
+			<millimeters name="MILLIMETERS">
+				<conversion>0.0393701</conversion>
+				<symbol>mm</symbol>
+			</millimeters>
+		</linear_distance>
+		<rotation_distance name="ROTATION DISTANCE">
+			<degrees name="DEGREES">
+				<conversion>1</conversion>
+				<symbol>deg</symbol>
+			</degrees>
+		</rotation_distance>
+		<time name="TIME">
+			<seconds name="SECONDS">
+				<conversion>1</conversion>
+				<symbol>s</symbol>
+			</seconds>
+			<milliseconds name="MILLISECONDS">
+				<conversion>0.001</conversion>
+				<symbol>ms</symbol>
+			</milliseconds>
+			<microseconds name="MICROSECONDS">
+				<conversion>0.000001</conversion>
+				<symbol>μs</symbol>
+			</microseconds>
+			<minutes name="MINUTES">
+				<conversion>60</conversion>
+				<symbol>min</symbol>
+			</minutes>
+			<hours name="HOURS">
+				<conversion>3600</conversion>
+				<symbol>h</symbol>
+			</hours>
+		</time>
+		<current name="CURRENT">
+			<amps name="AMPS">
+				<conversion>1</conversion>
+				<symbol>A</symbol>
+			</amps>
+			<milliamps name="MILLIAMPS">
+				<conversion>0.001</conversion>
+				<symbol>mA</symbol>
+			</milliamps>
+		</current>
+		<voltage name="VOLTAGE">
+			<volts name="VOLTS">
+				<conversion>1</conversion>
+				<symbol>V</symbol>
+			</volts>
+			<millivolts name="MILLIVOLTS">
+				<conversion>0.001</conversion>
+				<symbol>mV</symbol>
+			</millivolts>
+		</voltage>
+		<linear_speed name="LINEAR SPEED">
+			<inches_per_minute name="INCHES PER MINUTE">
+				<conversion>1</conversion>
+				<symbol>IPM</symbol>
+			</inches_per_minute>
+			<metres_per_second name="METRES PER SECOND">
+				<conversion>2362.2</conversion>
+				<symbol>m/s</symbol>
+			</metres_per_second>
+			<centimeters_per_second name="CENTIMETERS PER SECOND">
+				<conversion>23.622</conversion>
+				<symbol>cm/s</symbol>
+			</centimeters_per_second>
+			<metres_per_minute name="METRES PER MINUTE">
+				<conversion>39.3701</conversion>
+				<symbol>m/min</symbol>
+			</metres_per_minute>
+			<centimeters_per_minute name="CENTIMETERS PER MINUTE">
+				<conversion>0.393701</conversion>
+				<symbol>cm/min</symbol>
+			</centimeters_per_minute>
+			<millimeters_per_second name="MILLIMETERS PER SECOND">
+				<conversion>2.3622</conversion>
+				<symbol>mm/s</symbol>
+			</millimeters_per_second>
+			<millimeters_per_minute name="MILLIMETERS PER MINUTE">
+				<conversion>0.0393701</conversion>
+				<symbol>mm/min</symbol>
+			</millimeters_per_minute>
+		</linear_speed>
+		<rotation_speed name="ROTATION SPEED">
+			<rotations_per_minute name="ROTATIONS PER MINUTE">
+				<conversion>1</conversion>
+				<symbol>RPM</symbol>
+			</rotations_per_minute>
+			<degrees_per_second name="DEGREES PER SECOND">
+				<conversion>0.166666666666667</conversion>
+				<symbol>deg/s</symbol>
+			</degrees_per_second>
+		</rotation_speed>
+		<percentage name="PERCENTAGE">
+			<percent name="PERCENT">
+				<conversion>1</conversion>
+				<symbol>%</symbol>
+			</percent>
+		</percentage>
+		<frequency name="FREQUENCY">
+			<hertz name="HERTZ">
+				<conversion>1</conversion>
+				<symbol>Hz</symbol>
+			</hertz>
+			<kilohertz name="KILOHERTZ">
+				<conversion>1000.0</conversion>
+				<symbol>kHz</symbol>
+			</kilohertz>
+		</frequency>
+		<io name="IO">
+			<counts name="COUNTS">
+				<conversion>1</conversion>
+				<symbol>cts</symbol>
+			</counts>
+			<analog_voltage name="ANALOG VOLTAGE">
+				<conversion>1</conversion>
+				<symbol>V</symbol>
+			</analog_voltage>
+			<masked_counts name="masked_counts">
+				<conversion>1</conversion>
+				<symbol>counts</symbol>
+			</masked_counts>
+		</io>
+		<power name="POWER">
+			<watts name="WATTS">
+				<conversion>1</conversion>
+				<symbol>W</symbol>
+			</watts>
+			<kilowatts name="KILOWATTS">
+				<conversion>1000.0</conversion>
+				<symbol>kW</symbol>
+			</kilowatts>
+		</power> 
+		<energy name="Energy">
+			<joules name="JOULES">
+				<conversion>1</conversion>
+				<symbol>J</symbol>
+			</joules>
+			<kilojoules name="KILOJOULES">
+				<conversion>1000.0</conversion>
+				<symbol>kJ</symbol>
+			</kilojoules>
+			<kilowatt_hours name="KILOWATT HOURS">
+				<conversion>3599971.20023</conversion>
+				<symbol>kWh</symbol>
+			</kilowatt_hours>
+		</energy>
+		<flow name="Flow">
+			<gallons_per_hour name="GALLONS PER HOUR">
+				<conversion>1</conversion>
+				<symbol>GPH</symbol>
+			</gallons_per_hour>
+			<gallons_per_minute name="GALLONS PER MINUTE">
+				<conversion>60</conversion>
+				<symbol>GPM</symbol>
+			</gallons_per_minute>
+			<liters_per_hour name="LITERS PER HOUR">
+				<conversion>0.2641720512415584</conversion>
+				<symbol>l/h</symbol>
+			</liters_per_hour>
+			<liters_per_minute name="LITERS PER MINUTE">
+				<conversion>15.8503222371</conversion>
+				<symbol>l/min</symbol>
+			</liters_per_minute>
+			<cubic_feet_per_hour name="CUBIC FEET PER HOUR">
+				<conversion>7.48052</conversion>
+				<symbol>CFH</symbol>
+			</cubic_feet_per_hour>
+		</flow>
+		<heat_input name="HEAT INPUT">
+			<joules_per_inch name="JOULES PER INCH">
+				<conversion>1</conversion>
+				<symbol>J/in</symbol>
+			</joules_per_inch>
+			<kilojoules_per_inch name="KILOJOULES PER INCH">
+				<conversion>1000.0</conversion>
+				<symbol>kJ/in</symbol>
+			</kilojoules_per_inch>
+			<kilojoules_per_centimeter name="KILOJOULES PER CENTIMETER">
+				<conversion>2540</conversion>
+				<symbol>kJ/cm</symbol>
+			</kilojoules_per_centimeter>
+			<kilojoules_per_millimeter name="KJ PER MILLIMETER">
+				<conversion>25400</conversion>
+				<symbol>kJ/mm</symbol>
+			</kilojoules_per_millimeter>
+		</heat_input>
+		<resolution name="RESOLUTION">
+			<volts_per_inch name="VOLTS PER INCH">
+				<conversion>1</conversion>
+				<symbol>vpi</symbol>
+			</volts_per_inch>
+			<millivolts_per_inch name="MILLIVOLTS PER INCH">
+				<conversion>100</conversion>
+				<symbol>mV/in</symbol>
+			</millivolts_per_inch>
+			<volts_per_centimeter name="VOLTS PER CENTIMETER">
+				<conversion>2.54</conversion>
+				<symbol>V/cm</symbol>
+			</volts_per_centimeter>
+			<millivolts_per_centimeter name="MILLIVOLTS PER CENTIMETER">
+				<conversion>254</conversion>
+				<symbol>mV/cm</symbol>
+			</millivolts_per_centimeter>
+			<volts_per_meter name="VOLTS PER METER">
+				<conversion>0.0254</conversion>
+				<symbol>V/m</symbol>
+			</volts_per_meter>
+			<millivolts_per_meter name="MILLIVOLTS PER METER">
+				<conversion>2.54</conversion>
+				<symbol>mV/m</symbol>
+			</millivolts_per_meter>
+			<millivolts_per_millimeter name="MILLIVOLTS PER MILLIMETER">
+				<conversion>0.0254</conversion>
+				<symbol>mV/mm</symbol>
+			</millivolts_per_millimeter>
+			<volts_per_millimeter name="VOLTS PER MILLIMETER">
+				<conversion>25.4</conversion>
+				<symbol>V/mm</symbol>
+			</volts_per_millimeter>
+		</resolution>
+		<amps_rate name="AMPS RATE">
+			<amps_per_ms name="AMPS PER MS">
+				<conversion>1</conversion>
+				<symbol>A/ms</symbol>
+			</amps_per_ms>
+		</amps_rate>
+		<volts_rate name="VOLTS RATE">
+			<volts_per_ms name="VOLTS PER MS">
+				<conversion>1</conversion>
+				<symbol>V/ms</symbol>
+			</volts_per_ms>
+		</volts_rate>
+		<hotwire_rate name="HOTWIRE RATE">
+			<amps_per_ipm name="AMPS PER IPM">
+				<conversion>1</conversion>
+				<symbol>A/IPM</symbol>
+			</amps_per_ipm>
+			<amps_per_meter_per_minute name="AMPS PER METER PER MINUTE">
+				<conversion>0.025399986</conversion>
+				<symbol>A/m/min</symbol>
+			</amps_per_meter_per_minute>
+		</hotwire_rate>
+	</types>
+</UnitData>

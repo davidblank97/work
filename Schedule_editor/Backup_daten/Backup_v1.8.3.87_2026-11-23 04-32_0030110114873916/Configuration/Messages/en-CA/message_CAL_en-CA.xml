@@ -1,0 +1,108 @@
+<language fileType="CAL" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>No calibration target selected.</text>
+		<desc/>
+	</str>
+	<str id="2">
+		<text>The measured value cannot be zero. Enter in a non-zero value.</text>
+		<desc/>
+	</str>
+	<str id="3">
+		<text>The calibration routine did not run for enough time before it was stopped at %1 seconds. Please restart the calibration routine and run for at least %2 seconds.</text>
+		<desc>Calibration time too short. %1 = time calibration ran in seconds. %2 = minimum time in seconds.</desc>
+	</str>
+	<str id="4">
+		<text>A distance of zero cannot be calibrated. Enter in a non-zero distance.</text>
+		<desc/>
+	</str>
+	<str id="5">
+		<text>A SET POINT GAIN of %1 is outside of the recommended range. The value of the gain is recommended to be between %2 and %3.</text>
+		<desc>%1 = calculated gain. %1 = lower limit of valid range. %2 = upper limit of valid range</desc>
+	</str>
+	<str id="6">
+		<text>The value for SET POINT OFFSET is outside of the recommended range. The offset value should be between %1 and %2 (%3% and %4% of the max value %5).</text>
+		<desc>%1 = lower limit of valid range. %2 = upper limit of valid range. %3 lower limit percent. %4 upper limit percent. %5 max value.</desc>
+	</str>
+	<str id="7">
+		<text>A TELEMETRY GAIN of %1 is outside of the recommended range. The value of the gain is recommended to be between %2 and %3.</text>
+		<desc>%1 = calculated gain. %2 = lower limit of valid range. %3 = upper limit of valid range</desc>
+	</str>
+	<str id="8">
+		<text>The value for TELEMETRY OFFSET is outside of the recommended range. The offset value should be between %1 and %2 (%3% and %4% of the max value %5).</text>
+		<desc>%1 = lower limit of valid range. %2 = upper limit of valid range. %3 lower limit percent. %4 upper limit percent. %5 max value.</desc>
+	</str>
+	<str id="9">
+		<text>A SET POINT GAIN of %1 is outside of the acceptable range. The value of the gain must be between %2 and %3.</text>
+		<desc>%1 = calculated gain. %2 = lower limit of valid range. %3 = upper limit of valid range</desc>
+	</str>
+	<str id="10">
+		<text>The value for SET POINT OFFSET is outside of the acceptable range. The value of the offset must be between %1 and %2 (%3% and %4% of the max value %5).</text>
+		<desc>%1 = lower limit of valid range. %2 = upper limit of valid range. %3 lower limit percent. %4 upper limit percent. %5 max value.</desc>
+	</str>
+	<str id="11">
+		<text>A TELEMETRY GAIN of %1 is outside of the acceptable range. The value of the gain must be between %2 and %3.</text>
+		<desc>%1 = calculated gain. %2 = lower limit of valid range. %3 = upper limit of valid range</desc>
+	</str>
+	<str id="12">
+		<text>The value for SET POINT OFFSET is outside of the acceptable range. The value of the offset must be between %1 and %2 (%3% and %4% of the max value %5).</text>
+		<desc>%1 = lower limit of valid range. %2 = upper limit of valid range. %3 lower limit percent. %4 upper limit percent. %5 max value.</desc>
+	</str>
+	<str id="13">
+		<text>Unable to save the calibration results since one or more values are outside of the acceptable range. Please re-attempt the calibration process to achieve acceptable gains.</text>
+		<desc>Unable to save the results of calibration due to the values being outside of the valid range.</desc>
+	</str>
+	<str id="14">
+		<text>A velocity of zero cannot be calibrated. Enter a non-zero value and start again.</text>
+		<desc>Unable to perform axis calibration move since velocity is 0.</desc>
+	</str>
+	<str id="15">
+		<text>The distance of the calibration routine must be at least %1 to move for the minimum required time of %2 seconds. Enter a distance greater than %1 or adjust the speed and try again.</text>
+		<desc>Calibration time will be too short. %1 = minimum distance. %2 = minimum time in seconds.</desc>
+	</str>
+	<str id="16">
+		<text>The %1 axis does not support limit calibration.</text>
+		<desc>%1 = axis name.</desc>
+	</str>
+	<str id="17">
+		<text>The positive and negative limits cannot be set to the same position.</text>
+		<desc>The user requested that both the negative and positive position limit be equal in value.</desc>
+	</str>
+	<str id="18">
+		<text>The zero position is outside the requested positive %1 and negative %2 limits. Move the zero position or request new limits.</text>
+		<desc>Invalid limits. %1 = positive limit. %2 = negative limit.</desc>
+	</str>
+	<str id="19">
+		<text>The rated shunt voltage must be greater than zero.</text>
+		<desc>User must enter in a shunt voltage more than 0.</desc>
+	</str>
+	<str id="20">
+		<text>The rated shunt amperage must be greater than zero.</text>
+		<desc>User must enter in a shunt amperage more than 0.</desc>
+	</str>
+	<str id="21">
+		<text>Calibration results saved successfully.</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="22">
+		<text>A zero position of %1 cannot be set because it is outside the limits %2 and %3. Jog the axis to be within the limits before setting the zero position.</text>
+		<desc>%1 = current position. %2 = first limit. %3 = second limit.</desc>
+	</str>
+	<str id="23">
+		<text>The measured distance results in a resolution (%1) that deviates more than %2% from the weld head's original resolution (%3). Enter in a new measurement or re-calibrate the limits.</text>
+		<desc>%1 = new volts per inch. %2 = limit percent. %3 = weld head volts per inch.</desc>
+	</str>
+	<str id="24">
+		<text>The %1 axis does not support diameter calibration.</text>
+		<desc>%1 = axis name.</desc>
+	</str>
+	<str id="25">
+		<text>No calibration required for flat track.</text>
+		<desc>N/A</desc>
+	</str>
+</language>

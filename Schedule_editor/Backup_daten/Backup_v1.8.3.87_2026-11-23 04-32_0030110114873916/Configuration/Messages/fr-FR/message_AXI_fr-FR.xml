@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="AXI" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>La position zéro n&apos;a pas été réglée pour l&apos;axe %1. Réglez une position zéro avant de démarrer une séquence.</text>
+		<desc>%1 = axis name</desc>
+	</str>
+	<str id="2">
+		<text>La position de l&apos;axe %1 dépassera les valeurs limites définies car la position actuelle est %2 et la largeur est %3. Les valeurs limites positives et négatives sont %4 et %5 respectivement.</text>		
+		<desc>%1 = axis name. %2 = position. %3 = width. %4 = positive limit. %5 = negative limit.</desc>	
+	</str>
+	<str id="3">
+		<text>Appuyez sur DEMARRER sur la commande à distance pour mesurer la largeur de la rainure à une hauteur de %1.</text>
+		<desc>Message to initiate width detection routine. %1 height to measure width at.</desc>
+	</str>
+	<str id="4">
+		<text>Centrage de la torche dans la rainure, veuillez patienter.</text>
+		<desc>Message displayed while the controller is executing the center positioning routine</desc>
+	</str>
+	<str id="5">
+		<text>Mesure de la largeur de la rainure, veuillez patienter.</text>
+		<desc>Message displayed while the controller is executing the width detection routine</desc>
+	</str>
+	<str id="6">
+		<text>Le positionnement du centre a échoué. Motif : %1.</text>
+		<desc>Message displayed when the Center positioning routine fails. %1 = reason for failure</desc>
+	</str>
+	<str id="7">
+		<text>Le système n&apos;a pas pu mesurer la largeur de la rainure. Motif : %1.</text>
+		<desc>Message displayed when the Width detection routine fails. %1 = reason for failure</desc>
+	</str>
+	<str id="8">
+		<text>L&apos;axe %1 ne touche pas la pièce. Motif : %2.</text>
+		<desc>Message displayed when the Touch routine fails. %1 = axis name. %2 = reason for failure</desc>
+	</str>
+	<str id="9">
+		<text>L&apos;axe %1 n&apos;a pas pu être rétracté. Motif : %2.</text>
+		<desc>Message displayed when the retract routine fails. %1 = axis name. %2 = reason for failure</desc>
+	</str>
+	<str id="10">
+		<text>L&apos;axe %1 n&apos;a pas pu être étendu. Motif : %2.</text>
+		<desc>Message displayed when the extend routine fails. %1 = reason for failure</desc>
+	</str>
+	<str id="11">
+		<text>Le système n&apos;a pas pu effacer un contact d&apos;électrode à l&apos;aide de l&apos;axe %1. Motif : %2.</text>
+		<desc>Message displayed when the Clear touch routine fails. %1 = axis name. %2 = reason for failure</desc>
+	</str>
+	<str id="12">
+		<text>La marche à vide de l&apos;axe %1 a échoué. Motif : %2|</text>
+		<desc>Message displayed when the axis cannot be jogged. %1 = axis name. %2 = reason for failure</desc>
+	</str>
+	<str id="13">
+		<text>L&apos;axe %1 n&apos;a pas pu se déplacer dans la séquence. Motif : %2|</text>
+		<desc>Message displayed when the axis relative move fails. %1 = axis name. %2 = reason for failure</desc>
+	</str>
+	<str id="14">
+		<text>Le déplacement de l&apos;axe %1 a échoué. Motif : %2|</text>
+		<desc>Message displayed when the axis cannot be jogged. %1 = axis name. %2 = reason for failure</desc>
+	</str>
+	<str id="15">
+		<text>Le système détecte une tension de circuit fermé au niveau de l&apos;électrode. L&apos;électrode touche peut-être la pièce. Faites marcher la torche à vide vers le haut pour l&apos;éloigner de la pièce afin d&apos;interrompre le contact.</text>
+		<desc>Message displayed when the touch sensor sensed that the electrode is touching when it should not be.</desc>
+	</str>
+	<str id="16">
+		<text>Le système détecte une tension à vide au niveau de l&apos;électrode. L&apos;électrode ne touche peut-être pas la pièce.</text>
+		<desc>Message displayed when the touch sensor sensed that the electrode is not touching when it should be.</desc>
+	</str>
+	<str id="17">
+		<text>Retour à l&apos;origine de la tête de soudage, patientez.</text>
+		<desc>Message displayed while the controller is executing the homing sequence</desc>
+	</str>
+	<str id="18">
+		<text>Le système a essayé %1 fois d&apos;effacer le contact de l&apos;électrode.</text>
+		<desc>Message displayed when the axis took longer than usual to clear the electrode touch.</desc>
+	</str>
+	<str id="19">
+		<text>L&apos;axe %1 ne peut pas se déplacer avec une vitesse de zéro. Réglez une vitesse autre que zéro pour déplacer l&apos;axe.</text>
+		<desc>%1 = axis name. Message displayed when the axis move fails because of zero velocity.</desc>
+	</str>
+	<str id="20">
+		<text>Une ou plusieurs positions de l&apos;axe ont été perdues suite à un arrêt d&apos;urgence. Voulez-vous que le système utilise la dernière position connue avant l&apos;arrêt d&apos;urgence ?</text>
+		<desc>Message displayed when the axes loses position due to an E-Stop.</desc>
+	</str>
+	<str id="21">
+		<text>Le système n&apos;a pas pu déplacer le moteur de l&apos;axe.</text>
+		<desc>Detail to be added to another message.</desc>
+	</str>
+	<str id="22">
+		<text>Le système n&apos;a pas pu régler une accélération pour le moteur de l&apos;axe.</text>
+		<desc>Detail to be added to another message.</desc>
+	</str>
+	<str id="23">
+		<text>Le système n&apos;a pas pu régler une vitesse pour le moteur de l&apos;axe.</text>
+		<desc>Detail to be added to another message.</desc>
+	</str>
+	<str id="24">
+		<text>Le système n&apos;a pas pu activer le capteur tactile.</text>
+		<desc>Detail to be added to another message.</desc>
+	</str>
+	<str id="25">
+		<text>Le système n&apos;a pas pu lire le courant du moteur de l&apos;axe %1.</text>
+		<desc>Message displayed when the system failed to read the motor current of an axis. %1 = axis name.</desc>
+	</str>
+	<str id="26">
+		<text>La routine de retour à l&apos;origine a expiré après un déplacement de %1. Essayez de faire revenir l&apos;axe à la position d&apos;origine depuis une meilleure position ou augmentez la distance d&apos;expiration de retour à l&apos;origine à partir de l&apos;écran des paramètres.</text>
+		<desc>%1 = time out distance.</desc>
+	</str>
+	<str id="27">
+		<text>Le système a dépassé le nombre maximum de tentatives de retour à l&apos;origine après %1 essais. Essayez de faire revenir l&apos;axe à la position d&apos;origine depuis une meilleure position ou augmentez le nombre maximum de tentatives de retour à l&apos;origine à partir de l&apos;écran des paramètres.</text>
+		<desc>%1 = maximum homing attempts.</desc>
+	</str>
+<!-- To be translated -->
+	<str id="28">
+		<text>The direction of motion was towards the standing limit. Try to move away from this limit.</text>
+		<desc>Detail to be added to another message.</desc>
+	</str>
+	<str id="29">
+		<text>Axis is currently performing a programmed move.</text>
+		<desc>Detail to be added to another message.</desc>
+	</str>
+	<str id="30">
+		<text>%1 velocity is not calibrated.</text>
+		<desc>Detail to be added to another message. %1 = Axis name.</desc>
+	</str>
+	<str id="31">
+		<text>%1 limits are not calibrated.</text>
+		<desc>Detail to be added to another message. %1 = Axis name.</desc>
+	</str>
+	<str id="32">
+		<text>The following axes must be tuned before running a weld:|%1</text>
+		<desc>%1 = List of axes names.</desc>
+	</str>
+	<str id="33">
+		<text>Weld head has a tuning revision of %1 but the system is configured to use tuning revision %2. Tuning parameters have been reset and the axes must be tuned before running a weld.</text>
+		<desc>%1 = weld head tuning revision. %2 = system tuning revision.</desc>
+	</str>
+	<str id="34">
+		<text>Unable to move %1. Move %2 to a safe position (%3) before moving.</text>
+		<desc>%1 = axis name. %2 = dependent axis name. %3 = the safe position</desc>
+	</str>
+	<str id="35">
+		<text>Trying to chip the residue away from the weld, please wait.</text>
+		<desc>Message displayed while the controller is executing the residue chipper routine</desc>
+	</str>
+	<str id="36">
+		<text>Layer diameter detection in progress, please wait.</text>
+		<desc>Message displayed while the controller is executing the automated layer diameter detection routine</desc>
+	</str>
+	<str id="37">
+		<text>Layer diameter detection in progress, please touch the pipe with the electrode outside and inside of the groove.</text>
+		<desc>Message displayed while the controller is executing the manual layer diameter detection routine</desc>
+	</str>	
+	<str id="38">
+		<text>The system failed to measure the layer diameter. Reason: %1.</text>
+		<desc>Message displayed when the layer diameter routine fails. %1 = reason for failure</desc>
+	</str>
+	<str id="39">
+		<text>The measured layer diameter is %1 based on the programmed pipe diameter (%2) and AHC touch positions (%3 and %4).</text>
+		<desc>Message displayed when the layer diameter routine succeeds. %1 = measure diameter. %2 = programmed pipe diameter. %3 and %4 = AHC touch positions </desc>
+	</str>
+	<str id="40">
+		<text>The %1 axis must be at its home position before starting a sequence.</text>
+		<desc>%1 = axis name</desc>
+	</str>
+</language>

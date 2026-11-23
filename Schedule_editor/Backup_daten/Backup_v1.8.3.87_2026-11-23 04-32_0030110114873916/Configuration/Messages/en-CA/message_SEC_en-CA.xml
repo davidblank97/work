@@ -1,0 +1,88 @@
+<language fileType="SEC" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.10.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:17</date>
+	</metadata>
+	<str id="1">
+		<text>The user name %1 does not exist.</text>
+		<desc>Unable to complete request as user name does not exist. %1 = user name entered</desc>
+	</str>
+	<str id="2">
+		<text>Incorrect password.</text>
+		<desc>Unable to login due to incorrect password</desc>
+	</str>
+	<str id="3">
+		<text>Could not create user %1, as the user name already exists on the system. Enter a unique user name and try again.</text>
+		<desc>Could not create user as user name entered already exists. %1 = user name entered</desc>
+	</str>
+	<str id="4">
+		<text>The security level %1 does not exist.</text>
+		<desc>Unable to complete request as security level name does not exist. %1 = security level name entered</desc>
+	</str>
+	<str id="5">
+		<text>Could not create security level %1, as the name already exists on the system. Enter a unique name for the security level and try again.</text>
+		<desc>Could not create security level as security level name entered already exists. %1 = security level name entered</desc>
+	</str>
+	<str id="6">
+		<text>A user must be logged in to complete the request.</text>
+		<desc>Machine to machine message. Unable to complete request since a user is not logged in</desc>
+	</str>
+	<str id="7">
+		<text>The user %1 does not have permission to complete the request.</text>
+		<desc>Machine to machine message. Unable to complete request since they do not have correct permission.</desc>
+	</str>
+	<str id="8">
+		<text>%1 is a default user and cannot be deleted.</text>
+		<desc>Unable to delete user since the selected user is the admin. %1 = name of the default user</desc>
+	</str>
+	<str id="9">
+		<text>The user name field cannot be empty. Enter a valid name and try again.</text>
+		<desc>Unable to complete request as user name cannot be empty.</desc>
+	</str>
+	<str id="10">
+		<text>The password field cannot be empty. Enter a valid password and try again.</text>
+		<desc>Unable to complete request as password cannot be empty.</desc>
+	</str>
+	<str id="11">
+		<text>Cannot delete this security level until user(s) are no longer assigned to it.</text>
+		<desc>Unable to delete the security level since existing user(s) use the security level. %1 = security level name.</desc>
+	</str>
+	<str id="12">
+		<text>Cannot delete the user %1 until they are logged out.</text>
+		<desc>Unable to delete the user that is currently logged in. %1 = user name selected</desc>
+	</str>
+	<str id="13">
+		<text>Unable to edit setting. Settings for user %1 are controlled by the administrator.</text>
+		<desc>Unable to edit setting since the settings for that account are controlled by the system's administrator. %1 = user name</desc>
+	</str>
+	<str id="14">
+		<text>Security level %1 does not have permission to clear critical faults.</text>
+		<desc>Security level %1 does not have permission to clear critical faults. %1 = security level</desc>
+	</str>
+	<str id="15">
+		<text>%1 is a default security level and cannot be deleted.</text>
+		<desc>%1 = default security level</desc>
+	</str>
+	<str id="16">
+		<text>User %1 logged in with USB key.</text>
+		<desc>%1 = user name</desc>
+	</str>
+	<str id="17">
+		<text>A USB security key already exists. Do you want to override the existing key?</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="18">
+		<text>A security key was detected but is not compatible with this system. Ensure that the key file is correct and try again or log in using credentials.</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="19">
+		<text>A security key was detected belonging to a fleet that this system is not a part of. Please log in using credentials.</text>
+		<desc>N/A</desc>
+	</str>
+	<str id="20">
+		<text>Created a USB Key for user %1.</text>
+		<desc>%1 = User Name assigned to a digital USB Key.</desc>
+	</str>
+</language>

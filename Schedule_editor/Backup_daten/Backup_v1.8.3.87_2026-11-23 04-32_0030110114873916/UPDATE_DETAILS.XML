@@ -1,0 +1,13 @@
+<update_details>
+	<target/>
+	<version>
+		<product>1.8.3.87</product>
+		<control_board>0.0.0.0</control_board>
+		<stepper_board>0.0.0.0</stepper_board>
+		<servo_board>0.0.0.0</servo_board>
+		<ui>0.0.0.0</ui>
+	</version>
+	<release_notes>
+		- Fixed an issue where the layer diameter could be set to an incorrect value if non-inch user units were used and a FireView write operation failed to write the layer diameter.
+	</release_notes>
+</update_details>

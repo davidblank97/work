@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="IOM" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.2.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Invalid digital address (%1 %2).</text>
+		<desc>Digital address does not exist. %1 = offset. %2 = bit.</desc>
+	</str>
+	<str id="2">
+		<text>Invalid analog address (%1).</text>
+		<desc>Analog address does not exist. %1 = offset.</desc>
+	</str>
+	<str id="3">
+		<text>The firmware on the Jasper Control Board is version %1 but the software is expecting version %2. Please contact Liburdi Automation for further instructions.</text>
+		<desc>%1 = firmware on the board. %2 = version the software is expecting to be loaded.</desc>
+	</str>
+	<str id="4">
+		<text>The firmware on the Servo Board is version %1 but the software is expecting version %2. Please contact Liburdi Automation for further instructions.</text>
+		<desc>%1 = firmware on the board. %2 = version the software is expecting to be loaded.</desc>
+	</str>
+	<str id="5">
+		<text>The firmware on the Stepper Board is version %1 but the software is expecting version %2. Please contact Liburdi Automation for further instructions.</text>
+		<desc>%1 = firmware on the board. %2 = version the software is expecting to be loaded.</desc>
+	</str>
+</language>

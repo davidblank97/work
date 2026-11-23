@@ -1,0 +1,16 @@
+<chainset>
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>ADMIN</author>
+		<date>2026/03/23 11:23:28</date>
+		<signature/>
+	</metadata>
+	<desc>
+		<note/>
+		<autorun>true</autorun>
+		<loopto>0</loopto>
+		<loopcount>0</loopcount>
+	</desc>
+	<schedules/>
+</chainset>

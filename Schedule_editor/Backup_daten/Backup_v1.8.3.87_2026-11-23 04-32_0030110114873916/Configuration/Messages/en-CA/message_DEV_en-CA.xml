@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<language  fileType="DEV" localeID="en-CA">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Coolant flow rate of %1 is below the minimum acceptable rate of %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Coolant flow rate is too low.</desc>
+	</str>
+	<str id="2">
+		<text>Shield Gas flow of %1 is below the minimum acceptable rate of %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Shield Gas flow rate too low</desc>
+	</str>
+	<str id="3">
+		<text>Trail Gas flow of %1 is below the minimum acceptable rate of %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Trail Gas flow rate too low</desc>
+	</str>
+	<str id="4">
+		<text>Backup Gas flow of %1 is below the minimum acceptable rate of %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Backup Gas flow rate too low</desc>
+	</str>
+	<str id="5">
+		<text>Plasma Gas flow of %1 is below the minimum acceptable rate of %2.</text>
+		<desc>%1 = current flow rate. %2 = minimum acceptable flow rate. Plasma Gas flow rate too low</desc>
+	</str>
+	<str id="6">
+		<text>Hot Wire Amps telemetry is zero.</text>
+		<desc>Hot wire is enabled but amperage telemetry is 0</desc>
+	</str>
+	<str id="7">
+		<text>Failed to enable the touch sensor.</text>
+		<desc>A detail to be added to another message. Failed to enable touch sense</desc>
+	</str>
+	<str id="8">
+		<text>Electrode touched the work piece.</text>
+		<desc>A detail to be added to another message. Electrode Touched</desc>
+	</str>
+	<str id="9">
+		<text>No Gas Flow.</text>
+		<desc>A detail to be added to another message. One or more gasses are enabled but no gas is flowing.</desc>
+	</str>
+	<str id="10">
+		<text>The system has detected an object in the warning Zone. Please remove the object and step back.</text>
+		<desc>Proximity sensor detected object in warning zone</desc>
+	</str>
+	<str id="11">
+		<text>A new weld head has been detected. Would you like to switch to the new weld head?</text>
+		<desc>New weld head was detected. The user has the option to load the new weld head.</desc>
+	</str>
+	<str id="12">
+		<text>Loading configuration for the %1 head.</text>
+		<desc>Loading new weld head. %1 = new weld head name.</desc>
+	</str>
+	<str id="13">
+		<text>A timeout occurred while waiting for the electrode to touch the work piece. Reason: %1</text>
+		<desc>Electrode did not touch the part in the specified waiting period. %1 = reason for failure</desc>
+	</str>
+	<str id="14">
+		<text>A timeout occurred while waiting for the electrode to break contact with the work piece. Reason: %1</text>
+		<desc>Electrode did not clear the touched part in the specified waiting period. %1 = reason for failure</desc>
+	</str>
+	<str id="15">
+		<text>Input power failure, the voltage of phase %1 is zero.</text>
+		<desc>Input power fault. %1 = voltage phase (A, B, or C)</desc>
+	</str>
+	<str id="16">
+		<text>Detected an input average line-line voltage of %1. System was previously tapped for %2 so the expected value was within %3 and %4. Re-tapping of transformer(T1) is required.|Power cycle the system and only user with an ADMIN security level may accept the new input voltage rating.</text>
+		<desc>%1 = detected voltage, %2 = previously tapped voltage, %3 = expected voltage lower limit, %4 = expected voltage upper limit</desc>
+	</str>
+	<str id="17">
+		<text>Detected input line-line voltage %1 of %2. The acceptable range is between %3 and %4.</text>
+		<desc>%1 = line-line voltage phases (AB, BC, or AC), %2 = detected voltage, %3 = expected voltage lower limit, %4 = expected voltage upper limit</desc>
+	</str>
+	<str id="18">
+		<text>The pendant device %1, is not supported by this system. Please contact Liburdi Automation for further instructions.</text>
+		<desc>Pendant is not compatible. %1 = device id</desc>
+	</str>
+	<str id="19">
+		<text>Incompatible pendant mode found in the configuration file. The file contained mode %1 and the system was expecting mode %2.</text>
+		<desc>Wrong pendant mode was specified in the pendant configuration file. %1 = mode in file. %2 expected mode</desc>
+	</str>
+	<str id="20">
+		<text>Failed to process request for key %1.</text>
+		<desc>Pendant mode that does not exist was specified for a key. %1 = key name.</desc>
+	</str>
+	<str id="21">
+		<text>A communication error occurred while trying to enable MFC at address %1.</text>
+		<desc>Enable failed to send to Mass Flow Controller due to a connection issue. %1 = MFC address.</desc>
+	</str>
+	<str id="22">
+		<text>Shield Gas flow rate is low.</text>
+		<desc>Shield Gas flow rate is in the warning range.</desc>
+	</str>
+	<str id="23">
+		<text>Trail Gas flow rate is low.</text>
+		<desc>Trail Gas flow rate is in the warning range.</desc>
+	</str>
+	<str id="24">
+		<text>Backup Gas flow rate is low.</text>
+		<desc>Backup Gas flow rate is in the warning range.</desc>
+	</str>
+	<str id="25">
+		<text>Plasma Gas flow rate is low.</text>
+		<desc>Plasma Gas flow rate is in the warning range.</desc>
+	</str>
+	<str id="26">
+		<text>Coolant flow rate is low.</text>
+		<desc>Coolant flow rate is in the warning range.</desc>
+	</str>
+	<str id="27">
+		<text>No gas flow detected. Purge has been turned off to avoid damage to the MFC.</text>
+		<desc>No gas flow detected so purge was disabled since the Mass Flow Controller may be damaged if it is enabled with no flow.</desc>
+	</str>
+	<str id="28">
+		<text>%1 flow rate setpoint is 0 for segment %2.</text>
+		<desc>Gas flow will be enabled with a flow rate of 0 which is not recommended. %1 = gas type. %2 = segment number</desc>
+	</str>
+	<str id="29">
+		<text>A device was disabled due to an error when updating its status.|%1</text>
+		<desc>An error occurred when checking a device's status so it was disabled. %1 = further details.</desc>
+	</str>
+	<str id="30">
+		<text>The system could not detect a work or ground cable connected to the part.</text>
+		<desc>Hardware could not detect a work cable connected to the part.</desc>
+	</str>
+	<str id="31">
+		<text>Power Supply Over Temperature.</text>
+		<desc>A detail to be added to another message. Temperature of the power supply exceeded the max threshold allowed for welding.</desc>
+	</str>
+	<str id="32">
+		<text>Oscillation steer-control should be moved once to sync position before starting a weld.</text>
+		<desc>Oscillation steering pot control has to be manually moved once before the user can weld.</desc>
+	</str>
+	<str id="33">
+		<text>Pendant is not connected.</text>
+		<desc>Pendant is enabled but not connected.</desc>
+	</str>
+	<str id="34">
+		<text>Pendant (%1) connected.</text>
+		<desc>Pendant is connected. Type = %1</desc>
+	</str>
+	<str id="35">
+		<text>No Coolant flow.</text>
+		<desc>Coolant flow rate is too low.</desc>
+	</str>
+	<str id="36">
+		<text>No Shield Gas flow.</text>
+		<desc>Shield Gas flow rate too low</desc>
+	</str>
+	<str id="37">
+		<text>No Trail Gas flow.</text>
+		<desc>Trail Gas flow rate too low</desc>
+	</str>
+	<str id="38">
+		<text>No Backup Gas flow.</text>
+		<desc>Backup Gas flow rate too low</desc>
+	</str>
+	<str id="39">
+		<text>No Plasma Gas flow.</text>
+		<desc>Plasma Gas flow rate too low</desc>
+	</str>
+	<str id="40">
+		<text>No MFC detected at address %1.</text>
+		<desc>%1 = address of MFC (Mass Flow Controller) not detected</desc>
+	</str>
+	<str id="41">
+		<text>No MFM detected at address %1.</text>
+		<desc>%1 = address of MFM (Mass Flow Meter) not detected</desc>
+	</str>
+	<str id="42">
+		<text>Shield Gas MFC is not OEM calibrated.</text>
+		<desc>Shield Gas MFC was calibrated locally instead of by the MFC manufacturer.</desc>
+	</str>
+	<str id="43">
+		<text>Shield Gas MFM is not OEM calibrated.</text>
+		<desc>Shield Gas MFM was calibrated locally instead of by the MFM manufacturer.</desc>
+	</str>
+	<str id="44">
+		<text>Trail Gas MFC is not OEM calibrated.</text>
+		<desc>Trail Gas MFC was calibrated locally instead of by the MFC manufacturer.</desc>
+	</str>
+	<str id="45">
+		<text>Trail Gas MFM is not OEM calibrated.</text>
+		<desc>Trail Gas MFM was calibrated locally instead of by the MFM manufacturer.</desc>
+	</str>
+	<str id="46">
+		<text>Backup Gas MFC is not OEM calibrated.</text>
+		<desc>Backup Gas MFC was calibrated locally instead of by the MFC manufacturer.</desc>
+	</str>
+	<str id="47">
+		<text>Backup Gas MFM is not OEM calibrated.</text>
+		<desc>Backup Gas MFM was calibrated locally instead of by the MFM manufacturer.</desc>
+	</str>
+	<str id="48">
+		<text>Plasma Gas MFC is not OEM calibrated.</text>
+		<desc>Plasma Gas MFC was calibrated locally instead of by the MFC manufacturer.</desc>
+	</str>
+	<str id="49">
+		<text>Plasma Gas MFM is not OEM calibrated.</text>
+		<desc>Plasma Gas MFM was calibrated locally instead of by the MFM manufacturer.</desc>
+	</str>
+	<str id="50">
+		<text>Input power failure, the average voltage %1 is not supported. Check input power.</text>
+		<desc>Input power fault. %1 = average voltage</desc>
+	</str>
+	<str id="51">
+		<text>System is inter-locked. Un-lock to allow welding.</text>
+		<desc>The inter-lock button on the closed head pendant is active</desc>
+	</str>
+	<str id="52">
+		<text>Electrode failed to touch the workpiece. Moving any axis during this operation stops execution and will cause this to fail.</text>
+		<desc>Electrode did not touch the part.</desc>
+	</str>
+</language>

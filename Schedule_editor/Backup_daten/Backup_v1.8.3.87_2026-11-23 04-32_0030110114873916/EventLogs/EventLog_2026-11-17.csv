@@ -1,0 +1,286 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+03:07:12:176|11|USER LOGOUT|
+
+03:07:17:180|1|ALARM|[SEC002] Incorrect password.
+
+
+03:07:45:507|0|USER LOGIN|ADMIN
+
+03:07:45:508|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:07:51:542|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+03:07:51:605|3|SCHEDULE LOADED|0405-Fill-IN
+
+03:07:55:400|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+03:14:22:020|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:14:22:559|11|USER LOGOUT|ADMIN
+
+03:14:32:703|0|USER LOGIN|Welder
+
+03:14:32:705|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+03:15:54:540|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+03:15:54:541|1|ALARM|[SCH006] Loaded schedule 9997-VERIFICATION 60SEC.
+
+03:21:29:195|7|WELD STARTED|
+
+03:26:09:036|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:26:09:037|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+03:34:11:640|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:34:11:641|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+03:59:34:088|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:59:34:089|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+03:59:47:646|3|SCHEDULE LOADED|0404-Fill-OUT
+
+03:59:47:648|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+04:00:55:964|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:00:56:483|1|ALARM|[AXI012] The avc axis failed to jog. Reason: [AXI015] The system is detecting a closed circuit voltage at the electrode. The electrode may be touching the work piece. Jog the torch up and away from the part to break contact.
+
+
+
+
+04:02:06:332|10|WELD MODE CHANGED|WELD
+
+04:03:08:058|7|WELD STARTED|
+
+04:18:41:769|1|ALARM|MIN
+
+04:18:43:540|1|ALARM|MIN
+
+04:18:45:602|1|ALARM|MIN
+
+04:18:49:781|1|ALARM|MIN
+
+04:18:57:781|1|ALARM|MIN
+
+04:19:08:557|1|ALARM|MIN
+
+04:21:30:437|1|ALARM|MIN
+
+04:29:56:520|1|ALARM|MIN
+
+04:42:40:903|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:41:213|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:41:412|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:41:842|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:41:943|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:42:063|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:42:373|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:42:503|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:43:363|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:43:652|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:43:683|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:43:933|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:44:163|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:44:253|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:44:273|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:44:432|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:44:493|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:45:583|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:46:063|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:42:46:324|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:32:554|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:36:013|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:36:863|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:37:734|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:39:613|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:39:752|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:54:963|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:55:363|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:55:412|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:55:463|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:48:56:773|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:49:02:103|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:49:11:744|1|ALARM|[DEV008] Electrode touched the work piece.
+
+04:49:41:039|3|SCHEDULE LOADED|0405-Fill-IN
+
+04:49:41:040|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+04:52:36:582|10|WELD MODE CHANGED|TEST
+
+04:53:09:621|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+06:20:52:192|0|USER LOGIN|Welder
+
+06:20:52:196|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+06:22:30:630|0|USER LOGIN|Welder
+
+06:22:30:634|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+06:22:38:644|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+06:22:38:709|3|SCHEDULE LOADED|0405-Fill-IN
+
+06:22:42:507|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+06:27:56:864|3|SCHEDULE LOADED|0405-Fill-IN
+
+06:27:56:864|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+06:30:04:362|1|ALARM|[DEV008] Electrode touched the work piece.
+
+06:31:37:428|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+06:40:36:503|7|WELD STARTED|
+
+06:40:53:884|8|WELD STOPPED|
+
+06:41:22:469|10|WELD MODE CHANGED|WELD
+
+06:41:24:735|7|WELD STARTED|
+
+07:08:46:810|1|ALARM|MIN
+
+07:09:00:977|1|ALARM|MIN
+
+07:09:07:030|1|ALARM|MIN
+
+07:09:44:037|1|ALARM|MIN
+
+07:14:01:095|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+07:19:22:358|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: UNSPECIFIED
+
+07:19:57:088|3|SCHEDULE LOADED|0404-Fill-OUT
+
+07:19:57:088|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+07:24:29:104|7|WELD STARTED|
+
+07:57:13:823|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+08:02:24:549|1|ALARM|[EXE002] The sequence failed during step: Homing. Reason: UNSPECIFIED
+
+08:10:00:929|1|ALARM|[MOD011] Modbus watchdog timeout.
+
+08:10:13:029|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+09:24:22:829|1|ALARM|[MOT008] Positive limit reached: wm-inout
+
+
+09:24:23:458|1|ALARM|[AXI012] The wm-inout axis failed to jog. Reason: [AXI021] The system failed to move the axis' motor.
+[AXI028] The direction of motion was towards the standing limit. Try to move away from this limit.
+
+
+
+
+09:25:42:030|7|WELD STARTED|
+
+09:25:42:033|1|ALARM|[SCH030] Do you want to clear all warnings and start the weld sequence?
+
+09:33:40:429|3|SCHEDULE LOADED|0405-Fill-IN
+
+09:33:40:434|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+09:34:22:003|7|WELD STARTED|
+
+09:54:56:915|1|ALARM|MIN
+
+09:54:59:447|1|ALARM|MIN
+
+10:06:46:387|8|WELD STOPPED|
+
+10:07:11:137|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+10:15:37:322|1|ALARM|[DEV008] Electrode touched the work piece.
+
+10:15:38:695|1|ALARM|[AXI012] The avc axis failed to jog. Reason: [AXI015] The system is detecting a closed circuit voltage at the electrode. The electrode may be touching the work piece. Jog the torch up and away from the part to break contact.
+
+
+
+
+10:15:50:761|1|ALARM|[DEV008] Electrode touched the work piece.
+
+10:18:35:508|3|SCHEDULE LOADED|0404-Fill-OUT
+
+10:18:35:508|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+10:19:20:918|3|SCHEDULE LOADED|0402-Hotpass1
+
+10:19:20:919|1|ALARM|[SCH006] Loaded schedule 0402-Hotpass1.
+
+10:19:33:211|3|SCHEDULE LOADED|0404-Fill-OUT
+
+10:19:33:213|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+10:21:27:988|7|WELD STARTED|
+
+10:22:00:064|1|ALARM|MIN
+
+10:22:01:070|1|ALARM|MIN
+
+10:22:02:648|1|ALARM|MIN
+
+10:22:04:486|1|ALARM|MIN
+
+10:54:37:886|8|WELD STOPPED|
+
+10:55:06:443|1|ALARM|[AXI017] Homing the weld head, please wait.
+
+11:00:13:323|9|WELD ABORTED|
+
+11:01:03:629|1|ALARM|[MOD011] Modbus watchdog timeout.
+

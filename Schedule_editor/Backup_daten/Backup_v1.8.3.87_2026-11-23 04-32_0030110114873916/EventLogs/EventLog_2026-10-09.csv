@@ -1,0 +1,266 @@
+EVENT TYPE ID|EVENT TYPE NAME|TIMESTAMP|DETAILS
+
+09:55:11:093|0|USER LOGIN|SUPERVISO
+
+09:55:11:097|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+09:55:11:141|1|ALARM|[SEC016] User SUPERVISO logged in with USB key.
+
+09:55:16:883|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+09:55:16:948|3|SCHEDULE LOADED|9997-VERIFICATION 60SEC
+
+09:55:20:738|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+10:20:38:863|4|SCHEDULE SAVED|0407-Comp
+
+10:20:38:864|1|ALARM|[SCH008] Saved schedule 0407-Comp.
+
+10:20:38:897|1|ALARM|[SCH018] Parameter(s) in schedule '0407-Comp' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+10:20:38:897|3|SCHEDULE LOADED|0407-Comp
+
+10:20:38:919|1|ALARM|[SCH006] Loaded schedule 0407-Comp.
+
+10:21:44:997|4|SCHEDULE SAVED|0407-Comp
+
+10:21:44:998|1|ALARM|[SCH008] Saved schedule 0407-Comp.
+
+10:21:51:839|4|SCHEDULE SAVED|0402-Hotpass1
+
+10:21:51:840|1|ALARM|[SCH008] Saved schedule 0402-Hotpass1.
+
+10:21:51:874|1|ALARM|[SCH018] Parameter(s) in schedule '0402-Hotpass1' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+10:21:51:875|3|SCHEDULE LOADED|0402-Hotpass1
+
+10:21:51:899|1|ALARM|[SCH006] Loaded schedule 0402-Hotpass1.
+
+10:22:03:359|4|SCHEDULE SAVED|0402-Hotpass1
+
+10:22:03:361|1|ALARM|[SCH008] Saved schedule 0402-Hotpass1.
+
+10:22:07:309|4|SCHEDULE SAVED|0403-Hotpass2
+
+10:22:07:310|1|ALARM|[SCH008] Saved schedule 0403-Hotpass2.
+
+10:22:07:348|1|ALARM|[SCH018] Parameter(s) in schedule '0403-Hotpass2' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+10:22:07:352|3|SCHEDULE LOADED|0403-Hotpass2
+
+10:22:07:371|1|ALARM|[SCH006] Loaded schedule 0403-Hotpass2.
+
+10:22:17:112|4|SCHEDULE SAVED|0403-Hotpass2
+
+10:22:17:113|1|ALARM|[SCH008] Saved schedule 0403-Hotpass2.
+
+10:22:20:321|4|SCHEDULE SAVED|0404-Fill-OUT
+
+10:22:20:321|1|ALARM|[SCH008] Saved schedule 0404-Fill-OUT.
+
+10:22:20:327|1|ALARM|[SCH018] Parameter(s) in schedule '0404-Fill-OUT' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+10:22:20:353|3|SCHEDULE LOADED|0404-Fill-OUT
+
+10:22:20:377|1|ALARM|[SCH006] Loaded schedule 0404-Fill-OUT.
+
+10:22:30:801|4|SCHEDULE SAVED|0404-Fill-OUT
+
+10:22:30:803|1|ALARM|[SCH008] Saved schedule 0404-Fill-OUT.
+
+10:22:34:573|4|SCHEDULE SAVED|0405-Fill-IN
+
+10:22:34:574|1|ALARM|[SCH008] Saved schedule 0405-Fill-IN.
+
+10:22:34:609|1|ALARM|[SCH018] Parameter(s) in schedule '0405-Fill-IN' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+10:22:34:608|3|SCHEDULE LOADED|0405-Fill-IN
+
+10:22:34:633|1|ALARM|[SCH006] Loaded schedule 0405-Fill-IN.
+
+10:22:45:587|4|SCHEDULE SAVED|0405-Fill-IN
+
+10:22:45:588|1|ALARM|[SCH008] Saved schedule 0405-Fill-IN.
+
+10:22:50:745|4|SCHEDULE SAVED|0406-Fill-MID
+
+10:22:50:746|1|ALARM|[SCH008] Saved schedule 0406-Fill-MID.
+
+10:22:50:784|1|ALARM|[SCH018] Parameter(s) in schedule '0406-Fill-MID' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+10:22:50:785|3|SCHEDULE LOADED|0406-Fill-MID
+
+10:22:50:805|1|ALARM|[SCH006] Loaded schedule 0406-Fill-MID.
+
+10:23:00:823|4|SCHEDULE SAVED|0406-Fill-MID
+
+10:23:00:824|1|ALARM|[SCH008] Saved schedule 0406-Fill-MID.
+
+10:23:06:078|3|SCHEDULE LOADED|0407-Comp
+
+10:23:06:078|1|ALARM|[SCH006] Loaded schedule 0407-Comp.
+
+10:23:12:933|4|SCHEDULE SAVED|0408-Cap
+
+10:23:12:934|1|ALARM|[SCH008] Saved schedule 0408-Cap.
+
+10:23:12:965|1|ALARM|[SCH018] Parameter(s) in schedule '0408-Cap' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+10:23:12:966|3|SCHEDULE LOADED|0408-Cap
+
+10:23:12:989|1|ALARM|[SCH006] Loaded schedule 0408-Cap.
+
+10:23:20:826|4|SCHEDULE SAVED|0408-Cap
+
+10:23:20:827|1|ALARM|[SCH008] Saved schedule 0408-Cap.
+
+10:23:24:669|4|SCHEDULE SAVED|0409-Cap-LOW _W
+
+10:23:24:671|1|ALARM|[SCH008] Saved schedule 0409-Cap-LOW _W.
+
+10:23:24:706|1|ALARM|[SCH018] Parameter(s) in schedule '0409-Cap-LOW _W' are out of range.
+[SCH025] The following changes will be saved to the schedule. 
+[API006] WM-UPDOWN JOG has been changed from 100.00006% to the maximum acceptable value of 100.00000%.
+
+
+10:23:24:706|3|SCHEDULE LOADED|0409-Cap-LOW _W
+
+10:23:24:729|1|ALARM|[SCH006] Loaded schedule 0409-Cap-LOW _W.
+
+10:23:38:756|4|SCHEDULE SAVED|0409-Cap-LOW _W
+
+10:23:38:756|1|ALARM|[SCH008] Saved schedule 0409-Cap-LOW _W.
+
+10:23:48:263|3|SCHEDULE LOADED|0402-Hotpass1
+
+10:23:48:264|1|ALARM|[SCH006] Loaded schedule 0402-Hotpass1.
+
+10:26:58:582|4|SCHEDULE SAVED|0402-Hotpass1
+
+10:26:58:583|1|ALARM|[SCH008] Saved schedule 0402-Hotpass1.
+
+10:27:01:406|3|SCHEDULE LOADED|0403-Hotpass2
+
+10:27:01:407|1|ALARM|[SCH006] Loaded schedule 0403-Hotpass2.
+
+10:27:48:877|10|WELD MODE CHANGED|WELD
+
+10:27:50:317|10|WELD MODE CHANGED|TEST
+
+10:27:54:264|10|WELD MODE CHANGED|WELD
+
+10:27:55:569|1|ALARM|[DEV030] The system could not detect a work or ground cable connected to the part.
+
+
+10:28:07:799|1|ALARM|[DEV030] The system could not detect a work or ground cable connected to the part.
+
+
+10:28:14:327|1|ALARM|[DEV030] The system could not detect a work or ground cable connected to the part.
+
+
+10:28:27:326|10|WELD MODE CHANGED|TEST
+
+10:28:28:257|7|WELD STARTED|
+
+10:28:37:318|1|ALARM|[DAT002] Limit Fault: WIRE
+
+10:28:55:667|1|ALARM|[EXE001] The sequence has been aborted. Reason: [EXE013] The WIRE telemetry (-0.1123cm/min) went outside of the acceptable range of 95.18cm/min to 202.39cm/min. To view and adjust the acceptable ranges, use the LIMITS screen.
+
+10:39:49:160|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+10:39:49:359|1|ALARM|[MOT004] Following Error: wm-inout
+
+10:39:49:759|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+10:42:52:164|1|ALARM|[MOT004] Following Error: osc
+
+10:42:52:171|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+10:42:52:194|1|ALARM|[MOT002] The wm-updown axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.
+
+10:44:43:264|0|USER LOGIN|SUPERVISO
+
+10:44:43:270|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+10:44:43:274|1|ALARM|[SEC016] User SUPERVISO logged in with USB key.
+
+10:44:48:495|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+10:44:48:548|3|SCHEDULE LOADED|0403-Hotpass2
+
+10:44:48:578|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+10:44:52:334|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+10:50:58:185|1|ALARM|[MOT002] The travel axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.
+
+10:50:58:199|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+10:50:58:225|1|ALARM|[MOT004] Following Error: osc
+
+10:51:59:233|0|USER LOGIN|SUPERVISO
+
+10:51:59:237|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+
+10:51:59:268|1|ALARM|[SEC016] User SUPERVISO logged in with USB key.
+
+10:52:04:215|2|WELDHEAD LOADED|NGRT + H-HEAD
+
+10:52:04:286|3|SCHEDULE LOADED|0403-Hotpass2
+
+10:52:04:303|1|ALARM|[MOT009] Negative limit reached: wm-inout
+
+
+10:52:08:073|1|ALARM|[DEV034] Pendant (INFINITYPRO) connected.
+
+10:52:59:898|1|ALARM|[MOT004] Following Error: wm-inout
+
+10:53:01:097|1|ALARM|[MOT002] The wm-inout axis' motor exceeded its rated current. Inspect the motor before continuing normal operation.
+
+10:53:04:299|1|ALARM|[MOT008] Positive limit reached: wm-inout
+
+
+10:53:04:303|1|ALARM|[MOT004] Following Error: TUNGSTEN
+
+10:53:33:139|10|WELD MODE CHANGED|WELD
+
+10:53:34:572|10|WELD MODE CHANGED|TEST
+
+11:17:20:496|1|ALARM|[CRI001] To proceed:
+1. Release Emergency Stop buttons.
+2. Press the blue reset button on the front panel to reset.
+

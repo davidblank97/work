@@ -1,0 +1,72 @@
+<Schema name="WHCAL" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.6.10.0">
+
+	<ElementType name="cal" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (CAL)-->
+		<AttributeType name="model" required="yes" dt:type="string" />
+		<attribute type="model" />
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="axis" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (CAL)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (METADATA)-->
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="axis" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<!--DECLARE ALL ELEMENTS (AXIS)-->
+		<element type="gain" minOccurs="0" maxOccurs="1" />
+		<element type="offset" minOccurs="0" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="0" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="0" maxOccurs="1" />
+		<element type="rev_gain" minOccurs="0" maxOccurs="1" />
+		<element type="rev_offset" minOccurs="0" maxOccurs="1" />
+		<element type="rev_tel_gain" minOccurs="0" maxOccurs="1" />
+		<element type="rev_tel_offset" minOccurs="0" maxOccurs="1" />
+		<element type="pos_limit" minOccurs="0" maxOccurs="1" />
+		<element type="neg_limit" minOccurs="0" maxOccurs="1" />
+		<element type="vpi" minOccurs="0" maxOccurs="1" />
+		<element type="zero" minOccurs="0" maxOccurs="1" />
+		<element type="diameter" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (ALL)-->
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+	<ElementType name="gain" model="closed"  dt:type="float">
+		<AttributeType name="timestamp" required="yes" dt:type="string" />
+		<attribute type="timestamp" />
+	</ElementType>
+	<ElementType name="offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tel_gain" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="tel_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="rev_gain" model="closed"  dt:type="float" content="textOnly">
+		<AttributeType name="timestamp" required="yes" dt:type="string" />
+		<attribute type="timestamp" />
+	</ElementType>
+	<ElementType name="rev_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="rev_tel_gain" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="rev_tel_offset" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="pos_limit" model="closed"  dt:type="float">
+		<AttributeType name="timestamp" required="yes" dt:type="string" />
+		<attribute type="timestamp" />
+	</ElementType>
+	<ElementType name="neg_limit" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="vpi" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="zero" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="diameter" model="closed"  dt:type="float">
+		<AttributeType name="timestamp" required="yes" dt:type="string" />
+		<attribute type="timestamp" />
+	</ElementType>
+</Schema>

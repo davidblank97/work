@@ -1,0 +1,28 @@
+<system_states>
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.0</config_version>
+		<author>UPGRADE</author>
+		<date>2026/03/23 10:44:09</date>
+	</metadata>
+	<last_loaded_schedule>\FlashDisk\AutoRun\Schedules\04_HIC_PK_764_CS_NGRT\0409-Cap-LOW _W.xml</last_loaded_schedule>
+	<last_run_screen_configuration>NGRT</last_run_screen_configuration>
+	<last_input_voltage_rating>0</last_input_voltage_rating>
+	<auto_schedule_selection_enable>false</auto_schedule_selection_enable>
+	<mig_pulse_run_screen_configuration/>
+	<mig_cv_run_screen_configuration/>
+	<mig_dip_run_screen_configuration/>
+	<critical_fault_type>0</critical_fault_type>
+	<critical_fault_telemetry>0.000000</critical_fault_telemetry>
+	<critical_fault_setpoint>0.000000</critical_fault_setpoint>
+	<total_system_arc_time>97973.383000</total_system_arc_time>
+	<last_logged_in_user_name>ADMIN</last_logged_in_user_name>
+	<tig_sync_disabled_run_screen_configuration/>
+	<tig_arc_sync_run_screen_configuration/>
+	<tig_no_sync_run_screen_configuration/>
+	<tig_osc_sync_run_screen_configuration/>
+	<plasma_sync_disabled_run_screen_configuration/>
+	<plasma_arc_sync_run_screen_configuration/>
+	<plasma_no_sync_run_screen_configuration/>
+	<plasma_osc_sync_run_screen_configuration/>
+</system_states>

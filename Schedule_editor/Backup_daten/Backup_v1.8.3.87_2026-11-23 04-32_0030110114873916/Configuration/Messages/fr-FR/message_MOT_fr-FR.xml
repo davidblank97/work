@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="MOT" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.4.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>La tension du bus du moteur de l&apos;axe %1 est incorrecte.</text>
+		<desc>Bad Bus Voltage. %1 = Axis name</desc>
+	</str>
+	<str id="2">
+		<text>Le moteur de l&apos;axe %1 a dépassé son courant nominal. Inspectez le moteur avant de poursuivre en mode de fonctionnement normal.</text>
+		<desc>Over Current. %1 = Axis name</desc>
+	</str>
+	<str id="3">
+		<text>Le moteur de l&apos;axe %1 a dépassé sa température nominale. Attendez que le moteur refroidisse et inspectez-le avant de poursuivre en mode de fonctionnement normal.</text>
+		<desc>Over Temperature. %1 = Axis name</desc>
+	</str>
+	<str id="4">
+		<text>Erreur de suivi : %1</text>
+		<desc>Following Error. %1 = Axis name</desc>
+	</str>
+	<str id="5">
+		<text>Vitesse excessive : %1</text>
+		<desc>Over Speed. %1 = Axis name</desc>
+	</str>
+	<str id="6">
+		<text>Accélération excessive : %1</text>
+		<desc>Over Acceleration. %1 = Axis name</desc>
+	</str>
+	<str id="7">
+		<text>Vérifier l&apos;ID d&apos;erreur : %1</text>
+		<desc>Check Error ID. %1 = Axis name</desc>
+	</str>
+	<str id="8">
+		<text>Limite positive atteinte : %1</text>
+		<desc>Positive limit reached. %1 = Axis name</desc>
+	</str>
+	<str id="9">
+		<text>Limite négative atteinte : %1</text>
+		<desc>Negative limit reached. %1 = Axis name</desc>
+	</str>
+	<str id="10">
+		<text>Une erreur de communication s&apos;est produite sur l&apos;un des moteurs. Veuillez redémarrer le système complet</text>
+		<desc>Motor communication error</desc>
+	</str>
+	<str id="11">
+		<text>Une erreur de communication s&apos;est produite sur l&apos;un des moteurs. Faites un arrêt d&apos;urgence et vérifiez la connexion du moteur.</text>
+		<desc>Motor connection error</desc>
+	</str>
+	<str id="12">
+		<text>La position zéro n&apos;est pas réglée : %1</text>
+		<desc>Axis not zeroed. %1 = Axis name</desc>
+	</str>
+	<str id="13">
+		<text>Court-circuit : %1</text>
+		<desc>Short Circuit. %1 = Axis name</desc>
+	</str>
+	<str id="14">
+		<text>Sous-tension : %1</text>
+		<desc>Under Voltage. %1 = Axis name</desc>
+	</str>	
+	<str id="15">
+		<text>Surtension : %1</text>
+		<desc>Over Voltage. %1 = Axis name</desc>
+	</str>	
+	<str id="16">
+		<text>Une erreur moteur s&apos;est produite. Consultez les journaux pour en savoir plus.</text>
+		<desc>Could not start weld since a motor error happened</desc>
+	</str>
+	<str id="17">
+		<text>Un ou plusieurs moteurs ont atteint une valeur limite.</text>
+		<desc>Could not start weld since one or more motors have reached a limit.</desc>
+	</str>
+	<str id="18">
+		<text>Aucun fichier SMX n&apos;a été trouvé dans le dossier de mise à jour</text>
+		<desc>No SMX found in the update folder</desc>
+	</str>
+	<str id="19">
+		<text>Plusieurs fichiers SMX ont été trouvés sur la clé USB.</text>
+		<desc>More than one SMX files found on USB.</desc>
+	</str>
+	<str id="20">
+		<text>Un moteur n&apos;a pas appliqué les freins.</text>
+		<desc>Motor failed to apply brakes.</desc>
+	</str>
+	<str id="21">
+		<text>Un moteur n&apos;a pas relâché les freins.</text>
+		<desc>Motor failed to release brakes.</desc>
+	</str>
+	<str id="22">
+		<text>Un moteur n&apos;a pas d&apos;ES.</text>
+		<desc>Motor does not have IO.</desc>
+	</str>
+	<str id="23">
+		<text>L&apos;initialisation du moteur a échoué. Motif : %1</text>
+		<desc>Failed to initialize the motor. %1 = reason for failure</desc>
+	</str>
+	<str id="24">
+		<text>Le chargement du fichier de configuration a échoué : %1.</text>
+		<desc>Failed to load configuration file. %1 = Axis name</desc>
+	</str>
+	<str id="25">
+		<text>An error has occurred, which has caused a service to stop unexpectedly. Contact Liburdi for further assistance.</text>
+		<desc>An error has occurred, which has caused a service to stop unexpectedly.</desc>
+	</str>
+	<str id="26">
+		<text>%1 target position outside of max range.</text>
+		<desc>%1 target position outside of max range.</desc>
+	</str>
+	<str id="27">
+		<text>%1 lost reference position. Please re-zero or re-home the axis.</text>
+		<desc>Warning to re-zero or re-home when axis loses reference position. %1 = axis name.</desc>
+	</str>		
+</language>

@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="CHS" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Séquence de programmes chargée %1.</text>
+		<desc>%1 = chainset name</desc>
+	</str>
+	<str id="2">
+		<text>Séquence de programmes enregistrée %1.</text>
+		<desc>%1 = chainset name</desc>
+	</str>
+	<str id="3">
+		<text>Aucune séquence de programmes n&apos;a été chargée. Chargez une séquence de programmes avant d&apos;appuyer sur DEMARRER.</text>
+		<desc>Unable to run a chainset since one is not loaded</desc>
+	</str>
+	<str id="4">
+		<text>La séquence de programmes chargée est vide. Ajoutez un ou plusieurs programmes avant d&apos;exécuter la séquence.</text>
+		<desc>Unable to run a chainset since the chainset does not contain any schedules</desc>
+	</str>
+	<str id="5">
+		<text>Un ou plusieurs programmes de la séquence n&apos;existent plus. Remplacez ou supprimez les programmes non valides.</text>
+		<desc>One or more schedules contained in the loaded chainset are invalid.</desc>
+	</str>
+	<str id="6">
+		<text>Aucun programme de la séquence chargée n&apos;est activé. Activez au moins un programme avant d&apos;appuyer sur DEMARRER.</text>
+		<desc>The chainset does not contain any enabled schedules and cannot be ran.</desc>
+	</str>
+	<str id="7">
+		<text>ID %1 d&apos;une séquence de programmes non valide.</text>
+		<desc>%1 = chainset ID.</desc>
+	</str>
+	<str id="8">
+		<text>Une séquence de programmes avec un ID %1 existe déjà. Voulez-vous écraser la séquence de programmes existante ?</text>
+		<desc>%1 = chainset ID.</desc>
+	</str>
+	<str id="9">
+		<text>Des références à des programmes n&apos;existent plus et ont été supprimées de toutes les séquences de programmes. Références qui ont été supprimées : |%1</text>
+		<desc>%1 = details on which schedules were removed.</desc>
+	</str>
+</language>

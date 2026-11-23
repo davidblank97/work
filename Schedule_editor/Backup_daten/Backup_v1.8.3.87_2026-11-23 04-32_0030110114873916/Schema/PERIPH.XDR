@@ -1,0 +1,282 @@
+<Schema name="PERIPH" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.3.0">
+	<ElementType name="peripheral" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="name" required="yes" dt:type="string" />
+		<attribute type="name" />
+		<!--DECLARE ELEMENTS(PERIPHERAL)-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="ports" minOccurs="1" maxOccurs="1" />
+		<element type="devices" minOccurs="0" maxOccurs="1" />
+		<element type="services" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<!--DEFINE ELEMENTS(PERIPHERAL)-->
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="0" maxOccurs="1" />
+		<element type="date" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="ports" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS(PORTS)-->
+		<element type="comport" minOccurs="0" maxOccurs="*" />
+		<element type="ethernet" minOccurs="0" maxOccurs="*" />
+		<element type="canbus" minOccurs="0" maxOccurs="*" />
+		<element type="pipe" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+	<ElementType name="devices" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS(DEVICES)-->
+		<element type="seamtracker" minOccurs="0" maxOccurs="1" />
+		<element type="pendant" minOccurs="0" maxOccurs="1" />
+		<element type="energy_meter" minOccurs="0" maxOccurs="1" />
+		<element type="wire_manipulator" minOccurs="0" maxOccurs="1" />
+		<element type="gas_controller" minOccurs="0" maxOccurs="1" />
+		<element type="cooler" minOccurs="0" maxOccurs="1" />
+		<element type="proximity_sensor" minOccurs="0" maxOccurs="1" />
+		<element type="camera" minOccurs="0" maxOccurs="1" />
+		<element type="weldhead_switch" minOccurs="0" maxOccurs="1" />
+		<element type="printer" minOccurs="0" maxOccurs="1" />
+		<element type="home_switch" minOccurs="0" maxOccurs="1"/>
+		<element type="fan" minOccurs="0" maxOccurs="1" />
+		<element type="thermostat" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="services" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ELEMENTS(SERVICES)-->
+		<element type="ota" minOccurs="1" maxOccurs="1" />
+		<element type="whiteking_api" minOccurs="1" maxOccurs="1" />
+		<element type="modbus" minOccurs="1" maxOccurs="1" />
+		<element type="eip" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="ota" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+		<!--DECLARE ELEMENTS(OTA)-->
+		<element type="host_name" minOccurs="1" maxOccurs="1" />
+		<element type="port" minOccurs="1" maxOccurs="1" />
+		<element type="username" minOccurs="1" maxOccurs="1" />
+		<element type="password" minOccurs="1" maxOccurs="1" />
+		<element type="remote_update_directory" minOccurs="1" maxOccurs="1" />
+		<element type="remote_backup_directory" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="whiteking_api" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+		<!--DECLARE ELEMENTS(WHITEKING API)-->
+		<element type="channel" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="modbus" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+		<!--DECLARE ELEMENTS(MODBUS)-->
+		<element type="channel" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+	<ElementType name="eip" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+		<!--DECLARE ELEMENTS(EIP)-->
+		<element type="channel" minOccurs="1" maxOccurs="*" />
+	</ElementType>
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+	<!--DEFINE ELEMENTS (OTA)-->
+	<ElementType name="host_name" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="username" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="password" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="remote_update_directory" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="remote_backup_directory" model="closed"  dt:type="string" content="textOnly" />
+	<!--DEFINE ELEMENTS (WHITEKING API)-->
+	<ElementType name="channel" model="closed"  dt:type="string" content="textOnly" />
+	<!--DEFINE ELEMENTS(PORTS)-->
+	<ElementType name="comport" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="channel" required="yes" dt:type="string" />
+		<attribute type="channel" />
+		<!--DECLARE ELEMENTS(COMPORTS)-->
+		<element type="name" minOccurs="0" maxOccurs="1" />
+		<element type="port" minOccurs="1" maxOccurs="1" />
+		<element type="baud" minOccurs="1" maxOccurs="1" />
+		<element type="parity" minOccurs="1" maxOccurs="1" />
+		<element type="stopbits" minOccurs="1" maxOccurs="1" />
+		<element type="databits" minOccurs="1" maxOccurs="1" />
+		<element type="handshake" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="ethernet" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="channel" required="yes" dt:type="string" />
+		<attribute type="channel" />
+		<!--DECLARE ELEMENTS(ETHERNET)-->
+		<element type="name" minOccurs="0" maxOccurs="1" />
+		<element type="client" minOccurs="0" maxOccurs="1" />
+		<element type="port" minOccurs="1" maxOccurs="1" />
+		<element type="ip" minOccurs="0" maxOccurs="1" />
+		<element type="protocol" minOccurs="1" maxOccurs="1" />
+		<element type="timeout" minOccurs="0" maxOccurs="1" />
+		<element type="unitid" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="canbus" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="channel" required="yes" dt:type="string" />
+		<attribute type="channel" />
+		<!--DECLARE ELEMENTS(CANBUS)-->
+		<element type="name" minOccurs="0" maxOccurs="1" />
+		<element type="canbaud" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="pipe" model="closed" content="eltOnly" order="seq">
+		<AttributeType name="channel" required="yes" dt:type="string" />
+		<attribute type="channel" />
+		<!--DECLARE ELEMENTS(CANBUS)-->
+		<element type="name" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<!--DEFINE ELEMENTS(COMPORTS)-->
+	<ElementType name="name" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="client" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="port" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="baud" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="parity" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="stopbits" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="databits" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="handshake" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="is_verbose" model="closed"  dt:type="string" content="textOnly" />
+	<!--DEFINE ELEMENTS(ETHERNET)-->
+	<ElementType name="ip" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="protocol" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="timeout" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="unitid" model="closed"  dt:type="string" content="textOnly" />
+	<!--DEFINE ELEMENTS(CANBUS)-->
+	<ElementType name="canbaud" model="closed"  dt:type="string" content="textOnly" />
+	<!--DEFINE ELEMENTS(DEVICES)-->
+	<ElementType name="seamtracker" model="closed">
+		<AttributeType name="channel" required="yes" dt:type="string" />
+		<attribute type="channel" />
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+		<!--DECLARE ELEMENTS(SEAMTRACKER)-->
+		<element type="correction_direction_x" minOccurs="1" maxOccurs="1" />
+		<element type="correction_direction_z" minOccurs="1" maxOccurs="1" />
+		<element type="moves_with_x" minOccurs="1" maxOccurs="1" />
+		<element type="moves_with_z" minOccurs="1" maxOccurs="1" />
+		<element type="offset_x" minOccurs="1" maxOccurs="1" />
+		<element type="offset_y" minOccurs="1" maxOccurs="1" />
+		<element type="offset_z" minOccurs="1" maxOccurs="1" />
+		<element type="min_correction_delta" minOccurs="1" maxOccurs="1" />
+		<element type="max_correction_delta" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="pendant" model="closed">
+		<AttributeType name="channel" required="yes" dt:type="string" />
+		<attribute type="channel" />
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+		<element type="beep" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="energy_meter" model="closed">
+		<AttributeType name="channel" required="yes" dt:type="string" />
+		<attribute type="channel" />
+	</ElementType>
+	<ElementType name="wire_manipulator" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+	</ElementType>
+	<ElementType name="gas_controller" model="closed">
+		<AttributeType name="channel" required="no" dt:type="string" />
+		<attribute type="channel" />
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+		<element type="shield" minOccurs="0" maxOccurs="1" />
+		<element type="trail" minOccurs="0" maxOccurs="1" />
+		<element type="backup" minOccurs="0" maxOccurs="1" />
+		<element type="plasma" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="cooler" model="closed" >
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+	</ElementType>
+	<ElementType name="proximity_sensor" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+	</ElementType>
+	<ElementType name="camera" model="closed" >
+		<AttributeType name="light_enable" required="yes" dt:type="string" />
+		<attribute type="light_enable" />
+	</ElementType>
+	<ElementType name="weldhead_switch" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+	</ElementType>
+	<ElementType name="printer" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="type" required="yes" dt:type="string" />
+		<attribute type="type" />
+		<AttributeType name="channel" required="no" dt:type="int" />
+		<attribute type="channel" />
+	</ElementType>
+	<ElementType name="home_switch" model="closed">
+		<element type="at_home_range_distance" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="fan" model="closed" >
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+	</ElementType>
+	<ElementType name="thermostat" model="closed" >
+		<AttributeType name="enable" required="yes" dt:type="string" />
+		<attribute type="enable" />
+	</ElementType>
+	<!--DEFINE ELEMENTS(SEAMTRACKER)-->
+	<ElementType name="correction_direction_x" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="correction_direction_z" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="moves_with_x" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="moves_with_z" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="offset_x" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="offset_y" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="offset_z" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="min_correction_delta" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="max_correction_delta" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="at_home_range_distance" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="beep" model="closed"  dt:type="string" content="textOnly" >
+		<AttributeType name="intervals_15ms" required="no" dt:type="string" />
+		<attribute type="intervals_15ms" />
+		<AttributeType name="tone" required="no" dt:type="string" />
+		<attribute type="tone" />
+	</ElementType>
+	<ElementType name="shield" model="closed">
+		<AttributeType name="solenoid" required="no" dt:type="string" />
+		<attribute type="solenoid" />
+		<element type="setpoint" minOccurs="0" maxOccurs="1" />
+		<element type="telemetry" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="trail" model="closed">
+		<AttributeType name="solenoid" required="no" dt:type="string" />
+		<attribute type="solenoid" />
+		<element type="setpoint" minOccurs="0" maxOccurs="1" />
+		<element type="telemetry" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="backup" model="closed">
+		<AttributeType name="solenoid" required="no" dt:type="string" />
+		<attribute type="solenoid" />
+		<element type="setpoint" minOccurs="0" maxOccurs="1" />
+		<element type="telemetry" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="plasma" model="closed">
+		<AttributeType name="solenoid" required="no" dt:type="string" />
+		<attribute type="solenoid" />
+		<element type="setpoint" minOccurs="0" maxOccurs="1" />
+		<element type="telemetry" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="setpoint" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="type" required="yes" dt:type="string" />
+		<attribute type="type" />
+		<AttributeType name="channel" required="no" dt:type="int" />
+		<attribute type="channel" />
+		<AttributeType name="address" required="no" dt:type="int" />
+		<attribute type="address" />
+		<AttributeType name="cutoff_rate" required="no" dt:type="float" />
+		<attribute type="cutoff_rate" />
+	</ElementType>
+	<ElementType name="telemetry" model="closed" dt:type="string" content="textOnly">
+		<AttributeType name="type" required="yes" dt:type="string" />
+		<attribute type="type" />
+		<AttributeType name="channel" required="no" dt:type="int" />
+		<attribute type="channel" />
+		<AttributeType name="address" required="no" dt:type="int" />
+		<attribute type="address" />
+		<AttributeType name="cutoff_rate" required="no" dt:type="float" />
+		<attribute type="cutoff_rate" />
+	</ElementType>
+</Schema>

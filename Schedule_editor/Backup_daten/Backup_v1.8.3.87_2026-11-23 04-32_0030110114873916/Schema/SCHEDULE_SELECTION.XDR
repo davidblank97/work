@@ -1,0 +1,48 @@
+<Schema name="ScheduleSelection" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+
+  <ElementType name="ScheduleSelection" model="closed" content="eltOnly" order="seq">
+	  <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="custom_name" minOccurs="1" maxOccurs="1" />
+    <element type="measurements" minOccurs="1" maxOccurs="1" />
+    <element type="schedules" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+  
+  <ElementType name="custom_name" model="closed" dt:type="string" content="textOnly" />
+  
+  <ElementType name="measurements" model="closed" content="eltOnly" order="seq">
+    <element type="measurement" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+  
+  <ElementType name="schedules" model="closed" content="eltOnly" order="seq">
+    <element type="schedule" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="measurement" model="closed" dt:type="string" content="textOnly">
+    <AttributeType name="depth" required="yes" dt:type="string" />
+    <AttributeType name="height" required="yes" dt:type="string" />
+    <attribute type="depth" />
+    <attribute type="height" />
+  </ElementType>
+
+  <ElementType name="schedule" model="closed" dt:type="string" content="textOnly">
+    <AttributeType name="id" required="yes" dt:type="string" />
+    <AttributeType name="width_min" required="yes" dt:type="string" />
+    <AttributeType name="width_max" required="yes" dt:type="string" />
+    <attribute type="id" />
+    <attribute type="width_min" />
+    <attribute type="width_max" />
+  </ElementType>
+
+</Schema>

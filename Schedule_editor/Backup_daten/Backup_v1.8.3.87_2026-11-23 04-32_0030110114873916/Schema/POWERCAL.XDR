@@ -1,0 +1,109 @@
+<Schema name="POWERCAL" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.8.2.0">
+
+	<ElementType name="cal" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (CAL)-->
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="amps" minOccurs="1" maxOccurs="1" />
+		<element type="volts" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire" minOccurs="1" maxOccurs="1" />
+		<element type="hotwire2" minOccurs="1" maxOccurs="1" />
+		<element type="pilot" minOccurs="1" maxOccurs="1" />
+		<element type="shield_gas" minOccurs="1" maxOccurs="1" />
+		<element type="trail_gas" minOccurs="1" maxOccurs="1" />
+		<element type="plasma_gas" minOccurs="1" maxOccurs="1" />
+		<element type="backup_gas" minOccurs="1" maxOccurs="1" />
+		<element type="coolant" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (CAL)-->
+	<ElementType name="amps" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (AMPS)-->
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="volts" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (VOLTS)-->
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="hotwire" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (HOTWIRE1)-->
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="hotwire2" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (HOTWIRE2)-->
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="pilot" model="closed" content="eltOnly" order="seq">
+		<!--DECLARE ALL ELEMENTS (WIRE)-->
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="shield_gas" model="closed" content="eltOnly" order="seq">
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="trail_gas" model="closed" content="eltOnly" order="seq">
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="plasma_gas" model="closed" content="eltOnly" order="seq">
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	<ElementType name="backup_gas" model="closed" content="eltOnly" order="seq">
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="coolant" model="closed" content="eltOnly" order="seq">
+		<element type="gain" minOccurs="1" maxOccurs="1" />
+		<element type="offset" minOccurs="1" maxOccurs="1" />
+		<element type="tel_gain" minOccurs="1" maxOccurs="1" />
+		<element type="tel_offset" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+	
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+	<!--DEFINE ELEMENTS (ALL)-->
+	<ElementType name="gain" model="closed"  dt:type="string">
+		<AttributeType name="timestamp" required="yes" dt:type="string" />
+		<attribute type="timestamp" />
+	</ElementType>
+	<ElementType name="offset" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tel_gain" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="tel_offset" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

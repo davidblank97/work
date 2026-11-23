@@ -1,0 +1,96 @@
+<head model="WH_AMI81">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.1</config_version>
+		<author>UPGRADE</author>
+		<date>2026/10/09 09:45:42</date>
+		<signature>/MSfIa5EwnEhpPto4me6shtww5oOIqshrPaRXkut7iUS/riJXshOByXEtmREIzg1FWniI7keYoAJzORr+YmGD32odmzq6fupw/0N08rR8LOzB1TapsZP7LLksbu2cDeqzzWLV+GPxi5O9VYEkuXCWSefO78TGQajVX73DJ9t8q4=|BgIAAAAkAABSU0ExAAQAAAEAAQCl/9m6ZodW9jMY8BEFnS+UT/PlKlt4rHKRQ80vIZ0P0drstarqodokRI3emNuJofR2jLrITiGd2LvVbVmHl0Rr4BH3VJIihTcO+kvgXBRA4iohU+VKEdcxk8JP6ZTIhkJ2mnbLN36UWPxzmyMcx/FUb/jYNJMj1S4weIqDCeGN2g==</signature>
+	</metadata>
+	<properties>
+		<arc_start>1</arc_start>
+		<avc_sense>1</avc_sense>
+		<max_amps>300</max_amps>
+		<avg_amps>300</avg_amps>
+		<trail_fault>0</trail_fault>
+		<cool_flow>3.6</cool_flow>
+		<cool_fault>1</cool_fault>
+		<gas_fault>1</gas_fault>
+		<tuning_revision>3</tuning_revision>
+	</properties>
+	<axis name="travel" type="3" io_index="0">
+		<max_speed>10</max_speed>
+		<cmd_volts>16</cmd_volts>
+		<curr_limit>0.5</curr_limit>
+		<peak_current>1.5</peak_current>
+		<peak_current_time>0.25</peak_current_time>
+		<vlp>500</vlp>
+		<vli>900</vli>
+		<clp>4000</clp>
+		<cli>30</cli>
+		<back_emf_current_component>20.000</back_emf_current_component>
+		<pulse>1</pulse>
+		<bump_sense>1</bump_sense>
+		<tach>0</tach>
+		<direction>-1</direction>
+	</axis>
+	<axis name="wire" type="3" io_index="1">
+		<max_speed>100</max_speed>
+		<cmd_volts>16</cmd_volts>
+		<curr_limit>.5</curr_limit>
+		<peak_current>.94</peak_current>
+		<peak_current_time>0.25</peak_current_time>
+		<vlp>550</vlp>
+		<vli>3000</vli>
+		<clp>4000</clp>
+		<cli>30</cli>
+		<back_emf_current_component>20.000</back_emf_current_component>
+		<pulse>1</pulse>
+		<bump_sense>0</bump_sense>
+		<tach>0</tach>
+		<direction>1</direction>
+	</axis>
+	<axis name="avc" type="3" io_index="2">
+		<max_speed>60</max_speed>
+		<curr_limit>0.5</curr_limit>
+		<peak_current>.63</peak_current>
+		<peak_current_time>0.25</peak_current_time>
+		<vlp>400</vlp>
+		<vli>2000</vli>
+		<clp>4000</clp>
+		<cli>30</cli>
+		<back_emf_current_component>20.000</back_emf_current_component>
+		<pulse>1</pulse>
+		<bump_sense>1</bump_sense>
+		<tach>0</tach>
+		<direction>1</direction>
+	</axis>
+	<axis name="osc" type="3" io_index="3">
+		<max_speed>60</max_speed>
+		<curr_limit>0.5</curr_limit>
+		<peak_current>0.63</peak_current>
+		<peak_current_time>0.25</peak_current_time>
+		<vlp>300</vlp>
+		<vli>3200</vli>
+		<clp>4000</clp>
+		<cli>30</cli>
+		<back_emf_current_component>20.000</back_emf_current_component>
+		<pos type="0" channel="0">
+			<vpi>9.6</vpi>
+			<fwd_volts>3</fwd_volts>
+			<rev_volts>-3</rev_volts>
+			<loop divisor="1">
+				<p>1000.000</p>
+				<i>10.000</i>
+				<d>250.000</d>
+				<deadband>0.000</deadband>
+				<disableband>0.000</disableband>
+				<vff>80.000</vff>
+				<follow_err>0.200</follow_err>
+			</loop>
+		</pos>
+		<pulse>1</pulse>
+		<bump_sense>1</bump_sense>
+		<tach>0</tach>
+		<direction>-1</direction>
+	</axis>
+</head>

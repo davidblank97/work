@@ -1,0 +1,24 @@
+<gas_info>
+	<metadata>
+		<schema_version/>
+		<config_version>1.6.2.1</config_version>
+		<author>Liburdi Automation</author>
+		<date>07/27/2022</date>
+	</metadata>
+	<gas name="NOT SPECIFIED">
+		<symbol></symbol>
+		<conversion>1</conversion>
+	</gas>
+	<gas name="ARGON">
+		<symbol>Ar</symbol>
+		<conversion>1</conversion>
+	</gas>
+	<gas name="ARGON HELIUM MIX">
+		<symbol>30Ar/70He</symbol>
+		<conversion>0.9915</conversion>
+	</gas>
+	<gas name="ARGON HYDROGEN MIX">
+		<symbol>95Ar/5H</symbol>
+		<conversion>1.019</conversion>
+	</gas>
+</gas_info>

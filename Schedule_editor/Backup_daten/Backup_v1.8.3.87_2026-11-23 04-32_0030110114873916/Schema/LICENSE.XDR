@@ -1,0 +1,31 @@
+<Schema name="LICENSE" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+
+  <ElementType name="licensefile" model="closed" content="eltOnly" order="seq">
+    <AttributeType name="weldingcontrollerid" required="yes" dt:type="string" /> 
+    <attribute type="weldingcontrollerid" />
+	<element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="features" minOccurs="1" maxOccurs="*" /> 
+  </ElementType>
+
+    <!--DECLARE ALL ELEMENTS (METADATA)-->
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+    <element type="signature" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="features" model="closed" content="eltOnly" order="seq">
+    <element type="feature" minOccurs="0" maxOccurs="*" />
+  </ElementType>
+
+  <ElementType name="feature" model="closed"  dt:type="string" content="textOnly" />
+  
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="signature" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

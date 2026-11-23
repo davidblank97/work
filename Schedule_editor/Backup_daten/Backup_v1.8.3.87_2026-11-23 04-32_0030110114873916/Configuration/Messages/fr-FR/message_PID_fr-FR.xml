@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="PID" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>Enregistrer les valeurs de gain PID pour l&apos;axe %1 ?</text>
+		<desc></desc>
+	</str>
+	<str id="2">
+		<text>L&apos;enregistrement des valeurs PID pour l&apos;axe %1 a échoué.</text>
+		<desc>%1 = axis name</desc>
+	</str>
+</language>

@@ -1,0 +1,68 @@
+<cal>
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.0</config_version>
+		<author>ADMIN</author>
+		<date>2026/05/29 02:44:13</date>
+	</metadata>
+	<amps>
+		<gain timestamp="2025/11/26 11:11">0.9804</gain>
+		<offset>0.3921</offset>
+		<tel_gain>1.0264</tel_gain>
+		<tel_offset>1.0674</tel_offset>
+	</amps>
+	<volts>
+		<gain timestamp="2026/05/20 04:50">1.0000</gain>
+		<offset>-68.3930</offset>
+		<tel_gain>1.0158</tel_gain>
+		<tel_offset>0.1958</tel_offset>
+	</volts>
+	<hotwire>
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+	</hotwire>
+	<hotwire2>
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+	</hotwire2>
+	<pilot>
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+	</pilot>
+	<shield_gas>
+		<gain timestamp="2026/05/29 02:43">1.0000</gain>
+		<offset>-188.6188</offset>
+		<tel_gain>1.1203</tel_gain>
+		<tel_offset>12.6936</tel_offset>
+	</shield_gas>
+	<trail_gas>
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+	</trail_gas>
+	<plasma_gas>
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+	</plasma_gas>
+	<backup_gas>
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+	</backup_gas>
+	<coolant>
+		<gain timestamp="">1.0000</gain>
+		<offset>0.0000</offset>
+		<tel_gain>1.0000</tel_gain>
+		<tel_offset>0.0000</tel_offset>
+	</coolant>
+</cal>

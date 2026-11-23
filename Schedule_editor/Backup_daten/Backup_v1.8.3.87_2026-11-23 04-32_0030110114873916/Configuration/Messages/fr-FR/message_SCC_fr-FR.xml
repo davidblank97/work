@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="SCC" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.4.0.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>L&apos;écran %1 n&apos;a pas pu être trouvé.</text>
+		<desc>Screen name = %1</desc>
+	</str>
+	<str id="2">
+		<text>L&apos;écran %1 ne peut pas être modifié car il est actuellement chargé. Chargez un autre écran avant d&apos;apporter des modifications.</text>
+		<desc>Screen name = %1</desc>
+	</str>
+</language>

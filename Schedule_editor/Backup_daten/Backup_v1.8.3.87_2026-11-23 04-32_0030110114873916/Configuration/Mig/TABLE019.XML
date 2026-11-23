@@ -1,0 +1,80 @@
+<mig_table>
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.1.0</config_version>
+		<author>Liburdi Automation</author>
+		<date>02/12/2022</date>
+	</metadata>
+	<process>DIP</process>
+	<synergic>
+		<parameter name="dip_base_current" pct='0'>
+			<c>45</c>
+		</parameter>
+		<parameter name="dip_blast_amps" pct='0'>
+			<c>120</c>
+		</parameter>
+		<parameter name="dip_detachment_amps" pct='0'>
+			<c>40</c>
+		</parameter>
+		<parameter name="dip_burn_back_amps" pct='0'>
+			<c>165</c>
+		</parameter>
+		<parameter name="dip_dynamic_wetting_amps_drop" pct='0'>
+			<c>10</c>
+		</parameter>
+		<parameter name="dip_dynamics_short_wetting_time" pct='0'>
+			<c>0.000250</c>
+		</parameter>
+		<parameter name="dip_detachment_wetting_time" pct='0'>
+			<c>0.000500</c>
+		</parameter>
+		<parameter name="dip_minimum_burn_back_current_time" pct='0'>
+			<c>0.00100</c>
+		</parameter>
+		<parameter name="dip_dynamics_clear_short_ramp_rate" pct='0'>
+			<c>60</c>
+		</parameter>
+		<parameter name="dip_dynamics_detect_short_threshold" pct='0'>
+			<c>40</c>
+		</parameter>
+		<parameter name="dip_dynamics_clear_short_threshold" pct='0'>
+			<c>60</c>
+		</parameter>
+		<parameter name="dip_detachment_current_ramp_rate" pct='0'>
+			<c>800</c>
+		</parameter>
+		<parameter name="dip_pulse_exponential_decay_period" pct='0'>
+			<c>0.00200</c>
+		</parameter>
+		<parameter name="dip_dynamics_clear_short_max_current" pct='0'>
+			<c>300</c>
+		</parameter>
+		<parameter name="dip_dynamics_wetting_ramp_rate" pct='0'>
+			<c>200</c>
+		</parameter>
+		<parameter name="dip_dynamics_enable_voltage_threshold" pct='0'>
+			<c>11</c>
+		</parameter>
+		<parameter name="dip_blast_current_ramp_rate" pct='0'>
+			<c>800</c>
+		</parameter>
+		<parameter name="dip_burnback_current_ramp_rate" pct='0'>
+			<c>900</c>
+		</parameter>
+		<parameter name="dip_pre_detachment_ramp_rate" pct='0'>
+			<c>150</c>
+		</parameter>
+		<parameter name="dip_energy" pct='0'>
+			<c>0</c>
+		</parameter>
+		<parameter name="initial_wire_speed" pct='100'>
+			<c>75</c>
+		</parameter>
+		<parameter name="initial_current" pct='100'>
+			<c>30</c>
+		</parameter>
+		<parameter name="initial_current_time" pct='100'>
+			<c>0.010000</c>
+		</parameter>
+	</synergic>
+</mig_table>

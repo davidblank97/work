@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="CRI" localeID="fr-FR">
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.3.2</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+	<str id="1">
+		<text>To proceed:|1. Release Emergency Stop buttons.|2. Press the blue reset button on the front panel to reset.</text>
+		<desc>E-Stop is raised</desc>
+	</str>
+	<str id="2">
+		<text>The system is locked out.</text>
+		<desc>System is locked out</desc>
+	</str>
+	<str id="3">
+		<text>To proceed:|1. Release Emergency Stop buttons.|2. Press CLEAR button to continue.</text>
+		<desc>Clearable E-Stop is raised</desc>
+	</str>
+</language>

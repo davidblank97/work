@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language  fileType="API" localeID="fr-FR">
+  <metadata>
+    <schema_version/>
+    <config_version>1.4.0.0</config_version>
+    <author>Liburdi Automation</author>
+    <date>10/20/2020</date>
+  </metadata>
+	<str id="1">
+		<text>%1 ne peut pas être réglé sur %2 car la valeur minimum autorisée est %3. Entrez une valeur égale ou supérieure à %3.</text>
+		<desc>Value is less than the minimum allowed value for the given parameter. %1 = parameter name %2 = value %3 = minimum value</desc>
+	</str>
+	<str id="2">
+		<text>%1 ne peut pas être réglé sur %2 car la valeur maximum autorisée est %3. Entrez une valeur égale ou inférieure à %3.</text>
+		<desc>Value is greater than the maximum allowed value for the given parameter. %1 = parameter %2 = value %3 = maximum value</desc>
+	</str>
+	<str id="3">
+		<text>La commande demandée n&apos;a pas pu être exécutée car le système est occupé. Patientez quelques instants puis réessayez.</text>
+		<desc>Machine to machine message. Service could not be executed since the module attempting to execute is not enabled.</desc>
+	</str>
+	<str id="4">
+		<text>La valeur de %1 est en lecture seule et ne peut pas être réglée.</text>
+		<desc>Machine to machine message. No write function specified for given parameter id. %1 = parameter to write.</desc>
+	</str>
+	<str id="5">
+		<text>%1 a été modifié de %2 à la valeur minimum autorisée %3.</text>
+		<desc>Value is less than the minimum allowed value for the given parameter, so value was bounded to minimum. %1 = parameter. %2 = old value %3 = new value</desc>
+	</str>
+	<str id="6">
+		<text>%1 a été modifié de %2 à la valeur maximum autorisée %3.</text>
+		<desc>Value is greater than the maximum allowed value for the given parameter, so value was bounded to maximum. %1 = parameter. %2 = old value %3 = new value</desc>
+	</str>
+</language>

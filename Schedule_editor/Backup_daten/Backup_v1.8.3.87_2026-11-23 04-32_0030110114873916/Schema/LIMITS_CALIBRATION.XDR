@@ -1,0 +1,52 @@
+<Schema name="LIMITS_CALIBRATION" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.5.0.0">
+
+  <ElementType name="cal" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (CAL)-->
+    <element type="metadata" minOccurs="1" maxOccurs="1" />
+    <element type="travel" minOccurs="1" maxOccurs="1" />
+    <element type="osc" minOccurs="1" maxOccurs="1" />
+    <element type="prox" minOccurs="1" maxOccurs="1" />
+    <element type="theta" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <!--DEFINE ELEMENTS (CAL)-->
+  <ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (METADATA)-->
+    <element type="schema_version" minOccurs="1" maxOccurs="1" />
+    <element type="config_version" minOccurs="1" maxOccurs="1" />
+    <element type="author" minOccurs="1" maxOccurs="1" />
+    <element type="date" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <ElementType name="travel" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (TRAVEL)-->
+    <element type="pos_value" minOccurs="1" maxOccurs="1" />
+    <element type="neg_value" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+  <ElementType name="osc" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (OSC)-->
+    <element type="pos_value" minOccurs="1" maxOccurs="1" />
+    <element type="neg_value" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+  <ElementType name="prox" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (PROX)-->
+    <element type="pos_value" minOccurs="1" maxOccurs="1" />
+    <element type="neg_value" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+  <ElementType name="theta" model="closed" content="eltOnly" order="seq">
+    <!--DECLARE ALL ELEMENTS (THETA)-->
+    <element type="pos_value" minOccurs="1" maxOccurs="1" />
+    <element type="neg_value" minOccurs="1" maxOccurs="1" />
+  </ElementType>
+
+  <!--DEFINE ELEMENTS (ALL)-->
+  <!--DEFINE ELEMENTS (METADATA)-->
+  <ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+  <ElementType name="pos_value" model="closed"  dt:type="string" content="textOnly" />
+  <ElementType name="neg_value" model="closed"  dt:type="string" content="textOnly" />
+  
+</Schema>

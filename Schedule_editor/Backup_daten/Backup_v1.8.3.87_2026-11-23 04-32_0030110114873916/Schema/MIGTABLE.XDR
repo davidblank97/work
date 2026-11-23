@@ -1,0 +1,44 @@
+<Schema name="mig_table" xmlns="urn:schemas-microsoft-com:xml-data" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:version="1.6.11.0">
+	<ElementType name="process" model="closed"  dt:type="string" content="textOnly" />
+
+	<ElementType name="a" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="b" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="c" model="closed"  dt:type="float" content="textOnly" />
+	<ElementType name="r" model="closed"  dt:type="float" content="textOnly" />
+	<AttributeType name="name" required="no" dt:type="string" />
+	<AttributeType name="pct" required="no" dt:type="float" />
+
+	<ElementType name="parameter" model="closed" order="many">
+		<attribute type="name" />
+		<attribute type="pct" />
+		<element type="a" minOccurs="0" maxOccurs="1" />
+		<element type="b" minOccurs="0" maxOccurs="1" />
+		<element type="c" minOccurs="0" maxOccurs="1" />
+		<element type="r" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<ElementType name="synergic" model="closed" order="many">
+		<element type="parameter" minOccurs="0" maxOccurs="*" />
+	</ElementType>
+
+	<ElementType name="mig_table" model="closed" order="many">
+		<element type="metadata" minOccurs="1" maxOccurs="1" />
+		<element type="process" minOccurs="1" maxOccurs="1" />
+		<element type="synergic" minOccurs="0" maxOccurs="1" />
+	</ElementType>
+
+	<!--DECLARE ALL ELEMENTS (METADATA)-->
+	<ElementType name="metadata" model="closed" content="eltOnly" order="seq">
+		<element type="schema_version" minOccurs="1" maxOccurs="1" />
+		<element type="config_version" minOccurs="1" maxOccurs="1" />
+		<element type="author" minOccurs="1" maxOccurs="1" />
+		<element type="date" minOccurs="1" maxOccurs="1" />
+	</ElementType>
+
+	<!--DEFINE ELEMENTS (METADATA)-->
+	<ElementType name="schema_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="config_version" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="author" model="closed"  dt:type="string" content="textOnly" />
+	<ElementType name="date" model="closed"  dt:type="string" content="textOnly" />
+
+</Schema>

@@ -1,0 +1,116 @@
+<mig_tables>
+	<metadata>
+		<schema_version/>
+		<config_version>1.8.2.1</config_version>
+		<author>Liburdi Automation</author>
+		<date>10/20/2020</date>
+	</metadata>
+    <table id="1">
+        <name>MIG/FCAW</name>
+        <description>Gas Metal Arc Welding - Constant Voltage Process</description>
+    </table>
+    <table id="2">
+        <name>MetalBeam</name>
+        <description>Gas Metal Arc Welding - Pulsed Process</description>
+    </table>
+    <table id="3">
+        <name>DIP</name>
+        <description>Gas Metal Arc Welding - Short Circuit Transfer Process</description>
+    </table>
+    <table id="5">
+        <name>MetalBeamSynergic-1 Stainless Steel 1.2mm</name>
+        <wire_size>1.2mm</wire_size>
+        <material>SS</material>
+        <gas_type>Argon Mix</gas_type>	
+    </table>
+    <table id="6">
+        <name>MetalBeamSynergic-2-0 Carbon Steel 0.035</name>
+        <description>Gas Metal Arc Welding - Pulsed Process, 0.035in Carbon Steel Wire</description>
+        <wire_size>0.035</wire_size>
+        <material>CS</material>
+        <gas_type>C10</gas_type>
+    </table>
+    <table id="7">
+        <name>MetalBeamSynergic-2-0 Carbon Steel 0.045</name>
+        <description>Gas Metal Arc Welding - Pulsed Process, 0.045in Carbon Steel Wire</description>
+        <wire_size>0.045</wire_size>
+        <material>CS</material>
+        <gas_type>C10</gas_type>	
+    </table>
+    <table id="9">
+        <name>MetalBeamSynergic-3 Carbon Steel 1.2mm</name>
+        <description>Gas Metal Arc Welding - Pulsed Process, 1.2mm Carbon Steel Wire</description>
+        <wire_size>1.2mm</wire_size>
+        <material>CS</material>
+        <gas_type>C10</gas_type>
+    </table>
+    <table id="10">
+        <name>MetalBeamSynergic-1 Stellite 1.2mm</name>
+        <wire_size>1.2mm</wire_size>
+        <material>CrCo (Stellite)</material>
+        <gas_type>Argon Mix</gas_type>	
+    </table>
+    <table id="11">
+        <name>MetalBeamSynergic-2-1 Stainless Steel 0.035</name>
+        <description>Gas Metal Arc Welding - Pulsed Process, 0.035in Stainless Steel Wire</description>
+        <wire_size>0.035</wire_size>
+        <material>SS</material>
+        <gas_type>Argon Mix</gas_type>	
+    </table>
+    <table id="12">
+        <name>MetalBeamSynergic-2-1 Stainless Steel 0.045</name>
+        <description>Gas Metal Arc Welding - Pulsed Process, 0.045in Stainless Steel Wire</description>
+        <wire_size>0.045</wire_size>
+        <material>SS</material>
+        <gas_type>Argon Mix</gas_type>	
+    </table>
+    <table id="13">
+        <name>MetalBeamSynergic-1 Carbon Steel 1.2mm</name>
+        <wire_size>1.2mm</wire_size>
+        <material>CS</material>
+        <gas_type>Argon Mix</gas_type>	
+    </table>
+	<table id="14">
+		<name>DIPSynergic Stainless Steel 0.035 (135-225 IPM WIRE)</name>
+		<wire_size>0.035</wire_size>
+		<material>SS</material>
+		<gas_type>Argon Mix</gas_type>
+	</table>
+	<table id="15">
+		<name>DIPSynergic Stainless Steel 0.045 (NOT COMPLETE)</name>
+		<wire_size>0.045</wire_size>
+		<material>SS</material>
+		<gas_type>Argon Mix</gas_type>
+	</table>
+	<table id="16">
+		<name>DIPSynergic Carbon Steel 0.035</name>
+		<wire_size>0.035</wire_size>
+		<material>CS</material>
+		<gas_type>Argon Mix</gas_type>
+	</table>
+	<table id="17">
+		<name>DIPSynergic Carbon Steel 0.045 (NOT COMPLETE)</name>
+		<wire_size>0.045</wire_size>
+		<material>CS</material>
+		<gas_type>Argon Mix</gas_type>
+	</table>
+	<table id="18">
+		<name>DIPSynergic ER2209 0.035</name>
+		<wire_size>0.035</wire_size>
+		<material>ER2209</material>
+		<gas_type>N/A</gas_type>
+	</table>
+	<table id="19">
+		<name>DIPSynergic P91 0.035 (150-215 IPM WIRE)</name>
+		<wire_size>0.035</wire_size>
+		<material>P91</material>
+		<gas_type>N/A</gas_type>
+	</table>
+    <table id="20">
+        <name>MetalBeamSynergic-2-1 Metal Core 0.045</name>
+        <description>Gas Metal Arc Welding - Pulsed Process, 0.045in Metal Core Wire</description>
+        <wire_size>0.045</wire_size>
+        <material>Metal Core</material>
+        <gas_type>Argon Mix</gas_type>	
+    </table>	
+</mig_tables>

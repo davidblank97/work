@@ -1,0 +1,42 @@
+<cal model="NGRT + H-HEAD">
+	<metadata>
+		<schema_version/>
+		<config_version>1.7.4.0</config_version>
+		<author>ADMIN</author>
+		<date>2026/11/09 05:22:21</date>
+	</metadata>
+	<axis name="travel">
+		<gain timestamp="2026/11/09 05:22">0.9028</gain>
+		<offset>0.0870</offset>
+		<tel_gain>1.1078</tel_gain>
+		<tel_offset>-0.1005</tel_offset>
+		<rev_gain timestamp="2026/03/25 06:22">0.9436</rev_gain>
+		<rev_offset>0.0006</rev_offset>
+		<rev_tel_gain>1.0597</rev_tel_gain>
+		<rev_tel_offset>0.0035</rev_tel_offset>
+	</axis>
+	<axis name="wire">
+		<gain timestamp="2026/11/08 06:53">0.8043</gain>
+		<offset>-0.3897</offset>
+		<tel_gain>1.2446</tel_gain>
+		<tel_offset>0.4669</tel_offset>
+	</axis>
+	<axis name="osc">
+		<pos_limit timestamp="2026/11/08 06:56">0.8480</pos_limit>
+		<neg_limit>-0.9236</neg_limit>
+		<vpi>9.3013</vpi>
+		<zero>0.4176</zero>
+	</axis>
+	<axis name="wm-inout">
+		<pos_limit timestamp="2026/11/08 07:11">0.2448</pos_limit>
+		<neg_limit>-0.2276</neg_limit>
+		<vpi>14.1628</vpi>
+		<zero>-0.0611</zero>
+	</axis>
+	<axis name="tungsten">
+		<pos_limit timestamp="2026/11/08 07:14">0.3114</pos_limit>
+		<neg_limit>-0.3169</neg_limit>
+		<vpi>-24.1511</vpi>
+		<zero>0.0904</zero>
+	</axis>
+</cal>
