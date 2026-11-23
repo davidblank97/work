@@ -3124,6 +3124,93 @@
             font-size: 12px !important;
         }
 
+        .heat-targets {
+            display: grid;
+            gap: 6px;
+            margin: 2px 0 12px;
+        }
+
+        .heat-targets .heat-target-controls {
+            margin: 0;
+        }
+
+        .heat-target-empty {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .heat-target-row {
+            display: grid !important;
+            grid-template-columns: 130px auto auto auto minmax(0, 1fr) auto;
+            align-items: center;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-panel);
+        }
+
+        .heat-target-name {
+            width: 130px;
+            height: 28px;
+            padding: 3px 8px;
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            background: var(--bg-input);
+            color: var(--text-main);
+            font: inherit;
+            font-weight: 600;
+        }
+
+        .heat-target-files {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .heat-target-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border: 1px solid var(--border-strong);
+            border-radius: 999px;
+            color: var(--text-muted);
+            font-size: 11.5px;
+            cursor: pointer;
+        }
+
+        .heat-target-chip input {
+            margin: 0;
+            accent-color: var(--accent);
+        }
+
+        .heat-target-chip.is-on {
+            border-color: #805236;
+            color: #ffc095;
+        }
+
+        .heat-target-chip.is-implied {
+            opacity: 0.6;
+        }
+
+        .heat-target-chip.is-absent {
+            border-style: dashed;
+        }
+
+        .heat-target-remove {
+            justify-self: end;
+        }
+
+        @media (max-width: 1100px) {
+            .heat-target-row {
+                grid-template-columns: 130px auto auto auto;
+            }
+
+            .heat-target-files {
+                grid-column: 1 / -1;
+            }
+        }
+
         .heat-target-line {
             stroke: var(--danger);
             stroke-width: 2;
@@ -7644,22 +7731,73 @@
             return sameCount > 1 ? file.name : prefix;
         }
 
-        // Ziel-Bereich fuer den Heat Input (Benutzereingabe Min/Max, im Browser gespeichert).
-        const HEAT_TARGET_KEY = "scheduleEditorHeatInputTarget";
+        // Ziel-Bereiche (Target ranges) fuer den Heat Input: mehrere Bereiche mit Name, Min, Max und
+        // Dateizuordnung ueber die 4-stellige Nummer (files = null: alle Dateien). Im Browser gespeichert.
+        const HEAT_TARGET_KEY = "scheduleEditorHeatInputTarget";      // alt: ein einzelner Bereich (wird uebernommen)
+        const HEAT_TARGETS_KEY = "scheduleEditorHeatInputTargets";
 
-        function readHeatInputTarget() {
-            const stored = readStoredJson(HEAT_TARGET_KEY, {});
-            const parse = value => {
-                if (value === undefined || String(value).trim() === "") return null;
-                const number = parseNumberInput(value);
-                return Number.isFinite(number) && number >= 0 ? number : null;
-            };
-            return { min: parse(stored.min), max: parse(stored.max) };
+        function parseTargetNumber(value) {
+            if (value === undefined || value === null || String(value).trim() === "") return null;
+            const number = parseNumberInput(value);
+            return Number.isFinite(number) && number >= 0 ? number : null;
+        }
+
+        // Zuordnungsschluessel einer Datei: 4-stellige Nummer am Namensanfang, sonst der Dateiname.
+        function fileTargetKey(file) {
+            return (String(file.name).match(/^\d{4}/) || [file.name])[0];
+        }
+
+        function readHeatInputTargets() {
+            let stored = null;
+            try { stored = localStorage.getItem(HEAT_TARGETS_KEY); } catch (error) { /* ignore */ }
+            let list = [];
+            if (stored === null) {
+                // Uebernahme des frueheren einzelnen Ziel-Bereichs
+                const old = readStoredJson(HEAT_TARGET_KEY, {});
+                if (parseTargetNumber(old.min) !== null || parseTargetNumber(old.max) !== null) {
+                    list = [{ id: "target-1", name: "Target", min: String(old.min ?? ""), max: String(old.max ?? ""), files: null }];
+                }
+            } else {
+                list = readStoredJson(HEAT_TARGETS_KEY, []);
+            }
+            return list.filter(item => item && typeof item === "object").map((item, index) => ({
+                id: String(item.id || `target-${index + 1}`),
+                name: String(item.name || `Target ${index + 1}`).trim() || `Target ${index + 1}`,
+                min: parseTargetNumber(item.min),
+                max: parseTargetNumber(item.max),
+                files: Array.isArray(item.files) ? item.files.map(String) : null
+            }));
+        }
+
+        function saveHeatInputTargets(targets) {
+            try {
+                localStorage.setItem(HEAT_TARGETS_KEY, JSON.stringify(targets.map(target => ({
+                    id: target.id, name: target.name,
+                    min: target.min === null ? "" : String(target.min),
+                    max: target.max === null ? "" : String(target.max),
+                    files: target.files
+                }))));
+                localStorage.removeItem(HEAT_TARGET_KEY);
+            } catch (error) {
+                console.warn("Could not store the heat input target ranges.", error);
+            }
+        }
+
+        // Bereiche, die fuer eine Datei gelten (nur Bereiche mit mindestens Min oder Max).
+        function targetsForFile(file, targets) {
+            const key = fileTargetKey(file);
+            return targets.filter(target => (target.min !== null || target.max !== null)
+                && (target.files === null || target.files.includes(key)));
+        }
+
+        function describeTarget(target) {
+            return `${target.name} ${target.min ?? "–"} – ${target.max ?? "–"}`;
         }
 
         // Heat Input je Segment einer Datei, geprueft gegen <limits> (heat_input_fault_low/high)
         // und den Ziel-Bereich (Min/Max unter Tools > Heat Input).
-        function heatInputCheck(file, target = readHeatInputTarget()) {
+        function heatInputCheck(file, allTargets = readHeatInputTargets()) {
+            const targets = targetsForFile(file, allTargets);
             const limitLow = readHeatInputLimit(file, "heat_input_fault_low");
             const limitHigh = readHeatInputLimit(file, "heat_input_fault_high");
             const entries = file.sections.segments.map((segment, segmentIndex) => {
@@ -7668,12 +7806,15 @@
                 const outsideLimit = valid && (
                     (limitLow !== null && result.minHeatInput < limitLow)
                     || (limitHigh !== null && result.maxHeatInput > limitHigh));
-                const outsideTarget = valid && (
-                    (target.min !== null && result.minHeatInput < target.min)
-                    || (target.max !== null && result.maxHeatInput > target.max));
-                return { result, segmentIndex, outsideLimit, outsideTarget, outside: outsideLimit || outsideTarget };
+                // Alle zugeordneten Bereiche muessen eingehalten werden.
+                const targetViolations = valid ? targets.flatMap(target => [
+                    target.max !== null && result.maxHeatInput > target.max ? { target, bound: "max", value: target.max } : null,
+                    target.min !== null && result.minHeatInput < target.min ? { target, bound: "min", value: target.min } : null
+                ].filter(Boolean)) : [];
+                const outsideTarget = targetViolations.length > 0;
+                return { result, segmentIndex, outsideLimit, outsideTarget, targetViolations, outside: outsideLimit || outsideTarget };
             });
-            return { file, limitLow, limitHigh, target, entries };
+            return { file, limitLow, limitHigh, targets, entries };
         }
 
         // Batch Save: Segmente ausserhalb der Heat-Input-Grenzen melden (Fehlermeldung mit Rueckfrage).
@@ -7691,10 +7832,7 @@
                         if (check.limitHigh !== null && result.maxHeatInput > check.limitHigh) reasons.push(`limit max ${format(check.limitHigh)}`);
                         if (check.limitLow !== null && result.minHeatInput < check.limitLow) reasons.push(`limit min ${format(check.limitLow)}`);
                     }
-                    if (entry.outsideTarget) {
-                        if (check.target.max !== null && result.maxHeatInput > check.target.max) reasons.push(`target max ${format(check.target.max)}`);
-                        if (check.target.min !== null && result.minHeatInput < check.target.min) reasons.push(`target min ${format(check.target.min)}`);
-                    }
+                    entry.targetViolations.forEach(violation => reasons.push(`${violation.target.name} ${violation.bound} ${format(violation.value)}`));
                     const segmentNumber = segmentDisplayNumber(file.sections.segments[entry.segmentIndex], entry.segmentIndex);
                     problems.push(`${fileShortLabel(file)} · Segment ${segmentNumber}: ${format(result.minHeatInput)} – ${format(result.maxHeatInput)} kJ/mm (${reasons.join(", ")})`);
                 });
@@ -7736,83 +7874,147 @@
             if (proceed) proceed();
         };
 
-        function buildHeatTargetControls(target) {
+        // Bearbeitung der Ziel-Bereiche: je Zeile Name, Min, Max, Dateien (Chips), Entfernen.
+        function buildHeatTargetControls(targets) {
             const box = document.createElement("div");
-            box.className = "heat-target-controls";
+            box.className = "heat-targets";
+            const head = document.createElement("div");
+            head.className = "heat-target-controls";
             const caption = document.createElement("span");
             caption.className = "heat-target-caption";
-            caption.textContent = "Target range (red lines)";
-            box.appendChild(caption);
-            const inputs = {};
-            [["min", "Min"], ["max", "Max"]].forEach(([key, labelText]) => {
+            caption.textContent = "Target ranges (red lines)";
+            const add = document.createElement("button");
+            add.type = "button";
+            add.className = "btn-secondary heat-target-clear heat-target-add";
+            add.textContent = "+ Add target range";
+            add.onclick = () => {
+                const next = readHeatInputTargets();
+                const number = next.length + 1;
+                next.push({ id: `target-${Date.now()}`, name: `Target ${number}`, min: null, max: null, files: null });
+                saveHeatInputTargets(next);
+                renderHeatInput();
+                document.querySelector(`.heat-target-row:last-child .heat-target-name`)?.focus();
+            };
+            head.append(caption, add);
+            box.appendChild(head);
+            if (!targets.length) {
+                const empty = document.createElement("div");
+                empty.className = "heat-target-empty";
+                empty.textContent = "No target range – add one to check the heat input of selected files against it.";
+                box.appendChild(empty);
+            }
+            const fileKeys = [...new Set(loadedFiles.map(fileTargetKey))];
+            targets.forEach(target => box.appendChild(buildHeatTargetRow(target, fileKeys)));
+            return box;
+        }
+
+        function updateHeatTarget(id, change) {
+            const status = document.getElementById("status");
+            const next = readHeatInputTargets();
+            const target = next.find(item => item.id === id);
+            if (!target) return;
+            const candidate = { ...target, ...change };
+            if (candidate.min !== null && candidate.max !== null && candidate.min >= candidate.max) {
+                status.textContent = `${candidate.name}: min must be smaller than max.`;
+                renderHeatInput();
+                return;
+            }
+            Object.assign(target, candidate);
+            saveHeatInputTargets(next);
+            status.textContent = `Target range "${target.name}" updated.`;
+            renderHeatInput();
+        }
+
+        function buildHeatTargetRow(target, fileKeys) {
+            const row = document.createElement("div");
+            row.className = "heat-target-row heat-target-controls";
+            row.dataset.targetId = target.id;
+            const name = document.createElement("input");
+            name.type = "text";
+            name.className = "heat-target-name";
+            name.value = target.name;
+            name.setAttribute("aria-label", "Target range name");
+            name.onkeydown = event => { if (event.key === "Enter") { event.preventDefault(); name.blur(); } };
+            name.onchange = () => updateHeatTarget(target.id, { name: name.value.trim() || target.name });
+            row.appendChild(name);
+            ["min", "max"].forEach(key => {
                 const label = document.createElement("label");
                 label.className = "heat-target-field";
-                label.textContent = labelText;
+                label.textContent = key === "min" ? "Min" : "Max";
                 const input = document.createElement("input");
                 input.type = "text";
                 input.inputMode = "decimal";
-                input.id = `heatTarget${labelText}`;
+                input.className = `heat-target-${key}`;
                 input.placeholder = "–";
                 input.value = target[key] === null ? "" : String(target[key]);
-                input.onkeydown = event => {
-                    if (event.key === "Enter") { event.preventDefault(); input.blur(); }
+                input.onkeydown = event => { if (event.key === "Enter") { event.preventDefault(); input.blur(); } };
+                input.onchange = () => {
+                    const text = input.value.trim();
+                    const value = text === "" ? null : parseTargetNumber(text);
+                    if (text !== "" && value === null) {
+                        document.getElementById("status").textContent = "Please enter heat input values >= 0 (kJ/mm).";
+                        input.value = target[key] === null ? "" : String(target[key]);
+                        return;
+                    }
+                    updateHeatTarget(target.id, { [key]: value });
                 };
-                input.onchange = () => applyHeatTargetInputs(inputs, target);
                 label.appendChild(input);
-                inputs[key] = input;
-                box.appendChild(label);
+                row.appendChild(label);
             });
             const unit = document.createElement("span");
             unit.className = "heat-target-unit";
             unit.textContent = "kJ/mm";
-            box.appendChild(unit);
-            if (target.min !== null || target.max !== null) {
-                const clear = document.createElement("button");
-                clear.type = "button";
-                clear.className = "btn-secondary heat-target-clear";
-                clear.textContent = "Clear";
-                clear.onclick = () => {
-                    try { localStorage.removeItem(HEAT_TARGET_KEY); } catch (error) { /* ignore */ }
-                    renderHeatInput();
-                };
-                box.appendChild(clear);
-            }
-            return box;
-        }
+            row.appendChild(unit);
 
-        function applyHeatTargetInputs(inputs, previous) {
-            const parse = text => {
-                if (String(text).trim() === "") return { value: null, ok: true };
-                const number = parseNumberInput(text);
-                return { value: number, ok: Number.isFinite(number) && number >= 0 };
+            // Dateizuordnung
+            const files = document.createElement("span");
+            files.className = "heat-target-files";
+            const chip = (text, checked, onChange, title) => {
+                const label = document.createElement("label");
+                label.className = "heat-target-chip" + (checked ? " is-on" : "");
+                label.title = title || text;
+                const box = document.createElement("input");
+                box.type = "checkbox";
+                box.checked = checked;
+                box.onchange = () => onChange(box.checked);
+                label.append(box, document.createTextNode(text));
+                return label;
             };
-            const min = parse(inputs.min.value);
-            const max = parse(inputs.max.value);
-            const status = document.getElementById("status");
-            const revert = () => {
-                inputs.min.value = previous.min === null ? "" : String(previous.min);
-                inputs.max.value = previous.max === null ? "" : String(previous.max);
+            const allFiles = target.files === null;
+            files.appendChild(chip("All files", allFiles, checked => updateHeatTarget(target.id, { files: checked ? null : [] }),
+                "Use this range for every file"));
+            fileKeys.forEach(key => {
+                const on = allFiles || target.files.includes(key);
+                const element = chip(key, on, checked => {
+                    const current = allFiles ? [...fileKeys] : [...target.files];
+                    const nextFiles = checked ? [...new Set([...current, key])] : current.filter(item => item !== key);
+                    updateHeatTarget(target.id, { files: nextFiles });
+                }, `File ${key}`);
+                if (allFiles) element.classList.add("is-implied");
+                files.appendChild(element);
+            });
+            // Zugeordnete, aber nicht geladene Dateien bleiben sichtbar
+            if (!allFiles) target.files.filter(key => !fileKeys.includes(key)).forEach(key => {
+                const element = chip(key, true, checked => {
+                    if (!checked) updateHeatTarget(target.id, { files: target.files.filter(item => item !== key) });
+                }, `File ${key} (not loaded)`);
+                element.classList.add("is-absent");
+                files.appendChild(element);
+            });
+            row.appendChild(files);
+
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "btn-secondary heat-target-clear heat-target-remove";
+            remove.textContent = "Remove";
+            remove.title = `Remove target range "${target.name}"`;
+            remove.onclick = () => {
+                saveHeatInputTargets(readHeatInputTargets().filter(item => item.id !== target.id));
+                document.getElementById("status").textContent = `Target range "${target.name}" removed.`;
+                renderHeatInput();
             };
-            if (!min.ok || !max.ok) {
-                status.textContent = "Please enter heat input values >= 0 (kJ/mm).";
-                revert();
-                return;
-            }
-            if (min.value !== null && max.value !== null && min.value >= max.value) {
-                status.textContent = "Target min must be smaller than target max.";
-                revert();
-                return;
-            }
-            try {
-                localStorage.setItem(HEAT_TARGET_KEY, JSON.stringify({
-                    min: min.value === null ? "" : String(min.value),
-                    max: max.value === null ? "" : String(max.value)
-                }));
-            } catch (error) {
-                console.warn("Could not store the heat input target range.", error);
-            }
-            status.textContent = "Heat input target range updated.";
-            renderHeatInput();
+            row.appendChild(remove);
+            return row;
         }
 
         // Ein gemeinsames Diagramm fuer alle Dateien: x-Achse nach Datei gruppiert, je Segment Balken
@@ -7828,8 +8030,8 @@
             title.className = "heat-chart-title";
             title.textContent = "Heat input per segment (kJ/mm) — bar: min–max from overrides, dot: nominal";
             wrap.appendChild(title);
-            const target = readHeatInputTarget();
-            wrap.appendChild(buildHeatTargetControls(target));
+            const targets = readHeatInputTargets();
+            wrap.appendChild(buildHeatTargetControls(targets));
 
             // Keine separate Legende: jede Zeile traegt Farbpunkt und Segmentnamen direkt.
 
@@ -7844,7 +8046,7 @@
 
             // Skala (x): 0 bis Maximum (inkl. Grenzwerte), auf "schoene" Schritte gerundet.
             const limitValues = entriesByFile.flatMap(group => [group.limitLow, group.limitHigh]).filter(value => value !== null);
-            const targetValues = [target.min, target.max].filter(value => value !== null);
+            const targetValues = entriesByFile.flatMap(group => (group.targets || []).flatMap(item => [item.min, item.max])).filter(value => value !== null);
             const rawMax = Math.max(...valid.map(entry => entry.result.maxHeatInput), ...limitValues, ...targetValues) * 1.1;
             // Gitter in 0,1-Schritten (bei sehr grossen Werten groeber, damit es lesbar bleibt).
             let step = 0.1;
@@ -7864,8 +8066,12 @@
             const groupHeaderHeight = entriesByFile.length > 1 && !compactLabels ? 24 : 0;
             const groupGap = entriesByFile.length > 1 ? 10 : 0;
             const margin = { top: targetValues.length ? 24 : 12, right: 24, bottom: 30, left: compactLabels ? 140 : 100 };
+            // Zusaetzlicher Platz ueber Gruppen, deren Ziel-Bereiche sich gegenueber der vorigen Gruppe aendern (Beschriftung).
+            const targetSignatures = entriesByFile.map(group => (group.targets || []).map(item => item.id).join("|"));
+            const targetLabelSpace = 16;
+            const extraLabelSpace = targetSignatures.filter((signature, index) => index > 0 && signature && signature !== targetSignatures[index - 1]).length * targetLabelSpace;
             const plotH = entriesByFile.reduce((sum, group) => sum + groupHeaderHeight + group.entries.length * rowHeight, 0)
-                + groupGap * (entriesByFile.length - 1);
+                + groupGap * (entriesByFile.length - 1) + extraLabelSpace;
             const height = margin.top + plotH + margin.bottom;
             const plotW = width - margin.left - margin.right;
             const x = value => margin.left + value / xMax * plotW;
@@ -7900,13 +8106,8 @@
             const axisTitle = make("text", { x: width - margin.right, y: axisY + 28, class: "heat-tick", "text-anchor": "end" });
             axisTitle.textContent = "kJ/mm";
 
-            // Ziel-Bereich als rote Linien ueber das ganze Diagramm
-            [[target.min, "min"], [target.max, "max"]].forEach(([value, name]) => {
-                if (value === null) return;
-                make("line", { x1: x(value), x2: x(value), y1: margin.top - 4, y2: axisY, class: "heat-target-line" });
-                const label = make("text", { x: x(value), y: margin.top - 8, class: "heat-target-label", "text-anchor": name === "min" ? "end" : "start" });
-                label.textContent = `${name} ${value}`;
-            });
+            // Ziel-Bereiche: rote Linien ueber den Gruppen der zugeordneten Dateien (siehe unten je Gruppe)
+            let previousTargetSignature = "";
 
             const tooltip = document.createElement("div");
             tooltip.className = "heat-tooltip";
@@ -7929,8 +8130,27 @@
                     groupLabel.appendChild(fullName);
                     cursor += groupHeaderHeight;
                 }
+                if (groupIndex > 0 && targetSignatures[groupIndex] && targetSignatures[groupIndex] !== targetSignatures[groupIndex - 1]) {
+                    cursor += targetLabelSpace;
+                }
                 const groupTop = cursor;
                 const groupBottom = groupTop + group.entries.length * rowHeight;
+
+                // Ziel-Bereiche dieser Datei als rote Linien ueber ihrer Gruppe; Beschriftung, wenn sie sich aendern
+                const groupTargets = group.targets || [];
+                const signature = groupTargets.map(item => item.id).join("|");
+                const labelTargets = signature !== previousTargetSignature && groupTargets.length > 0;
+                previousTargetSignature = signature;
+                groupTargets.forEach(item => {
+                    [[item.min, "min"], [item.max, "max"]].forEach(([value, bound]) => {
+                        if (value === null) return;
+                        make("line", { x1: x(value), x2: x(value), y1: groupTop - (labelTargets ? 4 : 2), y2: groupBottom, class: "heat-target-line" });
+                        if (labelTargets) {
+                            const label = make("text", { x: x(value) + (bound === "min" ? -4 : 4), y: groupTop - 7, class: "heat-target-label", "text-anchor": bound === "min" ? "end" : "start" });
+                            label.textContent = `${item.name} ${bound} ${value}`;
+                        }
+                    });
+                });
 
                 // Grenzwerte dieser Datei nur ueber ihrer Gruppe (senkrecht)
                 [[group.limitLow, "low"], [group.limitHigh, "high"]].forEach(([value, name]) => {
@@ -8060,12 +8280,12 @@
                 return;
             }
 
-            // Ergebnisse aller sichtbaren Dateien; geprueft gegen <limits> und den Ziel-Bereich (Min/Max).
-            const target = readHeatInputTarget();
+            // Ergebnisse aller sichtbaren Dateien; geprueft gegen <limits> und die zugeordneten Ziel-Bereiche.
+            const targets = readHeatInputTargets();
             const visibleFiles = loadedFiles
                 .map((file, fileIndex) => ({ file, fileIndex }))
                 .filter(({ file }) => !heatInputHiddenFileIds.has(file.id));
-            const entriesByFile = visibleFiles.map(({ file, fileIndex }) => ({ ...heatInputCheck(file, target), fileIndex }));
+            const entriesByFile = visibleFiles.map(({ file, fileIndex }) => ({ ...heatInputCheck(file, targets), fileIndex }));
 
             const panel = document.createElement("div");
             panel.className = "panel";
@@ -8169,7 +8389,7 @@
                 fileRow.appendChild(fileCell);
                 tbody.appendChild(fileRow);
 
-                group.entries.forEach(({ result, segmentIndex, outsideLimit, outsideTarget }) => {
+                group.entries.forEach(({ result, segmentIndex, outsideLimit, outsideTarget, targetViolations }) => {
                     const segment = group.file.sections.segments[segmentIndex];
                     const row = document.createElement("tr");
                     row.className = "heat-segment-row" + (result.disabled || result.error ? " is-muted" : "");
@@ -8213,12 +8433,13 @@
                         status.className = "heat-status is-outside";
                         status.textContent = [outsideLimit ? "! outside limit" : "", outsideTarget ? "! outside target" : ""]
                             .filter(Boolean).join(" · ");
+                        if (outsideTarget) status.title = targetViolations.map(v => `${v.target.name}: ${v.bound} ${v.value}`).join(", ");
                     } else {
                         status.className = "heat-status is-ok";
                         const hasLimits = group.limitLow !== null || group.limitHigh !== null;
-                        const hasTarget = target.min !== null || target.max !== null;
+                        const hasTarget = group.targets.length > 0;
                         status.textContent = hasLimits || hasTarget ? "✓ OK" : "—";
-                        status.title = [hasLimits ? "within limits" : "", hasTarget ? "within target range" : ""].filter(Boolean).join(", ");
+                        status.title = [hasLimits ? "within limits" : "", hasTarget ? `within ${group.targets.map(item => item.name).join(", ")}` : ""].filter(Boolean).join(", ");
                     }
                     statusCell.appendChild(status);
                     row.appendChild(statusCell);
@@ -9577,7 +9798,7 @@
             }
         }
 
-        function buildOverviewHeatTable(entriesByFile, target) {
+        function buildOverviewHeatTable(entriesByFile) {
             let html = '<table class="heat"><thead><tr><th>File</th><th>Segment</th><th class="num">Heat input<br><small>kJ/mm</small></th>'
                 + '<th class="num">Range<br><small>kJ/mm</small></th><th class="num">Avg. current<br><small>A</small></th>'
                 + '<th class="num">Travel<br><small>mm/min</small></th><th>Status</th></tr></thead><tbody>';
@@ -9589,8 +9810,8 @@
                     const segment = group.file.sections.segments[entry.segmentIndex];
                     const valid = !result.disabled && !result.error;
                     const status = result.disabled ? "disabled" : result.error ? "! not calculable"
-                        : entry.outside ? [entry.outsideLimit ? "! outside limit" : "", entry.outsideTarget ? "! outside target" : ""].filter(Boolean).join(" · ")
-                            : (group.limitLow !== null || group.limitHigh !== null || target.min !== null || target.max !== null) ? "✓ OK" : "—";
+                        : entry.outside ? [entry.outsideLimit ? "! outside limit" : "", entry.outsideTarget ? `! outside ${entry.targetViolations.map(v => v.target.name).filter((n, i, a) => a.indexOf(n) === i).join(", ")}` : ""].filter(Boolean).join(" · ")
+                            : (group.limitLow !== null || group.limitHigh !== null || group.targets.length) ? "✓ OK" : "—";
                     const color = SEGMENT_COLORS[entry.segmentIndex % SEGMENT_COLORS.length];
                     html += `<tr class="${entry.outside ? "outside" : ""}">`
                         + `<td>${index === 0 ? `<strong>${escapeHtml(fileShortLabel(group.file))}</strong>${limits}` : ""}</td>`
@@ -9610,7 +9831,7 @@
 
         function buildProgramOverviewHtml() {
             const files = loadedFiles;
-            const target = readHeatInputTarget();
+            const targets = readHeatInputTargets();
             const fileColumns = files.map(file => ({ label: fileShortLabel(file), file }));
             const keysOf = node => node ? [...node.children].map(child => child.tagName) : [];
             const unionKeys = list => [...new Set(list.flat())];
@@ -9629,11 +9850,13 @@
             // Overrides: nur die fuer die Heat-Input-Berechnung verwendeten (siehe calculateSegmentHeatInput)
             const presentOverrideKeys = unionKeys(files.map(file => keysOf(file.sections.overrides)));
             const overrideKeys = HEAT_INPUT_OVERRIDE_KEYS.filter(key => presentOverrideKeys.includes(key));
-            const entriesByFile = files.map((file, fileIndex) => ({ ...heatInputCheck(file, target), fileIndex }));
+            const entriesByFile = files.map((file, fileIndex) => ({ ...heatInputCheck(file, targets), fileIndex }));
             const schema = getActiveXdr();
             const now = new Date();
-            const targetText = target.min !== null || target.max !== null
-                ? `Target range ${target.min ?? "–"} – ${target.max ?? "–"} kJ/mm (red lines)` : "No target range set";
+            const activeTargets = targets.filter(item => item.min !== null || item.max !== null);
+            const targetText = activeTargets.length
+                ? `Target ranges (red lines, kJ/mm): ${activeTargets.map(item => `${describeTarget(item)} for ${item.files === null ? "all files" : item.files.join(", ") || "no file"}`).join("; ")}`
+                : "No target range set";
 
             const fileList = files.map(file => {
                 const head = file.xml.documentElement.getAttribute("head") || "–";
@@ -9710,7 +9933,7 @@
     <h2 class="page-break">Heat input</h2>
     <div class="muted">Bar: min–max from the overrides, dot: nominal. ${escapeHtml(targetText)}.</div>
     <div class="chart">${buildOverviewHeatChart(entriesByFile)}</div>
-    ${buildOverviewHeatTable(entriesByFile, target)}
+    ${buildOverviewHeatTable(entriesByFile)}
 </body></html>`;
         }
 
@@ -10696,6 +10919,7 @@
             "scheduleEditorSidebarState",
             "scheduleEditorBatchSave",
             "scheduleEditorHeatInputTarget",
+            "scheduleEditorHeatInputTargets",
             "scheduleEditorParameterOrder",
             "scheduleEditorXdrSchemas",
             "scheduleEditorActiveXdr",
@@ -10733,6 +10957,7 @@
                     scheduleEditorSidebarState: isBooleanMap,
                     scheduleEditorBatchSave: isStringMap,
                     scheduleEditorHeatInputTarget: isStringMap,
+                    scheduleEditorHeatInputTargets: Array.isArray(value) && value.every(item => item && typeof item === "object" && !Array.isArray(item)),
                     scheduleEditorParameterOrder: isObject && Object.values(value).every(item =>
                         Array.isArray(item) && item.every(entry => typeof entry === "string")),
                     scheduleEditorXdrSchemas: Array.isArray(value) && value.every(item => isXdrRecord(item)

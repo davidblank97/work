@@ -20,7 +20,7 @@ module.exports = [
             await openBatch(frame);
             t.check("error dialog shown", await frame.locator("#heatSaveModal.show").count() === 1);
             const text = await frame.textContent("#heatSaveList");
-            t.check("names segment and target", /0402 · Segment 1: .* kJ\/mm \(target max 0\.100\)/.test(text), text);
+            t.check("names segment and target", /0402 · Segment 1: .* kJ\/mm \(Target max 0\.100\)/.test(text), text);
             await frame.click("#heatSaveCancelBtn");
             await page.waitForTimeout(200);
             t.check("cancel: no download", downloads === 0);
