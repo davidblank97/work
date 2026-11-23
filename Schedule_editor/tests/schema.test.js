@@ -1,7 +1,7 @@
 // Schema-Pruefung gegen WELDSCHEDULE.XDR und XDR-Verwaltung unter Settings.
 const fs = require("fs");
 
-const BASE = "Schedule_Org/Muster_schedules/8888-layout new NGRT.xml"; // Version 1.8.3.7, schema-konform
+const BASE = "Schedule_editor/data/samples/layouts/8888-layout new NGRT.xml"; // Version 1.8.3.7, schema-konform
 
 module.exports = [
     {
@@ -67,8 +67,8 @@ module.exports = [
         name: "XDR versions in Settings",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            const xdr = fs.readFileSync(t.file("Schedule_editor/WELDSCHEDULE.XDR"), "utf8");
-            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/Test 2 Segmente.xml")]);
+            const xdr = fs.readFileSync(t.file("Schedule_editor/data/schema/WELDSCHEDULE.XDR"), "utf8");
+            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/Test 2 Segmente.xml")]);
             await page.waitForTimeout(300);
             await frame.click("#localStorageBackupBtn");
             t.check("dialog is called Settings", (await frame.textContent("#localStorageBackupTitle")) === "Settings");

@@ -1,6 +1,6 @@
 // Batch Save: Fehlermeldung, wenn der Heat Input ausserhalb der Grenzen liegt.
 const fs = require("fs");
-const REF = "Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml";
+const REF = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml";
 
 const openBatch = async frame => {
     await frame.click("#batchSaveBtn");

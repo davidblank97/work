@@ -7,7 +7,7 @@ module.exports = [
         async run(t) {
             for (const width of [1440, 900]) {
                 const { page, frame } = await t.openApp("editor", { viewport: { width, height: 760 } });
-                const dir = "Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/";
+                const dir = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/";
                 const files = fs.readdirSync(t.file(dir)).filter(name => name.endsWith(".xml")).map(name => t.file(dir + name));
                 await frame.setInputFiles("#fileInput", files);
                 await page.waitForTimeout(500);

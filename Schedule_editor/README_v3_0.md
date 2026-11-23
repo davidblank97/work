@@ -35,7 +35,7 @@ Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 
 ## WDR Converter: Heat-Input-Auswertung
 
-Ersetzt die Excel-Vorlage `template_metric_Short.xlsx` (gleiche Kennwerte, aber ohne deren Fehler; Befunde in `WDR_converter/PLAN_Excel_Vorlage.md`). Ausgabeformat „Heat input evaluation“ (Standard):
+Ersetzt die Excel-Vorlage `template_metric_Short.xlsx` (gleiche Kennwerte, aber ohne deren Fehler; Befunde in `docs/PLAN_Excel_Vorlage.md`). Ausgabeformat „Heat input evaluation“ (Standard):
 
 - **Je CSV `<Name>_heat-input.xlsx`:**
   - `Data`: Spalten A–P wie in der Vorlage, **immer metrisch** (cm/min, mm/min, kJ/mm; imperiale Logs werden umgerechnet) und mit zwei Nachkommastellen angezeigt (gerechnet wird mit voller Genauigkeit). A–G sind die Logwerte, H ist Methode C (Maschine), I der Vorschub in mm/min, J/K die Zeit in s/min (K = J/60, die Vorlage rechnete die Zeit doppelt), L Methode A je Messpunkt (U·I/v·0,06·k), M/N nach Grund-/Pulsstrom getrennt, O/P gleitende Mittel „per period“ bzw. „per 10 periods“.
@@ -57,13 +57,13 @@ Ersetzt die Excel-Vorlage `template_metric_Short.xlsx` (gleiche Kennwerte, aber 
 
 ## Pendant Layout
 
-Bearbeitet die Tastenbelegung des Pendants (Datei `key_layout_*.xml`). Quelle: `Pendant_layout/Pendant_Layout_Generator_Simplified_v2_offline.html`; in der Suite im Farbschema des Editors.
+Bearbeitet die Tastenbelegung des Pendants (Datei `key_layout_*.xml`). Urspruengliche Quelle: `_archiv/Pendant_layout_original/Pendant_Layout_Generator_Simplified_v2_offline.html`; in der Suite im Farbschema des Editors.
 
 - **Dateiformat:**
   - Root `<termkeys>` (neu) oder `<infinitykeys>` (alt, wird beim Laden akzeptiert).
   - Darunter `metadata` (u. a. Autor, Datum) und neun Modi `<mode index name>`: NUMPAD, JOG, AUXJOG, MENU, INPUT, VIEW, EDIT, WELD, WELD2.
   - Jeder Modus hat 7 Zeilen × 4 Tasten (`<row index>` / `<key index>`); der Tasteninhalt ist der Funktionsname (z. B. `trav_fwd`), leer bedeutet unbelegt.
-  - Beispiel: `Pendant_layout/key_layout.xml`.
+  - Beispiel: `data/samples/key_layout.xml`.
 - **Bearbeiten:**
   - Datei laden (`Choose File`) oder mit den Werkseinstellungen beginnen; Autor und Dateinamen-Suffix eintragen.
   - Die Modi **JOG, WELD, WELD2** in Tabs bearbeiten: je Taste eine Auswahlliste, `--- CUSTOM ---` fuer freie Namen.
@@ -237,7 +237,7 @@ Ist eine passende Version gespeichert, bietet `Use v…` an, sie zu aktivieren.
 - Oben gibt es `Upgrade all to v… (n)` fuer alle betroffenen Dateien.
 - Ein Dialog zeigt vorher je Datei: Version alt → neu, Anzahl ergaenzter, entfernter und umbenannter Felder sowie das verwendete Muster.
 
-Regeln (wie `Schedule_Org/batch_editor1.6.py`: Layout von der neuesten Version, nicht die Werte):
+Regeln (wie `_archiv/Schedule_Org/batch_editor1.6.py`: Layout von der neuesten Version, nicht die Werte):
 
 1. **Werte bleiben erhalten:** Alle vorhandenen Felder behalten ihren Wert, auch gesperrte (🔒). Alle Segmente bleiben erhalten.
 2. **Fehlende Pflichtfelder ergaenzen:** Sie werden mit dem Wert aus dem Layout-Muster ergaenzt. Das Muster richtet sich nach dem Head:
@@ -368,11 +368,13 @@ Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Ni
 
 ## Dateien
 
-- `Lib_Schedule_Editor_v3_0.html`: Liburdi Schedule Suite 3.0 mit Startseite, Schedule Editor und WDR Converter in einer Datei; alle Bibliotheken eingebettet.
+- `Lib_Schedule_Editor_v3_0.html`: Liburdi Schedule Suite 3.0 (Startseite, Schedule Editor, WDR Converter, Pendant Layout) in einer Datei; alle Bibliotheken eingebettet.
+- `segments_sorting.json`: Reihenfolge der Segmentfelder (muss neben der HTML liegen).
 - `README_v3_0.md`: Diese Anleitung.
-- `WELDSCHEDULE.XDR`: Liburdi-Schema 1.8.3.7. Es ist auch im Editor eingebaut.
-- `segments_sorting.json`: Reihenfolge der Segmentfelder.
-- `schedule_beispiel.xml`, `Test 2 Segmente.xml`: Beispiel-Schedules aelterer Versionen zum Testen.
-- `04_HIC_PK_764_CS_NGRT_Rev1/`: Referenzprogramme in Version 1.8.3.7.
+- `data/samples/`: Beispiel-Schedules (`schedule_beispiel.xml`, `Test 2 Segmente.xml`), Referenzprogramme `04_HIC_PK_764_CS_NGRT_Rev1/` (1.8.3.7), Layout-Muster NG/NGRT (`layouts/`), Pendant-Beispiel `key_layout.xml`.
+- `data/schema/WELDSCHEDULE.XDR`: Liburdi-Schema 1.8.3.7 (auch im Editor eingebaut).
+- `data/wdr/`: Beispiel-Datalog (CSV), alte Excel-Vorlage und WPQ-Sammeltabelle als Referenz.
+- `data/machine_backup/`: Sicherung der Maschinensoftware 1.8.3.87 (Datalogs mit Schedule-Snapshots, Schedules, XDR, XSL-Upgrades).
+- `docs/`: Notizen, offene Punkte (`to_do`), Befunde zur Excel-Vorlage.
 - `tests/`: Browser-Tests (`npm test`, siehe AGENTS.md).
-- `archive/`: Fruehere Versionen (v2 bis v2.9) mit ihren Anleitungen, nur zum Nachschlagen.
+- Fruehere Versionen (v2 bis v2.9) und nicht mehr benoetigte Werkzeuge liegen in `/_archiv` (nur zum Nachschlagen).

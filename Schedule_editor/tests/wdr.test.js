@@ -12,7 +12,7 @@ module.exports = [
             await page.waitForTimeout(800);
             const editor = page.frames().find(frame => frame.url() === "about:srcdoc");
             t.check("editor not in quirks mode", await editor.evaluate(() => document.compatMode) === "CSS1Compat");
-            await editor.setInputFiles("#fileInput", [t.file("Schedule_editor/schedule_beispiel.xml")]);
+            await editor.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/schedule_beispiel.xml")]);
             await page.waitForTimeout(300);
             await page.click('#suite-bar [data-route="wdr"]');
             await page.waitForTimeout(800);

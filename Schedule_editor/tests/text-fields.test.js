@@ -4,7 +4,7 @@ module.exports = [
         name: "string field arc_type",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            const dir = "Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/";
+            const dir = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/";
             await frame.setInputFiles("#fileInput", [t.file(dir + "0402-Hotpass1.xml"), t.file(dir + "0403-Hotpass2.xml")]);
             await page.waitForTimeout(400);
             await frame.evaluate(() => { activeFile = 0; renderFileList(); showSection("global"); });

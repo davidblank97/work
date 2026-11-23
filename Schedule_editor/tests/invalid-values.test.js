@@ -6,7 +6,7 @@ module.exports = [
         name: "invalid number stays visible and unchanged",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            const text = fs.readFileSync(t.file("Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml"), "utf8")
+            const text = fs.readFileSync(t.file("Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml"), "utf8")
                 .replace(/<prepurge>[^<]*<\/prepurge>/, "<prepurge>abc</prepurge>");
             await frame.setInputFiles("#fileInput", [{ name: "invalid.xml", mimeType: "text/xml", buffer: Buffer.from(text) }]);
             await page.waitForTimeout(300);
@@ -31,7 +31,7 @@ module.exports = [
         name: "invalid integer field gets no decimals",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            const text = fs.readFileSync(t.file("Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml"), "utf8")
+            const text = fs.readFileSync(t.file("Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml"), "utf8")
                 .replace(/<trail_gas>[^<]*<\/trail_gas>/, "<trail_gas>x</trail_gas>");
             await frame.setInputFiles("#fileInput", [{ name: "invalid-int.xml", mimeType: "text/xml", buffer: Buffer.from(text) }]);
             await page.waitForTimeout(300);

@@ -4,7 +4,7 @@ module.exports = [
         name: "overview of all loaded files",
         async run(t) {
             const { context, page, frame } = await t.openApp("editor");
-            const dir = "Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/";
+            const dir = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/";
             await frame.setInputFiles("#fileInput", ["0402-Hotpass1.xml", "0403-Hotpass2.xml", "0408-Cap.xml"].map(name => t.file(dir + name)));
             await page.waitForTimeout(400);
             await frame.evaluate(() => { parameterOrder = { segments: ["indwell", "pri_amp", "slope"] }; });

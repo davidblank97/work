@@ -3,11 +3,11 @@ const fs = require("fs");
 const path = require("path");
 
 const OLD_FILES = [
-    "Schedule_editor/schedule_beispiel.xml",              // 1.7.4.1
-    "Schedule_Org/Muster_schedules/5555-layout old NG.xml", // 1.8.3.3
-    "Schedule_editor/Test 2 Segmente.xml"                  // 1.8.3.5
+    "Schedule_editor/data/samples/schedule_beispiel.xml",              // 1.7.4.1
+    "Schedule_editor/data/samples/layouts/5555-layout old NG.xml", // 1.8.3.3
+    "Schedule_editor/data/samples/Test 2 Segmente.xml"                  // 1.8.3.5
 ];
-const REFERENCE = "Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml";
+const REFERENCE = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml";
 
 const snapshot = frame => frame.evaluate(() => Object.fromEntries(loadedFiles.map(file => {
     const values = {};
@@ -73,10 +73,10 @@ module.exports = [
         name: "layout template by head",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            const text = fs.readFileSync(t.file("Schedule_editor/schedule_beispiel.xml"), "utf8").replace('head="NGRT + H-HEAD"', 'head="H2-FV-100S"');
+            const text = fs.readFileSync(t.file("Schedule_editor/data/samples/schedule_beispiel.xml"), "utf8").replace('head="NGRT + H-HEAD"', 'head="H2-FV-100S"');
             const ngFile = path.join(t.tmpDir, "ng_head.xml");
             fs.writeFileSync(ngFile, text);
-            await frame.setInputFiles("#fileInput", [ngFile, t.file("Schedule_editor/schedule_beispiel.xml")]);
+            await frame.setInputFiles("#fileInput", [ngFile, t.file("Schedule_editor/data/samples/schedule_beispiel.xml")]);
             await page.waitForTimeout(400);
             await frame.click("#upgradeBannerDismissBtn");
             t.check("banner can be dismissed", !(await frame.isVisible("#upgradeBanner")));

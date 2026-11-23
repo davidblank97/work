@@ -4,7 +4,7 @@ module.exports = [
         name: "highlights changes after upgrade",
         async run(t) {
             const { context, page, frame } = await t.openApp("editor");
-            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/schedule_beispiel.xml")]);
+            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/schedule_beispiel.xml")]);
             await page.waitForTimeout(400);
             let [viewer] = await Promise.all([context.waitForEvent("page"), frame.click("#xmlViewerBtn")]);
             await viewer.waitForTimeout(500);

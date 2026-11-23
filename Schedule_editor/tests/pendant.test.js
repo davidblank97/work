@@ -29,8 +29,8 @@ module.exports = [
         name: "load key_layout.xml, edit and export",
         async run(t) {
             const { context, page, frame } = await t.openApp("pendant");
-            const source = fs.readFileSync(t.file("Pendant_layout/key_layout.xml"), "utf8");
-            await frame.setInputFiles("#file-input", [t.file("Pendant_layout/key_layout.xml")]);
+            const source = fs.readFileSync(t.file("Schedule_editor/data/samples/key_layout.xml"), "utf8");
+            await frame.setInputFiles("#file-input", [t.file("Schedule_editor/data/samples/key_layout.xml")]);
             await page.waitForTimeout(400);
             const tabs = await frame.$$eval("#tabs-container button", buttons => buttons.map(b => b.dataset.mode));
             t.check("tabs JOG, WELD, WELD2", tabs.join(",") === "JOG,WELD,WELD2", tabs.join(","));

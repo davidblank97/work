@@ -11,7 +11,7 @@ module.exports = [
         async run(t) {
             for (const width of [1920, 1440, 1300, 1100]) {
                 const { page, frame } = await t.openApp("editor", { viewport: { width, height: 900 } });
-                await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
+                await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
                 await page.waitForTimeout(400);
                 await frame.evaluate(() => showSection("segments"));
                 await page.waitForTimeout(200);
@@ -32,7 +32,7 @@ module.exports = [
         name: "custom order keeps plain flow",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
+            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
             await page.waitForTimeout(300);
             await frame.evaluate(() => { parameterOrder = { segments: ["enable", "mode"] }; showSection("segments"); });
             const placed = await frame.evaluate(() => [...document.querySelectorAll(".segment-panel tbody tr")].filter(row => row.style.gridColumn).length);

@@ -7,13 +7,13 @@
 ## Key files
 
 - `Lib_Schedule_Editor_v3_0.html`: current version (Liburdi Schedule Suite 3.0). Start page + router at the top/bottom of the file; the Schedule Editor lives unchanged in `<template id="app-editor">` (embedded JSZip, CSS, app JavaScript), the WDR (Welddata) Converter in `<template id="app-wdr">`, the Pendant Key Layout Editor in `<template id="app-pendant">` (source `Pendant_layout/…_offline.html`, recoloured to the editor theme; its PDF preview stays light for printing). Each app is started as its own document via `iframe.srcdoc` (same origin, `<base href>` set to the suite URL) and kept alive when switching. Edit the apps inside their templates; never put `</template>` inside an app.
-- `archive/`: older versions (`Lib_Schedule_Editor_v2*.html`, README v2.8/v2.9), kept for reference. Do not edit unless asked.
+- `/_archiv/`: older versions and tools, kept for reference. Do not edit unless asked.
 - Schema check: `validateAgainstXdr` / `getSchemaResult` (editor template) validate each file against the active XDR (built-in copy of `WELDSCHEDULE.XDR` in `<script id="defaultXdr">`, more versions in localStorage `scheduleEditorXdrSchemas`, managed in Tools › Settings). Save paths go through `confirmSchemaBeforeSave`. Schedules older than the XDR version legitimately differ; `upgradeDocument` (Tools › Schema Check › Upgrade) migrates them: keep values, add missing fields from the layout template chosen by head (`<script id="layoutNGRT">` / `id="layoutNG"`, copies of `Schedule_Org/Muster_schedules/8888…`/`7777…`), apply `SCHEMA_RENAMES`, drop unknown fields, order by XDR, set `config_version`, `jog_speed_edit_mode`=1. Reference 1.8.3.7 files: `04_HIC_PK_764_CS_NGRT_Rev1/`.
 - `WELDSCHEDULE.XDR`: Liburdi schedule schema 1.8.3.7 (source of the built-in copy).
 - `segments_sorting.json`: priority order of segment fields; fetched only when served over http(s), otherwise the built-in `SEGMENT_SORTING_CONFIG` is used.
 - `README_v3_0.md`: user documentation (German). Update it when behavior changes.
 - `schedule_beispiel.xml`, `Test 2 Segmente.xml`: sample schedules for manual testing.
-- `text_doc/`: user notes (`to_do` with open feature ideas, heat input notes).
+- `docs/`: user notes (`to_do` with open feature ideas, heat input notes).
 
 ## Architecture notes (app script)
 
@@ -27,7 +27,7 @@
   - `buildEvaluationWorkbook` and `buildSummaryWorkbook` write xlsx files through the small `XlSheet`/`xlBuildWorkbook` writer: JSZip with inline strings, formulas with cached values and scatter charts. SheetJS is not used for these files, because it cannot write charts.
   - Settings are stored in localStorage `wdrEvaluationSettings`; target ranges are read from the editor's `scheduleEditorHeatInputTargets`.
   - The evaluation range is always the steady state from the set points, and the windows always follow the oscillation period. The template's fixed rows and windows (1000–121000, 104/996) were removed at the user's request. Output is always metric, with the number format `0.00`.
-  - `tests/wdr-evaluation.test.js` reads the raw data of `WDR_converter/template_metric_Short.xlsx` when it exists locally. That file is 60 MB and is not committed.
+  - `tests/wdr-evaluation.test.js` reads the raw data of `data/wdr/template_metric_Short.xlsx` when it exists locally. That file is 60 MB and is not committed.
 
 ## Validation and usage
 

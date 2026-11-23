@@ -1,5 +1,5 @@
 // Heat Input: mehrere Target Ranges mit Dateizuordnung.
-const DIR = "Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/";
+const DIR = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/";
 const FILES = ["0402-Hotpass1.xml", "0403-Hotpass2.xml", "0404-Fill-OUT.xml", "0408-Cap.xml"];
 
 module.exports = [

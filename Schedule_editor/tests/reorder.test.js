@@ -4,7 +4,7 @@ module.exports = [
         name: "drag parameters and lock",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
+            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
             await page.waitForTimeout(300);
             await frame.evaluate(() => showSection("global"));
             const rows = () => frame.$$eval("#content .param-table tr[data-param-key]", trs => trs.map(tr => tr.dataset.paramKey));
@@ -40,7 +40,7 @@ module.exports = [
         name: "outer diameter dropdown",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/schedule_beispiel.xml")]);
+            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/schedule_beispiel.xml")]);
             await page.waitForTimeout(300);
             await frame.evaluate(() => showSection("description"));
             const select = frame.locator(".diameter-select");

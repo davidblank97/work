@@ -36,7 +36,7 @@ const file = relative => path.join(ROOT, relative);
 
 // Kleiner CSV-Ausschnitt der grossen Beispiel-CSV (fuer schnelle WDR-Tests).
 function smallCsv(targetDir) {
-    const source = file("WDR_converter/DL_2026-11-10_14-16-55_Layer 7 Bead 12 Out _764.000_712.000_0.csv");
+    const source = file("Schedule_editor/data/wdr/DL_2026-11-10_14-16-55_Layer 7 Bead 12 Out _764.000_712.000_0.csv");
     const target = path.join(targetDir, "small.csv");
     const text = fs.readFileSync(source, "utf8").slice(0, 200000);
     fs.writeFileSync(target, text.slice(0, text.lastIndexOf("\n") + 1));

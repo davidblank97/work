@@ -219,7 +219,7 @@ module.exports = [
             await frame.uncheck("#eval-summary");
             const stored = await frame.evaluate(() => JSON.parse(localStorage.getItem("wdrEvaluationSettings") || "null"));
             t.check("settings stored", stored && stored.summary === false && stored.processFactor === 0.6, JSON.stringify(stored));
-            const csvPath = t.file("WDR_converter/DL_2026-11-10_14-16-55_Layer 7 Bead 12 Out _764.000_712.000_0.csv");
+            const csvPath = t.file("Schedule_editor/data/wdr/DL_2026-11-10_14-16-55_Layer 7 Bead 12 Out _764.000_712.000_0.csv");
             const csvLines = fs.readFileSync(csvPath, "utf8").split(/\r?\n/);
             const rawRow5 = csvLines[csvLines.indexOf("DATA_UOM") + 3].split(",").map(Number); // zweite Datenzeile
             const started = Date.now();
@@ -278,7 +278,7 @@ module.exports = [
         // Bereich (Dauerbetrieb) und Fenster (1 s, das Log hat keine Pendel-Sollwerte) weichen bewusst von der Vorlage ab.
         name: "raw data of the Excel template (optional)",
         async run(t) {
-            const templatePath = "WDR_converter/template_metric_Short.xlsx";
+            const templatePath = "Schedule_editor/data/wdr/template_metric_Short.xlsx";
             if (!fs.existsSync(t.file(templatePath))) {
                 t.check("template not present – comparison skipped", true);
                 return;

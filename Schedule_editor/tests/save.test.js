@@ -1,5 +1,5 @@
 // Save (ohne Download, alle geaenderten Dateien, Change Log) und Batch Save (Download).
-const REF = "Schedule_editor/04_HIC_PK_764_CS_NGRT_Rev1/";
+const REF = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/";
 
 module.exports = [
     {
