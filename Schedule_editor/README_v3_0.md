@@ -143,7 +143,13 @@ Segmente werden im Editor ab 1 nummeriert (Segment 1, 2, …). Im XML bleibt das
 
 Die aktive Datei kann ausserdem umbenannt werden. Der Bereich `Segments` erlaubt das Bearbeiten, Duplizieren, Verschieben und Loeschen von Segmenten. Das geoeffnete Segment ist in der Liste hervorgehoben und bleibt nach Duplizieren, Verschieben, Undo/Redo und Bereichswechsel ausgewaehlt; nach dem Duplizieren ist die Kopie gewaehlt.
 
-Die Standardreihenfolge der Segmentfelder (solange keine eigene Reihenfolge per Drag & Drop gespeichert ist) wird ueber `segments_sorting.json` (im selben Ordner) gesteuert. Die Feldnamen in `segmentPriorityOrder` koennen dort umsortiert werden; alle nicht aufgefuehrten Felder erscheinen danach. Die Datei wird nur geladen, wenn der Editor ueber einen Webserver laeuft. Beim direkten Oeffnen der HTML-Datei oder bei einer fehlerhaften JSON-Datei verwendet der Editor seine eingebaute Standardreihenfolge.
+**Segment-Anordnung:** Ohne eigene Reihenfolge stehen die wichtigsten Segmentfelder in Gruppen untereinander:
+
+- Spalte 1: `pri_amp`, `bkg_amp`, `pri_ahc`, `bkg_ahc`, `pri_travel`, `bkg_travel`
+- Spalte 2: `pri_wire`, `bkg_wire`, `indwell`, `excursion`, `outdwell`, `tungsten_width`
+- Spalte 3: `layer_diameter`, `segment_time`, `sync_mode`, `slope`, `osc_width`, `wire_manipulator_in_out_width`
+
+Bei schmalem Fenster rueckt eine Gruppe unter die vorige, bleibt aber zusammen. Alle uebrigen Felder folgen darunter. Die Gruppen stehen in `segments_sorting.json` (`segmentColumns`) und sind eingebaut, falls die Datei nicht geladen werden kann. Wer die Felder per Ziehen selbst anordnet, bekommt diese Reihenfolge; `Reset order` stellt die Gruppenanordnung wieder her.
 
 Aenderungen werden direkt im geladenen XML-DOM gespeichert. Die urspruengliche Datei auf der Festplatte bleibt bis zum Download unveraendert.
 

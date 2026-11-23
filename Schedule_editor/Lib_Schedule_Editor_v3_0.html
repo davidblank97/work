@@ -5230,24 +5230,56 @@
         let heatInputHiddenFileIds = new Set(); // im Heat Input ausgeblendete Dateien (nur fuer diese Sitzung)
         const SEGMENT_SORTING_CONFIG = {
             "version": 1,
+            // Spalten der Segmentansicht: jede Liste steht untereinander (z. B. pri_/bkg_amp zusammen).
+            "segmentColumns": [
+                [
+                    "pri_amp",
+                    "bkg_amp",
+                    "pri_ahc",
+                    "bkg_ahc",
+                    "pri_travel",
+                    "bkg_travel"
+                ],
+                [
+                    "pri_wire",
+                    "bkg_wire",
+                    "indwell",
+                    "excursion",
+                    "outdwell",
+                    "tungsten_width"
+                ],
+                [
+                    "layer_diameter",
+                    "segment_time",
+                    "sync_mode",
+                    "slope",
+                    "osc_width",
+                    "wire_manipulator_in_out_width"
+                ]
+            ],
             "segmentPriorityOrder": [
-                "layer_diameter",
-                "segment_time",
                 "pri_amp",
                 "bkg_amp",
                 "pri_ahc",
                 "bkg_ahc",
-                "pri_wire",
-                "bkg_wire",
                 "pri_travel",
                 "bkg_travel",
-                "tungsten_width",
+                "pri_wire",
+                "bkg_wire",
                 "indwell",
                 "excursion",
-                "outdwell"
+                "outdwell",
+                "tungsten_width",
+                "layer_diameter",
+                "segment_time",
+                "sync_mode",
+                "slope",
+                "osc_width",
+                "wire_manipulator_in_out_width"
             ]
         };
         let segmentPriorityOrder = [...SEGMENT_SORTING_CONFIG.segmentPriorityOrder];
+        let segmentColumns = SEGMENT_SORTING_CONFIG.segmentColumns.map(column => [...column]);
 
         // Liest JSON aus localStorage; bei defekten oder unpassenden Daten wird der Fallback genutzt.
         function readStoredJson(key, fallback) {
@@ -6093,6 +6125,10 @@
                 return;
             }
             segmentPriorityOrder = [...new Set(order.map(field => field.trim()))];
+            const columns = config.segmentColumns;
+            segmentColumns = Array.isArray(columns) && columns.every(column => Array.isArray(column) && column.every(field => typeof field === "string"))
+                ? columns.map(column => column.map(field => field.trim()))
+                : [segmentPriorityOrder];
 
             if (activeFile < 0 || lastSelectedSection !== "segments" || !document.querySelector(".segment-panel")) return;
             const selectedSegment = loadedFiles[activeFile]?.sections.segments[selectedSegmentPosition];
@@ -7529,6 +7565,42 @@
 
             table.appendChild(tbody); body.appendChild(table); panel.appendChild(header); panel.appendChild(body); content.appendChild(panel);
             applyTableSearch();
+            // Standardanordnung: Feldgruppen spaltenweise untereinander (nur ohne eigene Reihenfolge per Ziehen).
+            if (!Array.isArray(parameterOrder.segments)) {
+                layoutSegmentColumns(tbody);
+                if (window.ResizeObserver) {
+                    let lastColumns = 0;
+                    new ResizeObserver(() => {
+                        const count = gridColumnCount(tbody);
+                        if (count !== lastColumns) { lastColumns = count; layoutSegmentColumns(tbody); }
+                    }).observe(tbody);
+                }
+            }
+        }
+
+        function gridColumnCount(element) {
+            const template = getComputedStyle(element).gridTemplateColumns;
+            return template && template !== "none" ? template.split(" ").filter(Boolean).length : 1;
+        }
+
+        // Legt die Gruppen aus segmentColumns als Spalten an: Gruppe i in Spalte (i % Spaltenzahl),
+        // untereinander; alle uebrigen Felder fuellen danach die freien Zellen in normaler Reihenfolge.
+        function layoutSegmentColumns(tbody) {
+            const rows = new Map([...tbody.children].map(row => [row.dataset.paramKey, row]));
+            [...tbody.children].forEach(row => { row.style.gridColumn = ""; row.style.gridRow = ""; });
+            const columnCount = gridColumnCount(tbody);
+            if (columnCount < 2) return;
+            const heights = new Array(columnCount).fill(0);
+            segmentColumns.forEach((group, index) => {
+                const present = group.map(key => rows.get(key)).filter(Boolean);
+                if (!present.length) return;
+                const column = index % columnCount;
+                present.forEach((row, offset) => {
+                    row.style.gridColumn = String(column + 1);
+                    row.style.gridRow = String(heights[column] + offset + 1);
+                });
+                heights[column] += present.length;
+            });
         }
 
         // Segmentfarben (Ring, Segment-Tabelle, Heat-Input-Diagramm); fuer den dunklen Hintergrund
