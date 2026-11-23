@@ -47,6 +47,7 @@ Ersetzt die Excel-Vorlage `template_metric_Short.xlsx` (gleiche Kennwerte, aber 
 - **`Heat_input_summary_<Datum>.xlsx`:** je Raupe eine Zeile, Spalten wie die WPQ-Sammeltabelle.
   - Die Lage (Root/Hot pass/Fill/Cap) kommt aus dem Schedule-Namen, die Raupe aus dem Dateinamen (`L21_B42` oder `Layer 7 Bead 12`).
   - Dazu kommen Zielbereich und Status sowie je Lage MIN/MAX/AVERAGE als Formeln.
+  - **Schweisszeit** (Dauer des Logs, h:mm:ss) und **Drahtverbrauch** (Laenge in m und Masse in kg, Drahtvorschub ueber die ganze Schweissung aufsummiert) je Raupe, mit Summenzeile und Summen je Lage. Drahtdurchmesser (Standard 0,8 mm) und Dichte (Standard Stahl 7,85 g/cm³) sind im Panel einstellbar.
 - **Einstellungen** (Panel 2, im Browser gespeichert):
   - **Process factor k:** Standard 0,6 wie Maschine und Editor; 1 = Lichtbogenenergie.
   - **Auswertebereich:** immer der Dauerbetrieb laut Sollwerten des Logs (ohne Up- und Downslope); ohne Sollwerte das ganze Log. Die festen Zeilen 1000–121000 der Vorlage gibt es nicht mehr.

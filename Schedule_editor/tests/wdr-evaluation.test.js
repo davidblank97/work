@@ -25,7 +25,7 @@ function syntheticV2Log() {
     for (let i = 0; i < 3000; i++) {
         const pulse = i % 2;
         const amps = i >= 2800 ? 20 : (pulse ? 150 : 50);
-        lines.push(`${i * 10},${pulse},${amps.toFixed(6)},10.000000,10.000000,0.000000,0,0.000000,${pulse},0.360000,0.000000,0.000000`);
+        lines.push(`${i * 10},${pulse},${amps.toFixed(6)},10.000000,10.000000,100.000000,0,0.000000,${pulse},0.360000,0.000000,0.000000`);
     }
     const inches = 100 * 28 / 60 / 25.4; // 100 mm/min ueber 28 s
     lines.push(
@@ -175,7 +175,7 @@ module.exports = [
             t.check("energy / distance", near(r4.AD.v, 0.36, 2e-3), JSON.stringify(r4.AD));
             t.check("machine segment average", near(r4.AE.v, 0.36, 1e-4), JSON.stringify(r4.AE));
             t.check("row 1 on one line", book.title.startsWith("Heat input evaluation – 0408-WPQ") && book.title.includes("windows 0.995 s / 9.95 s") && book.row1Others === 0, `${book.title} | ${book.row1Others}`);
-            t.check("two decimals", book.styles.includes('formatCode="0.00"') && !book.styles.includes('formatCode="0.000"'));
+            t.check("two decimals", book.styles.includes('numFmtId="164" formatCode="0.00"/>'));
             t.check("metric units", book.units.slice(2, 16).join("|") === "A|V|cm/min|cm/min|kJ/mm|kJ/mm|mm/min|s|min|kJ/mm|kJ/mm|kJ/mm|kJ/mm|kJ/mm", book.units.join("|"));
             const row5 = book.rows[0];
             t.check("data columns", row5.A.v === 10 && row5.C.v === 150 && near(row5.E.v, 10) && near(row5.I.v, 100) && near(row5.J.v, 0.01) && near(row5.L.v, 0.54) && row5.M === null && near(row5.N.v, 0.54), JSON.stringify(row5));
@@ -192,16 +192,24 @@ module.exports = [
             t.check("factors: target", factorValue(factors, "Min (kJ/mm)") === 0.4 && factorValue(factors, "Max (kJ/mm)") === 0.6, JSON.stringify(factors));
             t.check("factors: result", String(factorValue(factors, "Result (per period min/max)")).startsWith("outside Cap"), factorValue(factors, "Result (per period min/max)"));
             t.check("factors: machine limits", factorValue(factors, "Volts High") === 50);
+            t.check("factors: wire", near(factorValue(factors, "Wire length (m)"), 29.99 / 60, 1e-9) && near(factorValue(factors, "Wire (kg)"), 29.99 / 60 * Math.PI * 0.16 * 7.85 / 1000, 1e-8), JSON.stringify(factors.filter(line => /Wire|Weld/.test(line[0]))));
             const machine = book["Machine averages"];
             t.check("machine averages sheet", machine[0][0] === "Segment averages (machine)" && near(machine[3][13], 0.36, 1e-4), JSON.stringify(machine.slice(0, 4)));
 
             const summary = out.files[summaryName]["Heat input"];
             const row = summary[2];
             t.check("summary row", row[0] === "Cap" && row[1] === "L21_B42" && near(row[6], 0.36) && near(row[8], 0.36), JSON.stringify(row));
-            t.check("summary status", String(row[18]).startsWith("outside Cap") && String(row[17]) === "Cap 0.4 – 0.6", JSON.stringify(row.slice(15)));
+            t.check("summary status", String(row[21]).startsWith("outside Cap") && String(row[20]) === "Cap 0.4 – 0.6", JSON.stringify(row.slice(15)));
+            // Draht 100 cm/min ueber 29.99 s = 0.49983 m; Ø 0.8 mm Stahl (7.85 g/cm³) -> 0.4998 · 0.50265 · 7.85 g
+            const wireM = 29.99 / 60; // m (100 cm/min)
+            const wireKg = wireM * Math.PI * 0.4 * 0.4 * 7.85 / 1000;
+            t.check("summary weld time and wire", near(row[17], 29.99 / 86400, 1e-9) && near(row[18], wireM, 1e-9) && near(row[19], wireKg, 1e-8), JSON.stringify(row.slice(17, 20)));
+            t.check("summary units", summary[1][17] === "h:mm:ss" && summary[1][18] === "m" && summary[1][19] === "kg", JSON.stringify(summary[1].slice(17, 20)));
+            const total = summary.find(line => line[0] === "Total") || [];
+            t.check("summary total", near(total[17], 29.99 / 86400, 1e-9) && near(total[19], wireKg, 1e-8), JSON.stringify(total));
             const blockIndex = summary.findIndex(line => line[3] === "MIN" && line[4] === "MAX" && line[5] === "AVERAGE");
             const group = summary[blockIndex + 1] || [];
-            t.check("summary group block", blockIndex > 2 && group[0] === "Cap" && near(group[3], 0.36) && near(group[5], 0.36) && group[6] === 1, JSON.stringify(summary.slice(3)));
+            t.check("summary group block", blockIndex > 2 && group[0] === "Cap" && near(group[3], 0.36) && near(group[5], 0.36) && group[6] === 1 && near(group[8], wireKg, 1e-8), JSON.stringify(summary.slice(3)));
         }
     },
     {

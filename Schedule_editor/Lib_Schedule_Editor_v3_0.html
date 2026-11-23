@@ -11588,6 +11588,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     </label>
                 </div>
                 <div class="eval-group">
+                    <span class="eval-title">Filler wire (wire consumption in the summary)</span>
+                    <label class="radio-label">Diameter
+                        <input type="number" class="eval-number" id="eval-wire-diameter" min="0.1" step="0.1" value="0.8"> mm, density
+                        <input type="number" class="eval-number" id="eval-wire-density" min="0.1" step="0.01" value="7.85"> g/cm³ (steel 7.85)
+                    </label>
+                </div>
+                <div class="eval-group">
                     <label class="radio-label"><input type="checkbox" id="eval-summary" checked> Summary workbook of all beads (Heat_input_summary_&lt;date&gt;.xlsx)</label>
                     <label class="radio-label"><input type="checkbox" id="eval-raw"> Add the sheet "Raw data" with all log columns (about twice the file size)</label>
                     <label class="radio-label"><input type="checkbox" id="eval-targets" checked> Check against the heat input target ranges of the Schedule Editor</label>
@@ -11813,6 +11820,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         const WDR_DEFAULT_SETTINGS = {
             processFactor: 0.6,
             periodSeconds: 1.0,
+            wireDiameter: 0.8,          // mm, Schweissdraht
+            wireDensity: 7.85,          // g/cm³, Stahl
             summary: true,
             useTargets: true,
             rawSheet: false             // Blatt "Raw data" mit allen Logspalten (Datei etwa doppelt so gross)
@@ -11931,6 +11940,23 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             }
             result.energyPerDistance = distance > 0 ? k * energy / distance / 1000 : NaN;
             result.machine = wdrMachineAverages(log, k);
+            // Schweisszeit (Dauer des Logs) und Drahtverbrauch ueber die ganze Schweissung
+            let first = 0;
+            while (first < n && !Number.isFinite(J[first])) first++;
+            let last = n - 1;
+            while (last > first && !Number.isFinite(J[last])) last--;
+            result.weldTime = last > first ? J[last] - J[first] : NaN; // s
+            let wireCm = 0;
+            let wireValid = false;
+            for (let i = 0; i + 1 < n; i++) {
+                const dt = J[i + 1] - J[i];
+                if (!(dt > 0) || !Number.isFinite(col.wire[i])) continue;
+                wireCm += Math.max(0, col.wire[i]) / 60 * dt; // cm/min · s
+                wireValid = true;
+            }
+            result.wireLength = wireValid ? wireCm / 100 : NaN; // m
+            const wireArea = Math.PI * (settings.wireDiameter / 2) ** 2; // mm²
+            result.wireMass = wireValid ? result.wireLength * wireArea * settings.wireDensity / 1000 : NaN; // m·mm²·g/cm³ = g -> kg
             return {
                 settings, n, a, b, rangeNote, periodSeconds, setpoints,
                 units: { travel: data.uom[indexes.travel] || "", heat: indexes.heat >= 0 ? (data.uom[indexes.heat] || "") : "", wire: indexes.wire >= 0 ? (data.uom[indexes.wire] || "") : "" },
@@ -12026,7 +12052,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
         /* ---- Minimaler XLSX-Schreiber (Werte, Formeln, Stile, Diagramme) ---- */
         const XL_MAIN_NS = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
-        const XL_STYLE = { normal: 0, bold: 1, header: 2, number: 3, stat: 4, flag: 5, note: 6, flagNumber: 7, ok: 8 };
+        const XL_STYLE = { normal: 0, bold: 1, header: 2, number: 3, stat: 4, flag: 5, note: 6, flagNumber: 7, ok: 8, duration: 9, boldNumber: 10, boldDuration: 11, number3: 12 };
 
         function xlEscape(text) {
             return String(text)
@@ -12125,7 +12151,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         }
 
         const XL_STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="0.00"/></numFmts><fonts count="5"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FFC00000"/><name val="Calibri"/><family val="2"/></font><font><i/><sz val="10"/><color rgb="FF6E6259"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FF2E7D32"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFCE4D6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="9"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="1" fillId="2" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="2" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="3"><numFmt numFmtId="164" formatCode="0.00"/><numFmt numFmtId="165" formatCode="[h]:mm:ss"/><numFmt numFmtId="166" formatCode="0.000"/></numFmts><fonts count="5"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FFC00000"/><name val="Calibri"/><family val="2"/></font><font><i/><sz val="10"/><color rgb="FF6E6259"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><color rgb="FF2E7D32"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFCE4D6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="13"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="1" fillId="2" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="164" fontId="2" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="165" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="165" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="166" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
 
         // Streudiagramm (x: Zeit in min) mit Linien ohne Marker.
         function xlScatterChartXml({ title, xTitle, yTitle, series }) {
@@ -12302,7 +12328,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             const factors = new XlSheet("Factors and limits", { widths: [34, 22, 70] });
             let row = 1;
             const put = (label, value, note, style) => factors.row(row++, [{ v: label, s: XL_STYLE.bold },
-                typeof value === "number" ? (Number.isInteger(value) ? value : { v: value, s: XL_STYLE.number }) : { v: value ?? "", s: style || 0 },
+                typeof value === "number" ? (Number.isInteger(value) ? value : { v: value, s: XL_STYLE.number })
+                    : (value && typeof value === "object" ? value : { v: value ?? "", s: style || 0 }),
                 note ? { v: note, s: XL_STYLE.note } : null]);
             factors.row(row++, [{ v: "Settings of this evaluation", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }]);
             put("Process factor k", settings.processFactor, "0.6 = heat input for TIG (EN ISO 1011-1, also used by the machine and the Schedule Editor); 1 = arc energy");
@@ -12320,6 +12347,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 if (log.header[key] !== undefined) put(key.charAt(0) + key.slice(1).toLowerCase(), log.header[key]);
             });
             put("Data rows", n);
+            put("Weld time", Number.isFinite(result.weldTime) ? `${Math.floor(result.weldTime / 3600)}:${String(Math.floor(result.weldTime % 3600 / 60)).padStart(2, "0")}:${String(Math.round(result.weldTime % 60)).padStart(2, "0")} (h:mm:ss)` : "n/a", "duration of the log");
+            put("Wire length (m)", Number.isFinite(result.wireLength) ? result.wireLength : "n/a", "wire feed speed integrated over the whole weld");
+            put("Wire (kg)", Number.isFinite(result.wireMass) ? { v: result.wireMass, s: XL_STYLE.number3 } : "n/a", `Ø ${settings.wireDiameter} mm, density ${settings.wireDensity} g/cm³`);
             if (evaluation.setpoints) put("Steady state (set points)", `${(evaluation.setpoints.start / 1000).toFixed(2)} s – ${Number.isFinite(evaluation.setpoints.end) ? (evaluation.setpoints.end / 1000).toFixed(2) + " s" : "end"}`, "after up-slope, before down-slope");
             row++;
             factors.row(row++, [{ v: "Heat input limits", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }, { v: "", s: XL_STYLE.header }]);
@@ -12394,10 +12424,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
         // Sammeltabelle aller Raupen (Aufbau wie WPQ_…_Heat-input.xlsx, korrigierte Ueberschriften).
         async function buildSummaryWorkbook(entries, settings) {
-            const sheet = new XlSheet("Heat input", { selected: true, freezeRows: 2, widths: [11, 11, 9, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 16, 34, 30, 40, 12, 4, 12, 12, 12, 12] });
+            const sheet = new XlSheet("Heat input", { selected: true, freezeRows: 2, widths: [11, 11, 9, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 11, 10, 10, 16, 34, 30, 40, 12] });
             const statHeaders = WDR_STAT_COLUMNS.map(item => item[1]);
-            sheet.row(1, ["Pass", "Bead", "Preheat", ...statHeaders, "Energy / distance\nk·ΣU·I·Δt / Σv·Δt", "Machine segment\naverage", "Target range", "Status (per period min/max)", "Schedule", "File", "Date"].map(text => ({ v: text, s: XL_STYLE.header })), 75);
-            sheet.row(2, ["", "", "°C", ...statHeaders.map(() => "kJ/mm"), "kJ/mm", "kJ/mm", "kJ/mm", "", "", "", ""].map(text => ({ v: text, s: XL_STYLE.header })));
+            sheet.row(1, ["Pass", "Bead", "Preheat", ...statHeaders, "Energy / distance\nk·ΣU·I·Δt / Σv·Δt", "Machine segment\naverage", "Weld time", "Wire length", "Wire\nconsumption", "Target range", "Status (per period min/max)", "Schedule", "File", "Date"].map(text => ({ v: text, s: XL_STYLE.header })), 75);
+            sheet.row(2, ["", "", "°C", ...statHeaders.map(() => "kJ/mm"), "kJ/mm", "kJ/mm", "h:mm:ss", "m", "kg", "kJ/mm", "", "", "", ""].map(text => ({ v: text, s: XL_STYLE.header })));
             const sorted = [...entries].sort((x, y) => WDR_PASS_ORDER.indexOf(x.pass) - WDR_PASS_ORDER.indexOf(y.pass)
                 || x.bead.layer - y.bead.layer || x.bead.bead - y.bead.bead || x.bead.suffix.localeCompare(y.bead.suffix) || x.fileName.localeCompare(y.fileName));
             const groups = new Map();
@@ -12418,6 +12448,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     ...values.map((value, valueIndex) => Number.isFinite(value) ? { v: value, s: rangeStyle(valueIndex) } : "n/a"),
                     Number.isFinite(r.energyPerDistance) ? { v: r.energyPerDistance, s: XL_STYLE.number } : "n/a",
                     Number.isFinite(r.machine?.heatInput) ? { v: r.machine.heatInput, s: XL_STYLE.number } : "n/a",
+                    Number.isFinite(r.weldTime) ? { v: r.weldTime / 86400, s: XL_STYLE.duration } : "n/a",
+                    Number.isFinite(r.wireLength) ? { v: r.wireLength, s: XL_STYLE.number } : "n/a",
+                    Number.isFinite(r.wireMass) ? { v: r.wireMass, s: XL_STYLE.number3 } : "n/a",
                     entry.target ? `${entry.target.name} ${entry.target.min ?? "–"} – ${entry.target.max ?? "–"}` : "–",
                     { v: status.text, s: statusStyle },
                     entry.schedule, entry.fileName, entry.date
@@ -12425,10 +12458,16 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 if (!groups.has(entry.pass)) groups.set(entry.pass, { first: rowNumber, last: rowNumber });
                 groups.get(entry.pass).last = rowNumber;
             });
-            // Gruppenblock: Mittel je Lage (Spalte I = average per period, wie in der WPQ-Datei)
             const lastDataRow = sorted.length + 2;
+            const sumOf = (key, from, to) => sorted.slice(from - 3, to - 2).map(entry => entry.evaluation.result[key]).filter(Number.isFinite).reduce((sum, value) => sum + value, 0);
+            // Summenzeile: gesamte Schweisszeit und Drahtverbrauch
+            sheet.row(lastDataRow + 1, [{ v: "Total", s: XL_STYLE.bold }, ...Array(16).fill(null),
+                { f: `SUM(R3:R${lastDataRow})`, v: sumOf("weldTime", 3, lastDataRow) / 86400, s: XL_STYLE.boldDuration },
+                { f: `SUM(S3:S${lastDataRow})`, v: sumOf("wireLength", 3, lastDataRow), s: XL_STYLE.boldNumber },
+                { f: `SUM(T3:T${lastDataRow})`, v: sumOf("wireMass", 3, lastDataRow), s: XL_STYLE.boldNumber }]);
+            // Gruppenblock: Mittel je Lage (Spalte I = average per period, wie in der WPQ-Datei), Schweisszeit und Draht je Lage
             const blockRow = lastDataRow + 3;
-            sheet.row(blockRow, ["Per pass (average per period, column I)", null, null, "MIN", "MAX", "AVERAGE", "Beads"].map((text, index) => text === null ? null : { v: text, s: index === 0 ? XL_STYLE.bold : XL_STYLE.header }));
+            sheet.row(blockRow, ["Per pass (average per period, column I)", null, null, "MIN", "MAX", "AVERAGE", "Beads", "Weld time", "Wire (kg)"].map((text, index) => text === null ? null : { v: text, s: index === 0 ? XL_STYLE.bold : XL_STYLE.header }));
             let groupRow = blockRow + 1;
             groups.forEach((range, pass) => {
                 const ref = `I${range.first}:I${range.last}`;
@@ -12437,9 +12476,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     values.length ? { f: `MIN(${ref})`, v: Math.min(...values), s: XL_STYLE.number } : "n/a",
                     values.length ? { f: `MAX(${ref})`, v: Math.max(...values), s: XL_STYLE.number } : "n/a",
                     values.length ? { f: `AVERAGE(${ref})`, v: values.reduce((sum, value) => sum + value, 0) / values.length, s: XL_STYLE.number } : "n/a",
-                    range.last - range.first + 1]);
+                    range.last - range.first + 1,
+                    { f: `SUM(R${range.first}:R${range.last})`, v: sumOf("weldTime", range.first, range.last) / 86400, s: XL_STYLE.duration },
+                    { f: `SUM(T${range.first}:T${range.last})`, v: sumOf("wireMass", range.first, range.last), s: XL_STYLE.number3 }]);
             });
-            sheet.row(groupRow + 1, [{ v: `Process factor k = ${settings.processFactor}. Columns D–O correspond to row 4 (Q–AB) of each evaluation workbook; headers corrected (W–Y: instantaneous Method A, Z–AB: Method C). Bead from the file name (L…_B… or "Layer … Bead …"), pass from the schedule name.`, s: XL_STYLE.note }]);
+            sheet.row(groupRow + 1, [{ v: `Process factor k = ${settings.processFactor}. Columns D–O correspond to row 4 (Q–AB) of each evaluation workbook; headers corrected (W–Y: instantaneous Method A, Z–AB: Method C). Bead from the file name (L…_B… or "Layer … Bead …"), pass from the schedule name. Weld time = duration of the log; wire = wire feed integrated over the whole weld, Ø ${settings.wireDiameter} mm, density ${settings.wireDensity} g/cm³.`, s: XL_STYLE.note }]);
             return xlBuildWorkbook([{ sheet }]);
         }
     </script>
@@ -12479,6 +12520,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             return {
                 processFactor: number('eval-factor', WDR_DEFAULT_SETTINGS.processFactor),
                 periodSeconds: number('eval-period', WDR_DEFAULT_SETTINGS.periodSeconds),
+                wireDiameter: number('eval-wire-diameter', WDR_DEFAULT_SETTINGS.wireDiameter),
+                wireDensity: number('eval-wire-density', WDR_DEFAULT_SETTINGS.wireDensity),
                 summary: evalInput('eval-summary').checked,
                 useTargets: evalInput('eval-targets').checked,
                 rawSheet: evalInput('eval-raw').checked
@@ -12488,6 +12531,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         function applyEvaluationSettings(settings) {
             evalInput('eval-factor').value = settings.processFactor;
             evalInput('eval-period').value = settings.periodSeconds;
+            evalInput('eval-wire-diameter').value = settings.wireDiameter;
+            evalInput('eval-wire-density').value = settings.wireDensity;
             evalInput('eval-summary').checked = settings.summary !== false;
             evalInput('eval-targets').checked = settings.useTargets !== false;
             evalInput('eval-raw').checked = settings.rawSheet === true;
