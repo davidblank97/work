@@ -2800,6 +2800,10 @@
             color: var(--text-main);
         }
 
+        .heat-save-title {
+            color: var(--danger) !important;
+        }
+
         .schema-save-text {
             margin: 0 0 10px;
             font-size: 13px;
@@ -3619,6 +3623,19 @@
         <div class="footer">
             <span id="status">Ready.</span>
             <span>Created by <b>David Blank, Bilfinger</b></span>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="heatSaveModal">
+        <div class="modal-box" role="alertdialog" aria-modal="true" aria-labelledby="heatSaveTitle">
+            <h3 id="heatSaveTitle" class="heat-save-title">Heat input outside the limits</h3>
+            <p id="heatSaveText" class="schema-save-text"></p>
+            <div id="heatSaveList" class="schema-save-list"></div>
+            <div class="modal-actions">
+                <button id="heatSaveShowBtn" class="btn-secondary" type="button">Show heat input</button>
+                <button id="heatSaveCancelBtn" class="btn-secondary" type="button">Cancel</button>
+                <button id="heatSaveConfirmBtn" class="btn-primary" type="button">Save anyway</button>
+            </div>
         </div>
     </div>
 
@@ -5160,7 +5177,7 @@
                         An optional revision tag (e.g. <code>Rev1</code>) is appended to every file name
                         (<code>Name_Rev1.xml</code>); an existing <code>_Rev…</code> suffix is replaced and the files
                         are renamed in the editor.
-                        Several files are saved as a ZIP archive.</li>
+                        Several files are saved as a ZIP archive. If a segment's heat input is outside the file limits or the target range (Tools › Heat Input), an error message lists the segments before anything is downloaded.</li>
                     <li><strong>Revert:</strong> reset all loaded files to the last saved state.</li>
                 </ul>
 
@@ -7637,6 +7654,85 @@
             return { min: parse(stored.min), max: parse(stored.max) };
         }
 
+        // Heat Input je Segment einer Datei, geprueft gegen <limits> (heat_input_fault_low/high)
+        // und den Ziel-Bereich (Min/Max unter Tools > Heat Input).
+        function heatInputCheck(file, target = readHeatInputTarget()) {
+            const limitLow = readHeatInputLimit(file, "heat_input_fault_low");
+            const limitHigh = readHeatInputLimit(file, "heat_input_fault_high");
+            const entries = file.sections.segments.map((segment, segmentIndex) => {
+                const result = calculateSegmentHeatInput(segment, file.sections.overrides);
+                const valid = !result.disabled && !result.error;
+                const outsideLimit = valid && (
+                    (limitLow !== null && result.minHeatInput < limitLow)
+                    || (limitHigh !== null && result.maxHeatInput > limitHigh));
+                const outsideTarget = valid && (
+                    (target.min !== null && result.minHeatInput < target.min)
+                    || (target.max !== null && result.maxHeatInput > target.max));
+                return { result, segmentIndex, outsideLimit, outsideTarget, outside: outsideLimit || outsideTarget };
+            });
+            return { file, limitLow, limitHigh, target, entries };
+        }
+
+        // Batch Save: Segmente ausserhalb der Heat-Input-Grenzen melden (Fehlermeldung mit Rueckfrage).
+        const heatSaveModal = document.getElementById("heatSaveModal");
+        let pendingHeatSave = null;
+        function confirmHeatInputBeforeSave(files, proceed) {
+            const format = value => value.toFixed(3);
+            const problems = [];
+            files.filter(Boolean).forEach(file => {
+                const check = heatInputCheck(file);
+                check.entries.filter(entry => entry.outside).forEach(entry => {
+                    const { result } = entry;
+                    const reasons = [];
+                    if (entry.outsideLimit) {
+                        if (check.limitHigh !== null && result.maxHeatInput > check.limitHigh) reasons.push(`limit max ${format(check.limitHigh)}`);
+                        if (check.limitLow !== null && result.minHeatInput < check.limitLow) reasons.push(`limit min ${format(check.limitLow)}`);
+                    }
+                    if (entry.outsideTarget) {
+                        if (check.target.max !== null && result.maxHeatInput > check.target.max) reasons.push(`target max ${format(check.target.max)}`);
+                        if (check.target.min !== null && result.minHeatInput < check.target.min) reasons.push(`target min ${format(check.target.min)}`);
+                    }
+                    const segmentNumber = segmentDisplayNumber(file.sections.segments[entry.segmentIndex], entry.segmentIndex);
+                    problems.push(`${fileShortLabel(file)} · Segment ${segmentNumber}: ${format(result.minHeatInput)} – ${format(result.maxHeatInput)} kJ/mm (${reasons.join(", ")})`);
+                });
+            });
+            if (!problems.length) { proceed(); return; }
+            document.getElementById("heatSaveText").textContent =
+                `${problems.length} segment(s) are outside the heat input limits. Save anyway?`;
+            const list = document.getElementById("heatSaveList");
+            list.replaceChildren();
+            problems.slice(0, 8).forEach(text => {
+                const line = document.createElement("div");
+                line.className = "schema-save-line";
+                line.textContent = text;
+                list.appendChild(line);
+            });
+            if (problems.length > 8) {
+                const more = document.createElement("div");
+                more.className = "schema-save-line";
+                more.textContent = `… and ${problems.length - 8} more`;
+                list.appendChild(more);
+            }
+            pendingHeatSave = proceed;
+            openModal(heatSaveModal, document.getElementById("heatSaveCancelBtn"));
+        }
+        document.getElementById("heatSaveCancelBtn").onclick = () => {
+            pendingHeatSave = null;
+            closeModal(heatSaveModal);
+            document.getElementById("status").textContent = "Batch save cancelled: heat input outside the limits (Tools › Heat Input).";
+        };
+        document.getElementById("heatSaveShowBtn").onclick = () => {
+            pendingHeatSave = null;
+            closeModal(heatSaveModal);
+            document.getElementById("heatInputBtn").click();
+        };
+        document.getElementById("heatSaveConfirmBtn").onclick = () => {
+            const proceed = pendingHeatSave;
+            pendingHeatSave = null;
+            closeModal(heatSaveModal);
+            if (proceed) proceed();
+        };
+
         function buildHeatTargetControls(target) {
             const box = document.createElement("div");
             box.className = "heat-target-controls";
@@ -7966,22 +8062,7 @@
             const visibleFiles = loadedFiles
                 .map((file, fileIndex) => ({ file, fileIndex }))
                 .filter(({ file }) => !heatInputHiddenFileIds.has(file.id));
-            const entriesByFile = visibleFiles.map(({ file, fileIndex }) => {
-                const limitLow = readHeatInputLimit(file, "heat_input_fault_low");
-                const limitHigh = readHeatInputLimit(file, "heat_input_fault_high");
-                const entries = file.sections.segments.map((segment, segmentIndex) => {
-                    const result = calculateSegmentHeatInput(segment, file.sections.overrides);
-                    const valid = !result.disabled && !result.error;
-                    const outsideLimit = valid && (
-                        (limitLow !== null && result.minHeatInput < limitLow)
-                        || (limitHigh !== null && result.maxHeatInput > limitHigh));
-                    const outsideTarget = valid && (
-                        (target.min !== null && result.minHeatInput < target.min)
-                        || (target.max !== null && result.maxHeatInput > target.max));
-                    return { result, segmentIndex, outsideLimit, outsideTarget, outside: outsideLimit || outsideTarget };
-                });
-                return { file, fileIndex, limitLow, limitHigh, entries };
-            });
+            const entriesByFile = visibleFiles.map(({ file, fileIndex }) => ({ ...heatInputCheck(file, target), fileIndex }));
 
             const panel = document.createElement("div");
             panel.className = "panel";
@@ -8496,7 +8577,10 @@
             }
             closeModal(batchSaveModal);
             const download = batchDownloadToggle.checked;
-            if (download) confirmSchemaBeforeSave(getBatchSaveTargets(), () => saveSelectedFiles(tag, true));
+            if (download) {
+                const targets = getBatchSaveTargets();
+                confirmHeatInputBeforeSave(targets, () => confirmSchemaBeforeSave(targets, () => saveSelectedFiles(tag, true)));
+            }
             else saveSelectedFiles(tag, false);
         };
         bindEnterToConfirm(revisionTagInput, document.getElementById("batchSaveConfirmBtn"));

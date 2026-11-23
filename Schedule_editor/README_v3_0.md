@@ -270,6 +270,13 @@ Umbenennen geht ueber das Dateinamen-Feld oben in der Dateikarte. `Save As…` g
 
 **Einziger Weg zum Herunterladen.** Speichert und laedt die markierten Dateien herunter; im Change Log entsteht je Datei eine Zeile `Downloaded`. Danach stehen die Dateien auf `Saved`. Wenn keine Datei markiert ist, werden alle geladenen Dateien verwendet.
 
+**Heat-Input-Pruefung beim Herunterladen:** Liegt der Heat Input eines Segments (Bereich Min – Max) ausserhalb der Grenzen, erscheint vor dem Download die Fehlermeldung „Heat input outside the limits“. Geprueft wird gegen:
+
+- die Grenzen in der Datei (`heat_input_fault_low` / `heat_input_fault_high` in `<limits>`, sofern gesetzt, also groesser als 0 und kleiner als 9999),
+- den Ziel-Bereich unter `Tools > Heat Input` (Felder Min/Max, rote Linien).
+
+Die Meldung nennt jedes betroffene Segment mit Wertebereich und der ueberschrittenen Grenze. Zur Wahl stehen `Cancel` (nichts wird heruntergeladen), `Show heat input` (oeffnet die Heat-Input-Ansicht) und `Save anyway`. Danach folgt gegebenenfalls noch die Schema-Rueckfrage.
+
 Vor dem Speichern oeffnet sich ein Dialog fuer einen optionalen **Revisions-Tag** (z. B. `Rev1`). Der Tag wird an jeden Dateinamen angehaengt:
 
 - `Naht_A.xml` + `Rev1` → `Naht_A_Rev1.xml`
