@@ -306,6 +306,14 @@ Darunter steht eine gemeinsame Tabelle: je Datei eine Kopfzeile mit Name und Gre
 - `Hidden Parameters`: Verwaltet ausgeblendete Parameter.
 - `Change Log`: Zeigt protokollierte Aenderungen. Jedes `Saved` (bzw. `Downloaded`) laesst sich per Klick aufklappen und zeigt die einzelnen Aenderungen dieses Speicherns: `~ changed` mit altem und neuem Wert, `+ added` und `− removed` (z. B. nach einem Upgrade). Gespeicherte Feldaenderungen stehen nur noch dort; oben erscheinen ungespeicherte Aenderungen und die Speicher-Eintraege. `Clear log` loescht alle Eintraege nach Rueckfrage; mit Undo lassen sie sich wiederherstellen.
 - `XML Viewer`: Oeffnet den schreibgeschuetzten XML-Inhalt der aktiven Datei.
+- `Program Overview (PDF)`: Oeffnet eine Druckansicht (A4 quer), die alle geladenen Dateien zusammenfasst. Mit `Print / Save as PDF` wird daraus ueber den Druckdialog eine PDF-Datei („Als PDF speichern“). Die Seiten enthalten:
+  1. eine Dateiliste mit Nummer, Name, Head, Anzahl Segmente, Version, Schema-Status und Speicherstand;
+  2. die hervorgehobenen (★) Werte aus `Global`, je Datei eine Spalte;
+  3. die hervorgehobenen (★) Werte aus den Segmenten, je Datei und Segment eine Spalte; Zeilen mit unterschiedlichen Werten sind schattiert;
+  4. das Heat-Input-Diagramm (inklusive Ziel-Bereich und Grenzen) mit Tabelle (Nominal, Bereich, Mittelstrom, Vorschub, Status);
+  5. alle Overrides, je Datei eine Spalte.
+
+  Welche Werte erscheinen, steuert die Markierung mit ★; Einheiten werden wie im Editor eingestellt angezeigt. Bei vielen Dateien werden die Tabellen in Bloecke zu acht (Overrides: zehn) Spalten aufgeteilt.
 - `Schema Check`: Prueft alle geladenen Dateien gegen das aktive XDR-Schema (siehe „Schema-Pruefung (XDR)“).
 - `Settings` (frueher `Local Storage Backup`): Verwaltet die XDR-Schema-Versionen und exportiert die lokalen Editor-Einstellungen als JSON-Datei oder importiert ein zuvor erstelltes JSON-Backup. Beim Import wird bestaetigt, dass die aktuellen Editor-Einstellungen ersetzt werden; anschliessend wird die Seite neu geladen. Nicht zum Schedule Editor gehoerende Local-Storage-Eintraege bleiben unberuehrt.
 
