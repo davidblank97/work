@@ -39,6 +39,7 @@
             <div id="toolsSection" class="sidebar-section-content">
                 <div class="sidebar-item" role="button" tabindex="0" id="compareBtn">Comparison</div>
                 <div class="sidebar-item" role="button" tabindex="0" id="heatInputBtn">Heat Input</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="wpsBtn" title="Import heat input and parameter ranges from a WPS (PDF) and check the schedules">WPS Import / Check</div>
                 <div class="sidebar-item" role="button" tabindex="0" id="schemaCheckBtn">Schema Check</div>
                 <div class="sidebar-item" role="button" tabindex="0" id="programOverviewBtn" title="Printable summary of all loaded files (save as PDF)">Program Overview (PDF)</div>
                 <div class="sidebar-item" role="button" tabindex="0" id="hiddenManagerBtn">Hidden Parameters</div>
@@ -110,6 +111,19 @@
                 <button id="heatSaveShowBtn" class="btn-secondary" type="button">Show heat input</button>
                 <button id="heatSaveCancelBtn" class="btn-secondary" type="button">Cancel</button>
                 <button id="heatSaveConfirmBtn" class="btn-primary" type="button">Save anyway</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="wpsSaveModal">
+        <div class="modal-box" role="alertdialog" aria-modal="true" aria-labelledby="wpsSaveTitle">
+            <h3 id="wpsSaveTitle" class="heat-save-title">Values outside the WPS</h3>
+            <p id="wpsSaveText" class="schema-save-text"></p>
+            <div id="wpsSaveList" class="schema-save-list"></div>
+            <div class="modal-actions">
+                <button id="wpsSaveShowBtn" class="btn-secondary" type="button">Show WPS check</button>
+                <button id="wpsSaveCancelBtn" class="btn-secondary" type="button">Cancel</button>
+                <button id="wpsSaveConfirmBtn" class="btn-primary" type="button">Save anyway</button>
             </div>
         </div>
     </div>
@@ -298,6 +312,15 @@
         </div>
     </div>
 
+    <!-- pdf.js 3.11.174 (Mozilla, Apache-2.0) fuer den WPS-Import. Als Text eingebettet und erst bei Bedarf
+         ausgefuehrt (loadPdfJs in 13-wps.js); der Worker laeuft im Haupt-Thread (offline, auch ueber file://). -->
+    <script type="text/x-library" data-library="pdfjs">
+<!-- @include vendor/pdfjs-3.11.174.min.js -->
+    </script>
+    <script type="text/x-library" data-library="pdfjs-worker">
+<!-- @include vendor/pdfjs-3.11.174.worker.min.js -->
+    </script>
+
     <script>
 <!-- @include editor/js/01-state-history.js -->
 <!-- @include editor/js/02-files-helpers.js -->
@@ -311,6 +334,7 @@
 <!-- @include editor/js/10-compare.js -->
 <!-- @include editor/js/11-viewer.js -->
 <!-- @include editor/js/12-changes-settings.js -->
+<!-- @include editor/js/13-wps.js -->
     </script>
 </body>
     </template>

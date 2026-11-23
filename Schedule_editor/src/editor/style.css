@@ -3302,3 +3302,134 @@
                 width: 170px;
             }
         }
+
+        /* WPS IMPORT / CHECK */
+        .wps-panel {
+            padding: 16px 18px;
+        }
+
+        .wps-drop {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 14px;
+            padding: 14px;
+            border: 1px dashed var(--border-strong);
+            border-radius: var(--radius);
+            background: var(--bg-input);
+        }
+
+        .wps-drop.is-over {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .wps-hint,
+        .wps-empty {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .wps-status {
+            flex-basis: 100%;
+            color: var(--text-main);
+            font-size: 12.5px;
+        }
+
+        .wps-status:empty {
+            display: none;
+        }
+
+        .wps-status.is-error,
+        .wps-summary.is-fail {
+            color: var(--danger);
+        }
+
+        .wps-title {
+            margin: 0 0 10px;
+            font-size: 14px;
+        }
+
+        .wps-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-size: 12.5px;
+        }
+
+        .wps-note {
+            margin: 0 0 6px;
+            color: #e4b363;
+            font-size: 12px;
+        }
+
+        .wps-range-table input,
+        .wps-range-table select {
+            width: 52px;
+            padding: 3px 6px;
+            font-size: 12px;
+        }
+
+        .wps-range-table .wps-label-input {
+            width: 92px;
+        }
+
+        .wps-range-table .wps-files-input {
+            width: 96px;
+        }
+
+        .wps-range-table select {
+            width: 88px;
+        }
+
+        .wps-range-table th,
+        .wps-range-table td {
+            padding: 4px 4px;
+        }
+
+        .wps-remove {
+            padding: 2px 8px;
+        }
+
+        .wps-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .wps-raw {
+            margin-top: 12px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .wps-raw pre {
+            max-height: 260px;
+            overflow: auto;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--bg-input);
+            white-space: pre-wrap;
+        }
+
+        .wps-summary {
+            margin: 0 0 10px;
+            font-size: 12.5px;
+        }
+
+        .wps-cell.is-fail {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .wps-cell.is-warn {
+            color: #e4b363;
+            font-weight: 600;
+        }
+
+        .wps-segment-row.is-off td {
+            color: var(--text-muted);
+        }

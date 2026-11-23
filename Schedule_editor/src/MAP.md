@@ -23,6 +23,7 @@ All JS files of one app run as one classic script in the app's iframe: they shar
 | Comparison table | `editor/js/10-compare.js` |
 | XML viewer (diff with missing values), hidden-field manager | `editor/js/11-viewer.js` |
 | Change counter, search, settings (localStorage export/import), revert | `editor/js/12-changes-settings.js` |
+| WPS import (PDF text via pdf.js, table parser), WPS ranges, WPS check, save warning | `editor/js/13-wps.js` |
 | Built-in XDR 1.8.3.7 and NG/NGRT layout templates (data, do not read) | `editor/data/` |
 | **WDR** overview | `wdr/README.md` |
 | WDR markup / styles | `wdr/index.html`, `wdr/style.css` |
@@ -32,6 +33,6 @@ All JS files of one app run as one classic script in the app's iframe: they shar
 | WDR UI: settings, file selection, convert loop, ZIP/folder output | `wdr/js/main.js` |
 | **Pendant** overview | `pendant/README.md` |
 | Pendant markup / styles / logic | `pendant/index.html`, `pendant/style.css`, `pendant/pendant.js` |
-| Libraries (minified, do not read) | `vendor/` (JSZip in editor and WDR, SheetJS in WDR) |
+| Libraries (minified, do not read) | `vendor/` (JSZip in editor and WDR, SheetJS in WDR, pdf.js in editor) |
 
 **Tests:** `../tests/*.test.js`. The test helpers are in `../tests/lib.js` (`startServer`, `t.openApp(route)` returns `{page, frame}`, `t.check`, `t.file`, `smallCsv`).

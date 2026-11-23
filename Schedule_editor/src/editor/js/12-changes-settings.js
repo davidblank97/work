@@ -119,6 +119,7 @@
             "scheduleEditorBatchSave",
             "scheduleEditorHeatInputTarget",
             "scheduleEditorHeatInputTargets",
+            "scheduleEditorWpsRanges",
             "scheduleEditorParameterOrder",
             "scheduleEditorXdrSchemas",
             "scheduleEditorActiveXdr",

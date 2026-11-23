@@ -49,7 +49,8 @@
                 name: String(item.name || `Target ${index + 1}`).trim() || `Target ${index + 1}`,
                 min: parseTargetNumber(item.min),
                 max: parseTargetNumber(item.max),
-                files: Array.isArray(item.files) ? item.files.map(String) : null
+                files: Array.isArray(item.files) ? item.files.map(String) : null,
+                ...(item.source ? { source: String(item.source) } : {})
             }));
         }
 
@@ -59,7 +60,8 @@
                     id: target.id, name: target.name,
                     min: target.min === null ? "" : String(target.min),
                     max: target.max === null ? "" : String(target.max),
-                    files: target.files
+                    files: target.files,
+                    ...(target.source ? { source: target.source } : {})
                 }))));
                 localStorage.removeItem(HEAT_TARGET_KEY);
             } catch (error) {

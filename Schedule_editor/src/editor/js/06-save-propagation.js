@@ -345,7 +345,7 @@
             const download = batchDownloadToggle.checked;
             if (download) {
                 const targets = getBatchSaveTargets();
-                confirmHeatInputBeforeSave(targets, () => confirmSchemaBeforeSave(targets, () => saveSelectedFiles(tag, true)));
+                confirmHeatInputBeforeSave(targets, () => confirmWpsBeforeSave(targets, () => confirmSchemaBeforeSave(targets, () => saveSelectedFiles(tag, true))));
             }
             else saveSelectedFiles(tag, false);
         };

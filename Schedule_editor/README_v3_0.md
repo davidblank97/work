@@ -33,6 +33,29 @@ Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 
 **Aufbau der Datei:** Startseite und Umschaltung stehen am Anfang und Ende der Datei. Die beiden Anwendungen liegen unveraendert in `<template id="app-editor">` bzw. `<template id="app-wdr">` und werden beim Oeffnen jeweils als eigenes Dokument (iframe) gestartet, damit sich CSS und JavaScript nicht gegenseitig stoeren. Aenderungen am Editor oder Converter werden direkt im jeweiligen Template vorgenommen. Einstellungen im `localStorage` (ausgeblendete/gesperrte Parameter, Reihenfolge usw.) sind dieselben wie bei der Einzeldatei, solange sie ueber dieselbe Adresse geoeffnet wird.
 
+## WPS-Import und -Pruefung (Tools › WPS Import / Check)
+
+Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; eingescannte Dokumente enthalten keinen Text, dann die Werte von Hand eintragen). Alles laeuft offline im Browser (pdf.js eingebettet).
+
+1. **Load WPS (PDF)…** (oder PDF auf das Feld ziehen):
+   - Die Tabelle mit Lage/Raupe, Strom, Spannung, Schweissgeschwindigkeit, Drahtvorschub und Waermeeinbringung wird erkannt (deutsche und englische Bezeichnungen).
+   - Bereiche wie `120 – 150`, `0,5 – 0,9`, `max. 1,2` oder `9 ± 2` werden gelesen.
+   - Die Einheiten werden umgerechnet (A, V, mm/min, m/min, kJ/mm).
+2. **Pruefen und korrigieren:**
+   - Die erkannten Werte stehen in einer Tabelle zum Bearbeiten. Der gelesene Text ist zum Vergleich aufklappbar.
+   - Je Lage werden die Schedules ueber die 4-stellige Nummer zugeordnet. Die Vorbelegung kommt aus den geladenen Dateien nach Lagentyp: Root, Hot pass, Fill (Comp ohne eigene Zeile), Cap.
+   - **Bitte immer mit dem Dokument vergleichen.**
+3. **Apply:**
+   - Speichert die Bereiche im Browser.
+   - Uebernimmt den Heat-Input-Bereich jeder Lage als **Target Range** (Tools › Heat Input). Ein erneuter Import ersetzt nur diese WPS-Bereiche; eigene Bereiche bleiben.
+4. **Pruefung** der geladenen Schedules je Segment:
+   - Strom (pri/bkg_amp), Spannung (pri/bkg_ahc), Vorschub und Draht (umgerechnet aus in/min) sowie Heat Input.
+   - **Rot:** Wert ausserhalb der WPS.
+   - **Gelb:** Wert innerhalb, aber der Override-Bereich (pri/bkg_amp_max, avc_override_max, travel_max, wire_max bzw. Heat-Input min/max) reicht hinaus.
+   - Waehlbar: Puls- und Grundwert einzeln (Standard) oder zeitgewichteter Mittelwert (Dwell/Excursion).
+   - Ein Klick oeffnet das Segment.
+5. **Batch Save** warnt, wenn Werte ausserhalb der WPS liegen.
+
 ## WDR Converter: Heat-Input-Auswertung
 
 Ersetzt die Excel-Vorlage `template_metric_Short.xlsx` (gleiche Kennwerte, aber ohne deren Fehler; Befunde in `docs/PLAN_Excel_Vorlage.md`). Ausgabeformat „Heat input evaluation“ (Standard):

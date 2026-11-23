@@ -3,7 +3,7 @@
 Edits Liburdi schedule XML files. The root element is `<sched>`, with the sections `metadata`, `description`, `global`, `limits`, `overrides` and `segment`. Several files can be loaded at once. Everything runs client-side.
 
 ## Files
-- `index.html`: markup and the include order: vendor JSZip → style → markup → `data/` blocks (`#defaultXdr`, `#layoutNGRT`, `#layoutNG`) → `js/01…12`.
+- `index.html`: markup and the include order: vendor JSZip → style → markup → `data/` blocks (`#defaultXdr`, `#layoutNGRT`, `#layoutNG`) → pdf.js as `text/x-library` (started on demand by `loadPdfJs`) → `js/01…13`.
 - `js/NN-*.js`: one area per file. See `../MAP.md` for the list.
 
 ## State and conventions
@@ -27,15 +27,20 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
   - sets `config_version` and `jog_speed_edit_mode`=1.
 - **Heat input** (05): `calculateSegmentHeatInput` is in 01. The target ranges are `{id,name,min,max,files|null}` and are matched by the 4-digit schedule prefix (`fileTargetKey`).
   - Open question: the oscillation cycle uses one excursion. Machine data suggests two; see `docs/PLAN_Excel_Vorlage.md`.
+- **WPS** (13):
+  - `readWpsPdf` (pdf.js text layer; the worker runs in the main thread, no OCR) → `parseWpsDocument`: header row found by keywords (DE/EN), columns found by x position, ranges parsed by `parseWpsRange`, units converted to A, V, mm/min, m/min, kJ/mm.
+  - Editable review table, then `applyWps`. It stores `scheduleEditorWpsRanges` and replaces the heat input targets with `source: "wps"`; manual targets stay.
+  - `wpsCheckFile` compares pri/bkg amp, ahc, travel and wire (stored in in/min) and the heat input per segment. Results: fail (nominal outside), warn (override range outside), ok. `confirmWpsBeforeSave` runs in Batch Save.
 - **Segment field order:** `segments_sorting.json` next to the built HTML. It is loaded only over http(s); otherwise `SEGMENT_SORTING_CONFIG` is used.
 - **localStorage** (all keys are listed in `LOCAL_STORAGE_BACKUP_KEYS`, file 12):
   - `hiddenFields`, `lockedFields`, `importantFields`, `parameterUnits`
   - `scheduleEditorChangeLog`, `scheduleEditorCustomHeads`, `scheduleEditorSidebarState`, `scheduleEditorBatchSave`, `scheduleEditorParameterOrder`
   - `scheduleEditorXdrSchemas`, `scheduleEditorActiveXdr`, `scheduleEditorLayoutTemplates`
   - `scheduleEditorHeatInputTargets` (also read by WDR); the old key `scheduleEditorHeatInputTarget`
+  - `scheduleEditorWpsRanges` (`{document, wpsNumber, checkMode, rows[{label, passType, files, current|voltage|travel|wire|heat: {min,max}}]}`)
   - Read through `readStoredJson`, which tolerates corrupt values.
 
 ## Tests (`../../tests/`)
 - schema, upgrade, viewer, save, reorder, invalid-values, comparison
-- text-fields, segment-layout, heat-save, heat-targets, overview
+- text-fields, segment-layout, heat-save, heat-targets, overview, wps (builds its own test PDF)
 - Sample files: `Schedule_editor/data/samples/`

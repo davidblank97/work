@@ -315,6 +315,7 @@
                 renderFileList();
                 renderSidebar();
                 if (document.getElementById("heatInputBtn").classList.contains("active")) renderHeatInput();
+                else if (document.getElementById("wpsBtn").classList.contains("active")) renderWps();
                 else showSection(lastSelectedSection);
                 document.getElementById("saveBtn").disabled = false;
                 batchSaveBtn.disabled = false;
@@ -329,6 +330,7 @@
                 if (resetBtn) resetBtn.disabled = true;
                 updateUndoRedoButtons();
                 document.getElementById("heatInputBtn").classList.remove("active");
+                document.getElementById("wpsBtn").classList.remove("active");
                 resetContentToPlaceholder();
             }
             updateSelectionStatus();
@@ -387,6 +389,7 @@
                     renderFileList();
                     renderSidebar();
                     if (document.getElementById("heatInputBtn").classList.contains("active")) renderHeatInput();
+                    else if (document.getElementById("wpsBtn").classList.contains("active")) renderWps();
                     else showSection(lastSelectedSection);
                 };
                 const statusSpan = document.createElement("span");
@@ -546,6 +549,7 @@
             commitPendingEdit();
             lastSelectedSection = name;
             document.getElementById("heatInputBtn").classList.remove("active");
+            document.getElementById("wpsBtn")?.classList.remove("active");
             document.getElementById("schemaCheckBtn")?.classList.remove("active");
             document.querySelectorAll("#sidebarItems .sidebar-item").forEach(el => el.classList.remove("active"));
 
