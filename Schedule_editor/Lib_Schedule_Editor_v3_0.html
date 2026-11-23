@@ -5198,8 +5198,8 @@
                         elements, order, attributes, data types) and compares the file version with the schema version.
                         <strong>Upgrade</strong> brings older files to the schema version: values are kept, missing fields come from
                         the layout template (NGRT/NG by head), unknown fields are removed.</li>
-                    <li><strong>Program Overview (PDF):</strong> printable summary of all loaded files – highlighted (★) Global and
-                        Segment values, heat input chart and table, all overrides; save it as PDF from the print dialog.</li>
+                    <li><strong>Program Overview (PDF):</strong> printable summary of all loaded files – highlighted (★) Global values,
+                        main Segment values in groups, heat input chart and table, the overrides used for the heat input; save it as PDF from the print dialog.</li>
                     <li><strong>Settings:</strong> manage XDR schema versions (load, activate, delete) and export or import the
                         editor settings as JSON.</li>
                 </ul>
@@ -9605,6 +9605,9 @@
             return html + "</tbody></table>";
         }
 
+        // Overrides, aus denen calculateSegmentHeatInput den Min/Max-Bereich berechnet (gruppiert: Strom, Spannung, Bewegung).
+        const HEAT_INPUT_OVERRIDE_KEYS = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "travel_max", "dwell_max", "excursion_max"];
+
         function buildProgramOverviewHtml() {
             const files = loadedFiles;
             const target = readHeatInputTarget();
@@ -9614,14 +9617,18 @@
 
             // Global: hervorgehobene Werte (★)
             const globalKeys = unionKeys(files.map(file => keysOf(file.sections.global))).filter(key => importantFields.has(key));
-            // Segmente: hervorgehobene Werte, Reihenfolge wie in der Segmentansicht
-            const segmentKeys = orderedParameterKeys("segments", unionKeys(files.map(file => file.sections.segments.flatMap(keysOf))))
-                .filter(key => importantFields.has(key));
+            // Segmente: die Feldgruppen der Segmentansicht (pri/bkg zusammen, indwell-excursion-outdwell untereinander),
+            // danach weitere hervorgehobene (★) Werte. Eine per Ziehen gespeicherte Reihenfolge gilt hier nicht.
+            const presentSegmentKeys = unionKeys(files.map(file => file.sections.segments.flatMap(keysOf)));
+            const groupedSegmentKeys = segmentColumns.flat().filter(key => presentSegmentKeys.includes(key));
+            const segmentKeys = [...groupedSegmentKeys,
+                ...presentSegmentKeys.filter(key => importantFields.has(key) && !groupedSegmentKeys.includes(key))];
             const segmentColumnsList = files.flatMap(file => file.sections.segments.map((segment, index) => ({
                 label: `${fileShortLabel(file)} · S${segmentDisplayNumber(segment, index)}`, segment
             })));
-            // Overrides: alle Werte
-            const overrideKeys = unionKeys(files.map(file => keysOf(file.sections.overrides)));
+            // Overrides: nur die fuer die Heat-Input-Berechnung verwendeten (siehe calculateSegmentHeatInput)
+            const presentOverrideKeys = unionKeys(files.map(file => keysOf(file.sections.overrides)));
+            const overrideKeys = HEAT_INPUT_OVERRIDE_KEYS.filter(key => presentOverrideKeys.includes(key));
             const entriesByFile = files.map((file, fileIndex) => ({ ...heatInputCheck(file, target), fileIndex }));
             const schema = getActiveXdr();
             const now = new Date();
@@ -9682,7 +9689,7 @@
     <div class="toolbar"><button class="primary" onclick="window.print()">Print / Save as PDF</button><button onclick="window.close()">Close</button></div>
     <header>
         <div><h1>Program overview <span>· ${files.length} file(s)</span></h1>
-            <div class="muted">Highlighted values (★) from Global and Segments, heat input, overrides</div></div>
+            <div class="muted">Highlighted Global values (★), main Segment values, heat input with the overrides it uses</div></div>
         <div class="meta">${escapeHtml(now.toLocaleString())}<br>${schema ? `Schema v${escapeHtml(schema.version)}` : ""}</div>
     </header>
 
@@ -9693,7 +9700,7 @@
     <h2>Global – highlighted values</h2>
     ${overviewMatrix(globalKeys, fileColumns, (column, key) => directChildValue(column.file.sections.global, key))}
 
-    <h2>Segments – highlighted values</h2>
+    <h2>Segments – main values</h2>
     ${overviewMatrix(segmentKeys, segmentColumnsList, (column, key) => directChildValue(column.segment, key))}
     <p class="legend">Rows with different values are shaded.</p>
 
@@ -9702,7 +9709,7 @@
     <div class="chart">${buildOverviewHeatChart(entriesByFile)}</div>
     ${buildOverviewHeatTable(entriesByFile, target)}
 
-    <h2 class="page-break">Overrides</h2>
+    <h2>Overrides used for the heat input</h2>
     ${overviewMatrix(overrideKeys, fileColumns, (column, key) => directChildValue(column.file.sections.overrides, key), 10)}
 </body></html>`;
         }
