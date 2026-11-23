@@ -1,0 +1,146 @@
+    <template id="app-wdr">
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liburdi Welddata Converter</title>
+    <!-- Eingebettet fuer Offline-Betrieb: SheetJS 0.18.5 (xlsx.full.min.js, Apache-2.0) und JSZip 3.10.1 (MIT),
+         aus den npm-Paketen; einzige Aenderung: in vier regulaeren Ausdruecken fuer HTML-Kommentare steht
+         das Ausrufezeichen bzw. die schliessende spitze Klammer in eckigen Klammern (gleiche Bedeutung),
+         damit HTML-Werkzeuge diese Stellen nicht selbst als Kommentar lesen.
+         FileSaver wird nicht benoetigt (Download ueber <a download>).
+         Die Bibliotheken stehen als Text (type="text/x-library") in der Datei und werden vom Lader darunter
+         ausgefuehrt; so prueft der Editor (VS Code) den minifizierten Code nicht als eigenes JavaScript. -->
+    <script type="text/x-library" data-library="xlsx">
+<!-- @include vendor/xlsx-0.18.5.min.js -->
+    </script>
+    <script type="text/x-library" data-library="jszip">
+<!-- @include vendor/jszip-3.10.1.min.js -->
+    </script>
+    <script>
+        // Eingebettete Bibliotheken (SheetJS, JSZip) ausfuehren, bevor der Converter startet.
+        document.querySelectorAll('script[type="text/x-library"]').forEach(block => {
+            const script = document.createElement("script");
+            script.textContent = block.textContent;
+            document.head.appendChild(script);
+        });
+    </script>
+
+    <style>
+<!-- @include wdr/style.css -->
+    </style>
+
+<div id="header">
+        <strong>Welddata Converter</strong>
+        <span class="header-sub">CSV &rarr; Excel (.xlsx)</span>
+    </div>
+
+    <div id="content">
+        <div class="panel">
+            <div class="panel-header">1. Select CSV/XML source files or folders</div>
+            <div class="panel-body">
+                <div class="drop-zone" id="drop-zone">
+                    <p>Drop files/folders here or use the buttons</p>
+                    <div class="selection-options">
+                        <button type="button" id="browse-files">Select files...</button>
+                        <button type="button" class="btn-secondary" id="browse-folder">Select folder...</button>
+                        <button type="button" class="btn-danger" id="clear-selection">Clear selection</button>
+                    </div>
+                    <span id="file-count-label">No files selected</span>
+                    <span class="hint" style="margin-top:4px;">Multiple folders can be selected one after another
+                        and are added to the list.</span>
+
+                    <input type="file" id="file-input" multiple accept=".csv,.xml">
+                    <input type="file" id="folder-input" webkitdirectory mozdirectory msdirectory odirectory directory
+                        multiple>
+                </div>
+                <div class="file-listbox" id="file-listbox" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Heat-Input-Auswertung (ersetzt die Excel-Vorlage template_metric_Short.xlsx, siehe WDR_converter/PLAN_Excel_Vorlage.md) -->
+        <div class="panel eval-panel" id="evaluation-panel">
+            <div class="panel-header">2. Heat input evaluation</div>
+            <div class="panel-body eval-grid">
+                <div class="eval-group">
+                    <label class="radio-label">Process factor k
+                        <input type="number" class="eval-number" id="eval-factor" min="0.1" max="1.5" step="0.05" value="0.6">
+                    </label>
+                    <span class="hint">0.6 = heat input for TIG (EN ISO 1011-1), as used by the machine and the Schedule Editor;
+                        1 = arc energy.</span>
+                </div>
+                <div class="eval-group">
+                    <span class="eval-title">Evaluation range and rolling averages</span>
+                    <span class="hint">Statistics cover the steady state from the set points of the log (without up- and down-slope).
+                        The rolling averages "per period" / "per 10 periods" use the oscillation period from the log
+                        (In-Dwell + Out-Dwell + 2 × Excursion). All values are converted to metric units.</span>
+                    <label class="radio-label">Oscillation period if the log has none
+                        <input type="number" class="eval-number" id="eval-period" min="0.1" step="0.1" value="1.0"> s
+                    </label>
+                </div>
+                <div class="eval-group">
+                    <span class="eval-title">Filler wire (wire consumption in the summary)</span>
+                    <label class="radio-label">Diameter
+                        <input type="number" class="eval-number" id="eval-wire-diameter" min="0.1" step="0.1" value="0.8"> mm, density
+                        <input type="number" class="eval-number" id="eval-wire-density" min="0.1" step="0.01" value="7.85"> g/cm³ (steel 7.85)
+                    </label>
+                </div>
+                <div class="eval-group">
+                    <label class="radio-label"><input type="checkbox" id="eval-summary" checked> Summary workbook of all beads (Heat_input_summary_&lt;date&gt;.xlsx)</label>
+                    <label class="radio-label"><input type="checkbox" id="eval-raw"> Add the sheet "Raw data" with all log columns (about twice the file size)</label>
+                    <label class="radio-label"><input type="checkbox" id="eval-targets" checked> Check against the heat input target ranges of the Schedule Editor</label>
+                    <span class="hint" id="eval-targets-info"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">3. Output format</div>
+            <div class="panel-body">
+                <div class="radio-stack">
+                    <label class="radio-label">
+                        <input type="radio" name="format" value="evaluation" checked> Heat input evaluation: Excel per CSV file (data, charts, limits) + summary
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="format" value="Excel"> Raw data only: Excel (.xlsx) per CSV file
+                    </label>
+                </div>
+                <span class="hint">On start you will be asked for a target folder (Chrome/Edge). The Excel files are
+                    saved there directly. Other browsers download a ZIP archive (split into several parts for large
+                    batches). XML files are copied unchanged. CSV files that are not Liburdi data logs are written as raw data.</span>
+            </div>
+        </div>
+
+        <div class="progress-container" id="progress-container">
+            <div class="progress-text">
+                <span id="progress-status">Processing files...</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <div class="panel download-container" id="download-container" style="display: none;">
+            <div class="panel-header">4. Download</div>
+            <div class="panel-body">
+                <p id="download-info">The converted files were packed into a ZIP archive.</p>
+                <button class="btn-download" id="download-btn">Download ZIP file</button>
+            </div>
+        </div>
+
+        <button class="btn-convert" id="convert-btn">START CONVERSION</button>
+
+        <div class="footer">
+            Created by: David Blank, Bilfinger
+        </div>
+    </div>
+
+    <script>
+<!-- @include wdr/js/evaluation.js -->
+<!-- @include wdr/js/xlsx-writer.js -->
+<!-- @include wdr/js/workbooks.js -->
+    </script>
+
+    <script>
+<!-- @include wdr/js/main.js -->
+    </script>
+    </template>

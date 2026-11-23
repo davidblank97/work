@@ -1,0 +1,316 @@
+    <template id="app-editor">
+<meta charset="UTF-8" />
+    <title>Liburdi Schedule Editor</title>
+    <script>
+<!-- @include vendor/jszip-3.10.1-editor.js -->
+    </script>
+    <style>
+<!-- @include editor/style.css -->
+    </style>
+
+<div id="sidebar">
+        <div class="sidebar-section-toggle" role="button" tabindex="0" aria-expanded="true"
+            aria-controls="filesSection">
+            <span>Files</span><span class="sidebar-section-chevron">⌄</span>
+        </div>
+        <div id="filesSection" class="sidebar-section-content">
+            <div class="file-selection-actions" role="group" aria-label="File selection">
+                <button id="selectAllBtn" class="btn-secondary" type="button" title="Select all loaded files">Select all</button>
+                <button id="clearSelectionBtn" class="btn-secondary" type="button" title="Clear the file selection">Clear</button>
+                <button id="invertSelectionBtn" class="btn-secondary" type="button" title="Invert the file selection">Invert</button>
+            </div>
+            <div id="fileList"></div>
+            <div id="fileDropZone">Drop XML files here</div>
+        </div>
+
+        <div class="sidebar-section-toggle" role="button" tabindex="0" aria-expanded="true"
+            aria-controls="sectionsSection">
+            <span>Sections</span><span class="sidebar-section-chevron">⌄</span>
+        </div>
+        <div id="sectionsSection" class="sidebar-section-content">
+            <div id="sidebarItems"></div>
+        </div>
+
+        <div class="tools-section">
+            <div class="sidebar-section-toggle" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="toolsSection">
+                <span>Tools</span><span class="sidebar-section-chevron">⌄</span>
+            </div>
+            <div id="toolsSection" class="sidebar-section-content">
+                <div class="sidebar-item" role="button" tabindex="0" id="compareBtn">Comparison</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="heatInputBtn">Heat Input</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="schemaCheckBtn">Schema Check</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="programOverviewBtn" title="Printable summary of all loaded files (save as PDF)">Program Overview (PDF)</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="hiddenManagerBtn">Hidden Parameters</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="changeLogBtn">Change Log</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="xmlViewerBtn">XML Viewer</div>
+                <div class="sidebar-item" role="button" tabindex="0" id="localStorageBackupBtn">Settings</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="header">
+            <strong>Liburdi Schedule Editor</strong>
+            <div class="header-actions">
+                <div class="toolbar-group header-file-group">
+                    <button id="openFilesBtn" type="button" title="Open XML files">Open XML…</button>
+                    <input type="file" id="fileInput" accept=".xml" multiple hidden />
+                    <button id="returnBtn" class="return-btn" type="button" disabled title="Undo (Ctrl+Z)"
+                        aria-label="Undo">↩</button>
+                    <button id="redoBtn" class="return-btn" type="button" disabled title="Redo (Ctrl+Y)"
+                        aria-label="Redo">↪</button>
+                    <button id="helpBtn" class="return-btn" type="button" title="Help" aria-label="Help">?</button>
+                </div>
+                <div class="toolbar-group header-search-group">
+                    <div class="search-wrap">
+                        <input id="searchBox" type="text" placeholder="Search… (Ctrl+F)"
+                            aria-label="Search parameter or value">
+                        <button id="searchClearBtn" class="search-clear-btn" type="button" title="Clear search (Esc)"
+                            aria-label="Clear search" hidden>×</button>
+                    </div>
+                    <span id="searchCount" class="search-count" aria-live="polite"></span>
+                </div>
+                <div class="toolbar-group header-save-group">
+                    <span class="badge" id="changeCounter">No changes</span>
+                    <button id="resetChangesBtn" class="btn-secondary" type="button" disabled
+                        title="Revert all loaded files to the last saved state">Revert</button>
+                    <button id="saveBtn" type="button" disabled title="Save all changed files in the editor and log them in the Change Log – no download (Ctrl+S)">Save</button>
+                    <button id="batchSaveBtn" class="batch-save-btn" type="button" disabled
+                        title="Download the selected files, optionally with a revision tag (ZIP for several files)">Batch Save…</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="upgradeBanner" class="upgrade-banner" role="status" hidden>
+            <span id="upgradeBannerText"></span>
+            <button id="upgradeBannerReviewBtn" type="button" class="schema-small-btn">Review &amp; upgrade…</button>
+            <button id="upgradeBannerDismissBtn" type="button" class="btn-secondary schema-small-btn">Dismiss</button>
+        </div>
+
+        <div id="content">
+            <div id="noFileMessage" style="text-align: center; margin-top: 80px; color: var(--text-muted);">
+                <h3 style="color: #fff;">No file loaded</h3>
+                <p>Please select one or more Liburdi XML schedule files above to begin.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <span id="status">Ready.</span>
+            <span>Created by <b>David Blank, Bilfinger</b></span>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="heatSaveModal">
+        <div class="modal-box" role="alertdialog" aria-modal="true" aria-labelledby="heatSaveTitle">
+            <h3 id="heatSaveTitle" class="heat-save-title">Heat input outside the limits</h3>
+            <p id="heatSaveText" class="schema-save-text"></p>
+            <div id="heatSaveList" class="schema-save-list"></div>
+            <div class="modal-actions">
+                <button id="heatSaveShowBtn" class="btn-secondary" type="button">Show heat input</button>
+                <button id="heatSaveCancelBtn" class="btn-secondary" type="button">Cancel</button>
+                <button id="heatSaveConfirmBtn" class="btn-primary" type="button">Save anyway</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="schemaSaveModal">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="schemaSaveTitle">
+            <h3 id="schemaSaveTitle">Schema errors</h3>
+            <p id="schemaSaveText" class="schema-save-text"></p>
+            <div id="schemaSaveList" class="schema-save-list"></div>
+            <div class="modal-actions">
+                <button id="schemaSaveShowBtn" class="btn-secondary" type="button">Show details</button>
+                <button id="schemaSaveCancelBtn" class="btn-secondary" type="button">Cancel</button>
+                <button id="schemaSaveConfirmBtn" class="btn-primary" type="button">Save anyway</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eingebaute Standard-XDR (WELDSCHEDULE.XDR); neue Versionen ueber Tools > Schema Check laden. -->
+    <script type="text/xml" id="defaultXdr">
+<!-- @include editor/data/default.xdr -->
+    </script>
+
+    <div class="modal-overlay" id="upgradeModal">
+        <div class="modal-box upgrade-modal-box" role="dialog" aria-modal="true" aria-labelledby="upgradeTitle">
+            <h3 id="upgradeTitle">Upgrade to the latest schema version</h3>
+            <p id="upgradeText" class="schema-save-text"></p>
+            <div id="upgradeList" class="schema-save-list"></div>
+            <div class="modal-actions">
+                <button id="upgradeCancelBtn" class="btn-secondary" type="button">Cancel</button>
+                <button id="upgradeConfirmBtn" class="btn-primary" type="button">Upgrade</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eingebaute Layout-Muster fuer das Upgrade (Werte neuer Felder), Auswahl nach Head. -->
+    <script type="text/xml" id="layoutNGRT">
+<!-- @include editor/data/layout-ngrt.xml -->
+    </script>
+    <script type="text/xml" id="layoutNG">
+<!-- @include editor/data/layout-ng.xml -->
+    </script>
+
+    <div class="modal-overlay" id="batchSaveModal">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="batchSaveTitle">
+            <h3 id="batchSaveTitle">Batch Save</h3>
+            <label for="revisionTagInput" style="font-size: 12px; color: var(--text-muted);">Revision tag
+                (optional, appended to every file name):</label>
+            <input type="text" id="revisionTagInput" placeholder="Rev1" autocomplete="off">
+            <label class="batch-download-toggle">
+                <input type="checkbox" id="batchDownloadToggle" checked>
+                Download files (ZIP for several files)
+            </label>
+            <div id="batchSavePreview" class="batch-save-preview" aria-live="polite"></div>
+            <div class="modal-actions">
+                <button id="batchSaveCancelBtn" class="btn-secondary" type="button"
+                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                <button id="batchSaveConfirmBtn" class="btn-primary" type="button">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="headModal">
+        <div class="modal-box">
+            <h3>Add new head</h3>
+            <label for="headInput" style="font-size: 12px; color: var(--text-muted);">Value for the XML attribute
+                "head":</label>
+            <input type="text" id="headInput" placeholder="New head">
+            <div class="modal-actions">
+                <button id="headCancelBtn" class="btn-secondary"
+                    style="padding: 7px 16px; font-size: 13px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                <button id="headConfirmBtn" class="btn-primary">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal-box help-modal-box" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+            <h3 id="helpTitle">Liburdi Schedule Editor v2.9 - Help</h3>
+            <div class="help-content">
+                <h4>Start</h4>
+                <p>Open this HTML file in a current browser. For the full feature set (segment field order, XDR
+                    schemas from the Schedule Database) serve the project folder with
+                    <code>python3 -m http.server 8000</code>.</p>
+
+                <h4>Loading XML files</h4>
+                <ol>
+                    <li>Click <strong>Open XML…</strong> or drop XML files on <strong>Drop XML files here</strong>.</li>
+                    <li>Only valid schedules (<code>&lt;sched&gt;</code> with at least one segment) are accepted.</li>
+                    <li>Click a file in the list to make it the active file.</li>
+                    <li>Use the checkboxes (or <strong>Select all / Clear / Invert</strong>) for batch actions.</li>
+                </ol>
+                <p>Files are processed in the browser only. Files on disk stay unchanged until you save.</p>
+
+                <h4>Editing</h4>
+                <p>The sections <strong>Description</strong>, <strong>Global</strong>, <strong>Limits</strong>,
+                    <strong>Overrides</strong> and <strong>Segments</strong> can be edited directly. Decimal comma
+                    and point are both accepted. Changed values are highlighted; hover a value to see the last
+                    saved value.</p>
+                <p>If the active file is selected, edits outside of Segments are also applied to all other selected
+                    files.</p>
+                <p>Hover a parameter row to mark it as important (★) or hide it (⊘). Double-click and right-click
+                    on the name do the same.</p>
+                <p>Drag a parameter row by its name or handle (⠿) to reorder it; Alt+↑/↓ on the handle moves it by one row.
+                    The order is stored per section (all segments share one order) and included in the Local Storage
+                    Backup. <strong>Reset order</strong> in the panel header restores the default order. Locked parameters (🔒)
+                    cannot be moved and keep their position.</p>
+                <p>In Segments, segments can be duplicated, moved and deleted. The selected segment stays open.</p>
+
+                <h4>Keyboard shortcuts</h4>
+                <ul>
+                    <li><strong>Ctrl+S</strong> save all changed files (in the editor, logged in the Change Log)</li>
+                    <li><strong>Ctrl+Z</strong> undo, <strong>Ctrl+Y</strong> / <strong>Ctrl+Shift+Z</strong> redo
+                        (inside an input field the browser's own undo applies)</li>
+                    <li><strong>Ctrl+F</strong> or <strong>/</strong> search, <strong>Esc</strong> clear search or
+                        close dialog</li>
+                </ul>
+
+                <h4>Saving</h4>
+                <ul>
+                    <li><strong>Save:</strong> saves all changed files in the editor (new baseline for "changed" markers,
+                        Revert and the XML Viewer) and adds a "Saved" entry with the number of changes to the Change Log.
+                        Nothing is downloaded; saved files that were not downloaded show <em>Saved ↓</em>.
+                        To rename a file, edit the file name above the sections.</li>
+                    <li><strong>Batch Save:</strong> the only way to download: saves and downloads the selected files (all files if none are selected).
+                        An optional revision tag (e.g. <code>Rev1</code>) is appended to every file name
+                        (<code>Name_Rev1.xml</code>); an existing <code>_Rev…</code> suffix is replaced and the files
+                        are renamed in the editor.
+                        Several files are saved as a ZIP archive. If a segment's heat input is outside the file limits or the target range (Tools › Heat Input), an error message lists the segments before anything is downloaded.</li>
+                    <li><strong>Revert:</strong> reset all loaded files to the last saved state.</li>
+                </ul>
+
+                <h4>Tools</h4>
+                <ul>
+                    <li><strong>Comparison:</strong> compare loaded files, edit values, transfer values to all files,
+                        optionally show differences only.</li>
+                    <li><strong>Heat Input:</strong> heat input per segment with efficiency η = 0.6 (background values
+                        during excursion, primary values during indwell/outdwell); min/max from the percentage
+                        overrides. A chart shows the min–max range and nominal value per segment, with the heat input limits
+                        from &lt;limits&gt; as dashed lines. Enter a target Min/Max to draw red reference lines.</li>
+                    <li><strong>Hidden Parameters:</strong> restore hidden parameters.</li>
+                    <li><strong>Change Log:</strong> show recorded changes; <em>Clear log</em> deletes all entries (Undo restores them).</li>
+                    <li><strong>XML Viewer:</strong> read-only XML of the active file; changes since the last save are highlighted (green added, red removed, yellow changed with the old value); with a saved XDR schema, missing
+                        required values are marked in red.</li>
+                    <li><strong>Schema Check:</strong> checks all loaded files against the active XDR schema (required and unknown
+                        elements, order, attributes, data types) and compares the file version with the schema version.
+                        <strong>Upgrade</strong> brings older files to the schema version: values are kept, missing fields come from
+                        the layout template (NGRT/NG by head), unknown fields are removed.</li>
+                    <li><strong>Program Overview (PDF):</strong> printable summary of all loaded files – highlighted (★) Global values,
+                        main Segment values in groups, heat input chart and table, the overrides used for the heat input; save it as PDF from the print dialog.</li>
+                    <li><strong>Settings:</strong> manage XDR schema versions (load, activate, delete) and export or import the
+                        editor settings as JSON.</li>
+                </ul>
+
+                <h4>Local settings</h4>
+                <p>Hidden and important parameters, custom heads, units, the change log and the sidebar state are
+                    stored in the browser's localStorage.</p>
+            </div>
+            <div class="modal-actions">
+                <button id="helpCloseBtn" class="btn-primary" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="localStorageBackupModal">
+        <div class="modal-box storage-modal-box" role="dialog" aria-modal="true"
+            aria-labelledby="localStorageBackupTitle">
+            <h3 id="localStorageBackupTitle">Settings</h3>
+            <section class="settings-section">
+                <h4>XDR schema</h4>
+                <p>Schedules are checked against the active XDR schema (results: Tools › Schema Check). Load new
+                    XDR versions here; they are stored in the browser.</p>
+                <div id="xdrManager"></div>
+            </section>
+            <section class="settings-section">
+                <h4>Backup</h4>
+                <p>Export or import the local editor settings (including the XDR versions) as a JSON file.
+                    Importing replaces the stored editor settings and reloads the page.</p>
+            </section>
+            <input id="localStorageBackupFile" type="file" accept=".json,application/json" hidden>
+            <p id="localStorageBackupStatus" class="storage-backup-status" role="status" aria-live="polite"></p>
+            <div class="modal-actions storage-modal-actions">
+                <button id="localStorageBackupCloseBtn" class="btn-secondary" type="button">Close</button>
+                <button id="localStorageBackupImportBtn" class="btn-secondary" type="button">Import JSON</button>
+                <button id="localStorageBackupExportBtn" class="btn-primary" type="button">Export JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+<!-- @include editor/js/01-state-history.js -->
+<!-- @include editor/js/02-files-helpers.js -->
+<!-- @include editor/js/03-input-panel.js -->
+<!-- @include editor/js/04-segments.js -->
+<!-- @include editor/js/05-heat-input.js -->
+<!-- @include editor/js/06-save-propagation.js -->
+<!-- @include editor/js/07-schema.js -->
+<!-- @include editor/js/08-upgrade.js -->
+<!-- @include editor/js/09-overview.js -->
+<!-- @include editor/js/10-compare.js -->
+<!-- @include editor/js/11-viewer.js -->
+<!-- @include editor/js/12-changes-settings.js -->
+    </script>
+</body>
+    </template>

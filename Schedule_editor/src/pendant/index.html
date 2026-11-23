@@ -1,0 +1,188 @@
+    <template id="app-pendant">
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendant Key Layout Editor — Simplified</title>
+    <!-- Using Tailwind CSS for a clean, modern UI -->
+    <!-- Tailwind CDN removed; offline static CSS shim is used instead -->
+    <style>
+<!-- @include pendant/style.css -->
+    </style>
+<div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-5xl">
+        <header class="mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold" style="color: var(--accent);">
+                    Pendant Key Layout Editor
+                    <span class="simplified-badge">Simplified</span>
+                </h1>
+                <p class="mt-1" style="color: var(--text-secondary);">Edit JOG, WELD, and WELD2 only — all other modes are written with defaults.</p>
+            </div>
+            <button id="help-button" class="btn-icon font-bold p-2 rounded-full h-10 w-10 flex items-center justify-center" title="Help">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+        </header>
+
+        <main class="panel p-6 rounded-xl shadow-lg">
+
+            <!-- Scope banner -->
+            <div class="scope-banner text-sm p-3 rounded-lg mb-6">
+                This simplified editor only shows the three most-used pages:
+                <strong>JOG</strong>, <strong>WELD</strong>, and <strong>WELD2</strong>.
+                The generated XML still contains all nine modes — the others
+                (NUMPAD, AUXJOG, MENU, INPUT, VIEW, EDIT) are written using factory defaults
+                or, if a file is loaded, the values from that file.
+            </div>
+
+            <!-- File Loader Section -->
+            <div class="mb-6 p-4 panel-inset rounded-lg">
+                 <label for="file-input" class="block text-sm font-medium mb-2" style="color: var(--text-secondary);">Load from XML File:</label>
+                 <input type="file" id="file-input" class="block w-full text-sm" style="color: var(--text-muted);" accept=".xml">
+            </div>
+
+            <!-- Metadata Input Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-6">
+                <div>
+                    <label for="author-input" class="block text-sm font-medium mb-1" style="color: var(--text-secondary);">Layout Author:</label>
+                    <input type="text" id="author-input" class="w-full p-2 rounded-md shadow-sm" placeholder="Enter your name or ID">
+                </div>
+                <div>
+                    <label for="filename-suffix-input" class="block text-sm font-medium mb-1" style="color: var(--text-secondary);">File Name Suffix:</label>
+                    <div class="flex items-center">
+                        <span class="mr-1" style="color: var(--text-muted);">key_layout_</span>
+                        <input type="text" id="filename-suffix-input" class="flex-grow p-2 rounded-md shadow-sm" placeholder="e.g., custom_v1">
+                        <span class="ml-1" style="color: var(--text-muted);">.xml</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="mb-4" style="border-bottom: 1px solid var(--border-muted);">
+                <nav id="tabs-container" class="-mb-px flex space-x-2 overflow-x-auto" aria-label="Tabs"></nav>
+            </div>
+
+            <!-- Mode Tools Bar -->
+            <div class="mb-4 flex flex-wrap gap-2 items-center justify-between">
+                <div class="text-sm flex flex-wrap items-center gap-x-4 gap-y-1" style="color: var(--text-muted);">
+                    <div>
+                        Current mode: <span id="current-mode-label" style="color: var(--accent); font-weight: 600;">—</span>
+                    </div>
+                    <div>
+                        Clipboard: <span id="clipboard-label" style="color: var(--text-muted); font-style: italic;">empty</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button id="copy-page-button" class="btn-secondary py-2 px-4 rounded-md text-sm flex items-center gap-2" title="Copy the current mode page to the clipboard">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy page
+                    </button>
+                    <button id="paste-page-button" class="btn-secondary py-2 px-4 rounded-md text-sm flex items-center gap-2" title="Paste the clipboard contents onto the current mode page" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        Paste page
+                    </button>
+                    <button id="blank-page-button" class="btn-secondary py-2 px-4 rounded-md text-sm flex items-center gap-2" title="Fill the current mode page with blank_black on every key">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13H5v-2h14v2z" />
+                        </svg>
+                        Fill page with blank_black
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid Containers -->
+            <div id="grid-editor-container"></div>
+
+            <!-- Action Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                <button id="preview-pdf-button" class="btn-secondary flex-1 py-3 px-4 rounded-lg shadow-sm flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    Preview Layout as PDF
+                </button>
+                <button id="generate-xml-button" class="btn-primary flex-1 py-3 px-4 rounded-lg shadow-sm">
+                    Generate &amp; Download XML
+                </button>
+            </div>
+
+            <!-- XML Output Display -->
+            <div class="mt-8">
+                <h2 class="text-xl font-semibold" style="color: var(--accent);">Generated XML Preview</h2>
+                <pre class="xml-preview mt-2 text-sm p-4 rounded-lg max-h-96 overflow-auto"><code id="xml-output" style="font-family: 'Consolas', 'Liberation Mono', 'Courier New', monospace;">Your generated XML will appear here...</code></pre>
+            </div>
+        </main>
+
+        <footer class="mt-6 text-center text-xs" style="color: var(--text-muted);">
+            Pendant Key Layout Editor &middot; Simplified v2 — Offline (JOG / WELD / WELD2 + PDF preview) &middot; XML format: <code>termkeys</code>
+        </footer>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="hidden fixed inset-0 overflow-y-auto h-full w-full flex items-center justify-center" style="background-color: rgba(0, 0, 0, 0.8);">
+        <div class="relative mx-auto p-5 panel w-full max-w-md shadow-lg rounded-md">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium" style="color: var(--accent);">How to Use the Simplified Editor</h3>
+                <div class="mt-2 px-7 py-3 text-left">
+                    <p class="text-sm mb-4" style="color: var(--text-secondary);">
+                        This is the simplified version of the layout editor. Only the three most-used pages
+                        (<strong>JOG</strong>, <strong>WELD</strong>, <strong>WELD2</strong>) are editable.
+                        The generated XML still includes all nine modes — the other six are written with factory
+                        defaults, or with the values from a loaded file if one is provided.
+                    </p>
+                    <ol class="list-decimal list-inside space-y-3" style="color: var(--text-primary);">
+                        <li><span class="font-semibold" style="color: var(--accent);">Loading:</span> Click "Choose File" to load an existing <code>key_layout_*.xml</code> file. All nine modes are read in, but only JOG, WELD, and WELD2 are exposed for editing.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Editing:</span>
+                            <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                                <li>Switch between JOG, WELD, and WELD2 using the orange tabs.</li>
+                                <li>Change any button's function using its dropdown.</li>
+                                <li>For custom functions, select "--- CUSTOM ---" and type a value.</li>
+                            </ul>
+                        </li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Copy / Paste:</span> Use "Copy page" to capture the current mode, then switch to another mode tab and use "Paste page" to overwrite it. The clipboard indicator shows which mode is currently held.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Blank page:</span> Use "Fill page with blank_black" to wipe the current mode and start from scratch. A confirmation prompt appears first.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Preview as PDF:</span> Click "Preview Layout as PDF" to open a printable view of the three editable pages with their button icons. Use the print dialog's "Save as PDF" option to keep a copy.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Saving:</span> Enter an author and file suffix, then click "Generate &amp; Download XML". The output contains all nine modes.</li>
+                    </ol>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="close-help-button" class="btn-primary px-4 py-2 text-base rounded-md w-full shadow-sm">
+                        Got it
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal (used for "Fill page" and "Paste page" actions) -->
+    <div id="confirm-modal" class="hidden fixed inset-0 overflow-y-auto h-full w-full flex items-center justify-center" style="background-color: rgba(0, 0, 0, 0.8);">
+        <div class="relative mx-auto p-5 panel w-full max-w-md shadow-lg rounded-md">
+            <div class="mt-3 text-center">
+                <h3 id="confirm-title" class="text-lg leading-6 font-medium" style="color: var(--accent);">Confirm</h3>
+                <div class="mt-2 px-7 py-3 text-left">
+                    <p id="confirm-body" class="text-sm" style="color: var(--text-secondary);">
+                        <!-- Body set dynamically -->
+                    </p>
+                </div>
+                <div class="flex gap-2 px-4 py-3">
+                    <button id="cancel-blank-button" class="flex-1 py-2 px-4 rounded-md text-sm" style="background-color: var(--bg-elev); color: var(--text-primary); border: 1px solid var(--border-strong);">
+                        Cancel
+                    </button>
+                    <button id="confirm-blank-button" class="btn-primary flex-1 py-2 px-4 text-sm rounded-md">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+<!-- @include pendant/pendant.js -->
+    </script>
+</body>
+    </template>

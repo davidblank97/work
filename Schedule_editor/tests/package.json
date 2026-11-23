@@ -3,6 +3,7 @@
   "private": true,
   "description": "Browser tests for Lib_Schedule_Editor_v3_0.html (Playwright, Chromium)",
   "scripts": {
+    "pretest": "node ../build.js --check",
     "test": "node run.js"
   },
   "devDependencies": {

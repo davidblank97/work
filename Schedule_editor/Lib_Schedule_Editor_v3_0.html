@@ -6,13 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liburdi Schedule Suite 3.0</title>
     <!--
-        Liburdi Schedule Suite 3.0
-        Aufbau: Startseite + zwei eigenstaendige Anwendungen in <template>-Bloecken.
-        - #app-editor: Liburdi Schedule Editor (Quelltext wie bisher, hier bearbeiten)
-        - #app-wdr:    Liburdi Welddata Converter
-        Beim Oeffnen wird die gewaehlte Anwendung als eigenes Dokument (iframe srcdoc, gleiche Herkunft)
-        gestartet; so bleiben CSS und JavaScript der beiden Anwendungen voneinander getrennt.
-        Einmal geoeffnete Anwendungen bleiben beim Wechsel erhalten (geladene Dateien gehen nicht verloren).
+        GENERATED FILE – do not edit. Source: Schedule_editor/src/ (see src/MAP.md), build: `node build.js`.
+        Liburdi Schedule Suite 3.0: start page + three independent apps in <template> blocks
+        (#app-editor, #app-wdr, #app-pendant). Each app is started as its own document (iframe srcdoc,
+        same origin), so CSS and JavaScript stay separate; opened apps keep their state when switching.
     -->
     <style>
         :root {
@@ -13035,7 +13032,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     </template>
 
     <!-- ============================================================
-         APP: Pendant Key Layout Editor (Quelle: Pendant_layout/Pendant_Layout_Generator_Simplified_v2_offline.html,
+         APP: Pendant Key Layout Editor (Quelle: _archiv/Pendant_layout_original/Pendant_Layout_Generator_Simplified_v2_offline.html,
          Farbschema an den Schedule Editor angepasst; die PDF-Vorschau bleibt hell fuer den Druck)
          ============================================================ -->
     <template id="app-pendant">
