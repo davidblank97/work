@@ -13,7 +13,7 @@
 - `segments_sorting.json`: priority order of segment fields; fetched only when served over http(s), otherwise the built-in `SEGMENT_SORTING_CONFIG` is used.
 - `README_v3_0.md`: user documentation (German). Update it when behavior changes.
 - `schedule_beispiel.xml`, `Test 2 Segmente.xml`: sample schedules for manual testing.
-- `to_do`: open feature ideas from the user.
+- `text_doc/`: user notes (`to_do` with open feature ideas, heat input notes).
 
 ## Architecture notes (app script)
 
