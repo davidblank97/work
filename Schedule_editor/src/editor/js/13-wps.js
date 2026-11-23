@@ -567,7 +567,7 @@
             const addRow = document.createElement("button");
             addRow.type = "button";
             addRow.className = "btn-secondary";
-            addRow.textContent = "Add row";
+            addRow.textContent = "+ Add row";
             addRow.onclick = () => { working.rows.push(normalizeWpsRow({ label: "", passType: "Other" })); if (!wpsDraft) wpsDraft = working; renderWps(); };
             applyBtn.type = "button";
             applyBtn.className = "btn-primary";

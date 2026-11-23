@@ -141,7 +141,7 @@ module.exports = [
             await frame.setInputFiles("#wpsFileInput", [pdfPath]);
             await frame.waitForSelector(".wps-note", { timeout: 20000 });
             t.check("note: no table", (await frame.textContent(".wps-note")).includes("No parameter table found"));
-            await frame.click("text=Add row");
+            await frame.click("text=+ Add row");
             t.check("row added", await frame.locator(".wps-range-table tbody tr").count() === 1);
             await frame.click("text=Discard");
             await frame.click("text=Enter ranges manually");

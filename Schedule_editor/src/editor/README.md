@@ -44,3 +44,23 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
 - schema, upgrade, viewer, save, reorder, invalid-values, comparison
 - text-fields, segment-layout, heat-save, heat-targets, overview, wps (builds its own test PDF)
 - Sample files: `Schedule_editor/data/samples/`
+
+## UI conventions (from the suite design system, https://claude.ai/artifact/Swt1V8HuXWB9nRmP11GMc2)
+- **Theme:** one warm dark theme. Use the CSS variables in `style.css` (`--bg-*`, `--text-*`, `--accent*`, `--success`, `--warning`, `--danger`); no new hex values.
+- **Accent** (`--accent` #f28a3d, weld orange) marks what acts or is active. Text on an accent fill uses `on-accent` (#24150d), never white.
+- **State colours** carry one meaning each and always come with a word:
+  - `success` = changed, not saved;
+  - `warning` = saved but not downloaded, or a warning;
+  - `danger` = invalid or destructive.
+  - Do not spread `teal`.
+- **Copy:**
+  - English, with parameters named exactly as their XML keys.
+  - Units always visible, e.g. "Length (mm)".
+  - Buttons are short verbs in title case: "…" when a button opens a dialog or file picker, "+" when it appends (`+ Add segment`).
+  - Status text is plain, without "!". No emoji; icons are Unicode glyphs.
+- **Shape and size:**
+  - Radius 7px on controls, 8px on panels.
+  - Control heights 32px in the header, 28px in panels.
+  - Depth comes from grounds and 1px borders, not shadows.
+  - Value fields use the mono font, right-aligned.
+

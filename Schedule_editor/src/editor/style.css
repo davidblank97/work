@@ -1823,6 +1823,7 @@
             --text-muted: #9c8f85;
             --accent: #f28a3d;
             --accent-soft: rgba(242, 138, 61, 0.14);
+            --warning: #e4b363;
             --radius: 8px;
             --control-h: 32px;
         }
@@ -3361,7 +3362,7 @@
 
         .wps-note {
             margin: 0 0 6px;
-            color: #e4b363;
+            color: var(--warning);
             font-size: 12px;
         }
 
@@ -3426,7 +3427,7 @@
         }
 
         .wps-cell.is-warn {
-            color: #e4b363;
+            color: var(--warning);
             font-weight: 600;
         }
 
