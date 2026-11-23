@@ -376,5 +376,26 @@ Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Ni
 - `data/wdr/`: Beispiel-Datalog (CSV), alte Excel-Vorlage und WPQ-Sammeltabelle als Referenz.
 - `data/machine_backup/`: Sicherung der Maschinensoftware 1.8.3.87 (Datalogs mit Schedule-Snapshots, Schedules, XDR, XSL-Upgrades).
 - `docs/`: Notizen, offene Punkte (`to_do`), Befunde zur Excel-Vorlage.
-- `tests/`: Browser-Tests (`npm test`, siehe AGENTS.md).
+- `src/`, `build.js`: Quelltext der Suite in Modulen. Die HTML-Datei wird daraus erzeugt (siehe „Entwicklung“).
+- `tests/`: Browser-Tests (`npm test`).
 - Fruehere Versionen (v2 bis v2.9) und nicht mehr benoetigte Werkzeuge liegen in `/_archiv` (nur zum Nachschlagen).
+
+## Entwicklung
+
+Die Datei `Lib_Schedule_Editor_v3_0.html` wird **erzeugt** und nicht direkt bearbeitet. Quellen liegen in `src/`:
+- `suite/`: Startseite und Umschaltung.
+- `editor/`: Markup, CSS und 12 JS-Dateien nach Bereichen.
+- `wdr/`: Auswertung, Excel-Writer und Oberflaeche.
+- `pendant/`: Pendant Layout.
+- `vendor/`: Bibliotheken.
+
+Welche Datei fuer welches Thema zustaendig ist, steht in `src/MAP.md`. Jedes Modul hat eine kurze `README.md`.
+
+Nach einer Aenderung im Ordner `Schedule_editor` ausfuehren:
+
+```bash
+node build.js            # erzeugt Lib_Schedule_Editor_v3_0.html
+cd tests && npm test     # prueft zuerst, ob der Build aktuell ist, dann alle Browser-Tests
+```
+
+`build.js` braucht nur Node.js, keine weiteren Pakete. Das Ergebnis bleibt eine einzelne, offline lauffaehige Datei.
