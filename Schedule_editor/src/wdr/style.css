@@ -334,7 +334,7 @@
             width: 76px;
             height: auto;
             padding: 4px 7px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #806b5c; /* 3:1 auf bg-input */
             border-radius: 6px;
             background: var(--bg-input);
             color: var(--text-main);

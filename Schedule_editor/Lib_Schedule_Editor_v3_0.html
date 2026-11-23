@@ -706,7 +706,7 @@
         }
 
         .important-cell input {
-            border-color: rgba(255, 152, 0, 0.25);
+            border-color: rgba(255, 152, 0, 0.5);   /* 3:1 auf bg-input */
         }
 
         .changed {
@@ -1394,7 +1394,7 @@
 
         #searchBox {
             background: #151311;
-            border-color: #4a3d34;
+            border-color: var(--border-strong);
             color: var(--text-main);
         }
 
@@ -1519,7 +1519,7 @@
         .modal-box input[type="text"],
         .modal-box textarea {
             background: var(--bg-input);
-            border-color: #493c33;
+            border-color: var(--border-strong);
             color: #ffb77f;
         }
 
@@ -1538,7 +1538,7 @@
         .unit-toggle-btn {
             background: #2a2420;
             color: #b8a99f;
-            border-color: #4a3d34;
+            border-color: var(--border-strong);
         }
 
         .unit-toggle-btn:hover {
@@ -2132,7 +2132,7 @@
             --bg-panel-2: #272220;
             --bg-input: #161412;
             --border-color: #342c27;
-            --border-strong: #4a3d34;
+            --border-strong: #806b5c;   /* Rahmen von Bedienelementen: >= 3:1 auf bg-input, bg-panel, bg-panel-2 (WCAG 1.4.11) */
             --text-main: #f1ebe5;
             --text-muted: #9c8f85;
             --accent: #f28a3d;
@@ -12474,7 +12474,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             width: 76px;
             height: auto;
             padding: 4px 7px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #806b5c; /* 3:1 auf bg-input */
             border-radius: 6px;
             background: var(--bg-input);
             color: var(--text-main);
@@ -14170,7 +14170,7 @@ input, select, textarea { font: inherit; }
             --bg-elev: #272220;
             --bg-input: #161412;
             --border-muted: #342c27;
-            --border-strong: #493c33;
+            --border-strong: #806b5c;
             --text-primary: #f1ebe5;
             --text-secondary: #bda99b;
             --text-muted: #9d8f85;
