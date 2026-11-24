@@ -696,6 +696,31 @@
         }
 
         // Auf die markierten Dateien mit WPS-Zeile anwenden (keine Markierung: alle), mit Undo.
+        // Fit Values ist ein tiefer Eingriff ins Programm: vorher bestaetigen lassen (Cancel ist vorausgewaehlt).
+        const wpsFitValuesModal = document.getElementById("wpsFitValuesModal");
+        function confirmWpsFitValues() {
+            const store = readWpsStore();
+            if (!store) return;
+            const affected = loadedFiles.filter((file, index) => (!selectedFiles.size || selectedFiles.has(index))
+                && store.rows.some(row => row.files.includes(fileTargetKey(file))));
+            document.getElementById("wpsFitValuesText").textContent = affected.length
+                ? `Affected program(s) (${affected.length}): ${affected.map(fileShortLabel).join(", ")}. Every change is listed in the change log and can be undone with Ctrl+Z.`
+                : "No selected program is assigned to a WPS pass – nothing will be changed.";
+            document.getElementById("wpsFitValuesConfirmBtn").disabled = !affected.length;
+            const cancel = document.getElementById("wpsFitValuesCancelBtn");
+            openModal(wpsFitValuesModal, cancel);
+            // erst sichtbar, dann fokussieren: Enter bestaetigt so nie versehentlich
+            window.setTimeout(() => cancel.focus(), 60);
+        }
+        document.getElementById("wpsFitValuesCancelBtn").onclick = () => {
+            closeModal(wpsFitValuesModal);
+            document.getElementById("status").textContent = "Fit Values cancelled – no values changed.";
+        };
+        document.getElementById("wpsFitValuesConfirmBtn").onclick = () => {
+            closeModal(wpsFitValuesModal);
+            applyWpsFit("values");
+        };
+
         function applyWpsFit(mode) {
             const store = readWpsStore();
             if (!store) return;
@@ -1017,7 +1042,7 @@
                 fitValues.id = "wpsFitValuesBtn";
                 fitValues.textContent = "Fit Values";
                 fitValues.title = "Set current, voltage and wire of the selected files to the nearest WPS limit; then correct the heat input with the current (within the WPS current range). The travel speed is never changed.";
-                fitValues.onclick = () => applyWpsFit("values");
+                fitValues.onclick = confirmWpsFitValues;
                 const fitHint = document.createElement("span");
                 fitHint.className = "wps-hint";
                 fitHint.textContent = "Applies to the selected files with a WPS row · undo with Ctrl+Z · listed in the change log";

@@ -68,6 +68,7 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
      - `wire_max` nach derselben Logik: groesstmoeglich bis 10 %, sodass Draht ± Override in der WPS bleibt (kein Einfluss auf den Heat Input). `travel_max` bleibt unveraendert.
      - **Die Werte selbst werden nie geaendert.** Liegt ein Wert schon ausserhalb, wird er als „Not solved“ gemeldet (dann Fit Values).
    - **Fit Values:**
+     - Da hier die Programmwerte selbst geaendert werden, erscheint vorher eine **Sicherheitsabfrage** mit den betroffenen Programmen („Cancel“ ist vorausgewaehlt).
      - Strom, Spannung und Draht ausserhalb der WPS werden auf die naechste WPS-Grenze gesetzt (nach innen gerundet, mit den Nachkommastellen der Datei).
      - Liegt der Heat Input danach noch ausserhalb, wird der Strom (Puls- und Grundstrom mit demselben Faktor) angepasst, soweit der WPS-Strombereich es erlaubt.
      - Ein Wert auf der Grenze laesst den Override gelb; dann zusaetzlich **Fit Overrides**.

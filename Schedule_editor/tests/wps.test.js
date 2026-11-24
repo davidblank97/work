@@ -248,7 +248,16 @@ module.exports = [
                 `${await xml("overrides", "dwell_max")} ${await xml("overrides", "excursion_max")}`);
             t.check("change log entries", await frame.evaluate(() => changeLog.filter(entry => entry.section === "overrides").length) === 5);
 
+            // Fit Values fragt nach; Abbrechen aendert nichts
             await frame.click("#wpsFitValuesBtn");
+            await page.waitForTimeout(150);
+            t.check("confirmation dialog", await frame.locator("#wpsFitValuesModal.show").count() === 1
+                && (await frame.textContent("#wpsFitValuesText")).includes("Affected program(s) (1): 0402")
+                && await frame.evaluate(() => document.activeElement.id) === "wpsFitValuesCancelBtn", JSON.stringify([await frame.locator("#wpsFitValuesModal.show").count(), await frame.textContent("#wpsFitValuesText"), await frame.evaluate(() => document.activeElement.id)]));
+            await frame.click("#wpsFitValuesCancelBtn");
+            t.check("cancel keeps the values", await xml("segments", "pri_wire") === "66.929170" && (await frame.textContent("#status")).includes("Fit Values cancelled"));
+            await frame.click("#wpsFitValuesBtn");
+            await frame.click("#wpsFitValuesConfirmBtn");
             // 1.5 m/min = 59.0551181 in/min -> abgerundet 59.055118
             t.check("pri_wire set to the WPS max", await xml("segments", "pri_wire") === "59.055118", await xml("segments", "pri_wire"));
             t.check("other values unchanged", await xml("segments", "bkg_wire") === "51.181130" && await xml("segments", "pri_amp") === "180.000000");
@@ -316,6 +325,7 @@ module.exports = [
             }, key);
             const travelBefore = [await value("pri_travel"), await value("bkg_travel"), await value("travel_max")];
             await frame.click("#wpsFitValuesBtn");
+            await frame.click("#wpsFitValuesConfirmBtn");
             t.check("travel unchanged by Fit Values", JSON.stringify([await value("pri_travel"), await value("bkg_travel"), await value("travel_max")]) === JSON.stringify(travelBefore));
             const result = await frame.textContent("#wpsFitResult");
             t.check("travel reported, not changed", result.includes("pri_travel 75 mm/min is outside the WPS (travel speed is never changed)"), result);
