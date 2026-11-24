@@ -12072,77 +12072,97 @@
             return file.sections.segments.filter(segment => wpsReadValue(segment, "enable") !== 0);
         }
 
-        // Overrides so verkleinern, dass Nominal ± Override in der WPS liegt (nie vergroessern).
+        // Overrides so gross wie moeglich (hoechstens WPS_OVERRIDE_TARGET %), ohne dass der Schweisser mit irgendeiner
+        // Override-Stellung die WPS verletzen kann: je Wert (Nominal ± Override) und beim Heat Input (alle Overrides
+        // gleichzeitig im unguenstigsten Fall). Werte werden nie geaendert; travel_max bleibt; wire_max nur kleiner.
+        const WPS_OVERRIDE_TARGET = 10;
         function fitWpsOverrides(file, rows, changes, issues) {
             const overrides = file.sections.overrides;
             if (!overrides) return;
             const label = fileShortLabel(file);
+            const nodeOf = (parent, name) => [...parent.children].find(child => child.tagName === name);
+            const targets = {};
             WPS_OVERRIDE_MAP.forEach(({ field, override, keys, factor, fixed }) => {
-                const range = wpsCombinedRange(rows, field);
                 const current = wpsReadValue(overrides, override);
-                if (!range || current === null || current <= 0) return;
-                let allowed = current;
-                wpsSegmentsOf(file).forEach(segment => keys.forEach(key => {
-                    const raw = wpsReadValue(segment, key);
-                    if (raw === null || raw <= 0) return;
-                    const value = raw * factor;
-                    if (wpsBelow(value, range) || wpsAbove(value, range)) {
-                        issues.push(fixed
-                            ? `${label}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (travel speed is never changed)`
-                            : `${label}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (use Fit values)`);
-                        return;
-                    }
-                    const up = range.max !== null ? Math.max(0, (range.max - value) / value * 100) : Infinity;
-                    const down = range.min !== null ? Math.max(0, (value - range.min) / value * 100) : Infinity;
-                    allowed = Math.min(allowed, up, down);
-                }));
-                if (allowed < current && fixed) {
-                    issues.push(`${label}: ${override} ${formatWpsNumber(current, field)} % reaches outside the WPS (travel speed is never changed)`);
+                if (current === null) return;
+                const maximize = WPS_HEAT_OVERRIDES.includes(override);
+                const range = wpsCombinedRange(rows, field);
+                let allowed = maximize ? WPS_OVERRIDE_TARGET : current;
+                if (range) {
+                    wpsSegmentsOf(file).forEach(segment => keys.forEach(key => {
+                        const raw = wpsReadValue(segment, key);
+                        if (raw === null || raw <= 0) return;
+                        const value = raw * factor;
+                        if (wpsBelow(value, range) || wpsAbove(value, range)) {
+                            issues.push(fixed
+                                ? `${label}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (travel speed is never changed)`
+                                : `${label}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (use Fit Values)`);
+                            return;
+                        }
+                        const up = range.max !== null ? Math.max(0, (range.max - value) / value * 100) : Infinity;
+                        const down = range.min !== null ? Math.max(0, (value - range.min) / value * 100) : Infinity;
+                        allowed = Math.min(allowed, up, down);
+                    }));
+                }
+                if (fixed) {
+                    if (allowed < current) issues.push(`${label}: ${override} ${formatWpsNumber(current, field)} % reaches outside the WPS (travel speed is never changed)`);
                     return;
                 }
-                if (allowed < current) {
-                    if (isLocked(override)) { issues.push(`${label}: ${override} is locked`); return; }
-                    const node = [...overrides.children].find(child => child.tagName === override);
-                    // auf 0.1 % abgerundet (lesbar, sicher innerhalb)
-                    wpsWriteValue(file, overrides, "overrides", "", override, wpsFormatLike(node.textContent, Math.floor(Math.max(0, allowed) * 10) / 10, "down"), changes);
+                const next = Math.floor(Math.max(0, allowed) * 10 + 1e-9) / 10;   // abgerundet auf 0.1 %: sicher innerhalb
+                if (maximize || next < current) targets[override] = next;
+            });
+            // Ohne WPS-Bereich (Dwell, Excursion): bis zum Zielwert, begrenzt nur durch den Heat Input.
+            ["dwell_max", "excursion_max"].forEach(name => { if (nodeOf(overrides, name)) targets[name] = WPS_OVERRIDE_TARGET; });
+            Object.keys(targets).forEach(name => {
+                const current = wpsReadValue(overrides, name);
+                if (isLocked(name) && targets[name] !== current) {
+                    issues.push(`${label}: ${name} is locked`);
+                    targets[name] = current;
                 }
             });
-            // Heat Input: alle Heat-Input-Overrides gemeinsam verkleinern, bis min/max im WPS-Bereich liegen.
-            const heatRange = wpsCombinedRange(rows, "heat");
-            if (!heatRange) return;
-            const heatOutside = (testOverrides, nominalOnly) => wpsSegmentsOf(file).some(segment => {
-                const result = calculateSegmentHeatInput(segment, testOverrides);
-                if (result.disabled || result.error) return false;
-                const low = nominalOnly ? result.heatInput : result.minHeatInput;
-                const high = nominalOnly ? result.heatInput : result.maxHeatInput;
-                return wpsBelow(low, heatRange) || wpsAbove(high, heatRange);
-            });
-            if (heatOutside(overrides, true)) {
-                issues.push(`${label}: nominal heat input is outside the WPS (use Fit values)`);
-                return;
-            }
-            if (!heatOutside(overrides, false)) return;
-            const locked = WPS_HEAT_OVERRIDES.filter(name => isLocked(name));
-            if (locked.length) { issues.push(`${label}: heat input overrides locked (${locked.join(", ")})`); return; }
-            const original = Object.fromEntries(WPS_HEAT_OVERRIDES.map(name => [name, wpsReadValue(overrides, name) ?? 0]));
-            const scaled = scale => {
+
+            // Heat Input: min/max (alle Overrides gleichzeitig) muss in der WPS liegen; sonst die Heat-Overrides gemeinsam
+            // so wenig wie noetig skalieren (groesster gemeinsamer Bereich).
+            const scalable = WPS_HEAT_OVERRIDES.filter(name => name in targets && !isLocked(name));
+            const build = scale => {
                 const copy = overrides.cloneNode(true);
-                WPS_HEAT_OVERRIDES.forEach(name => {
-                    const node = [...copy.children].find(child => child.tagName === name);
-                    if (node) node.textContent = String(original[name] * scale);
+                Object.entries(targets).forEach(([name, value]) => {
+                    const node = nodeOf(copy, name);
+                    if (node) node.textContent = String(scalable.includes(name) ? Math.floor(value * scale * 10 + 1e-9) / 10 : value);
                 });
                 return copy;
             };
-            let low = 0;
-            let high = 1;
-            for (let step = 0; step < 30; step++) {
-                const middle = (low + high) / 2;
-                if (heatOutside(scaled(middle), false)) high = middle; else low = middle;
+            let scale = 1;
+            const heatRange = wpsCombinedRange(rows, "heat");
+            if (heatRange) {
+                const heatOutside = (testOverrides, nominalOnly) => wpsSegmentsOf(file).some(segment => {
+                    const result = calculateSegmentHeatInput(segment, testOverrides);
+                    if (result.disabled || result.error) return false;
+                    return wpsBelow(nominalOnly ? result.heatInput : result.minHeatInput, heatRange)
+                        || wpsAbove(nominalOnly ? result.heatInput : result.maxHeatInput, heatRange);
+                });
+                if (heatOutside(overrides, true)) {
+                    issues.push(`${label}: nominal heat input is outside the WPS (use Fit Values)`);
+                } else if (heatOutside(build(1), false)) {
+                    let low = 0;
+                    let high = 1;
+                    for (let step = 0; step < 30; step++) {
+                        const middle = (low + high) / 2;
+                        if (heatOutside(build(middle), false)) high = middle; else low = middle;
+                    }
+                    scale = low;
+                    // Kontrolle: niemals mit Override-Bereich ausserhalb (sonst schrittweise weiter verkleinern)
+                    while (scale > 0 && heatOutside(build(scale), false)) scale = Math.max(0, scale - 0.01);
+                    if (heatOutside(build(scale), false)) issues.push(`${label}: heat input min/max outside the WPS also without heat input overrides (locked overrides or travel_max)`);
+                }
             }
-            WPS_HEAT_OVERRIDES.forEach(name => {
-                const node = [...overrides.children].find(child => child.tagName === name);
-                if (!node || original[name] <= 0) return;
-                wpsWriteValue(file, overrides, "overrides", "", name, wpsFormatLike(node.textContent, Math.floor(original[name] * low * 10) / 10, "down"), changes);
+
+            // Einmal schreiben (Change Log, Undo ueber applyWpsFit)
+            const final = build(scale);
+            Object.keys(targets).forEach(name => {
+                const node = nodeOf(overrides, name);
+                const value = Number(nodeOf(final, name).textContent);
+                if (node) wpsWriteValue(file, overrides, "overrides", "", name, wpsFormatLike(node.textContent, value, "down"), changes);
             });
         }
 
@@ -12513,7 +12533,7 @@
                 fitOverrides.className = "btn-secondary";
                 fitOverrides.id = "wpsFitOverridesBtn";
                 fitOverrides.textContent = "Fit Overrides";
-                fitOverrides.title = "Reduce the override percentages of the selected files so that value ± override (and the heat input min/max) stay inside the WPS. Values and the travel override (travel_max) are not changed.";
+                fitOverrides.title = "Set the heat input overrides (current, voltage, dwell, excursion) of the selected files to the largest range up to 10 % so that no override setting can leave the WPS (each value and the heat input). Values and travel_max are not changed; wire_max is only reduced.";
                 fitOverrides.onclick = () => applyWpsFit("overrides");
                 const fitValues = document.createElement("button");
                 fitValues.type = "button";

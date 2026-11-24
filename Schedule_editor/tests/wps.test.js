@@ -244,7 +244,9 @@ module.exports = [
             let after = await statuses();
             t.check("after overrides: current and voltage ok, wire still outside", after.current === "is-ok" && after.voltage === "is-ok" && after.wire === "is-fail", JSON.stringify(after));
             t.check("not solved: wire value", (await frame.textContent("#wpsFitResult")).includes("pri_wire 170 cm/min is outside the WPS"), await frame.textContent("#wpsFitResult"));
-            t.check("change log entries", await frame.evaluate(() => changeLog.filter(entry => entry.section === "overrides").length) === 3);
+            t.check("dwell/excursion raised to 10 %", await xml("overrides", "dwell_max") === "10.000000" && await xml("overrides", "excursion_max") === "10.000000",
+                `${await xml("overrides", "dwell_max")} ${await xml("overrides", "excursion_max")}`);
+            t.check("change log entries", await frame.evaluate(() => changeLog.filter(entry => entry.section === "overrides").length) === 5);
 
             await frame.click("#wpsFitValuesBtn");
             // 1.5 m/min = 59.0551181 in/min -> abgerundet 59.055118
@@ -322,6 +324,38 @@ module.exports = [
             t.check("current stays inside the WPS", Number(await value("bkg_amp")) >= 120 && Number(await value("pri_amp")) <= 190, await value("bkg_amp"));
             await frame.click("#wpsFitOverridesBtn");
             t.check("travel unchanged by Fit Overrides", JSON.stringify([await value("pri_travel"), await value("bkg_travel"), await value("travel_max")]) === JSON.stringify(travelBefore));
+        }
+    },
+    {
+        // Weite WPS: alle Heat-Input-Overrides auf 10 %, auch wenn sie vorher kleiner waren; Werte und travel_max bleiben.
+        name: "fit overrides enlarges to the largest range (max 10 %)",
+        async run(t) {
+            const { page, frame } = await t.openApp("editor");
+            await frame.evaluate(() => localStorage.setItem("scheduleEditorWpsRanges", JSON.stringify({
+                document: "test.pdf", wpsNumber: "T-4", checkMode: "separate", wireUnit: "cm/min",
+                rows: [{ label: "Hotpass", passType: "Hot pass", files: ["0402"], current: { min: 50, max: 400 }, voltage: { min: 5, max: 20 },
+                    travel: { min: null, max: null }, wire: { min: null, max: null }, heat: { min: null, max: 5 } }]
+            })));
+            await frame.setInputFiles("#fileInput", [t.file(REF)]);
+            await page.waitForTimeout(300);
+            const names = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "dwell_max", "excursion_max", "travel_max", "wire_max"];
+            const read = () => frame.evaluate(list => {
+                const file = loadedFiles[0];
+                const get = (parent, name) => [...parent.children].find(child => child.tagName === name).textContent;
+                return { ...Object.fromEntries(list.map(name => [name, get(file.sections.overrides, name)])),
+                    values: ["pri_amp", "bkg_amp", "pri_ahc", "pri_travel", "pri_wire"].map(name => get(file.sections.segments[0], name)).join("|") };
+            }, names);
+            await frame.evaluate(() => ["pri_amp_max", "bkg_amp_max", "avc_override_max"].forEach(name => {
+                [...loadedFiles[0].sections.overrides.children].find(child => child.tagName === name).textContent = "3.000000";
+            }));
+            const before = await read();
+            await openWps(frame);
+            await frame.click("#wpsFitOverridesBtn");
+            const after = await read();
+            t.check("heat input overrides at 10 %", ["pri_amp_max", "bkg_amp_max", "avc_override_max", "dwell_max", "excursion_max"].every(name => after[name] === "10.000000"), JSON.stringify(after));
+            t.check("values, travel_max and wire_max unchanged", after.values === before.values && after.travel_max === before.travel_max && after.wire_max === before.wire_max, JSON.stringify([before, after]));
+            const cells = await frame.evaluate(checkCells);
+            t.check("no override setting can leave the WPS", Object.values(cells).every(cell => cell.status === "is-ok"), JSON.stringify(cells));
         }
     }
 ];

@@ -61,10 +61,12 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
    - Tabelle: je WPS-Lage eine Zeile mit den Bereichen („WPS range“), darunter je Schedule eine Zeile. Puls (P) und Grund (B) stehen in eigenen Spalten, rechts die Spalte **Status** (OK / Override / Outside).
    - Ein Klick oeffnet das Segment; beim Ueberfahren eines Werts stehen die Details im Tooltip.
 5. **An die WPS anpassen** (fuer die markierten Dateien mit WPS-Zeile; Rueckgaengig mit Strg+Z, jede Aenderung steht im Change Log und darunter in einer Liste):
-   - **Fit Overrides:**
-     - Die Override-Prozente (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `wire_max`) werden nur verkleinert, auf 0,1 % abgerundet, bis Wert ± Override in der WPS liegt.
-     - Reicht der Heat-Input-Bereich (min/max) noch hinaus, werden die Heat-Input-Overrides (Strom, Spannung, `dwell_max`, `excursion_max`) gemeinsam reduziert.
-     - Die Werte selbst bleiben unveraendert. Liegt ein Wert schon ausserhalb, wird er als „Not solved“ gemeldet.
+   - **Fit Overrides** (Ziel: dem Schweisser einen moeglichst grossen Bereich lassen, ohne dass er die WPS verletzen kann):
+     - Die Heat-Input-relevanten Overrides (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `dwell_max`, `excursion_max`) werden auf den **groesstmoeglichen Bereich bis 10 %** gesetzt, also auch vergroessert.
+     - Jeder Wert ± Override muss in der WPS liegen. Nahe der Grenze wird der Override kleiner (z. B. 10,9 V bei max. 11,77 V → 7,9 %). Abgerundet wird auf 0,1 %.
+     - Der Heat Input muss auch im ungunstigsten Fall (alle Overrides gleichzeitig) in der WPS bleiben. Sonst werden diese Overrides gemeinsam so wenig wie noetig reduziert (z. B. Decklage mit 0,47–0,70 kJ/mm → alle 3,9 %).
+     - `wire_max` wird nur verkleinert, wenn noetig; `travel_max` bleibt unveraendert.
+     - **Die Werte selbst werden nie geaendert.** Liegt ein Wert schon ausserhalb, wird er als „Not solved“ gemeldet (dann Fit Values).
    - **Fit Values:**
      - Strom, Spannung und Draht ausserhalb der WPS werden auf die naechste WPS-Grenze gesetzt (nach innen gerundet, mit den Nachkommastellen der Datei).
      - Liegt der Heat Input danach noch ausserhalb, wird der Strom (Puls- und Grundstrom mit demselben Faktor) angepasst, soweit der WPS-Strombereich es erlaubt.
