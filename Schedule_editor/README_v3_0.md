@@ -385,16 +385,18 @@ Darunter steht eine gemeinsame Tabelle: je Datei eine Kopfzeile mit Name und Gre
 - `Change Log`: Zeigt protokollierte Aenderungen. Jedes `Saved` (bzw. `Downloaded`) laesst sich per Klick aufklappen und zeigt die einzelnen Aenderungen dieses Speicherns: `~ changed` mit altem und neuem Wert, `+ added` und `− removed` (z. B. nach einem Upgrade). Gespeicherte Feldaenderungen stehen nur noch dort; oben erscheinen ungespeicherte Aenderungen und die Speicher-Eintraege. `Clear log` loescht alle Eintraege nach Rueckfrage; mit Undo lassen sie sich wiederherstellen.
 - `XML Viewer`: Oeffnet den schreibgeschuetzten XML-Inhalt der aktiven Datei.
 - `Program Overview (PDF)`: Oeffnet eine Druckansicht (A4 quer), die alle geladenen Dateien zusammenfasst. Mit `Print / Save as PDF` wird daraus ueber den Druckdialog eine PDF-Datei („Als PDF speichern“). Die Seiten enthalten:
-  1. eine Dateiliste mit Nummer, Name, Head, Anzahl Segmente, WPS-Lage, Heat-Input-Zielbereich, Schema-Status und Speicherstand. Die Version steht nur dabei, wenn sie sich unterscheidet; sonst steht sie im Kopf, zusammen mit der WPS-Nummer;
-  2. falls eine WPS uebernommen ist: **WPS – ranges and check**
-     - die WPS-Bereiche je Lage (Strom, Spannung, Vorschub, Draht, Heat Input) mit den zugeordneten Schedules;
-     - die Pruefung wie im Editor (Puls/Grund getrennt, Status OK / Override / Outside);
-  3. die Hauptwerte der Segmente, je Datei und Segment eine Spalte.
+1. eine Dateiliste mit Nummer, Name, Head, Anzahl Segmente, WPS-Lage, Heat-Input-Zielbereich, Schema-Status und Speicherstand. Die Version steht nur dabei, wenn sie sich unterscheidet; sonst steht sie im Kopf, zusammen mit der WPS-Nummer;
+  2. die Hauptwerte der Segmente, je Datei und Segment eine Spalte.
      - Gruppiert nach Strom, Spannung, Vorschub, Draht, Pendeln und weiteren Werten (danach weitere mit ★ markierte Segmentwerte). Eine eigene, per Ziehen festgelegte Reihenfolge gilt hier nicht.
      - Zeilen, die in allen Dateien gleich sind, erscheinen grau, damit Unterschiede auffallen;
-  4. die hervorgehobenen (★) Werte aus `Global`, nur wenn welche markiert sind;
-  5. die Overrides in Prozent (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `travel_max`, `dwell_max`, `excursion_max`, `wire_max`), 0 % grau;
-  6. das Heat-Input-Diagramm (inklusive Ziel-Bereich und Grenzen) mit Tabelle (Nominal, Bereich mit Overrides, Zielbereich, Mittelstrom, Vorschub, Status). Dieser Teil beginnt auf einer neuen Seite.
+  3. die hervorgehobenen (★) Werte aus `Global`, nur wenn welche markiert sind;
+  4. die Overrides in Prozent (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `travel_max`, `dwell_max`, `excursion_max`, `wire_max`), 0 % grau;
+  5. das Heat-Input-Diagramm (inklusive Ziel-Bereich und Grenzen) mit Tabelle (Nominal, Bereich mit Overrides, Zielbereich, Mittelstrom, Vorschub, Status).
+  6. zum Schluss, falls eine WPS uebernommen ist: **WPS – ranges and check**
+     - die WPS-Bereiche je Lage (Strom, Spannung, Vorschub, Draht, Heat Input) mit den zugeordneten Schedules;
+     - die Pruefung wie im Editor (Puls/Grund getrennt, Status OK / Override / Outside).
+
+  Seitenumbrueche: Jeder Abschnitt wird nach Moeglichkeit zusammen auf einer Seite gedruckt; Tabellen werden nicht zerschnitten (nur wenn eine Tabelle laenger als eine Seite ist, wird sie geteilt und der Tabellenkopf wiederholt).
 
   Welche Global-Werte und zusaetzlichen Segmentwerte erscheinen, steuert die Markierung mit ★; Einheiten werden wie im Editor eingestellt angezeigt. Bei vielen Dateien werden die Tabellen in Bloecke zu acht (Overrides: zehn) Spalten aufgeteilt.
 - `Schema Check`: Prueft alle geladenen Dateien gegen das aktive XDR-Schema (siehe „Schema-Pruefung (XDR)“).

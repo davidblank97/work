@@ -52,7 +52,14 @@ module.exports = [
             overview.on("pageerror", error => t.errors.push(`overview: ${error.message}`));
             await overview.waitForLoadState();
             const headings = await overview.$$eval("h2", items => items.map(item => item.textContent));
-            t.check("WPS section after files", headings[1] === "WPS – ranges and check", headings.join(" | "));
+            t.check("WPS section at the end", headings[headings.length - 1] === "WPS – ranges and check" && headings[headings.length - 2] === "Heat input", headings.join(" | "));
+            // Seitenumbrueche: Abschnitte und Tabellen werden nicht zerschnitten, Tabellenkoepfe wiederholen sich
+            const breaks = await overview.evaluate(() => ({
+                sections: [...document.querySelectorAll("section.block")].every(section => getComputedStyle(section).breakInside === "avoid"),
+                tables: [...document.querySelectorAll("table")].every(table => getComputedStyle(table).breakInside === "avoid"),
+                headings: [...document.querySelectorAll("h2")].every(heading => heading.closest("section.block"))
+            }));
+            t.check("page breaks: blocks and tables kept together", breaks.sections && breaks.tables && breaks.headings, JSON.stringify(breaks));
             t.check("WPS number in the header", (await overview.textContent(".meta")).includes("WPS HIC-T-1"));
             t.check("WPS source", (await overview.textContent("h2:text-is('WPS – ranges and check') + div")).includes("wps.pdf, page 24"));
             const range = await overview.locator("table.wps:not(.check) tbody tr").first().innerText();

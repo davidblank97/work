@@ -110,11 +110,16 @@
             });
             check += "</tbody></table>";
             const source = [store.wpsNumber ? `WPS ${store.wpsNumber}` : "", store.document ? `${store.document}${store.page ? `, page ${store.page}` : ""}` : ""].filter(Boolean).join(" · ");
-            return `<h2>WPS – ranges and check</h2>
+            // Zwei Bloecke: Ueberschrift + Bereiche bleiben zusammen, die Pruefung als eigener Block (nicht zerschnitten).
+            return `<section class="block">
+    <h2>WPS – ranges and check</h2>
     <div class="muted">${escapeHtml(source)}${mean ? " · current, voltage, travel and wire checked as time-weighted mean" : ""}</div>
     ${ranges}
+    </section>
+    <section class="block">
     ${results.length ? check : '<p class="muted">No loaded schedule is assigned to a WPS pass.</p>'}
-    <p class="legend">P = pulse, B = background. Outside: value outside the WPS. Override: value inside, but value ± override reaches outside.${unassigned.length ? ` Not assigned to a WPS pass: ${escapeHtml(unassigned.join(", "))}.` : ""}</p>`;
+    <p class="legend">P = pulse, B = background. Outside: value outside the WPS. Override: value inside, but value ± override reaches outside.${unassigned.length ? ` Not assigned to a WPS pass: ${escapeHtml(unassigned.join(", "))}.` : ""}</p>
+    </section>`;
         }
 
         function buildOverviewHeatChart(entriesByFile) {
@@ -239,7 +244,10 @@
     h2 { margin: 20px 0 6px; font-size: 14px; color: #9a4a12; border-bottom: 1px solid #e0d6cc; padding-bottom: 3px; break-after: avoid; }
     .meta { text-align: right; color: #6b5f55; }
     .muted, small { color: #6b5f55; }
-    table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; background: #fff; break-inside: auto; }
+    table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; background: #fff; break-inside: avoid; page-break-inside: avoid; }
+    thead { display: table-header-group; }
+    section.block { break-inside: avoid; page-break-inside: avoid; }
+    tr.group { break-after: avoid; page-break-after: avoid; }
     th, td { padding: 3px 7px; border-bottom: 1px solid #ece3da; text-align: left; vertical-align: top; }
     th { background: #f6ebe1; font-weight: 700; border-bottom: 1px solid #d8c8b9; vertical-align: bottom; }
     tr { break-inside: avoid; }
@@ -275,31 +283,41 @@
     <div class="toolbar"><button class="primary" onclick="window.print()">Print / Save as PDF</button><button onclick="window.close()">Close</button></div>
     <header>
         <div><h1>Program overview <span>· ${files.length} file(s)</span></h1>
-            <div class="muted">Files${wpsStore ? ", WPS" : ""}, segments, ${globalKeys.length ? "global (★), " : ""}overrides, heat input</div></div>
+            <div class="muted">Files, segments, ${globalKeys.length ? "global (★), " : ""}overrides, heat input${wpsStore ? ", WPS" : ""}</div></div>
         <div class="meta">${metaLines.map(escapeHtml).join("<br>")}</div>
     </header>
 
+    <section class="block">
     <h2>Files</h2>
     <table><thead>${fileHead}</thead>
     <tbody>${fileList}</tbody></table>
+    </section>
 
-    ${buildOverviewWps(files)}
-
+    <section class="block">
     <h2>Segments – main values</h2>
     ${overviewMatrix(overviewSegmentRows(segmentKeys), segmentColumnsList, (column, key) => directChildValue(column.segment, key))}
     <p class="legend">Grey rows: same value in all files.</p>
+    </section>
 ${globalKeys.length ? `
+    <section class="block">
     <h2>Global – highlighted values</h2>
-    ${overviewMatrix(globalKeys, fileColumns, (column, key) => directChildValue(column.file.sections.global, key))}` : ""}
+    ${overviewMatrix(globalKeys, fileColumns, (column, key) => directChildValue(column.file.sections.global, key))}
+    </section>` : ""}
 
+    <section class="block">
     <h2>Overrides</h2>
     ${overviewMatrix(overrideKeys, fileColumns, (column, key) => directChildValue(column.file.sections.overrides, key), 10, percent)}
     <p class="legend">Range the welder may change the value by (±). Used for the heat input range; wire_max for the WPS check of the wire feed.</p>
+    </section>
 
-    <h2 class="page-break">Heat input</h2>
+    <section class="block">
+    <h2>Heat input</h2>
     <div class="muted">Bar: min–max with the overrides, dot: nominal. ${escapeHtml(targetText)}.</div>
     <div class="chart">${buildOverviewHeatChart(entriesByFile)}</div>
     ${buildOverviewHeatTable(entriesByFile)}
+    </section>
+
+    ${buildOverviewWps(files)}
 </body></html>`;
         }
 
