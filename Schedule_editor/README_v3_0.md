@@ -41,6 +41,9 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
    - Die Tabelle mit Lage/Raupe, Strom, Spannung, Schweissgeschwindigkeit, Drahtvorschub und Waermeeinbringung wird erkannt (deutsche und englische Bezeichnungen).
    - Bereiche wie `120 – 150`, `0,5 – 0,9`, `max. 1,2` oder `9 ± 2` werden gelesen.
    - Die Einheiten werden umgerechnet (A, V, mm/min, m/min, kJ/mm).
+   - Zwei Tabellenformen werden erkannt: eine Zeile je Lage, oder Formulare mit den **Lagen als Spalten** und je einer `min.`/`max.`-Zeile pro Parameter (Bilfinger-Vordruck, z. B. Seite 24 im WDP-3).
+   - Bei Formularen werden nur **mechanisierte Prozesse (m-141)** uebernommen; Spalten mit Handschweissen (141, z. B. Wurzel-/Stuetzlage) werden mit Hinweis uebersprungen.
+   - Enthaelt die PDF mehrere WPS (z. B. HIC-O01-1P auf Seite 24 und HIC-O01-2P auf Seite 27), kann die WPS ausgewaehlt werden; die WPS-Nummer wird aus dem Kopf gelesen.
 2. **Pruefen und korrigieren:**
    - Die erkannten Werte stehen in einer Tabelle zum Bearbeiten. Der gelesene Text ist zum Vergleich aufklappbar.
    - Je Lage werden die Schedules ueber die 4-stellige Nummer zugeordnet. Die Vorbelegung kommt aus den geladenen Dateien nach Lagentyp: Root, Hot pass, Fill (Comp ohne eigene Zeile), Cap.

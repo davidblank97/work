@@ -147,5 +147,50 @@ module.exports = [
             await frame.click("text=Enter ranges manually");
             t.check("manual template rows", await frame.locator(".wps-range-table tbody tr").count() === 4);
         }
+    },
+    {
+        // Echte WPS (Bilfinger-Vordruck, Lagen als Spalten): Seite 24 = HIC-O01-1P, Seite 27 = HIC-O01-2P.
+        name: "real WPS document (transposed form, m-141 only)",
+        async run(t) {
+            const pdf = "Schedule_editor/data/samples/ACCEPTED_NSSS_WDP-3_Rev_006.PDF";
+            if (!fs.existsSync(t.file(pdf))) {
+                t.check("sample WPS not present – skipped", true);
+                return;
+            }
+            const { page, frame } = await t.openApp("editor", {
+                beforeLoad: page => page.route(url => !url.href.startsWith(t.baseUrl), route => route.abort())
+            });
+            const sample = name => t.file(`Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/${name}`);
+            await frame.setInputFiles("#fileInput", [sample("0402-Hotpass1.xml"), sample("0404-Fill-OUT.xml"), sample("0407-Comp.xml"), sample("0408-Cap.xml")]);
+            await page.waitForTimeout(400);
+            await frame.click("#wpsBtn");
+            await frame.setInputFiles("#wpsFileInput", [t.file(pdf)]);
+            await frame.waitForSelector(".wps-range-table tbody tr", { timeout: 30000 });
+            const status = await frame.textContent("#wpsStatus");
+            t.check("status: two forms, page 24 first", status.includes("2 WPS forms in the document (pages 24, 27); showing page 24") && status.includes("WPS HIC-O01-1P Rev.005"), status);
+            t.check("form choice", (await frame.$$eval("#wpsFormSelect option", options => options.map(option => option.textContent))).join("|")
+                === "Page 24 – HIC-O01-1P Rev.005 (2 pass row(s))|Page 27 – HIC-O01-2P Rev.005 (2 pass row(s))");
+            const fill = await rowValues(frame, "Füllage (m-141)");
+            // Strom, Spannung, Vorschub (cm/min -> mm/min), Draht (cm/min -> m/min), Heat Input
+            t.check("filling layer", fill && fill.type === "Fill" && fill.files === "0404, 0407"
+                && fill.numbers.join("|") === "108|300|8.6|11.77|50|100|0.8|3|0.46|1.52", JSON.stringify(fill));
+            const cap = await rowValues(frame, "Decklage (m-141)");
+            t.check("cap layer", cap && cap.type === "Cap" && cap.files === "0408"
+                && cap.numbers.join("|") === "108|200|8.7|11.6|50|100|0.8|3|0.47|0.7", JSON.stringify(cap));
+            t.check("manual root/hot pass (141) skipped", (await frame.textContent(".wps-panel:nth-of-type(2)")).includes("Wurzel-/Stützlage (141) skipped"));
+            t.check("raw text of page 24 only", (await frame.textContent(".wps-raw summary")).includes("page 24") && !(await frame.textContent(".wps-raw pre")).includes("HIC-O01- 2P"));
+            await frame.selectOption("#wpsFormSelect", "1");
+            t.check("switch to page 27", await frame.inputValue("#wpsNumberInput") === "HIC-O01-2P Rev.005");
+            await frame.selectOption("#wpsFormSelect", "0");
+            await frame.click("#wpsApplyBtn");
+            const store = await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorWpsRanges")));
+            t.check("applied with page", store.page === 24 && store.wpsNumber === "HIC-O01-1P Rev.005" && store.rows.length === 2, JSON.stringify(store).slice(0, 200));
+            const summary = await frame.textContent("#wpsSummary");
+            t.check("check: 3 files, hot pass without WPS row", /^3 file\(s\) checked/.test(summary) && summary.includes("no WPS row: 0402"), summary);
+            // 0408: pri_travel 3.937008 in/min = 100 mm/min = WPS-Maximum (10 cm/min) -> innerhalb, nicht durch Rundung ausserhalb
+            const capTravel = await frame.evaluate(() => [...document.querySelectorAll(".wps-check-table tbody tr")]
+                .find(row => row.previousElementSibling?.textContent.includes("0408-Cap.xml"))?.querySelector("[data-field=travel]")?.className);
+            t.check("travel at the WPS maximum is inside", capTravel && !capTravel.includes("is-fail"), capTravel);
+        }
     }
 ];

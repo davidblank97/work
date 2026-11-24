@@ -3688,7 +3688,7 @@
         }
 
         .wps-range-table .wps-label-input {
-            width: 92px;
+            width: 128px;
         }
 
         .wps-range-table .wps-files-input {
@@ -11480,8 +11480,12 @@
         }
 
         function detectWpsUnit(field, text) {
-            const value = String(text).toLowerCase().replace(/\s+/g, "");
-            return Object.keys(WPS_FIELDS[field].units).find(unit => value.includes(unit)) || null;
+            const value = String(text).toLowerCase().replace(/\s*\/\s*/g, "/");
+            // Einheit nicht als Teil einer anderen lesen ("m/min" in "cm/min"): kein Buchstabe davor.
+            return Object.keys(WPS_FIELDS[field].units).find(unit => {
+                const index = value.indexOf(unit);
+                return index >= 0 && !/[a-z]/.test(value[index - 1] || "");
+            }) || null;
         }
 
         function wpsPassType(text) {
@@ -11495,7 +11499,106 @@
         }
 
         // Zerlegt die Textzeilen in Kopffelder und die Parametertabelle (eine Zeile je Lage).
+        // WPS-Formulare "quer" (z. B. Bilfinger/Liburdi-Vordruck): Lagen als Spalten (Wurzel-/Stuetzlage,
+        // Fuellage, Decklage), Parameter als Zeilen mit je einer "min."- und "max."-Zeile. Ein Formular je Seite;
+        // ein Dokument kann mehrere WPS enthalten. Uebernommen werden nur mechanisierte Prozesse (m-141 …),
+        // wenn das Formular solche enthaelt.
+        const WPS_FORM_LABELS = {
+            current: /^(schwei(ß|ss)strom|weld(ing)? current)/i,
+            voltage: /^(schwei(ß|ss)spannung|(arc )?voltage)/i,
+            travel: /^(schwei(ß|ss)s?geschw|welding speed|travel speed)/i,
+            wire: /^(drahtgeschw|drahtvorschub|wire (feed )?speed)/i,
+            heat: /^(w(ä|ae)rmeeinbringung|streckenenergie|heat input)/i
+        };
+        function parseWpsForms(lines) {
+            const pages = [...new Set(lines.map(line => line.page))];
+            const forms = [];
+            pages.forEach(pageNumber => {
+                const items = lines.filter(line => line.page === pageNumber).flatMap(line => line.items);
+                // Kopfzeile der Lagen: mindestens zwei Lagenbezeichnungen in einer Zeile, rechts der Beschriftungen.
+                const passWord = /wurzel|st(ü|ue)tz|f(ü|ue)ll|deck|root|hot.?pass|fill|cap/i;
+                const passItems = items.filter(item => item.x > 200 && passWord.test(item.str));
+                const headerY = [...new Set(passItems.map(item => Math.round(item.y)))]
+                    .sort((a, b) => b - a)
+                    .find(y => passItems.filter(item => Math.abs(item.y - y) <= 2).length >= 2);
+                if (headerY === undefined) return;
+                const columns = passItems.filter(item => Math.abs(item.y - headerY) <= 2).sort((a, b) => a.x - b.x)
+                    .map((item, index, list) => ({ label: item.str.trim(), left: item.x - 4, right: index + 1 < list.length ? list[index + 1].x - 4 : Infinity }));
+                const inColumn = (item, column) => item.x >= column.left && item.x < column.right;
+                const near = (a, b, tolerance) => Math.abs(a - b) <= tolerance;
+                // Prozess je Spalte (z. B. "141", "m-141") aus der naechsten Zeile mit Prozessnummern unter dem Kopf.
+                const processItems = items.filter(item => /^m?-?\d{2,3}$/i.test(item.str.trim()) && item.y < headerY && item.y > headerY - 40 && item.x > 200);
+                columns.forEach(column => {
+                    column.process = processItems.filter(item => inColumn(item, column)).sort((a, b) => b.y - a.y || a.x - b.x)[0]?.str.trim() || "";
+                });
+                // Parameterzeilen: Beschriftung links, Zeilen "min." und "max." daneben, Werte in den Lagenspalten.
+                const values = {};
+                const units = {};
+                Object.entries(WPS_FORM_LABELS).forEach(([field, pattern]) => {
+                    const label = items.find(item => item.x < 170 && item.y < headerY && pattern.test(item.str.trim()));
+                    if (!label) return;
+                    const unitText = items.filter(item => item.x < 200 && near(item.y, label.y, 3)).map(item => item.str).join(" ");
+                    units[field] = detectWpsUnit(field, unitText) || null;
+                    const minMarker = items.find(item => /^min\.?$/i.test(item.str.trim()) && item.x > 140 && near(item.y, label.y, 3));
+                    const maxMarker = minMarker && items.find(item => /^max\.?$/i.test(item.str.trim()) && item.x > 140 && item.y < minMarker.y - 3 && item.y > minMarker.y - 15);
+                    const rowValue = (y, column) => items
+                        .filter(item => near(item.y, y, 2) && inColumn(item, column) && wpsNumberValue(item.str.trim()) !== null)
+                        .sort((a, b) => a.x - b.x)[0];
+                    values[field] = columns.map(column => {
+                        if (minMarker) {
+                            const min = rowValue(minMarker.y, column);
+                            const max = maxMarker ? rowValue(maxMarker.y, column) : null;
+                            return { min: min ? wpsNumberValue(min.str.trim()) : null, max: max ? wpsNumberValue(max.str.trim()) : null };
+                        }
+                        const single = items.filter(item => near(item.y, label.y, 2) && inColumn(item, column)).map(item => item.str).join(" ");
+                        return parseWpsRange(single) || { min: null, max: null };
+                    });
+                });
+                const fields = Object.keys(values);
+                if (fields.length < 2) return;
+                // WPS-Nummer: Wert rechts neben "Sp.-Nr.:" bzw. "WPS-no.:" (ggf. mit "Rev.…").
+                const numberLabel = items.find(item => /^(sp\.?-?nr\.?|wps[ -]?(no|nr)\.?):?$/i.test(item.str.trim()));
+                let wpsNumber = "";
+                if (numberLabel) {
+                    const right = items.filter(item => item.x > numberLabel.x + numberLabel.w && near(item.y, numberLabel.y, 8) && !/^(sp\.?-?nr|wps)/i.test(item.str.trim()))
+                        .sort((a, b) => a.x - b.x);
+                    wpsNumber = right.map(item => item.str.trim()).join(" ").replace(/-\s+/g, "-").trim();
+                }
+                const mechanized = columns.some(column => /^m-/i.test(column.process));
+                const notes = [];
+                const rows = [];
+                columns.forEach((column, index) => {
+                    if (mechanized && !/^m-/i.test(column.process)) {
+                        notes.push(`${column.label} (${column.process || "no process"}) skipped: only mechanized processes (m-…) are imported.`);
+                        return;
+                    }
+                    const row = normalizeWpsRow({ label: `${column.label}${column.process ? ` (${column.process})` : ""}`, passType: wpsPassType(column.label) });
+                    fields.forEach(field => {
+                        const range = values[field][index];
+                        const factor = units[field] && WPS_FIELDS[field].units[units[field]] ? WPS_FIELDS[field].units[units[field]] : 1;
+                        const convert = value => (value === null ? null : Number((value * factor).toPrecision(6)));
+                        row[field] = { min: convert(range.min), max: convert(range.max) };
+                    });
+                    if (WPS_FIELD_KEYS.some(field => row[field].min !== null || row[field].max !== null)) rows.push(row);
+                });
+                Object.entries(units).forEach(([field, unit]) => {
+                    if (unit && WPS_FIELDS[field].units[unit] !== 1) notes.push(`${WPS_FIELDS[field].label}: converted from ${unit} to ${WPS_FIELDS[field].unit}.`);
+                });
+                if (rows.length) forms.push({ page: pageNumber, wpsNumber, rows, notes });
+            });
+            return forms;
+        }
+
         function parseWpsDocument(lines) {
+            const forms = parseWpsForms(lines);
+            if (forms.length) {
+                return { wpsNumber: forms[0].wpsNumber, rows: forms[0].rows, notes: forms[0].notes, forms, formIndex: 0 };
+            }
+            return parseWpsRowTable(lines);
+        }
+
+        // Tabelle mit einer Zeile je Lage (Kopfzeile mit Strom, Spannung, … als Spalten).
+        function parseWpsRowTable(lines) {
             const allText = lines.map(line => line.text).join("\n");
             // WPS-Nummer: "WPS-Nr.: 0408-01", "WPS No. 12/3", "WPS: A-17" (nur innerhalb einer Zeile)
             const numberMatch = allText.match(/\b(?:p?WPS|SAA)[ \t-]*(?:Nr\.?|No\.?|Number|Nummer)[ \t]*[:.]?[ \t]*([A-Z0-9][\w./-]{0,30})/i)
@@ -11634,6 +11737,7 @@
             const store = {
                 document: working.document || "",
                 wpsNumber: working.wpsNumber || "",
+                page: working.page ?? null,
                 importedAt: new Date().toISOString(),
                 checkMode: previous?.checkMode || "separate",
                 rows: working.rows.map(normalizeWpsRow)
@@ -11664,7 +11768,9 @@
         // Bewertung eines Werts: nominal ausserhalb -> fail; Override-Bereich ragt hinaus -> warn.
         function wpsRate(nominal, percent, range) {
             if (!range || (range.min === null && range.max === null) || nominal === null) return { status: "na" };
-            const outside = value => (range.min !== null && value < range.min - 1e-9) || (range.max !== null && value > range.max + 1e-9);
+            // Kleine relative Toleranz: Umrechnungsreste (3.937008 in/min = 100.0000003 mm/min) zaehlen nicht als ausserhalb.
+            const eps = bound => Math.max(1e-6, Math.abs(bound) * 1e-6);
+            const outside = value => (range.min !== null && value < range.min - eps(range.min)) || (range.max !== null && value > range.max + eps(range.max));
             if (outside(nominal)) return { status: "fail" };
             if (percent > 0) {
                 const low = nominal * (1 - percent / 100);
@@ -11752,7 +11858,7 @@
             heading.textContent = "WPS Import / Check";
             content.appendChild(heading);
             const store = readWpsStore();
-            const working = wpsDraft || (store ? { document: store.document, wpsNumber: store.wpsNumber, rows: store.rows.map(normalizeWpsRow), notes: [], lines: null } : null);
+            const working = wpsDraft || (store ? { document: store.document, wpsNumber: store.wpsNumber, page: store.page ?? null, rows: store.rows.map(normalizeWpsRow), notes: [], lines: null } : null);
 
             /* Import */
             const importPanel = document.createElement("div");
@@ -11784,9 +11890,14 @@
                     const lines = await readWpsPdf(file);
                     if (!lines.length) throw new Error("The PDF contains no text (scanned document?). Enter the values manually.");
                     const parsed = parseWpsDocument(lines);
-                    wpsDraft = { document: file.name, wpsNumber: parsed.wpsNumber, rows: assignWpsFiles(parsed.rows), notes: parsed.notes, lines };
+                    wpsDraft = {
+                        document: file.name, wpsNumber: parsed.wpsNumber, page: parsed.forms?.[0]?.page ?? null,
+                        rows: assignWpsFiles(parsed.rows.map(normalizeWpsRow)), notes: parsed.notes, lines,
+                        forms: parsed.forms || null, formIndex: 0
+                    };
                     renderWps();
-                    document.getElementById("wpsStatus").textContent = `${file.name}: ${parsed.rows.length} pass row(s) found${parsed.wpsNumber ? `, WPS ${parsed.wpsNumber}` : ""}. Check the values and click "Apply".`;
+                    const formInfo = parsed.forms?.length > 1 ? ` ${parsed.forms.length} WPS forms in the document (pages ${parsed.forms.map(form => form.page).join(", ")}); showing page ${parsed.forms[0].page}.` : "";
+                    document.getElementById("wpsStatus").textContent = `${file.name}: ${parsed.rows.length} pass row(s) found${parsed.wpsNumber ? `, WPS ${parsed.wpsNumber}` : ""}.${formInfo} Check the values and click "Apply".`;
                 } catch (error) {
                     // Nicht lesbar (z. B. gescannt): Tabelle zum Ausfuellen von Hand anbieten.
                     wpsDraft = { document: file.name, wpsNumber: "", rows: assignWpsFiles(["Root", "Hot pass", "Fill", "Cap"].map(type => normalizeWpsRow({ label: type, passType: type }))), notes: [], lines: null };
@@ -11829,7 +11940,7 @@
             rangePanel.className = "panel wps-panel";
             const title = document.createElement("h3");
             title.className = "wps-title";
-            title.textContent = wpsDraft ? "Ranges read from the WPS (not applied yet)" : `WPS ranges in use${store.document ? ` – ${store.document}` : ""}`;
+            title.textContent = wpsDraft ? "Ranges read from the WPS (not applied yet)" : `WPS ranges in use${store.document ? ` – ${store.document}${store.page ? `, page ${store.page}` : ""}` : ""}`;
             rangePanel.appendChild(title);
             const meta = document.createElement("label");
             meta.className = "wps-meta";
@@ -11840,6 +11951,26 @@
             numberInput.oninput = () => { working.wpsNumber = numberInput.value.trim(); markDirty(); };
             meta.append(document.createTextNode("WPS no. "), numberInput);
             rangePanel.appendChild(meta);
+            // Mehrere WPS-Formulare im Dokument: Auswahl
+            if (working.forms?.length > 1) {
+                const formLabel = document.createElement("label");
+                formLabel.className = "wps-meta wps-form-choice";
+                const formSelect = document.createElement("select");
+                formSelect.id = "wpsFormSelect";
+                working.forms.forEach((form, index) => formSelect.add(new Option(
+                    `Page ${form.page}${form.wpsNumber ? ` – ${form.wpsNumber}` : ""} (${form.rows.length} pass row(s))`, String(index), false, index === working.formIndex)));
+                formSelect.onchange = () => {
+                    const form = working.forms[Number(formSelect.value)];
+                    Object.assign(working, {
+                        formIndex: Number(formSelect.value), page: form.page, wpsNumber: form.wpsNumber,
+                        rows: assignWpsFiles(form.rows.map(normalizeWpsRow)), notes: form.notes
+                    });
+                    wpsDraft = working;
+                    renderWps();
+                };
+                formLabel.append(document.createTextNode("WPS in the document: "), formSelect);
+                rangePanel.appendChild(formLabel);
+            }
             (working.notes || []).forEach(note => {
                 const line = document.createElement("p");
                 line.className = "wps-note";
@@ -11941,9 +12072,9 @@
                 const details = document.createElement("details");
                 details.className = "wps-raw";
                 const summary = document.createElement("summary");
-                summary.textContent = "Text read from the PDF (for comparison)";
+                summary.textContent = `Text read from the PDF${working.page ? ` (page ${working.page})` : ""} for comparison`;
                 const pre = document.createElement("pre");
-                pre.textContent = working.lines.map(line => line.text).join("\n");
+                pre.textContent = working.lines.filter(line => !working.page || line.page === working.page).map(line => line.text).join("\n");
                 details.append(summary, pre);
                 rangePanel.appendChild(details);
             }
