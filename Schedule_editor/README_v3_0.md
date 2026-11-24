@@ -65,7 +65,7 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
      - Die Heat-Input-relevanten Overrides (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `dwell_max`, `excursion_max`) werden auf den **groesstmoeglichen Bereich bis 10 %** gesetzt, also auch vergroessert.
      - Jeder Wert ± Override muss in der WPS liegen. Nahe der Grenze wird der Override kleiner (z. B. 10,9 V bei max. 11,77 V → 7,9 %). Abgerundet wird auf 0,1 %.
      - Der Heat Input muss auch im ungunstigsten Fall (alle Overrides gleichzeitig) in der WPS bleiben. Sonst werden diese Overrides gemeinsam so wenig wie noetig reduziert (z. B. Decklage mit 0,47–0,70 kJ/mm → alle 3,9 %).
-     - `wire_max` wird nur verkleinert, wenn noetig; `travel_max` bleibt unveraendert.
+     - `wire_max` nach derselben Logik: groesstmoeglich bis 10 %, sodass Draht ± Override in der WPS bleibt (kein Einfluss auf den Heat Input). `travel_max` bleibt unveraendert.
      - **Die Werte selbst werden nie geaendert.** Liegt ein Wert schon ausserhalb, wird er als „Not solved“ gemeldet (dann Fit Values).
    - **Fit Values:**
      - Strom, Spannung und Draht ausserhalb der WPS werden auf die naechste WPS-Grenze gesetzt (nach innen gerundet, mit den Nachkommastellen der Datei).

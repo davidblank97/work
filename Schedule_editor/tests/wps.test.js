@@ -334,7 +334,7 @@ module.exports = [
             await frame.evaluate(() => localStorage.setItem("scheduleEditorWpsRanges", JSON.stringify({
                 document: "test.pdf", wpsNumber: "T-4", checkMode: "separate", wireUnit: "cm/min",
                 rows: [{ label: "Hotpass", passType: "Hot pass", files: ["0402"], current: { min: 50, max: 400 }, voltage: { min: 5, max: 20 },
-                    travel: { min: null, max: null }, wire: { min: null, max: null }, heat: { min: null, max: 5 } }]
+                    travel: { min: null, max: null }, wire: { min: 50, max: 500 }, heat: { min: null, max: 5 } }]
             })));
             await frame.setInputFiles("#fileInput", [t.file(REF)]);
             await page.waitForTimeout(300);
@@ -345,7 +345,7 @@ module.exports = [
                 return { ...Object.fromEntries(list.map(name => [name, get(file.sections.overrides, name)])),
                     values: ["pri_amp", "bkg_amp", "pri_ahc", "pri_travel", "pri_wire"].map(name => get(file.sections.segments[0], name)).join("|") };
             }, names);
-            await frame.evaluate(() => ["pri_amp_max", "bkg_amp_max", "avc_override_max"].forEach(name => {
+            await frame.evaluate(() => ["pri_amp_max", "bkg_amp_max", "avc_override_max", "wire_max"].forEach(name => {
                 [...loadedFiles[0].sections.overrides.children].find(child => child.tagName === name).textContent = "3.000000";
             }));
             const before = await read();
@@ -353,7 +353,8 @@ module.exports = [
             await frame.click("#wpsFitOverridesBtn");
             const after = await read();
             t.check("heat input overrides at 10 %", ["pri_amp_max", "bkg_amp_max", "avc_override_max", "dwell_max", "excursion_max"].every(name => after[name] === "10.000000"), JSON.stringify(after));
-            t.check("values, travel_max and wire_max unchanged", after.values === before.values && after.travel_max === before.travel_max && after.wire_max === before.wire_max, JSON.stringify([before, after]));
+            t.check("wire_max enlarged to 10 %", before.wire_max === "3.000000" && after.wire_max === "10.000000", JSON.stringify([before.wire_max, after.wire_max]));
+            t.check("values and travel_max unchanged", after.values === before.values && after.travel_max === before.travel_max, JSON.stringify([before, after]));
             const cells = await frame.evaluate(checkCells);
             t.check("no override setting can leave the WPS", Object.values(cells).every(cell => cell.status === "is-ok"), JSON.stringify(cells));
         }

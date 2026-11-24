@@ -37,7 +37,7 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
   - Fit (`applyWpsFit`, under `recordHistoryAction`, change log through `wpsWriteValue`; applies to the selected files with a WPS row):
     - `fitWpsOverrides` sets `WPS_HEAT_OVERRIDES` (amps, avc, dwell, excursion) to the largest value up to `WPS_OVERRIDE_TARGET` (10 %) at which every value ± override stays in the WPS (floored to 0.1 %).
       - If the heat min/max (all overrides together) is outside, it scales them together by binary search and checks the result again.
-      - Values are never changed. `wire_max` is only lowered; `travel_max` is never changed.
+      - Values are never changed. `wire_max` uses the same logic, up to 10 % within the WPS wire range; it is not part of the heat scaling. `travel_max` is never changed.
       - It writes once, after the scaling.
     - `fitWpsValues` clamps the values to the WPS bound, rounded inwards. If the heat input is still outside, it scales pri/bkg amps, within the current range.
     - **Travel speed is never changed:** the `fixed` entry in `WPS_OVERRIDE_MAP` covers pri/bkg_travel and travel_max, and `travel_max` is not part of `WPS_HEAT_OVERRIDES`. Travel speed is only checked and reported.

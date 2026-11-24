@@ -549,7 +549,8 @@
 
         // Overrides so gross wie moeglich (hoechstens WPS_OVERRIDE_TARGET %), ohne dass der Schweisser mit irgendeiner
         // Override-Stellung die WPS verletzen kann: je Wert (Nominal ± Override) und beim Heat Input (alle Overrides
-        // gleichzeitig im unguenstigsten Fall). Werte werden nie geaendert; travel_max bleibt; wire_max nur kleiner.
+        // gleichzeitig im unguenstigsten Fall). Werte werden nie geaendert; travel_max bleibt. wire_max ebenso bis 10 %
+        // (nur gegen den WPS-Drahtbereich, kein Einfluss auf den Heat Input).
         const WPS_OVERRIDE_TARGET = 10;
         function fitWpsOverrides(file, rows, changes, issues) {
             const overrides = file.sections.overrides;
@@ -560,7 +561,7 @@
             WPS_OVERRIDE_MAP.forEach(({ field, override, keys, factor, fixed }) => {
                 const current = wpsReadValue(overrides, override);
                 if (current === null) return;
-                const maximize = WPS_HEAT_OVERRIDES.includes(override);
+                const maximize = WPS_HEAT_OVERRIDES.includes(override) || override === "wire_max";
                 const range = wpsCombinedRange(rows, field);
                 let allowed = maximize ? WPS_OVERRIDE_TARGET : current;
                 if (range) {
@@ -1008,7 +1009,7 @@
                 fitOverrides.className = "btn-secondary";
                 fitOverrides.id = "wpsFitOverridesBtn";
                 fitOverrides.textContent = "Fit Overrides";
-                fitOverrides.title = "Set the heat input overrides (current, voltage, dwell, excursion) of the selected files to the largest range up to 10 % so that no override setting can leave the WPS (each value and the heat input). Values and travel_max are not changed; wire_max is only reduced.";
+                fitOverrides.title = "Set the heat input overrides (current, voltage, dwell, excursion) of the selected files to the largest range up to 10 % so that no override setting can leave the WPS (each value and the heat input). wire_max likewise up to 10 % within the WPS wire range. Values and travel_max are not changed.";
                 fitOverrides.onclick = () => applyWpsFit("overrides");
                 const fitValues = document.createElement("button");
                 fitValues.type = "button";
