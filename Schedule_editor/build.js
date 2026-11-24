@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Baut Lib_Schedule_Editor_v3_0.html aus src/ (keine Abhaengigkeiten).
+// Baut Lib_Schedule_Editor_v3_1.html aus src/ (keine Abhaengigkeiten).
 //   node build.js          -> schreibt die Datei
 //   node build.js --check  -> Fehler, wenn die Datei nicht dem Stand von src/ entspricht
 // Eine Zeile "<!-- @include pfad -->" (Pfad relativ zu src/) wird durch den Inhalt der Datei ersetzt (rekursiv).
@@ -7,7 +7,7 @@ const fs = require("fs");
 const path = require("path");
 
 const SRC = path.join(__dirname, "src");
-const OUT = path.join(__dirname, "Lib_Schedule_Editor_v3_0.html");
+const OUT = path.join(__dirname, "Lib_Schedule_Editor_v3_1.html");
 const INCLUDE = /^\s*<!-- @include (\S+) -->\s*$/;
 
 function expand(file, stack = []) {
@@ -24,7 +24,7 @@ const html = expand("suite/shell.html");
 if (process.argv.includes("--check")) {
     const current = fs.existsSync(OUT) ? fs.readFileSync(OUT, "utf8") : "";
     if (current !== html) {
-        console.error("Lib_Schedule_Editor_v3_0.html is out of date: run `node build.js` in Schedule_editor/.");
+        console.error("Lib_Schedule_Editor_v3_1.html is out of date: run `node build.js` in Schedule_editor/.");
         process.exit(1);
     }
     console.log("Build is up to date.");

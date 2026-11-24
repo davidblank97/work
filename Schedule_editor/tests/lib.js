@@ -5,7 +5,7 @@ const path = require("path");
 const { chromium } = require("playwright");
 
 const ROOT = path.resolve(__dirname, "..", "..");
-const SUITE_PATH = "/Schedule_editor/Lib_Schedule_Editor_v3_0.html";
+const SUITE_PATH = "/Schedule_editor/Lib_Schedule_Editor_v3_1.html";
 const TYPES = {
     ".html": "text/html; charset=utf-8", ".json": "application/json", ".xml": "text/xml",
     ".xdr": "text/xml", ".js": "text/javascript", ".csv": "text/csv", ".md": "text/plain"

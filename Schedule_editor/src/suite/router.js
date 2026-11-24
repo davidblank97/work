@@ -42,7 +42,7 @@
                     badge.hidden = !frames[badge.dataset.running];
                 });
                 if (!active) {
-                    document.title = "Liburdi Schedule Suite 3.0";
+                    document.title = "Liburdi Schedule Suite 3.1";
                     return;
                 }
                 const frame = getFrame(active);

@@ -1,10 +1,33 @@
-# Liburdi Schedule Suite v3.0
+# Liburdi Schedule Suite v3.1
 
-Version 3.0 fasst den **Schedule Editor**, den **WDR Converter** (Welddata Converter) und den **Pendant Layout Editor** in einer Datei zusammen: `Lib_Schedule_Editor_v3_0.html`.
+Die Suite fasst den **Schedule Editor**, den **WDR Converter** (Welddata Converter) und den **Pendant Layout Editor** in einer Datei zusammen: `Lib_Schedule_Editor_v3_1.html`.
+
+## Neu in Version 3.1
+
+- **Heat Input & WPS** (ein Werkzeug mit zwei Reitern, siehe „WPS-Import und -Pruefung“):
+  - WPS als digitale PDF einlesen, auch Formulare mit den Lagen als Spalten. Uebernommen werden nur mechanisierte Prozesse (m-141); mehrere WPS in einer PDF sind waehlbar.
+  - Die Heat-Input-Bereiche der WPS werden zu Target Ranges.
+  - Pruefung aller Schedules gegen die WPS, mit Tabelle je Lage: Puls und Grund getrennt, Status OK / Override / Outside.
+  - **Fit Overrides:** groesstmoeglicher Override-Bereich bis 10 %, ohne dass die WPS verletzt werden kann, auch beim Heat Input.
+  - **Fit Values** (mit Sicherheitsabfrage): Werte auf die WPS-Grenze setzen. Die Schweissgeschwindigkeit wird nie veraendert.
+- **Anzeige:**
+  - Alle Zahlen mit hoechstens 2 Nachkommastellen; die Datei behaelt ihre Genauigkeit.
+  - Der Drahtvorschub in der WPS-Pruefung wird in cm/min angezeigt.
+  - Staerkere Rahmen der Eingabefelder (Kontrast mindestens 3:1).
+- **Programmuebersicht (PDF):**
+  - Ein Dialog fragt nach dem Nahtnamen (wird zur Ueberschrift) und nach „Prepared by“.
+  - WPS-Bereiche und WPS-Pruefung stehen am Ende.
+  - Segmentwerte gruppiert, Overrides in %.
+  - Saubere Seitenumbrueche ohne zerschnittene Tabellen.
+- **WDR Converter:**
+  - Heat-Input-Auswertung je CSV und Sammeltabelle aller Raupen, mit Schweisszeit und Drahtverbrauch (kg).
+- **Intern:**
+  - Die Datei wird aus Modulen in `src/` gebaut (siehe „Entwicklung“).
+  - Die Arbeitsordner sind aufgeraeumt: Daten in `data/`, Notizen in `docs/`, Altes in `/_archiv`.
 
 ## Start
 
-`Lib_Schedule_Editor_v3_0.html` in einem aktuellen Browser oeffnen. Es erscheint eine **Startseite** mit zwei Karten:
+`Lib_Schedule_Editor_v3_1.html` in einem aktuellen Browser oeffnen. Es erscheint eine **Startseite** mit zwei Karten:
 
 - **Schedule Editor:** Liburdi-Schedule-XML-Dateien bearbeiten, vergleichen und speichern (Beschreibung ab „Aufbau der Oberflaeche“).
 - **WDR Converter:** Schweissdaten-Aufzeichnungen (Liburdi Data Logs, CSV) auswerten: je CSV eine Heat-Input-Auswertung als Excel-Datei plus eine Sammeltabelle aller Raupen (siehe „WDR Converter: Heat-Input-Auswertung“), oder wie bisher nur die Rohdaten als .xlsx. Chrome/Edge fragen beim Start nach einem Zielordner und schreiben die Dateien direkt dorthin; andere Browser laden ein ZIP herunter. XML-Dateien werden unveraendert kopiert.
@@ -16,7 +39,7 @@ Nach der Auswahl wird die Anwendung geoeffnet. Oben erscheint eine schmale Leist
 - `⌂ Start` fuehrt zur Startseite zurueck.
 - `Schedule Editor` / `WDR Converter` / `Pendant Layout` wechseln direkt zwischen den Anwendungen.
 
-Einmal geoeffnete Anwendungen laufen weiter: Geladene XML-Dateien, Undo-Verlauf und Auswahl bleiben beim Wechsel erhalten, auf der Startseite sind sie mit `Open` markiert. Erst beim Schliessen oder Neuladen des Browser-Tabs gehen sie verloren (der Editor warnt bei ungespeicherten Aenderungen). Die Adresse merkt sich die gewaehlte Anwendung (`…v3_0.html#editor` bzw. `#wdr`); solche Links und die Zurueck-Taste des Browsers funktionieren.
+Einmal geoeffnete Anwendungen laufen weiter: Geladene XML-Dateien, Undo-Verlauf und Auswahl bleiben beim Wechsel erhalten, auf der Startseite sind sie mit `Open` markiert. Erst beim Schliessen oder Neuladen des Browser-Tabs gehen sie verloren (der Editor warnt bei ungespeicherten Aenderungen). Die Adresse merkt sich die gewaehlte Anwendung (`…v3_1.html#editor` bzw. `#wdr`); solche Links und die Zurueck-Taste des Browsers funktionieren.
 
 Beide Anwendungen sind eigenstaendig und brauchen **kein Internet**: Der Schedule Editor enthaelt CSS, JavaScript und JSZip, der WDR Converter enthaelt SheetJS 0.18.5 und JSZip 3.10.1.
 
@@ -27,7 +50,7 @@ cd /workspaces/work
 python3 -m http.server 8000
 ```
 
-Danach `http://localhost:8000/Schedule_editor/Lib_Schedule_Editor_v3_0.html` oeffnen.
+Danach `http://localhost:8000/Schedule_editor/Lib_Schedule_Editor_v3_1.html` oeffnen.
 
 Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 
@@ -420,9 +443,9 @@ Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Ni
 
 ## Dateien
 
-- `Lib_Schedule_Editor_v3_0.html`: Liburdi Schedule Suite 3.0 (Startseite, Schedule Editor, WDR Converter, Pendant Layout) in einer Datei; alle Bibliotheken eingebettet.
+- `Lib_Schedule_Editor_v3_1.html`: Liburdi Schedule Suite 3.1 (Startseite, Schedule Editor, WDR Converter, Pendant Layout) in einer Datei; alle Bibliotheken eingebettet.
 - `segments_sorting.json`: Reihenfolge der Segmentfelder (muss neben der HTML liegen).
-- `README_v3_0.md`: Diese Anleitung.
+- `README_v3_1.md`: Diese Anleitung.
 - `data/samples/`: Beispiel-Schedules (`schedule_beispiel.xml`, `Test 2 Segmente.xml`), Referenzprogramme `04_HIC_PK_764_CS_NGRT_Rev1/` (1.8.3.7), Layout-Muster NG/NGRT (`layouts/`), Pendant-Beispiel `key_layout.xml`.
 - `data/schema/WELDSCHEDULE.XDR`: Liburdi-Schema 1.8.3.7 (auch im Editor eingebaut).
 - `data/wdr/`: Beispiel-Datalog (CSV), alte Excel-Vorlage und WPQ-Sammeltabelle als Referenz.
@@ -434,7 +457,7 @@ Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Ni
 
 ## Entwicklung
 
-Die Datei `Lib_Schedule_Editor_v3_0.html` wird **erzeugt** und nicht direkt bearbeitet. Quellen liegen in `src/`:
+Die Datei `Lib_Schedule_Editor_v3_1.html` wird **erzeugt** und nicht direkt bearbeitet. Quellen liegen in `src/`:
 - `suite/`: Startseite und Umschaltung.
 - `editor/`: Markup, CSS und 12 JS-Dateien nach Bereichen.
 - `wdr/`: Auswertung, Excel-Writer und Oberflaeche.
@@ -446,7 +469,7 @@ Welche Datei fuer welches Thema zustaendig ist, steht in `src/MAP.md`. Jedes Mod
 Nach einer Aenderung im Ordner `Schedule_editor` ausfuehren:
 
 ```bash
-node build.js            # erzeugt Lib_Schedule_Editor_v3_0.html
+node build.js            # erzeugt Lib_Schedule_Editor_v3_1.html
 cd tests && npm test     # prueft zuerst, ob der Build aktuell ist, dann alle Browser-Tests
 ```
 

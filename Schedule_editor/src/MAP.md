@@ -1,6 +1,6 @@
 # Source map
 
-`node build.js` replaces every line `<!-- @include path -->` with the content of that file. Paths are relative to `src/` and resolved recursively, starting from `suite/shell.html`. The result is `../Lib_Schedule_Editor_v3_0.html`.
+`node build.js` replaces every line `<!-- @include path -->` with the content of that file. Paths are relative to `src/` and resolved recursively, starting from `suite/shell.html`. The result is `../Lib_Schedule_Editor_v3_1.html`.
 
 All JS files of one app run as one classic script in the app's iframe: they share globals, and their order is the include order in `index.html`. A new file needs an include line in the matching `index.html`. Never write `</template>` inside an app; `</script>` is allowed only in strings when it is split.
 
