@@ -192,5 +192,84 @@ module.exports = [
                 .find(row => row.previousElementSibling?.textContent.includes("0408-Cap.xml"))?.querySelector("[data-field=travel]")?.className);
             t.check("travel at the WPS maximum is inside", capTravel && !capTravel.includes("is-fail"), capTravel);
         }
+    },
+    {
+        // 0402: Strom 180/140 A (±10 %), Spannung 9.9/9.4 V (±10 %), Draht 66.93/51.18 in/min = 1.70/1.30 m/min (±10 %).
+        name: "fit overrides and values to the WPS",
+        async run(t) {
+            const { page, frame } = await t.openApp("editor");
+            await frame.evaluate(() => localStorage.setItem("scheduleEditorWpsRanges", JSON.stringify({
+                document: "test.pdf", wpsNumber: "T-1", checkMode: "separate",
+                rows: [{ label: "Hotpass", passType: "Hot pass", files: ["0402"], current: { min: 130, max: 190 }, voltage: { min: 9, max: 11 },
+                    travel: { min: 60, max: 80 }, wire: { min: 1, max: 1.5 }, heat: { min: null, max: 1.2 } }]
+            })));
+            await frame.setInputFiles("#fileInput", [t.file(REF)]);
+            await page.waitForTimeout(300);
+            await frame.click("#wpsBtn");
+            const xml = (section, key) => frame.evaluate(([sectionName, name]) => {
+                const file = loadedFiles[0];
+                const parent = sectionName === "overrides" ? file.sections.overrides : file.sections.segments[0];
+                return [...parent.children].find(child => child.tagName === name).textContent;
+            }, [section, key]);
+            const statuses = () => frame.evaluate(() => Object.fromEntries([...document.querySelectorAll(".wps-check-table .wps-cell[data-field]")]
+                .map(cell => [cell.dataset.field, [...cell.classList].find(name => name.startsWith("is-"))])));
+            t.check("before: current warn, wire fail", JSON.stringify(await statuses()).includes('"current":"is-warn"') && (await statuses()).wire === "is-fail", JSON.stringify(await statuses()));
+
+            await frame.click("#wpsFitOverridesBtn");
+            // pri: (190-180)/180 = 5.56 % -> 5.5; bkg: (140-130)/140 = 7.14 % -> 7.1; Spannung: (9.4-9)/9.4 = 4.26 % -> 4.2
+            t.check("pri_amp_max", await xml("overrides", "pri_amp_max") === "5.500000", await xml("overrides", "pri_amp_max"));
+            t.check("bkg_amp_max", await xml("overrides", "bkg_amp_max") === "7.100000", await xml("overrides", "bkg_amp_max"));
+            t.check("avc_override_max", await xml("overrides", "avc_override_max") === "4.200000", await xml("overrides", "avc_override_max"));
+            t.check("values unchanged", await xml("segments", "pri_amp") === "180.000000" && await xml("segments", "pri_wire") === "66.929170");
+            let after = await statuses();
+            t.check("after overrides: current and voltage ok, wire still outside", after.current === "is-ok" && after.voltage === "is-ok" && after.wire === "is-fail", JSON.stringify(after));
+            t.check("not solved: wire value", (await frame.textContent("#wpsFitResult")).includes("pri_wire 1.7 m/min is outside the WPS"), await frame.textContent("#wpsFitResult"));
+            t.check("change log entries", await frame.evaluate(() => changeLog.filter(entry => entry.section === "overrides").length) === 3);
+
+            await frame.click("#wpsFitValuesBtn");
+            // 1.5 m/min = 59.0551181 in/min -> abgerundet 59.055118
+            t.check("pri_wire set to the WPS max", await xml("segments", "pri_wire") === "59.055118", await xml("segments", "pri_wire"));
+            t.check("other values unchanged", await xml("segments", "bkg_wire") === "51.181130" && await xml("segments", "pri_amp") === "180.000000");
+            after = await statuses();
+            // Wert liegt jetzt auf der WPS-Grenze -> der Draht-Override (10 %) reicht noch hinaus
+            t.check("after values: inside, wire override still reaches outside", after.wire === "is-warn" && Object.entries(after).every(([key, status]) => key === "wire" || status === "is-ok"), JSON.stringify(after));
+            await frame.click("#wpsFitOverridesBtn");
+            t.check("then fit overrides: wire_max 0", await xml("overrides", "wire_max") === "0.000000", await xml("overrides", "wire_max"));
+            after = await statuses();
+            t.check("all inside", Object.values(after).every(status => status === "is-ok"), JSON.stringify(after));
+            t.check("summary clean", (await frame.textContent("#wpsSummary")).includes("0 value(s) outside the WPS · 0 value(s) with override range outside"), await frame.textContent("#wpsSummary"));
+
+            await frame.evaluate(() => undoLastEdit());
+            t.check("undo restores the override", await xml("overrides", "wire_max") === "10.000000");
+            await frame.evaluate(() => undoLastEdit());
+            t.check("undo restores the value", await xml("segments", "pri_wire") === "66.929170");
+            await frame.evaluate(() => undoLastEdit());
+            t.check("undo restores the overrides", await xml("overrides", "pri_amp_max") === "10.000000");
+        }
+    },
+    {
+        name: "fit overrides: heat input range reduced together",
+        async run(t) {
+            const { page, frame } = await t.openApp("editor");
+            await frame.setInputFiles("#fileInput", [t.file(REF)]);
+            await page.waitForTimeout(300);
+            const heat = await frame.evaluate(() => calculateSegmentHeatInput(loadedFiles[0].sections.segments[0], loadedFiles[0].sections.overrides));
+            // Max knapp ueber dem Nominalwert: nur die Heat-Input-Overrides koennen das loesen.
+            const max = Number((heat.heatInput * 1.02).toFixed(3));
+            await frame.evaluate(limit => localStorage.setItem("scheduleEditorWpsRanges", JSON.stringify({
+                document: "test.pdf", wpsNumber: "T-2", checkMode: "separate",
+                rows: [{ label: "Hotpass", passType: "Hot pass", files: ["0402"], current: { min: null, max: null }, voltage: { min: null, max: null },
+                    travel: { min: null, max: null }, wire: { min: null, max: null }, heat: { min: null, max: limit } }]
+            })), max);
+            await frame.click("#wpsBtn");
+            const heatStatus = () => frame.evaluate(() => document.querySelector(".wps-check-table .wps-cell[data-field=heat]").className);
+            t.check("before: heat override range outside", (await heatStatus()).includes("is-warn"), await heatStatus());
+            await frame.click("#wpsFitOverridesBtn");
+            t.check("after: heat inside", (await heatStatus()).includes("is-ok"), await heatStatus());
+            const result = await frame.evaluate(() => calculateSegmentHeatInput(loadedFiles[0].sections.segments[0], loadedFiles[0].sections.overrides));
+            t.check("max heat input <= WPS max", result.maxHeatInput <= max + 1e-6 && result.heatInput === heat.heatInput, `${result.maxHeatInput} vs ${max}`);
+            const amp = await frame.evaluate(() => [...loadedFiles[0].sections.overrides.children].find(child => child.tagName === "pri_amp_max").textContent);
+            t.check("overrides reduced, one decimal", /^\d+\.\d0{5}$/.test(amp) && Number(amp) < 10, amp);
+        }
     }
 ];

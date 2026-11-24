@@ -57,7 +57,17 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
    - **Gelb:** Wert innerhalb, aber der Override-Bereich (pri/bkg_amp_max, avc_override_max, travel_max, wire_max bzw. Heat-Input min/max) reicht hinaus.
    - Waehlbar: Puls- und Grundwert einzeln (Standard) oder zeitgewichteter Mittelwert (Dwell/Excursion).
    - Ein Klick oeffnet das Segment.
-5. **Batch Save** warnt, wenn Werte ausserhalb der WPS liegen.
+5. **An die WPS anpassen** (fuer die markierten Dateien mit WPS-Zeile; Rueckgaengig mit Strg+Z, jede Aenderung steht im Change Log und darunter in einer Liste):
+   - **Fit Overrides:**
+     - Die Override-Prozente (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `travel_max`, `wire_max`) werden nur verkleinert, auf 0,1 % abgerundet, bis Wert ± Override in der WPS liegt.
+     - Reicht der Heat-Input-Bereich (min/max) noch hinaus, werden die Heat-Input-Overrides (auch `dwell_max`, `excursion_max`) gemeinsam reduziert.
+     - Die Werte selbst bleiben unveraendert. Liegt ein Wert schon ausserhalb, wird er als „Not solved“ gemeldet.
+   - **Fit Values:**
+     - Strom, Spannung, Vorschub und Draht ausserhalb der WPS werden auf die naechste WPS-Grenze gesetzt (nach innen gerundet, mit den Nachkommastellen der Datei).
+     - Liegt der Heat Input danach noch ausserhalb, wird der Vorschub (pri und bkg mit demselben Faktor) angepasst, soweit der WPS-Vorschubbereich es erlaubt.
+     - Ein Wert auf der Grenze laesst den Override gelb; dann zusaetzlich **Fit Overrides**.
+   - Werte genau auf der WPS-Grenze gelten als innerhalb und werden nicht veraendert.
+6. **Batch Save** warnt, wenn Werte ausserhalb der WPS liegen.
 
 ## WDR Converter: Heat-Input-Auswertung
 

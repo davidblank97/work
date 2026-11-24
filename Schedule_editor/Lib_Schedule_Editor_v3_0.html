@@ -3748,6 +3748,31 @@
         .wps-segment-row.is-off td {
             color: var(--text-muted);
         }
+
+        .wps-fit-actions {
+            align-items: center;
+            margin: 0 0 10px;
+        }
+
+        .wps-fit-result:empty {
+            display: none;
+        }
+
+        .wps-fit-result {
+            max-height: 180px;
+            overflow: auto;
+            margin-bottom: 10px;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--bg-input);
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 11.5px;
+        }
+
+        .wps-fit-line.is-issue {
+            color: var(--warning);
+        }
     </style>
 
 <div id="sidebar">
@@ -11837,6 +11862,206 @@
             return { file, rows, entries };
         }
 
+        /* Anpassen an die WPS: Overrides verkleinern ("Fit overrides") bzw. Werte in den Bereich setzen ("Fit values") */
+        // Overrides je WPS-Feld und die Segmentwerte, die sie betreffen (Faktor: Schedule-Einheit -> WPS-Einheit).
+        const WPS_OVERRIDE_MAP = [
+            { field: "current", override: "pri_amp_max", keys: ["pri_amp"], factor: 1 },
+            { field: "current", override: "bkg_amp_max", keys: ["bkg_amp"], factor: 1 },
+            { field: "voltage", override: "avc_override_max", keys: ["pri_ahc", "bkg_ahc"], factor: 1 },
+            { field: "travel", override: "travel_max", keys: ["pri_travel", "bkg_travel"], factor: 25.4 },
+            { field: "wire", override: "wire_max", keys: ["pri_wire", "bkg_wire"], factor: 0.0254 }
+        ];
+        const WPS_HEAT_OVERRIDES = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "travel_max", "dwell_max", "excursion_max"];
+
+        // Gleiche Toleranz wie die Pruefung (wpsRate): Werte genau auf der Grenze gelten als innerhalb.
+        const wpsEps = bound => Math.max(1e-6, Math.abs(bound) * 1e-6);
+        const wpsAbove = (value, range) => range.max !== null && value > range.max + wpsEps(range.max);
+        const wpsBelow = (value, range) => range.min !== null && value < range.min - wpsEps(range.min);
+
+        // Gemeinsamer Bereich aller zugeordneten WPS-Zeilen (Schnittmenge).
+        function wpsCombinedRange(rows, field) {
+            const mins = rows.map(row => row[field].min).filter(value => value !== null);
+            const maxs = rows.map(row => row[field].max).filter(value => value !== null);
+            if (!mins.length && !maxs.length) return null;
+            return { min: mins.length ? Math.max(...mins) : null, max: maxs.length ? Math.min(...maxs) : null };
+        }
+
+        // Wert schreiben (Stellen der Datei, Change Log); liefert true bei einer Aenderung.
+        function wpsWriteValue(file, parent, sectionName, segmentIndex, key, text, changes) {
+            const node = parent && [...parent.children].find(child => child.tagName === key);
+            if (!node || node.textContent === text) return false;
+            const oldValue = node.textContent;
+            node.textContent = text;
+            const fileIndex = loadedFiles.indexOf(file);
+            updateChangeLogEntry({ fileIndex, fileName: file.name, sectionName, key, segmentIndex, oldValue, newValue: text });
+            changes.push({ file: file.name, key, segmentIndex, oldValue, newValue: text });
+            return true;
+        }
+
+        // Zahl mit den Nachkommastellen des bisherigen Werts, Rundung in Richtung "down" (abrunden) oder "up".
+        function wpsFormatLike(oldText, value, direction) {
+            const places = getDecimalPlaces(String(oldText).trim());
+            const scale = 10 ** places;
+            const rounded = direction === "down" ? Math.floor(value * scale + 1e-9) / scale
+                : direction === "up" ? Math.ceil(value * scale - 1e-9) / scale : Math.round(value * scale) / scale;
+            return rounded.toFixed(places);
+        }
+
+        function wpsSegmentsOf(file) {
+            return file.sections.segments.filter(segment => wpsReadValue(segment, "enable") !== 0);
+        }
+
+        // Overrides so verkleinern, dass Nominal ± Override in der WPS liegt (nie vergroessern).
+        function fitWpsOverrides(file, rows, changes, issues) {
+            const overrides = file.sections.overrides;
+            if (!overrides) return;
+            const label = fileShortLabel(file);
+            WPS_OVERRIDE_MAP.forEach(({ field, override, keys, factor }) => {
+                const range = wpsCombinedRange(rows, field);
+                const current = wpsReadValue(overrides, override);
+                if (!range || current === null || current <= 0) return;
+                let allowed = current;
+                wpsSegmentsOf(file).forEach(segment => keys.forEach(key => {
+                    const raw = wpsReadValue(segment, key);
+                    if (raw === null || raw <= 0) return;
+                    const value = raw * factor;
+                    if (wpsBelow(value, range) || wpsAbove(value, range)) {
+                        issues.push(`${label}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (use Fit values)`);
+                        return;
+                    }
+                    const up = range.max !== null ? Math.max(0, (range.max - value) / value * 100) : Infinity;
+                    const down = range.min !== null ? Math.max(0, (value - range.min) / value * 100) : Infinity;
+                    allowed = Math.min(allowed, up, down);
+                }));
+                if (allowed < current) {
+                    if (isLocked(override)) { issues.push(`${label}: ${override} is locked`); return; }
+                    const node = [...overrides.children].find(child => child.tagName === override);
+                    // auf 0.1 % abgerundet (lesbar, sicher innerhalb)
+                    wpsWriteValue(file, overrides, "overrides", "", override, wpsFormatLike(node.textContent, Math.floor(Math.max(0, allowed) * 10) / 10, "down"), changes);
+                }
+            });
+            // Heat Input: alle Heat-Input-Overrides gemeinsam verkleinern, bis min/max im WPS-Bereich liegen.
+            const heatRange = wpsCombinedRange(rows, "heat");
+            if (!heatRange) return;
+            const heatOutside = (testOverrides, nominalOnly) => wpsSegmentsOf(file).some(segment => {
+                const result = calculateSegmentHeatInput(segment, testOverrides);
+                if (result.disabled || result.error) return false;
+                const low = nominalOnly ? result.heatInput : result.minHeatInput;
+                const high = nominalOnly ? result.heatInput : result.maxHeatInput;
+                return wpsBelow(low, heatRange) || wpsAbove(high, heatRange);
+            });
+            if (heatOutside(overrides, true)) {
+                issues.push(`${label}: nominal heat input is outside the WPS (use Fit values)`);
+                return;
+            }
+            if (!heatOutside(overrides, false)) return;
+            const locked = WPS_HEAT_OVERRIDES.filter(name => isLocked(name));
+            if (locked.length) { issues.push(`${label}: heat input overrides locked (${locked.join(", ")})`); return; }
+            const original = Object.fromEntries(WPS_HEAT_OVERRIDES.map(name => [name, wpsReadValue(overrides, name) ?? 0]));
+            const scaled = scale => {
+                const copy = overrides.cloneNode(true);
+                WPS_HEAT_OVERRIDES.forEach(name => {
+                    const node = [...copy.children].find(child => child.tagName === name);
+                    if (node) node.textContent = String(original[name] * scale);
+                });
+                return copy;
+            };
+            let low = 0;
+            let high = 1;
+            for (let step = 0; step < 30; step++) {
+                const middle = (low + high) / 2;
+                if (heatOutside(scaled(middle), false)) high = middle; else low = middle;
+            }
+            WPS_HEAT_OVERRIDES.forEach(name => {
+                const node = [...overrides.children].find(child => child.tagName === name);
+                if (!node || original[name] <= 0) return;
+                wpsWriteValue(file, overrides, "overrides", "", name, wpsFormatLike(node.textContent, Math.floor(original[name] * low * 10) / 10, "down"), changes);
+            });
+        }
+
+        // Nominalwerte in den WPS-Bereich setzen; Heat Input danach ueber den Vorschub korrigieren.
+        function fitWpsValues(file, rows, changes, issues) {
+            const label = fileShortLabel(file);
+            wpsSegmentsOf(file).forEach(segment => {
+                const segmentIndex = segment.getAttribute("index") || "";
+                const segmentLabel = `${label} · Segment ${segmentDisplayNumber(segment, file.sections.segments.indexOf(segment))}`;
+                WPS_OVERRIDE_MAP.forEach(({ field, keys, factor }) => {
+                    const range = wpsCombinedRange(rows, field);
+                    if (!range) return;
+                    keys.forEach(key => {
+                        const raw = wpsReadValue(segment, key);
+                        if (raw === null) return;
+                        const node = [...segment.children].find(child => child.tagName === key);
+                        const value = raw * factor;
+                        let text = null;
+                        if (wpsAbove(value, range)) text = wpsFormatLike(node.textContent, range.max / factor, "down");
+                        else if (wpsBelow(value, range)) text = wpsFormatLike(node.textContent, range.min / factor, "up");
+                        if (text === null) return;
+                        if (isLocked(key)) { issues.push(`${segmentLabel}: ${key} is locked`); return; }
+                        wpsWriteValue(file, segment, "segments", segmentIndex, key, text, changes);
+                    });
+                });
+                const heatRange = wpsCombinedRange(rows, "heat");
+                if (!heatRange) return;
+                const result = calculateSegmentHeatInput(segment, file.sections.overrides);
+                if (result.disabled || result.error) return;
+                let target = null;
+                if (wpsAbove(result.heatInput, heatRange)) target = heatRange.max * (1 - 1e-4);
+                else if (wpsBelow(result.heatInput, heatRange)) target = heatRange.min * (1 + 1e-4);
+                if (target === null) return;
+                // Heat Input ~ 1 / Vorschub: beide Vorschuebe mit demselben Faktor aendern, im WPS-Vorschubbereich.
+                const travelRange = wpsCombinedRange(rows, "travel");
+                let ratio = result.heatInput / target;
+                const travels = ["pri_travel", "bkg_travel"].map(key => ({ key, value: wpsReadValue(segment, key) })).filter(item => item.value > 0);
+                if (!travels.length || travels.some(item => isLocked(item.key))) { issues.push(`${segmentLabel}: heat input outside, travel speed cannot be changed`); return; }
+                if (travelRange) {
+                    travels.forEach(({ value }) => {
+                        const mm = value * 25.4;
+                        if (travelRange.max !== null && ratio > 1) ratio = Math.min(ratio, travelRange.max / mm);
+                        if (travelRange.min !== null && ratio < 1) ratio = Math.max(ratio, travelRange.min / mm);
+                    });
+                }
+                travels.forEach(({ key, value }) => {
+                    const node = [...segment.children].find(child => child.tagName === key);
+                    wpsWriteValue(file, segment, "segments", segmentIndex, key, wpsFormatLike(node.textContent, value * ratio, ratio > 1 ? "up" : "down"), changes);
+                });
+                const after = calculateSegmentHeatInput(segment, file.sections.overrides);
+                if (wpsAbove(after.heatInput, heatRange) || wpsBelow(after.heatInput, heatRange)) {
+                    issues.push(`${segmentLabel}: heat input ${formatWpsNumber(after.heatInput, "heat")} kJ/mm still outside (travel speed at the WPS limit)`);
+                }
+            });
+        }
+
+        // Auf die markierten Dateien mit WPS-Zeile anwenden (keine Markierung: alle), mit Undo.
+        function applyWpsFit(mode) {
+            const store = readWpsStore();
+            if (!store) return;
+            const selected = loadedFiles.filter((file, index) => !selectedFiles.size || selectedFiles.has(index));
+            const targets = selected.map(file => ({ file, rows: store.rows.filter(row => row.files.includes(fileTargetKey(file))) })).filter(item => item.rows.length);
+            const changes = [];
+            const issues = [];
+            recordHistoryAction(mode === "overrides" ? "Fit overrides to WPS" : "Fit values to WPS", () => {
+                targets.forEach(({ file, rows }) => (mode === "overrides" ? fitWpsOverrides : fitWpsValues)(file, rows, changes, issues));
+            });
+            renderFileList();
+            renderWps();
+            const files = new Set(changes.map(change => change.file)).size;
+            const what = mode === "overrides" ? "Overrides fitted" : "Values fitted";
+            document.getElementById("status").textContent = `${what} to the WPS: ${changes.length} value(s) changed in ${files} file(s) (undo with Ctrl+Z).`
+                + (issues.length ? ` Not solved: ${issues.slice(0, 4).join("; ")}${issues.length > 4 ? ` … (+${issues.length - 4})` : ""}` : "");
+            const list = document.getElementById("wpsFitResult");
+            if (list) {
+                list.replaceChildren(...[...changes.map(change => `${change.file}${change.segmentIndex !== "" ? ` · segment ${Number(change.segmentIndex) + 1}` : ""}: ${change.key} ${change.oldValue} → ${change.newValue}`),
+                    ...issues.map(issue => `Not solved – ${issue}`)].map(text => {
+                    const line = document.createElement("div");
+                    line.className = text.startsWith("Not solved") ? "wps-fit-line is-issue" : "wps-fit-line";
+                    line.textContent = text;
+                    return line;
+                }));
+                if (!changes.length && !issues.length) list.textContent = "Nothing to change: all values and override ranges are inside the WPS.";
+            }
+        }
+
         function formatWpsNumber(value, field) {
             if (value === null || !Number.isFinite(value)) return "–";
             return Number(value.toFixed(DISPLAY_DECIMALS)).toString();
@@ -12115,6 +12340,33 @@
                 : "Load schedules to check them against the WPS.";
             if (counts.fail) summaryLine.classList.add("is-fail");
             checkPanel.appendChild(summaryLine);
+            if (checked.length) {
+                const fitActions = document.createElement("div");
+                fitActions.className = "wps-actions wps-fit-actions";
+                const fitOverrides = document.createElement("button");
+                fitOverrides.type = "button";
+                fitOverrides.className = "btn-secondary";
+                fitOverrides.id = "wpsFitOverridesBtn";
+                fitOverrides.textContent = "Fit Overrides";
+                fitOverrides.title = "Reduce the override percentages of the selected files so that value ± override (and the heat input min/max) stay inside the WPS. Values are not changed.";
+                fitOverrides.onclick = () => applyWpsFit("overrides");
+                const fitValues = document.createElement("button");
+                fitValues.type = "button";
+                fitValues.className = "btn-secondary";
+                fitValues.id = "wpsFitValuesBtn";
+                fitValues.textContent = "Fit Values";
+                fitValues.title = "Set current, voltage, travel and wire of the selected files to the nearest WPS limit; then correct the heat input with the travel speed (within the WPS travel range).";
+                fitValues.onclick = () => applyWpsFit("values");
+                const fitHint = document.createElement("span");
+                fitHint.className = "wps-hint";
+                fitHint.textContent = "Applies to the selected files with a WPS row · undo with Ctrl+Z · listed in the change log";
+                fitActions.append(fitOverrides, fitValues, fitHint);
+                checkPanel.appendChild(fitActions);
+                const fitResult = document.createElement("div");
+                fitResult.className = "wps-fit-result";
+                fitResult.id = "wpsFitResult";
+                checkPanel.appendChild(fitResult);
+            }
             if (checked.length) {
                 const checkTable = document.createElement("table");
                 checkTable.className = "heat-table wps-check-table";
