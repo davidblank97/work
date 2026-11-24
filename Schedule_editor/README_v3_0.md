@@ -58,7 +58,8 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
    - **Rot:** Wert ausserhalb der WPS.
    - **Gelb:** Wert innerhalb, aber der Override-Bereich (pri/bkg_amp_max, avc_override_max, travel_max, wire_max bzw. Heat-Input min/max) reicht hinaus.
    - Waehlbar: Puls- und Grundwert einzeln (Standard) oder zeitgewichteter Mittelwert (Dwell/Excursion).
-   - Ein Klick oeffnet das Segment.
+   - Tabelle: je WPS-Lage eine Zeile mit den Bereichen („WPS range“), darunter je Schedule eine Zeile. Puls (P) und Grund (B) stehen in eigenen Spalten, rechts die Spalte **Status** (OK / Override / Outside).
+   - Ein Klick oeffnet das Segment; beim Ueberfahren eines Werts stehen die Details im Tooltip.
 5. **An die WPS anpassen** (fuer die markierten Dateien mit WPS-Zeile; Rueckgaengig mit Strg+Z, jede Aenderung steht im Change Log und darunter in einer Liste):
    - **Fit Overrides:**
      - Die Override-Prozente (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `wire_max`) werden nur verkleinert, auf 0,1 % abgerundet, bis Wert ± Override in der WPS liegt.

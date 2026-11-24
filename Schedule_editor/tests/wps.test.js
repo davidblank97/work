@@ -46,6 +46,22 @@ function wpsPdf() {
     ]);
 }
 
+// Pruefzellen je Feld zusammenfassen: Text "P 180 / B 140" (Mittelwert ohne Praefix), Status = schlechtester Teil.
+const checkCells = () => {
+    const rank = { "is-ok": 0, "is-na": 0, "is-warn": 1, "is-fail": 2 };
+    const fields = {};
+    document.querySelectorAll(".wps-check-table .wps-cell[data-field]").forEach(cell => {
+        const status = [...cell.classList].find(name => name.startsWith("is-"));
+        const prefix = { pri: "P ", bkg: "B " }[cell.dataset.part] || "";
+        const field = fields[cell.dataset.field] || (fields[cell.dataset.field] = { parts: [], status: "is-ok" });
+        if (field.parts.length >= 2 || field.done) { field.done = true; return; }
+        field.parts.push(prefix + cell.textContent);
+        if (rank[status] > rank[field.status]) field.status = status;
+        if (cell.dataset.part !== "pri") field.done = true;
+    });
+    return Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, { text: field.parts.join(" / "), status: field.status }]));
+};
+
 // Werkzeug "Heat Input & WPS" oeffnen und den Reiter "WPS Import / Check" waehlen.
 async function openWps(frame) {
     await frame.click("#heatInputBtn");
@@ -103,8 +119,7 @@ module.exports = [
 
             // Pruefung 0402: Strom 180/140 A (±10 %) gegen 130–190 -> Override 198 > 190 = Warnung;
             // Draht 66.93 in/min = 1.70 m/min > 1.5 = ausserhalb; Vorschub 2.9528 in/min = 75 mm/min in 60–80.
-            const cells = await frame.evaluate(() => Object.fromEntries([...document.querySelectorAll(".wps-check-table .wps-cell[data-field]")]
-                .map(cell => [cell.dataset.field, { text: cell.textContent, status: [...cell.classList].find(name => name.startsWith("is-")) }])));
+            const cells = await frame.evaluate(checkCells);
             t.check("current: warn (override range)", cells.current?.status === "is-warn" && cells.current.text === "P 180 / B 140", JSON.stringify(cells.current));
             t.check("wire: outside", cells.wire?.status === "is-fail" && cells.wire.text === "P 1.7 / B 1.3", JSON.stringify(cells.wire));
             t.check("travel: ok (converted)", cells.travel?.status === "is-ok" && cells.travel.text === "P 75 / B 75", JSON.stringify(cells.travel));
@@ -195,8 +210,7 @@ module.exports = [
             const summary = await frame.textContent("#wpsSummary");
             t.check("check: 3 files, hot pass without WPS row", /^3 file\(s\) checked/.test(summary) && summary.includes("no WPS row: 0402"), summary);
             // 0408: pri_travel 3.937008 in/min = 100 mm/min = WPS-Maximum (10 cm/min) -> innerhalb, nicht durch Rundung ausserhalb
-            const capTravel = await frame.evaluate(() => [...document.querySelectorAll(".wps-check-table tbody tr")]
-                .find(row => row.previousElementSibling?.textContent.includes("0408-Cap.xml"))?.querySelector("[data-field=travel]")?.className);
+            const capTravel = await frame.evaluate(() => document.querySelector('.wps-check-table tr[data-file="0408-Cap.xml"] [data-field=travel]')?.className);
             t.check("travel at the WPS maximum is inside", capTravel && !capTravel.includes("is-fail"), capTravel);
         }
     },
@@ -218,8 +232,7 @@ module.exports = [
                 const parent = sectionName === "overrides" ? file.sections.overrides : file.sections.segments[0];
                 return [...parent.children].find(child => child.tagName === name).textContent;
             }, [section, key]);
-            const statuses = () => frame.evaluate(() => Object.fromEntries([...document.querySelectorAll(".wps-check-table .wps-cell[data-field]")]
-                .map(cell => [cell.dataset.field, [...cell.classList].find(name => name.startsWith("is-"))])));
+            const statuses = async () => Object.fromEntries(Object.entries(await frame.evaluate(checkCells)).map(([field, cell]) => [field, cell.status]));
             t.check("before: current warn, wire fail", JSON.stringify(await statuses()).includes('"current":"is-warn"') && (await statuses()).wire === "is-fail", JSON.stringify(await statuses()));
 
             await frame.click("#wpsFitOverridesBtn");

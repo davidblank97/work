@@ -3506,3 +3506,87 @@
             outline: 2px solid var(--accent);
             outline-offset: -2px;
         }
+
+        /* WPS Check: Tabelle */
+        .wps-check-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .wps-check-table th {
+            text-align: left;
+        }
+
+        .wps-check-table th.num,
+        .wps-check-table td.num {
+            text-align: right;
+        }
+
+        .wps-check-table .wps-col-group {
+            border-left: 1px solid var(--border-color);
+        }
+
+        .wps-check-table td.wps-cell {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 12px;
+        }
+
+        .wps-group-row td {
+            padding-top: 10px;
+            padding-bottom: 6px;
+            background: var(--bg-panel-2);
+            border-top: 1px solid var(--border-strong);
+        }
+
+        .wps-group-name {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .wps-range-cell {
+            color: var(--text-muted);
+            font-size: 11.5px;
+            white-space: nowrap;
+        }
+
+        .wps-range-label {
+            color: var(--text-muted);
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .wps-segment-row:hover td {
+            background: var(--accent-soft);
+        }
+
+        .wps-schedule-name {
+            white-space: nowrap;
+        }
+
+        .wps-status-cell {
+            font-size: 11.5px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .wps-status-cell.is-ok,
+        .wps-status-cell.is-off,
+        .wps-status-cell.is-na {
+            color: var(--text-muted);
+        }
+
+        .wps-status-cell.is-warn {
+            color: var(--warning);
+        }
+
+        .wps-status-cell.is-fail {
+            color: var(--danger);
+        }
+
+        .wps-unassigned-row td {
+            padding-top: 10px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }

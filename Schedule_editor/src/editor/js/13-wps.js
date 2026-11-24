@@ -1001,51 +1001,116 @@
                 checkPanel.appendChild(fitResult);
             }
             if (checked.length) {
+                // Tabelle: je WPS-Lage eine Gruppenzeile mit den Bereichen, darunter je Datei/Segment eine Zeile;
+                // Puls (P) und Grund (B) in eigenen Spalten, Status als Wort.
+                const mean = store.checkMode === "mean";
+                const pairFields = WPS_FIELD_KEYS.filter(key => key !== "heat");
+                const columnCount = 1 + pairFields.length * 2 + 2;
                 const checkTable = document.createElement("table");
                 checkTable.className = "heat-table wps-check-table";
-                checkTable.innerHTML = "<thead><tr><th>Segment</th>" + WPS_FIELD_KEYS.map(key => `<th>${WPS_FIELDS[key].label}</th>`).join("") + "</tr>"
-                    + "<tr class=\"heat-unit-row\"><th></th>" + WPS_FIELD_KEYS.map(key => `<th>${WPS_FIELDS[key].unit}</th>`).join("") + "</tr></thead>";
+                checkTable.innerHTML = "<thead><tr><th rowspan=\"2\">Schedule</th>"
+                    + pairFields.map(key => `<th colspan="2" class="wps-col-group">${WPS_FIELDS[key].label} (${WPS_FIELDS[key].unit})</th>`).join("")
+                    + `<th class="wps-col-group">${WPS_FIELDS.heat.label} (${WPS_FIELDS.heat.unit})</th><th rowspan="2">Status</th></tr>`
+                    + "<tr class=\"heat-unit-row\">" + pairFields.map(() => (mean ? "<th colspan=\"2\" class=\"num wps-col-group\">mean</th>" : "<th class=\"num wps-col-group\">P</th><th class=\"num\">B</th>")).join("")
+                    + "<th class=\"num wps-col-group\">nominal</th></tr></thead>";
                 const checkBody = document.createElement("tbody");
+                const statusWord = { ok: "OK", warn: "Override", fail: "Outside", na: "–", off: "Off" };
+                const worst = list => (list.some(item => item.status === "fail") ? "fail" : list.some(item => item.status === "warn") ? "warn" : list.length ? "ok" : "na");
+                const describeCheck = (check, key) => {
+                    const part = { pri: "pulse", bkg: "background", mean: "mean", "": "nominal" }[check.part];
+                    const state = { ok: "inside", warn: "override range outside", fail: "outside", na: "–" }[check.status];
+                    const span = check.low !== undefined ? ` (override ${formatWpsNumber(check.low, key)} – ${formatWpsNumber(check.high, key)})` : "";
+                    return `${check.row.label}: ${part} ${formatWpsNumber(check.value, key)} ${WPS_FIELDS[key].unit}, WPS ${describeWpsRange(check.row[key], key)} → ${state}${span}`;
+                };
+                // Gruppen nach zugeordneten WPS-Zeilen (Reihenfolge wie in der WPS)
+                const groups = [];
                 checked.forEach(result => {
-                    const fileRow = document.createElement("tr");
-                    fileRow.className = "heat-file-row";
-                    const fileCell = document.createElement("td");
-                    fileCell.colSpan = WPS_FIELD_KEYS.length + 1;
-                    fileCell.innerHTML = `<span class="heat-file-name"></span><span class="heat-file-limits"></span>`;
-                    fileCell.firstChild.textContent = result.file.name;
-                    fileCell.lastChild.textContent = `WPS: ${result.rows.map(row => `${row.label} (${WPS_FIELD_KEYS.map(key => describeWpsRange(row[key], key)).join(" · ")})`).join("; ")}`;
-                    fileRow.appendChild(fileCell);
-                    checkBody.appendChild(fileRow);
-                    result.entries.forEach(entry => {
-                        const segment = result.file.sections.segments[entry.segmentIndex];
-                        const tr = document.createElement("tr");
-                        tr.className = `heat-segment-row wps-segment-row is-${entry.disabled ? "off" : entry.status}`;
-                        tr.tabIndex = 0;
-                        tr.onclick = () => openHeatInputSegment(result.fileIndex, entry.segmentIndex);
-                        tr.onkeydown = event => { if (event.key === "Enter") tr.click(); };
-                        const label = document.createElement("td");
-                        label.textContent = `Segment ${segmentDisplayNumber(segment, entry.segmentIndex)}${entry.disabled ? " (off)" : ""}`;
-                        tr.appendChild(label);
-                        WPS_FIELD_KEYS.forEach(key => {
-                            const td = document.createElement("td");
-                            td.className = "num wps-cell";
-                            const value = entry.values[key];
-                            if (!value || !value.checks.length) { td.textContent = "–"; tr.appendChild(td); return; }
-                            td.classList.add(`is-${value.status}`);
-                            td.dataset.field = key;
-                            td.textContent = value.checks.filter((check, index, list) => list.findIndex(other => other.part === check.part) === index)
-                                .map(check => `${check.part === "bkg" ? "B " : check.part === "pri" ? "P " : ""}${formatWpsNumber(check.value, key)}`).join(" / ");
-                            td.title = value.checks.map(check => {
-                                const part = { pri: "pulse", bkg: "background", mean: "mean", "": "nominal" }[check.part];
-                                const state = { ok: "ok", warn: "override range outside", fail: "outside", na: "–" }[check.status];
-                                const span = check.low !== undefined ? ` (override ${formatWpsNumber(check.low, key)} – ${formatWpsNumber(check.high, key)})` : "";
-                                return `${check.row.label}: ${part} ${formatWpsNumber(check.value, key)} ${WPS_FIELDS[key].unit}, WPS ${describeWpsRange(check.row[key], key)} → ${state}${span}`;
-                            }).join("\n");
-                            tr.appendChild(td);
+                    const key = result.rows.map(row => store.rows.indexOf(row)).join("+");
+                    let group = groups.find(item => item.key === key);
+                    if (!group) groups.push(group = { key, rows: result.rows, results: [] });
+                    group.results.push(result);
+                });
+                groups.sort((x, y) => store.rows.indexOf(x.rows[0]) - store.rows.indexOf(y.rows[0]));
+                groups.forEach(group => {
+                    const groupRow = document.createElement("tr");
+                    groupRow.className = "wps-group-row";
+                    const name = document.createElement("td");
+                    name.className = "wps-group-name";
+                    name.textContent = group.rows.map(row => row.label).join(" + ");
+                    groupRow.appendChild(name);
+                    const rangeCell = (key, span) => {
+                        const td = document.createElement("td");
+                        td.className = "num wps-range-cell wps-col-group";
+                        if (span) td.colSpan = span;
+                        const range = group.rows.length === 1 ? group.rows[0][key] : wpsCombinedRange(group.rows, key);
+                        td.textContent = describeWpsRange(range, key);
+                        return td;
+                    };
+                    pairFields.forEach(key => groupRow.appendChild(rangeCell(key, 2)));
+                    groupRow.appendChild(rangeCell("heat"));
+                    const rangeLabel = document.createElement("td");
+                    rangeLabel.className = "wps-range-label";
+                    rangeLabel.textContent = "WPS range";
+                    groupRow.appendChild(rangeLabel);
+                    checkBody.appendChild(groupRow);
+                    group.results.forEach(result => {
+                        const segmentCount = result.file.sections.segments.length;
+                        result.entries.forEach(entry => {
+                            const segment = result.file.sections.segments[entry.segmentIndex];
+                            const tr = document.createElement("tr");
+                            const status = entry.disabled ? "off" : entry.status;
+                            tr.className = `heat-segment-row wps-segment-row is-${status}`;
+                            tr.dataset.file = result.file.name;
+                            tr.tabIndex = 0;
+                            tr.title = "Open segment";
+                            tr.onclick = () => openHeatInputSegment(result.fileIndex, entry.segmentIndex);
+                            tr.onkeydown = event => { if (event.key === "Enter") tr.click(); };
+                            const label = document.createElement("td");
+                            label.className = "wps-schedule-name";
+                            label.textContent = result.file.name.replace(/\.xml$/i, "")
+                                + (segmentCount > 1 ? ` · Seg ${segmentDisplayNumber(segment, entry.segmentIndex)}` : "");
+                            tr.appendChild(label);
+                            const valueCell = (key, checks, part, span) => {
+                                const td = document.createElement("td");
+                                td.className = "num wps-cell";
+                                if (span) td.colSpan = span;
+                                if (part === "pri" || part === "mean" || part === "") td.classList.add("wps-col-group");
+                                if (!checks.length) { td.textContent = "–"; return td; }
+                                td.classList.add(`is-${worst(checks)}`);
+                                td.dataset.field = key;
+                                td.dataset.part = part;
+                                td.textContent = formatWpsNumber(checks[0].value, key);
+                                td.title = checks.map(check => describeCheck(check, key)).join("\n");
+                                return td;
+                            };
+                            pairFields.forEach(key => {
+                                const checks = entry.values[key]?.checks || [];
+                                if (entry.disabled) { const off = valueCell(key, [], "pri", 2); tr.appendChild(off); return; }
+                                if (mean && checks.some(check => check.part === "mean")) {
+                                    tr.appendChild(valueCell(key, checks.filter(check => check.part === "mean"), "mean", 2));
+                                } else {
+                                    tr.appendChild(valueCell(key, checks.filter(check => check.part === "pri"), "pri"));
+                                    tr.appendChild(valueCell(key, checks.filter(check => check.part === "bkg"), "bkg"));
+                                }
+                            });
+                            tr.appendChild(valueCell("heat", entry.disabled ? [] : entry.values.heat?.checks || [], ""));
+                            const statusCell = document.createElement("td");
+                            statusCell.className = `wps-status-cell is-${status}`;
+                            statusCell.textContent = statusWord[status] || "–";
+                            tr.appendChild(statusCell);
+                            checkBody.appendChild(tr);
                         });
-                        checkBody.appendChild(tr);
                     });
                 });
+                if (unassigned.length) {
+                    const row = document.createElement("tr");
+                    row.className = "wps-unassigned-row";
+                    const cell = document.createElement("td");
+                    cell.colSpan = columnCount;
+                    cell.textContent = `Not checked (no WPS pass assigned): ${unassigned.join(", ")}`;
+                    row.appendChild(cell);
+                    checkBody.appendChild(row);
+                }
                 checkTable.appendChild(checkBody);
                 const checkWrap = document.createElement("div");
                 checkWrap.className = "heat-table-wrap";
@@ -1053,7 +1118,7 @@
                 checkPanel.appendChild(checkWrap);
                 const legend = document.createElement("p");
                 legend.className = "wps-hint";
-                legend.textContent = "P = pulse (pri), B = background (bkg). Red: value outside the WPS. Amber: value inside, but the override range (Overrides: pri/bkg_amp_max, avc_override_max, travel_max, wire_max; heat input min/max) reaches outside. Travel and wire are converted from in/min.";
+                legend.textContent = "P = pulse (pri), B = background (bkg). Outside: value outside the WPS. Override: value inside, but value ± override (pri/bkg_amp_max, avc_override_max, travel_max, wire_max; heat input min/max) reaches outside. Travel and wire converted from in/min. Click a row to open the segment; hover a value for details.";
                 checkPanel.appendChild(legend);
             }
             content.appendChild(checkPanel);
