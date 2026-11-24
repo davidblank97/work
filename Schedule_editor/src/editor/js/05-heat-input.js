@@ -432,8 +432,14 @@
                         if (value === null) return;
                         make("line", { x1: x(value), x2: x(value), y1: groupTop - (labelTargets ? 4 : 2), y2: groupBottom, class: "heat-target-line" });
                         if (labelTargets) {
-                            const label = make("text", { x: x(value) + (bound === "min" ? -4 : 4), y: groupTop - 7, class: "heat-target-label", "text-anchor": bound === "min" ? "end" : "start" });
-                            label.textContent = `${item.name} ${bound} ${value}`;
+                            const text = `${item.name} ${bound} ${value}`;
+                            // Beschriftung zur Innenseite drehen, wenn sie sonst ueber den Rand liefe (ca. 6.5 px je Zeichen)
+                            const estimate = text.length * 6.5;
+                            let toLeft = bound === "min";
+                            if (!toLeft && x(value) + 4 + estimate > width) toLeft = true;
+                            if (toLeft && x(value) - 4 - estimate < 0) toLeft = false;
+                            const label = make("text", { x: x(value) + (toLeft ? -4 : 4), y: groupTop - 7, class: "heat-target-label", "text-anchor": toLeft ? "end" : "start" });
+                            label.textContent = text;
                         }
                     });
                 });
