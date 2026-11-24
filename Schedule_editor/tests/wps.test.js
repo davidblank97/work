@@ -97,9 +97,9 @@ module.exports = [
             const hot = await rowValues(frame, "Hotpass");
             // Reihenfolge: Strom, Spannung, Vorschub (mm/min), Draht (m/min), Heat Input – je min/max
             t.check("hot pass row", hot && hot.type === "Hot pass" && hot.files === "0402"
-                && hot.numbers.join("|") === "130|190|9|11|60|80|1|1.5||1.2", JSON.stringify(hot));
+                && hot.numbers.join("|") === "130|190|9|11|60|80|100|150||1.2", JSON.stringify(hot));
             const root = await rowValues(frame, "Wurzel");
-            t.check("root row (decimal comma, cm/min -> mm/min)", root && root.type === "Root" && root.numbers.join("|") === "80|120|9|11|60|90|0.5|1|0.5|0.9", JSON.stringify(root));
+            t.check("root row (decimal comma, cm/min -> mm/min)", root && root.type === "Root" && root.numbers.join("|") === "80|120|9|11|60|90|50|100|0.5|0.9", JSON.stringify(root));
             const cap = await rowValues(frame, "Decklage");
             t.check("cap row (± range)", cap && cap.type === "Cap" && cap.numbers.slice(4, 6).join("|") === "70|110", JSON.stringify(cap));
             const fill = await rowValues(frame, "Fülllage");
@@ -121,7 +121,7 @@ module.exports = [
             // Draht 66.93 in/min = 1.70 m/min > 1.5 = ausserhalb; Vorschub 2.9528 in/min = 75 mm/min in 60–80.
             const cells = await frame.evaluate(checkCells);
             t.check("current: warn (override range)", cells.current?.status === "is-warn" && cells.current.text === "P 180 / B 140", JSON.stringify(cells.current));
-            t.check("wire: outside", cells.wire?.status === "is-fail" && cells.wire.text === "P 1.7 / B 1.3", JSON.stringify(cells.wire));
+            t.check("wire: outside", cells.wire?.status === "is-fail" && cells.wire.text === "P 170 / B 130", JSON.stringify(cells.wire));
             t.check("travel: ok (converted)", cells.travel?.status === "is-ok" && cells.travel.text === "P 75 / B 75", JSON.stringify(cells.travel));
             const heat = await frame.evaluate(() => calculateSegmentHeatInput(loadedFiles[0].sections.segments[0], loadedFiles[0].sections.overrides));
             const heatStatus = heat.heatInput > 1.2 ? "is-fail" : heat.maxHeatInput > 1.2 ? "is-warn" : "is-ok";
@@ -195,10 +195,10 @@ module.exports = [
             const fill = await rowValues(frame, "Füllage (m-141)");
             // Strom, Spannung, Vorschub (cm/min -> mm/min), Draht (cm/min -> m/min), Heat Input
             t.check("filling layer", fill && fill.type === "Fill" && fill.files === "0404, 0407"
-                && fill.numbers.join("|") === "108|300|8.6|11.77|50|100|0.8|3|0.46|1.52", JSON.stringify(fill));
+                && fill.numbers.join("|") === "108|300|8.6|11.77|50|100|80|300|0.46|1.52", JSON.stringify(fill));
             const cap = await rowValues(frame, "Decklage (m-141)");
             t.check("cap layer", cap && cap.type === "Cap" && cap.files === "0408"
-                && cap.numbers.join("|") === "108|200|8.7|11.6|50|100|0.8|3|0.47|0.7", JSON.stringify(cap));
+                && cap.numbers.join("|") === "108|200|8.7|11.6|50|100|80|300|0.47|0.7", JSON.stringify(cap));
             t.check("manual root/hot pass (141) skipped", (await frame.textContent("#content")).includes("Wurzel-/Stützlage (141) skipped"));
             t.check("raw text of page 24 only", (await frame.textContent(".wps-raw summary")).includes("page 24") && !(await frame.textContent(".wps-raw pre")).includes("HIC-O01- 2P"));
             await frame.selectOption("#wpsFormSelect", "1");
@@ -243,7 +243,7 @@ module.exports = [
             t.check("values unchanged", await xml("segments", "pri_amp") === "180.000000" && await xml("segments", "pri_wire") === "66.929170");
             let after = await statuses();
             t.check("after overrides: current and voltage ok, wire still outside", after.current === "is-ok" && after.voltage === "is-ok" && after.wire === "is-fail", JSON.stringify(after));
-            t.check("not solved: wire value", (await frame.textContent("#wpsFitResult")).includes("pri_wire 1.7 m/min is outside the WPS"), await frame.textContent("#wpsFitResult"));
+            t.check("not solved: wire value", (await frame.textContent("#wpsFitResult")).includes("pri_wire 170 cm/min is outside the WPS"), await frame.textContent("#wpsFitResult"));
             t.check("change log entries", await frame.evaluate(() => changeLog.filter(entry => entry.section === "overrides").length) === 3);
 
             await frame.click("#wpsFitValuesBtn");

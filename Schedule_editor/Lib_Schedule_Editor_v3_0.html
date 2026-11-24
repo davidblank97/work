@@ -11535,7 +11535,7 @@
             current: { label: "Current", unit: "A", units: {} },
             voltage: { label: "Voltage", unit: "V", units: {} },
             travel: { label: "Travel speed", unit: "mm/min", units: { "mm/min": 1, "cm/min": 10, "m/min": 1000, "mm/s": 60, "cm/s": 600, "in/min": 25.4, "ipm": 25.4 } },
-            wire: { label: "Wire feed", unit: "m/min", units: { "m/min": 1, "cm/min": 0.01, "mm/min": 0.001, "mm/s": 0.06, "in/min": 0.0254, "ipm": 0.0254 } },
+            wire: { label: "Wire feed", unit: "cm/min", units: { "cm/min": 1, "m/min": 100, "mm/min": 0.1, "mm/s": 6, "in/min": 2.54, "ipm": 2.54 } },
             heat: { label: "Heat input", unit: "kJ/mm", units: { "kj/mm": 1, "kj/cm": 0.1, "j/mm": 0.001, "kj/in": 1 / 25.4 } }
         };
         const WPS_FIELD_KEYS = ["current", "voltage", "travel", "wire", "heat"];
@@ -11545,11 +11545,18 @@
         function readWpsStore() {
             const stored = readStoredJson(WPS_STORE_KEY, null);
             if (!stored || typeof stored !== "object" || !Array.isArray(stored.rows)) return null;
-            return { ...stored, checkMode: stored.checkMode === "mean" ? "mean" : "separate", rows: stored.rows.map(normalizeWpsRow) };
+            const rows = stored.rows.map(normalizeWpsRow);
+            // Fruehere Versionen speicherten den Drahtvorschub in m/min -> cm/min
+            if (stored.wireUnit !== "cm/min") {
+                rows.forEach(row => {
+                    ["min", "max"].forEach(bound => { if (row.wire[bound] !== null) row.wire[bound] = Number((row.wire[bound] * 100).toPrecision(6)); });
+                });
+            }
+            return { ...stored, wireUnit: "cm/min", checkMode: stored.checkMode === "mean" ? "mean" : "separate", rows };
         }
 
         function saveWpsStore(store) {
-            try { localStorage.setItem(WPS_STORE_KEY, JSON.stringify(store)); } catch (error) { console.warn("Could not store the WPS ranges.", error); }
+            try { localStorage.setItem(WPS_STORE_KEY, JSON.stringify({ ...store, wireUnit: "cm/min" })); } catch (error) { console.warn("Could not store the WPS ranges.", error); }
         }
 
         function normalizeWpsRow(row) {
@@ -11974,7 +11981,7 @@
                     current: [read("pri_amp"), read("bkg_amp"), percent("pri_amp_max"), percent("bkg_amp_max")],
                     voltage: [read("pri_ahc"), read("bkg_ahc"), percent("avc_override_max"), percent("avc_override_max")],
                     travel: [read("pri_travel"), read("bkg_travel"), percent("travel_max"), percent("travel_max")].map((value, index) => (index < 2 && value !== null ? value * 25.4 : value)),
-                    wire: [read("pri_wire"), read("bkg_wire"), percent("wire_max"), percent("wire_max")].map((value, index) => (index < 2 && value !== null ? value * 0.0254 : value))
+                    wire: [read("pri_wire"), read("bkg_wire"), percent("wire_max"), percent("wire_max")].map((value, index) => (index < 2 && value !== null ? value * 2.54 : value))
                 };
                 const heat = calculateSegmentHeatInput(segment, overrides);
                 const values = {};
@@ -12022,7 +12029,7 @@
             { field: "current", override: "bkg_amp_max", keys: ["bkg_amp"], factor: 1 },
             { field: "voltage", override: "avc_override_max", keys: ["pri_ahc", "bkg_ahc"], factor: 1 },
             { field: "travel", override: "travel_max", keys: ["pri_travel", "bkg_travel"], factor: 25.4, fixed: true },
-            { field: "wire", override: "wire_max", keys: ["pri_wire", "bkg_wire"], factor: 0.0254 }
+            { field: "wire", override: "wire_max", keys: ["pri_wire", "bkg_wire"], factor: 2.54 }
         ];
         // Gemeinsam reduzierbare Heat-Input-Overrides (travel_max bleibt unveraendert).
         const WPS_HEAT_OVERRIDES = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "dwell_max", "excursion_max"];
