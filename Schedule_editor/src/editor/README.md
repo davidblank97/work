@@ -50,7 +50,7 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
   - `scheduleEditorChangeLog`, `scheduleEditorCustomHeads`, `scheduleEditorSidebarState`, `scheduleEditorBatchSave`, `scheduleEditorParameterOrder`
   - `scheduleEditorXdrSchemas`, `scheduleEditorActiveXdr`, `scheduleEditorLayoutTemplates`
   - `scheduleEditorHeatInputTargets` (also read by WDR); the old key `scheduleEditorHeatInputTarget`
-  - `scheduleEditorOverviewSeamName` (last seam name used as the heading of the program overview)
+  - `scheduleEditorOverviewSeamName`, `scheduleEditorOverviewPreparedBy` (last seam name and author of the program overview)
   - `scheduleEditorWpsRanges` (`{document, wpsNumber, checkMode, rows[{label, passType, files, current|voltage|travel|wire|heat: {min,max}}]}`)
   - Read through `readStoredJson`, which tolerates corrupt values.
 

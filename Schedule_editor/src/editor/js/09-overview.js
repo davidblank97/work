@@ -175,8 +175,9 @@
         const HEAT_INPUT_OVERRIDE_KEYS = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "travel_max", "dwell_max", "excursion_max"];
         const OVERVIEW_OVERRIDE_KEYS = [...HEAT_INPUT_OVERRIDE_KEYS, "wire_max"];
 
-        function buildProgramOverviewHtml(seamName = "") {
+        function buildProgramOverviewHtml(seamName = "", preparedBy = "") {
             const seam = String(seamName || "").trim();
+            const author = String(preparedBy || "").trim();
             const files = loadedFiles;
             // Ziel-Bereiche aus der WPS: im Diagramm ohne WPS-Nummer (steht im Kopf), damit die Beschriftung passt.
             const wpsStore = readWpsStore();
@@ -226,7 +227,7 @@
             const fileHead = '<tr><th>No.</th><th>File</th><th>Head</th><th class="num">Segments</th>'
                 + (wpsStore ? "<th>WPS pass</th>" : "") + '<th class="num">Heat input target<br><small>kJ/mm</small></th>'
                 + (showVersion ? "<th>Version</th>" : "") + "<th>Schema</th><th>State</th></tr>";
-            const metaLines = [now.toLocaleString(),
+            const metaLines = [author ? `Prepared by ${author}` : "", now.toLocaleString(),
                 [schema ? `Schema v${schema.version}` : "", !showVersion && versions[0] !== "–" ? `files v${versions[0]}` : ""].filter(Boolean).join(" · "),
                 wpsStore?.wpsNumber ? `WPS ${wpsStore.wpsNumber}` : ""].filter(Boolean);
             const percent = (key, value) => `${Number(Number(value).toFixed(DISPLAY_DECIMALS))} %`;
@@ -325,6 +326,8 @@ ${globalKeys.length ? `
 
         // Vor dem Oeffnen nach dem Nahtnamen fragen (Ueberschrift der Uebersicht); der letzte Name wird vorgeschlagen.
         const OVERVIEW_SEAM_KEY = "scheduleEditorOverviewSeamName";
+        const OVERVIEW_AUTHOR_KEY = "scheduleEditorOverviewPreparedBy";
+        const preparedByInput = document.getElementById("preparedByInput");
         const overviewModal = document.getElementById("overviewModal");
         const seamNameInput = document.getElementById("seamNameInput");
         function openProgramOverview() {
@@ -334,28 +337,38 @@ ${globalKeys.length ? `
                 return;
             }
             let lastName = "";
-            try { lastName = localStorage.getItem(OVERVIEW_SEAM_KEY) || ""; } catch (error) { /* ohne Speicher */ }
+            let lastAuthor = "";
+            try {
+                lastName = localStorage.getItem(OVERVIEW_SEAM_KEY) || "";
+                lastAuthor = localStorage.getItem(OVERVIEW_AUTHOR_KEY) || "";
+            } catch (error) { /* ohne Speicher */ }
             seamNameInput.value = lastName;
+            preparedByInput.value = lastAuthor;
             openModal(overviewModal, seamNameInput);
             window.setTimeout(() => { seamNameInput.focus(); seamNameInput.select(); }, 60);
         }
         document.getElementById("overviewCancelBtn").onclick = () => closeModal(overviewModal);
         document.getElementById("overviewConfirmBtn").onclick = () => {
             const seamName = seamNameInput.value.trim();
-            try { localStorage.setItem(OVERVIEW_SEAM_KEY, seamName); } catch (error) { /* ohne Speicher */ }
+            const preparedBy = preparedByInput.value.trim();
+            try {
+                localStorage.setItem(OVERVIEW_SEAM_KEY, seamName);
+                localStorage.setItem(OVERVIEW_AUTHOR_KEY, preparedBy);
+            } catch (error) { /* ohne Speicher */ }
             closeModal(overviewModal);
-            showProgramOverview(seamName);
+            showProgramOverview(seamName, preparedBy);
         };
         bindEnterToConfirm(seamNameInput, document.getElementById("overviewConfirmBtn"));
+        bindEnterToConfirm(preparedByInput, document.getElementById("overviewConfirmBtn"));
 
-        function showProgramOverview(seamName) {
+        function showProgramOverview(seamName, preparedBy) {
             const overviewWindow = window.open("", "_blank");
             if (!overviewWindow) {
                 document.getElementById("status").textContent = "Could not open the program overview. Please allow pop-ups for this page.";
                 return;
             }
             overviewWindow.document.open();
-            overviewWindow.document.write(buildProgramOverviewHtml(seamName));
+            overviewWindow.document.write(buildProgramOverviewHtml(seamName, preparedBy));
             overviewWindow.document.close();
             overviewWindow.focus();
             document.getElementById("status").textContent = `Program overview of ${loadedFiles.length} file(s) opened – use "Print / Save as PDF".`;

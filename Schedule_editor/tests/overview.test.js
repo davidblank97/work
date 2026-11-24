@@ -11,11 +11,13 @@ module.exports = [
             await frame.click("#programOverviewBtn");
             t.check("dialog asks for the seam name", await frame.locator("#overviewModal.show").count() === 1);
             await frame.fill("#seamNameInput", "HIC PK 764 – Naht 04");
-            const [overview] = await Promise.all([context.waitForEvent("page"), frame.press("#seamNameInput", "Enter")]);
+            await frame.fill("#preparedByInput", "M. Muster");
+            const [overview] = await Promise.all([context.waitForEvent("page"), frame.press("#preparedByInput", "Enter")]);
             overview.on("pageerror", error => t.errors.push(`overview: ${error.message}`));
             await overview.waitForLoadState();
             t.check("seam name as heading", await overview.textContent("h1") === "HIC PK 764 – Naht 04" && (await overview.title()).startsWith("HIC PK 764 – Naht 04"), await overview.textContent("h1"));
             t.check("subtitle", (await overview.textContent(".subtitle")).includes("Program overview"));
+            t.check("prepared by in the header", (await overview.textContent(".meta")).includes("Prepared by M. Muster"), await overview.textContent(".meta"));
             const headings = await overview.$$eval("h2", items => items.map(item => item.textContent));
             // ohne WPS und ohne hervorgehobene Global-Werte: kein WPS- und kein Global-Abschnitt
             t.check("section order", JSON.stringify(headings) === JSON.stringify(["Files", "Segments – main values", "Overrides", "Heat input"]), headings.join(" | "));
@@ -61,6 +63,7 @@ module.exports = [
             await overview.waitForLoadState();
             const headings = await overview.$$eval("h2", items => items.map(item => item.textContent));
             t.check("no seam name: default heading", (await overview.textContent("h1")).startsWith("Program overview"));
+            t.check("no author: no prepared-by line", !(await overview.textContent(".meta")).includes("Prepared by"));
             t.check("WPS section at the end", headings[headings.length - 1] === "WPS – ranges and check" && headings[headings.length - 2] === "Heat input", headings.join(" | "));
             // Seitenumbrueche: Abschnitte und Tabellen werden nicht zerschnitten, Tabellenkoepfe wiederholen sich
             const breaks = await overview.evaluate(() => ({
@@ -84,12 +87,12 @@ module.exports = [
         name: "seam name dialog: cancel and suggestion",
         async run(t) {
             const { page, frame } = await t.openApp("editor");
-            await frame.evaluate(() => localStorage.setItem("scheduleEditorOverviewSeamName", "Naht 07"));
+            await frame.evaluate(() => { localStorage.setItem("scheduleEditorOverviewSeamName", "Naht 07"); localStorage.setItem("scheduleEditorOverviewPreparedBy", "A. Beispiel"); });
             await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
             await page.waitForTimeout(300);
             await frame.click("#programOverviewBtn");
             await page.waitForTimeout(150);
-            t.check("last seam name suggested", await frame.inputValue("#seamNameInput") === "Naht 07");
+            t.check("last seam name and author suggested", await frame.inputValue("#seamNameInput") === "Naht 07" && await frame.inputValue("#preparedByInput") === "A. Beispiel");
             t.check("input focused", await frame.evaluate(() => document.activeElement.id) === "seamNameInput");
             let opened = 0;
             page.context().on("page", () => { opened++; });
