@@ -201,6 +201,18 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="overviewModal">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="overviewTitle">
+            <h3 id="overviewTitle">Program overview</h3>
+            <label for="seamNameInput" class="overview-seam-label">Weld seam name (used as the heading)</label>
+            <input type="text" id="seamNameInput" placeholder="e.g. HIC PK 764 – seam 04" maxlength="120">
+            <div class="modal-actions">
+                <button id="overviewCancelBtn" class="btn-secondary" type="button">Cancel</button>
+                <button id="overviewConfirmBtn" class="btn-primary" type="button">Open Overview</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="headModal">
         <div class="modal-box">
             <h3>Add new head</h3>

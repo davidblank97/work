@@ -175,7 +175,8 @@
         const HEAT_INPUT_OVERRIDE_KEYS = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "travel_max", "dwell_max", "excursion_max"];
         const OVERVIEW_OVERRIDE_KEYS = [...HEAT_INPUT_OVERRIDE_KEYS, "wire_max"];
 
-        function buildProgramOverviewHtml() {
+        function buildProgramOverviewHtml(seamName = "") {
+            const seam = String(seamName || "").trim();
             const files = loadedFiles;
             // Ziel-Bereiche aus der WPS: im Diagramm ohne WPS-Nummer (steht im Kopf), damit die Beschriftung passt.
             const wpsStore = readWpsStore();
@@ -231,7 +232,7 @@
             const percent = (key, value) => `${Number(Number(value).toFixed(DISPLAY_DECIMALS))} %`;
 
             return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><title>Program overview – ${escapeHtml(now.toLocaleDateString())}</title>
+<html lang="en"><head><meta charset="UTF-8"><title>${seam ? `${escapeHtml(seam)} – program overview` : `Program overview – ${escapeHtml(now.toLocaleDateString())}`}</title>
 <style>
     @page { size: A4 landscape; margin: 10mm; }
     * { box-sizing: border-box; }
@@ -240,7 +241,8 @@
     .toolbar button { padding: 7px 14px; border: 1px solid #805236; border-radius: 7px; background: #fff; color: #9a4a12; font-weight: 600; cursor: pointer; }
     .toolbar button.primary { background: #f28a3d; border-color: #d9702c; color: #24150d; }
     header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #f28a3d; padding-bottom: 6px; margin-bottom: 12px; }
-    h1 { margin: 0; font-size: 20px; } h1 span { color: #d9702c; }
+    h1 { margin: 0; font-size: 20px; } h1 span, .subtitle span { color: #d9702c; }
+    .subtitle { margin-top: 2px; font-size: 13px; font-weight: 700; color: #3a322c; }
     h2 { margin: 20px 0 6px; font-size: 14px; color: #9a4a12; border-bottom: 1px solid #e0d6cc; padding-bottom: 3px; break-after: avoid; }
     .meta { text-align: right; color: #6b5f55; }
     .muted, small { color: #6b5f55; }
@@ -282,7 +284,7 @@
 <body>
     <div class="toolbar"><button class="primary" onclick="window.print()">Print / Save as PDF</button><button onclick="window.close()">Close</button></div>
     <header>
-        <div><h1>Program overview <span>· ${files.length} file(s)</span></h1>
+        <div>${seam ? `<h1>${escapeHtml(seam)}</h1><div class="subtitle">Program overview <span>· ${files.length} file(s)</span></div>` : `<h1>Program overview <span>· ${files.length} file(s)</span></h1>`}
             <div class="muted">Files, segments, ${globalKeys.length ? "global (★), " : ""}overrides, heat input${wpsStore ? ", WPS" : ""}</div></div>
         <div class="meta">${metaLines.map(escapeHtml).join("<br>")}</div>
     </header>
@@ -321,19 +323,39 @@ ${globalKeys.length ? `
 </body></html>`;
         }
 
+        // Vor dem Oeffnen nach dem Nahtnamen fragen (Ueberschrift der Uebersicht); der letzte Name wird vorgeschlagen.
+        const OVERVIEW_SEAM_KEY = "scheduleEditorOverviewSeamName";
+        const overviewModal = document.getElementById("overviewModal");
+        const seamNameInput = document.getElementById("seamNameInput");
         function openProgramOverview() {
             commitPendingEdit();
             if (!loadedFiles.length) {
                 document.getElementById("status").textContent = "Please load at least one XML file for the program overview.";
                 return;
             }
+            let lastName = "";
+            try { lastName = localStorage.getItem(OVERVIEW_SEAM_KEY) || ""; } catch (error) { /* ohne Speicher */ }
+            seamNameInput.value = lastName;
+            openModal(overviewModal, seamNameInput);
+            window.setTimeout(() => { seamNameInput.focus(); seamNameInput.select(); }, 60);
+        }
+        document.getElementById("overviewCancelBtn").onclick = () => closeModal(overviewModal);
+        document.getElementById("overviewConfirmBtn").onclick = () => {
+            const seamName = seamNameInput.value.trim();
+            try { localStorage.setItem(OVERVIEW_SEAM_KEY, seamName); } catch (error) { /* ohne Speicher */ }
+            closeModal(overviewModal);
+            showProgramOverview(seamName);
+        };
+        bindEnterToConfirm(seamNameInput, document.getElementById("overviewConfirmBtn"));
+
+        function showProgramOverview(seamName) {
             const overviewWindow = window.open("", "_blank");
             if (!overviewWindow) {
                 document.getElementById("status").textContent = "Could not open the program overview. Please allow pop-ups for this page.";
                 return;
             }
             overviewWindow.document.open();
-            overviewWindow.document.write(buildProgramOverviewHtml());
+            overviewWindow.document.write(buildProgramOverviewHtml(seamName));
             overviewWindow.document.close();
             overviewWindow.focus();
             document.getElementById("status").textContent = `Program overview of ${loadedFiles.length} file(s) opened – use "Print / Save as PDF".`;

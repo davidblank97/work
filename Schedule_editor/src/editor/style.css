@@ -3590,3 +3590,10 @@
             color: var(--text-muted);
             font-size: 12px;
         }
+
+        .overview-seam-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }

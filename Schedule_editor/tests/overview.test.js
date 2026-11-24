@@ -8,9 +8,14 @@ module.exports = [
             await frame.setInputFiles("#fileInput", ["0402-Hotpass1.xml", "0403-Hotpass2.xml", "0408-Cap.xml"].map(name => t.file(dir + name)));
             await page.waitForTimeout(400);
             await frame.evaluate(() => { parameterOrder = { segments: ["indwell", "pri_amp", "slope"] }; });
-            const [overview] = await Promise.all([context.waitForEvent("page"), frame.click("#programOverviewBtn")]);
+            await frame.click("#programOverviewBtn");
+            t.check("dialog asks for the seam name", await frame.locator("#overviewModal.show").count() === 1);
+            await frame.fill("#seamNameInput", "HIC PK 764 – Naht 04");
+            const [overview] = await Promise.all([context.waitForEvent("page"), frame.press("#seamNameInput", "Enter")]);
             overview.on("pageerror", error => t.errors.push(`overview: ${error.message}`));
             await overview.waitForLoadState();
+            t.check("seam name as heading", await overview.textContent("h1") === "HIC PK 764 – Naht 04" && (await overview.title()).startsWith("HIC PK 764 – Naht 04"), await overview.textContent("h1"));
+            t.check("subtitle", (await overview.textContent(".subtitle")).includes("Program overview"));
             const headings = await overview.$$eval("h2", items => items.map(item => item.textContent));
             // ohne WPS und ohne hervorgehobene Global-Werte: kein WPS- und kein Global-Abschnitt
             t.check("section order", JSON.stringify(headings) === JSON.stringify(["Files", "Segments – main values", "Overrides", "Heat input"]), headings.join(" | "));
@@ -48,10 +53,14 @@ module.exports = [
             const dir = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/";
             await frame.setInputFiles("#fileInput", ["0402-Hotpass1.xml", "0403-Hotpass2.xml", "0408-Cap.xml"].map(name => t.file(dir + name)));
             await page.waitForTimeout(400);
-            const [overview] = await Promise.all([context.waitForEvent("page"), frame.click("#programOverviewBtn")]);
+            await frame.click("#programOverviewBtn");
+            await page.waitForTimeout(150);
+            await frame.fill("#seamNameInput", "");
+            const [overview] = await Promise.all([context.waitForEvent("page"), frame.click("#overviewConfirmBtn")]);
             overview.on("pageerror", error => t.errors.push(`overview: ${error.message}`));
             await overview.waitForLoadState();
             const headings = await overview.$$eval("h2", items => items.map(item => item.textContent));
+            t.check("no seam name: default heading", (await overview.textContent("h1")).startsWith("Program overview"));
             t.check("WPS section at the end", headings[headings.length - 1] === "WPS – ranges and check" && headings[headings.length - 2] === "Heat input", headings.join(" | "));
             // Seitenumbrueche: Abschnitte und Tabellen werden nicht zerschnitten, Tabellenkoepfe wiederholen sich
             const breaks = await overview.evaluate(() => ({
@@ -69,6 +78,24 @@ module.exports = [
             t.check("unassigned file named", (await overview.textContent("table.wps.check + p.legend")).includes("Not assigned to a WPS pass: 0408"));
             const files = await overview.locator("h2:text-is('Files') + table tbody tr").first().innerText();
             t.check("files: WPS pass column", files.includes("Füllage (m-141)"), files);
+        }
+    },
+    {
+        name: "seam name dialog: cancel and suggestion",
+        async run(t) {
+            const { page, frame } = await t.openApp("editor");
+            await frame.evaluate(() => localStorage.setItem("scheduleEditorOverviewSeamName", "Naht 07"));
+            await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
+            await page.waitForTimeout(300);
+            await frame.click("#programOverviewBtn");
+            await page.waitForTimeout(150);
+            t.check("last seam name suggested", await frame.inputValue("#seamNameInput") === "Naht 07");
+            t.check("input focused", await frame.evaluate(() => document.activeElement.id) === "seamNameInput");
+            let opened = 0;
+            page.context().on("page", () => { opened++; });
+            await frame.click("#overviewCancelBtn");
+            await page.waitForTimeout(200);
+            t.check("cancel opens nothing", opened === 0 && await frame.locator("#overviewModal.show").count() === 0);
         }
     }
 ];
