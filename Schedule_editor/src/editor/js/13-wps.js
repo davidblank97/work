@@ -491,14 +491,16 @@
 
         /* Anpassen an die WPS: Overrides verkleinern ("Fit overrides") bzw. Werte in den Bereich setzen ("Fit values") */
         // Overrides je WPS-Feld und die Segmentwerte, die sie betreffen (Faktor: Schedule-Einheit -> WPS-Einheit).
+        // fixed: wird nie veraendert (Schweissgeschwindigkeit), nur geprueft und gemeldet.
         const WPS_OVERRIDE_MAP = [
             { field: "current", override: "pri_amp_max", keys: ["pri_amp"], factor: 1 },
             { field: "current", override: "bkg_amp_max", keys: ["bkg_amp"], factor: 1 },
             { field: "voltage", override: "avc_override_max", keys: ["pri_ahc", "bkg_ahc"], factor: 1 },
-            { field: "travel", override: "travel_max", keys: ["pri_travel", "bkg_travel"], factor: 25.4 },
+            { field: "travel", override: "travel_max", keys: ["pri_travel", "bkg_travel"], factor: 25.4, fixed: true },
             { field: "wire", override: "wire_max", keys: ["pri_wire", "bkg_wire"], factor: 0.0254 }
         ];
-        const WPS_HEAT_OVERRIDES = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "travel_max", "dwell_max", "excursion_max"];
+        // Gemeinsam reduzierbare Heat-Input-Overrides (travel_max bleibt unveraendert).
+        const WPS_HEAT_OVERRIDES = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "dwell_max", "excursion_max"];
 
         // Gleiche Toleranz wie die Pruefung (wpsRate): Werte genau auf der Grenze gelten als innerhalb.
         const wpsEps = bound => Math.max(1e-6, Math.abs(bound) * 1e-6);
@@ -543,7 +545,7 @@
             const overrides = file.sections.overrides;
             if (!overrides) return;
             const label = fileShortLabel(file);
-            WPS_OVERRIDE_MAP.forEach(({ field, override, keys, factor }) => {
+            WPS_OVERRIDE_MAP.forEach(({ field, override, keys, factor, fixed }) => {
                 const range = wpsCombinedRange(rows, field);
                 const current = wpsReadValue(overrides, override);
                 if (!range || current === null || current <= 0) return;
@@ -553,13 +555,19 @@
                     if (raw === null || raw <= 0) return;
                     const value = raw * factor;
                     if (wpsBelow(value, range) || wpsAbove(value, range)) {
-                        issues.push(`${label}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (use Fit values)`);
+                        issues.push(fixed
+                            ? `${label}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (travel speed is never changed)`
+                            : `${label}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (use Fit values)`);
                         return;
                     }
                     const up = range.max !== null ? Math.max(0, (range.max - value) / value * 100) : Infinity;
                     const down = range.min !== null ? Math.max(0, (value - range.min) / value * 100) : Infinity;
                     allowed = Math.min(allowed, up, down);
                 }));
+                if (allowed < current && fixed) {
+                    issues.push(`${label}: ${override} ${formatWpsNumber(current, field)} % reaches outside the WPS (travel speed is never changed)`);
+                    return;
+                }
                 if (allowed < current) {
                     if (isLocked(override)) { issues.push(`${label}: ${override} is locked`); return; }
                     const node = [...overrides.children].find(child => child.tagName === override);
@@ -606,13 +614,13 @@
             });
         }
 
-        // Nominalwerte in den WPS-Bereich setzen; Heat Input danach ueber den Vorschub korrigieren.
+        // Nominalwerte in den WPS-Bereich setzen (nie den Vorschub); Heat Input danach ueber den Strom korrigieren.
         function fitWpsValues(file, rows, changes, issues) {
             const label = fileShortLabel(file);
             wpsSegmentsOf(file).forEach(segment => {
                 const segmentIndex = segment.getAttribute("index") || "";
                 const segmentLabel = `${label} · Segment ${segmentDisplayNumber(segment, file.sections.segments.indexOf(segment))}`;
-                WPS_OVERRIDE_MAP.forEach(({ field, keys, factor }) => {
+                WPS_OVERRIDE_MAP.forEach(({ field, keys, factor, fixed }) => {
                     const range = wpsCombinedRange(rows, field);
                     if (!range) return;
                     keys.forEach(key => {
@@ -624,6 +632,7 @@
                         if (wpsAbove(value, range)) text = wpsFormatLike(node.textContent, range.max / factor, "down");
                         else if (wpsBelow(value, range)) text = wpsFormatLike(node.textContent, range.min / factor, "up");
                         if (text === null) return;
+                        if (fixed) { issues.push(`${segmentLabel}: ${key} ${formatWpsNumber(value, field)} ${WPS_FIELDS[field].unit} is outside the WPS (travel speed is never changed)`); return; }
                         if (isLocked(key)) { issues.push(`${segmentLabel}: ${key} is locked`); return; }
                         wpsWriteValue(file, segment, "segments", segmentIndex, key, text, changes);
                     });
@@ -636,25 +645,24 @@
                 if (wpsAbove(result.heatInput, heatRange)) target = heatRange.max * (1 - 1e-4);
                 else if (wpsBelow(result.heatInput, heatRange)) target = heatRange.min * (1 + 1e-4);
                 if (target === null) return;
-                // Heat Input ~ 1 / Vorschub: beide Vorschuebe mit demselben Faktor aendern, im WPS-Vorschubbereich.
-                const travelRange = wpsCombinedRange(rows, "travel");
-                let ratio = result.heatInput / target;
-                const travels = ["pri_travel", "bkg_travel"].map(key => ({ key, value: wpsReadValue(segment, key) })).filter(item => item.value > 0);
-                if (!travels.length || travels.some(item => isLocked(item.key))) { issues.push(`${segmentLabel}: heat input outside, travel speed cannot be changed`); return; }
-                if (travelRange) {
-                    travels.forEach(({ value }) => {
-                        const mm = value * 25.4;
-                        if (travelRange.max !== null && ratio > 1) ratio = Math.min(ratio, travelRange.max / mm);
-                        if (travelRange.min !== null && ratio < 1) ratio = Math.max(ratio, travelRange.min / mm);
+                // Heat Input ~ Strom (U·I): Puls- und Grundstrom mit demselben Faktor aendern, im WPS-Strombereich.
+                const currentRange = wpsCombinedRange(rows, "current");
+                let ratio = target / result.heatInput;
+                const amps = ["pri_amp", "bkg_amp"].map(key => ({ key, value: wpsReadValue(segment, key) })).filter(item => item.value > 0);
+                if (!amps.length || amps.some(item => isLocked(item.key))) { issues.push(`${segmentLabel}: heat input outside, current cannot be changed`); return; }
+                if (currentRange) {
+                    amps.forEach(({ value }) => {
+                        if (currentRange.max !== null && ratio > 1) ratio = Math.min(ratio, currentRange.max / value);
+                        if (currentRange.min !== null && ratio < 1) ratio = Math.max(ratio, currentRange.min / value);
                     });
                 }
-                travels.forEach(({ key, value }) => {
+                amps.forEach(({ key, value }) => {
                     const node = [...segment.children].find(child => child.tagName === key);
-                    wpsWriteValue(file, segment, "segments", segmentIndex, key, wpsFormatLike(node.textContent, value * ratio, ratio > 1 ? "up" : "down"), changes);
+                    wpsWriteValue(file, segment, "segments", segmentIndex, key, wpsFormatLike(node.textContent, value * ratio, ratio < 1 ? "down" : "up"), changes);
                 });
                 const after = calculateSegmentHeatInput(segment, file.sections.overrides);
                 if (wpsAbove(after.heatInput, heatRange) || wpsBelow(after.heatInput, heatRange)) {
-                    issues.push(`${segmentLabel}: heat input ${formatWpsNumber(after.heatInput, "heat")} kJ/mm still outside (travel speed at the WPS limit)`);
+                    issues.push(`${segmentLabel}: heat input ${formatWpsNumber(after.heatInput, "heat")} kJ/mm still outside (current at the WPS limit)`);
                 }
             });
         }
@@ -706,9 +714,7 @@
             commitPendingEdit();
             const content = document.getElementById("content");
             content.innerHTML = "";
-            const heading = document.createElement("h2");
-            heading.textContent = "WPS Import / Check";
-            content.appendChild(heading);
+            appendHeatToolHeader(content);
             const store = readWpsStore();
             const working = wpsDraft || (store ? { document: store.document, wpsNumber: store.wpsNumber, page: store.page ?? null, rows: store.rows.map(normalizeWpsRow), notes: [], lines: null } : null);
 
@@ -903,7 +909,7 @@
             applyBtn.className = "btn-primary";
             applyBtn.id = "wpsApplyBtn";
             applyBtn.textContent = "Apply";
-            applyBtn.title = "Store the ranges and set the heat input ranges as target ranges (Tools › Heat Input)";
+            applyBtn.title = "Store the ranges and set the heat input ranges as target ranges (Heat Input tab)";
             applyBtn.disabled = !dirty;
             applyBtn.onclick = () => {
                 const stored = applyWps(working);
@@ -975,14 +981,14 @@
                 fitOverrides.className = "btn-secondary";
                 fitOverrides.id = "wpsFitOverridesBtn";
                 fitOverrides.textContent = "Fit Overrides";
-                fitOverrides.title = "Reduce the override percentages of the selected files so that value ± override (and the heat input min/max) stay inside the WPS. Values are not changed.";
+                fitOverrides.title = "Reduce the override percentages of the selected files so that value ± override (and the heat input min/max) stay inside the WPS. Values and the travel override (travel_max) are not changed.";
                 fitOverrides.onclick = () => applyWpsFit("overrides");
                 const fitValues = document.createElement("button");
                 fitValues.type = "button";
                 fitValues.className = "btn-secondary";
                 fitValues.id = "wpsFitValuesBtn";
                 fitValues.textContent = "Fit Values";
-                fitValues.title = "Set current, voltage, travel and wire of the selected files to the nearest WPS limit; then correct the heat input with the travel speed (within the WPS travel range).";
+                fitValues.title = "Set current, voltage and wire of the selected files to the nearest WPS limit; then correct the heat input with the current (within the WPS current range). The travel speed is never changed.";
                 fitValues.onclick = () => applyWpsFit("values");
                 const fitHint = document.createElement("span");
                 fitHint.className = "wps-hint";
@@ -1089,12 +1095,12 @@
         document.getElementById("wpsSaveCancelBtn").onclick = () => {
             pendingWpsSave = null;
             closeModal(wpsSaveModal);
-            document.getElementById("status").textContent = "Batch save cancelled: values outside the WPS (Tools › WPS Import / Check).";
+            document.getElementById("status").textContent = "Batch save cancelled: values outside the WPS (Tools › Heat Input & WPS).";
         };
         document.getElementById("wpsSaveShowBtn").onclick = () => {
             pendingWpsSave = null;
             closeModal(wpsSaveModal);
-            document.getElementById("wpsBtn").click();
+            openHeatTool("wps");
         };
         document.getElementById("wpsSaveConfirmBtn").onclick = () => {
             const proceed = pendingWpsSave;
@@ -1103,9 +1109,3 @@
             if (proceed) proceed();
         };
 
-        document.getElementById("wpsBtn").onclick = () => {
-            commitPendingEdit();
-            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
-            document.getElementById("wpsBtn").classList.add("active");
-            renderWps();
-        };

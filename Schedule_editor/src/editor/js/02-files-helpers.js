@@ -321,8 +321,7 @@
                 if (activeFile < 0 || activeFile >= loadedFiles.length) activeFile = 0;
                 renderFileList();
                 renderSidebar();
-                if (document.getElementById("heatInputBtn").classList.contains("active")) renderHeatInput();
-                else if (document.getElementById("wpsBtn").classList.contains("active")) renderWps();
+                if (document.getElementById("heatInputBtn").classList.contains("active")) renderHeatTool();
                 else showSection(lastSelectedSection);
                 document.getElementById("saveBtn").disabled = false;
                 batchSaveBtn.disabled = false;
@@ -337,7 +336,6 @@
                 if (resetBtn) resetBtn.disabled = true;
                 updateUndoRedoButtons();
                 document.getElementById("heatInputBtn").classList.remove("active");
-                document.getElementById("wpsBtn").classList.remove("active");
                 resetContentToPlaceholder();
             }
             updateSelectionStatus();
@@ -395,8 +393,7 @@
                     activeFile = i;
                     renderFileList();
                     renderSidebar();
-                    if (document.getElementById("heatInputBtn").classList.contains("active")) renderHeatInput();
-                    else if (document.getElementById("wpsBtn").classList.contains("active")) renderWps();
+                    if (document.getElementById("heatInputBtn").classList.contains("active")) renderHeatTool();
                     else showSection(lastSelectedSection);
                 };
                 const statusSpan = document.createElement("span");
@@ -556,7 +553,6 @@
             commitPendingEdit();
             lastSelectedSection = name;
             document.getElementById("heatInputBtn").classList.remove("active");
-            document.getElementById("wpsBtn")?.classList.remove("active");
             document.getElementById("schemaCheckBtn")?.classList.remove("active");
             document.querySelectorAll("#sidebarItems .sidebar-item").forEach(el => el.classList.remove("active"));
 

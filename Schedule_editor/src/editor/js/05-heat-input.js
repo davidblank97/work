@@ -146,12 +146,12 @@
         document.getElementById("heatSaveCancelBtn").onclick = () => {
             pendingHeatSave = null;
             closeModal(heatSaveModal);
-            document.getElementById("status").textContent = "Batch save cancelled: heat input outside the limits (Tools › Heat Input).";
+            document.getElementById("status").textContent = "Batch save cancelled: heat input outside the limits (Tools › Heat Input & WPS).";
         };
         document.getElementById("heatSaveShowBtn").onclick = () => {
             pendingHeatSave = null;
             closeModal(heatSaveModal);
-            document.getElementById("heatInputBtn").click();
+            openHeatTool("heat");
         };
         document.getElementById("heatSaveConfirmBtn").onclick = () => {
             const proceed = pendingHeatSave;
@@ -546,18 +546,49 @@
         window.addEventListener("resize", () => {
             window.clearTimeout(heatInputResizeTimer);
             heatInputResizeTimer = window.setTimeout(() => {
-                if (document.getElementById("heatInputBtn")?.classList.contains("active")) renderHeatInput();
+                if (document.getElementById("heatInputBtn")?.classList.contains("active") && heatToolTab === "heat") renderHeatInput();
             }, 150);
         });
+
+        // Ein Werkzeug "Heat Input & WPS" mit zwei Reitern: Heat Input (dieses Modul) und WPS Import / Check (13-wps.js).
+        let heatToolTab = "heat";
+        function renderHeatTool() {
+            if (heatToolTab === "wps") renderWps();
+            else renderHeatInput();
+        }
+        function openHeatTool(tab) {
+            heatToolTab = tab;
+            commitPendingEdit();
+            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
+            document.getElementById("heatInputBtn").classList.add("active");
+            renderHeatTool();
+        }
+        // Ueberschrift und Reiter oben in der Ansicht
+        function appendHeatToolHeader(content) {
+            const heading = document.createElement("h2");
+            heading.textContent = "Heat Input & WPS";
+            const tabs = document.createElement("div");
+            tabs.className = "heat-tool-tabs";
+            tabs.setAttribute("role", "tablist");
+            [["heat", "Heat Input", "heatTabHeat"], ["wps", "WPS Import / Check", "heatTabWps"]].forEach(([tab, label, id]) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.id = id;
+                button.className = `heat-tool-tab${heatToolTab === tab ? " is-active" : ""}`;
+                button.setAttribute("role", "tab");
+                button.setAttribute("aria-selected", String(heatToolTab === tab));
+                button.textContent = label;
+                button.onclick = () => { if (heatToolTab !== tab) openHeatTool(tab); };
+                tabs.appendChild(button);
+            });
+            content.append(heading, tabs);
+        }
 
         function renderHeatInput() {
             commitPendingEdit();
             const content = document.getElementById("content");
             content.innerHTML = "";
-
-            const heading = document.createElement("h2");
-            heading.textContent = "Heat Input";
-            content.appendChild(heading);
+            appendHeatToolHeader(content);
 
             if (activeFile < 0 || activeFile >= loadedFiles.length) {
                 const message = document.createElement("p");

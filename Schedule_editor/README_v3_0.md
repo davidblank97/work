@@ -33,7 +33,9 @@ Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
 
 **Aufbau der Datei:** Startseite und Umschaltung stehen am Anfang und Ende der Datei. Die beiden Anwendungen liegen unveraendert in `<template id="app-editor">` bzw. `<template id="app-wdr">` und werden beim Oeffnen jeweils als eigenes Dokument (iframe) gestartet, damit sich CSS und JavaScript nicht gegenseitig stoeren. Aenderungen am Editor oder Converter werden direkt im jeweiligen Template vorgenommen. Einstellungen im `localStorage` (ausgeblendete/gesperrte Parameter, Reihenfolge usw.) sind dieselben wie bei der Einzeldatei, solange sie ueber dieselbe Adresse geoeffnet wird.
 
-## WPS-Import und -Pruefung (Tools › WPS Import / Check)
+## WPS-Import und -Pruefung (Tools › Heat Input & WPS, Reiter „WPS Import / Check“)
+
+Heat Input und WPS sind ein Werkzeug mit zwei Reitern: **Heat Input** (Diagramm, Tabelle, Target Ranges) und **WPS Import / Check**.
 
 Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; eingescannte Dokumente enthalten keinen Text, dann die Werte von Hand eintragen). Alles laeuft offline im Browser (pdf.js eingebettet).
 
@@ -50,7 +52,7 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
    - **Bitte immer mit dem Dokument vergleichen.**
 3. **Apply:**
    - Speichert die Bereiche im Browser.
-   - Uebernimmt den Heat-Input-Bereich jeder Lage als **Target Range** (Tools › Heat Input). Ein erneuter Import ersetzt nur diese WPS-Bereiche; eigene Bereiche bleiben.
+   - Uebernimmt den Heat-Input-Bereich jeder Lage als **Target Range** (Reiter „Heat Input“). Ein erneuter Import ersetzt nur diese WPS-Bereiche; eigene Bereiche bleiben.
 4. **Pruefung** der geladenen Schedules je Segment:
    - Strom (pri/bkg_amp), Spannung (pri/bkg_ahc), Vorschub und Draht (umgerechnet aus in/min) sowie Heat Input.
    - **Rot:** Wert ausserhalb der WPS.
@@ -59,14 +61,15 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
    - Ein Klick oeffnet das Segment.
 5. **An die WPS anpassen** (fuer die markierten Dateien mit WPS-Zeile; Rueckgaengig mit Strg+Z, jede Aenderung steht im Change Log und darunter in einer Liste):
    - **Fit Overrides:**
-     - Die Override-Prozente (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `travel_max`, `wire_max`) werden nur verkleinert, auf 0,1 % abgerundet, bis Wert ± Override in der WPS liegt.
-     - Reicht der Heat-Input-Bereich (min/max) noch hinaus, werden die Heat-Input-Overrides (auch `dwell_max`, `excursion_max`) gemeinsam reduziert.
+     - Die Override-Prozente (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `wire_max`) werden nur verkleinert, auf 0,1 % abgerundet, bis Wert ± Override in der WPS liegt.
+     - Reicht der Heat-Input-Bereich (min/max) noch hinaus, werden die Heat-Input-Overrides (Strom, Spannung, `dwell_max`, `excursion_max`) gemeinsam reduziert.
      - Die Werte selbst bleiben unveraendert. Liegt ein Wert schon ausserhalb, wird er als „Not solved“ gemeldet.
    - **Fit Values:**
-     - Strom, Spannung, Vorschub und Draht ausserhalb der WPS werden auf die naechste WPS-Grenze gesetzt (nach innen gerundet, mit den Nachkommastellen der Datei).
-     - Liegt der Heat Input danach noch ausserhalb, wird der Vorschub (pri und bkg mit demselben Faktor) angepasst, soweit der WPS-Vorschubbereich es erlaubt.
+     - Strom, Spannung und Draht ausserhalb der WPS werden auf die naechste WPS-Grenze gesetzt (nach innen gerundet, mit den Nachkommastellen der Datei).
+     - Liegt der Heat Input danach noch ausserhalb, wird der Strom (Puls- und Grundstrom mit demselben Faktor) angepasst, soweit der WPS-Strombereich es erlaubt.
      - Ein Wert auf der Grenze laesst den Override gelb; dann zusaetzlich **Fit Overrides**.
    - Werte genau auf der WPS-Grenze gelten als innerhalb und werden nicht veraendert.
+   - **Die Schweissgeschwindigkeit (`pri_travel`, `bkg_travel`, `travel_max`) wird nie veraendert.** Liegt sie ausserhalb der WPS, wird das nur gemeldet.
 6. **Batch Save** warnt, wenn Werte ausserhalb der WPS liegen.
 
 ## WDR Converter: Heat-Input-Auswertung
@@ -333,7 +336,7 @@ Umbenennen geht ueber das Dateinamen-Feld oben in der Dateikarte. `Save As…` g
 **Heat-Input-Pruefung beim Herunterladen:** Liegt der Heat Input eines Segments (Bereich Min – Max) ausserhalb der Grenzen, erscheint vor dem Download die Fehlermeldung „Heat input outside the limits“. Geprueft wird gegen:
 
 - die Grenzen in der Datei (`heat_input_fault_low` / `heat_input_fault_high` in `<limits>`, sofern gesetzt, also groesser als 0 und kleiner als 9999),
-- den Ziel-Bereich unter `Tools > Heat Input` (Felder Min/Max, rote Linien).
+- den Ziel-Bereich unter `Tools > Heat Input & WPS` (Reiter „Heat Input“) (Felder Min/Max, rote Linien).
 
 Die Meldung nennt jedes betroffene Segment mit Wertebereich und der ueberschrittenen Grenze. Zur Wahl stehen `Cancel` (nichts wird heruntergeladen), `Show heat input` (oeffnet die Heat-Input-Ansicht) und `Save anyway`. Danach folgt gegebenenfalls noch die Schema-Rueckfrage.
 

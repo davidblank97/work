@@ -412,12 +412,7 @@
 
         document.getElementById("compareBtn").onclick = renderComparison;
         document.getElementById("xmlViewerBtn").onclick = openXmlViewer;
-        document.getElementById("heatInputBtn").onclick = () => {
-            commitPendingEdit();
-            document.querySelectorAll("#sidebar .sidebar-item").forEach(el => el.classList.remove("active"));
-            document.getElementById("heatInputBtn").classList.add("active");
-            renderHeatInput();
-        };
+        document.getElementById("heatInputBtn").onclick = () => openHeatTool(heatToolTab);
 
         document.getElementById("hiddenManagerBtn").onclick = () => {
             commitPendingEdit();

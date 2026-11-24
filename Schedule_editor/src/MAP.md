@@ -15,7 +15,7 @@ All JS files of one app run as one classic script in the app's iframe: they shar
 | Number parsing, parameter order/drag, file list, sidebar, saved-value markers | `editor/js/02-files-helpers.js` |
 | Input fields, panel rendering (global/limits/overrides …) | `editor/js/03-input-panel.js` |
 | Segments: list, ring, add/duplicate/move, column layout | `editor/js/04-segments.js` |
-| Heat input: limits, target ranges, chart, save check | `editor/js/05-heat-input.js` |
+| Heat input: limits, target ranges, chart, save check; tool "Heat Input & WPS" with tabs (`openHeatTool`) | `editor/js/05-heat-input.js` |
 | Propagation to selected files, Save / Batch Save, modals, head presets | `editor/js/06-save-propagation.js` |
 | XDR schema check and XDR manager | `editor/js/07-schema.js` |
 | Upgrade to schema version (layout templates) | `editor/js/08-upgrade.js` |

@@ -46,6 +46,12 @@ function wpsPdf() {
     ]);
 }
 
+// Werkzeug "Heat Input & WPS" oeffnen und den Reiter "WPS Import / Check" waehlen.
+async function openWps(frame) {
+    await frame.click("#heatInputBtn");
+    await frame.click("#heatTabWps");
+}
+
 const rowValues = (frame, label) => frame.evaluate(text => {
     const rowElement = [...document.querySelectorAll(".wps-range-table tbody tr")].find(tr => tr.querySelector(".wps-label-input").value === text);
     if (!rowElement) return null;
@@ -63,8 +69,9 @@ module.exports = [
             await frame.evaluate(() => localStorage.setItem("scheduleEditorHeatInputTargets", JSON.stringify([{ id: "m1", name: "Manual", min: "0.1", max: "5", files: null }])));
             await frame.setInputFiles("#fileInput", [t.file(REF)]);
             await page.waitForTimeout(300);
-            await frame.click("#wpsBtn");
-            t.check("view opened", (await frame.textContent("#content h2")) === "WPS Import / Check");
+            await openWps(frame);
+            t.check("one tool with tabs", (await frame.textContent("#content h2")) === "Heat Input & WPS"
+                && await frame.getAttribute("#heatTabWps", "aria-selected") === "true" && await frame.locator("#wpsBtn").count() === 0);
             const pdfPath = path.join(t.tmpDir, "WPS_0402.pdf");
             fs.writeFileSync(pdfPath, wpsPdf());
             await frame.setInputFiles("#wpsFileInput", [pdfPath]);
@@ -81,7 +88,7 @@ module.exports = [
             t.check("cap row (± range)", cap && cap.type === "Cap" && cap.numbers.slice(4, 6).join("|") === "70|110", JSON.stringify(cap));
             const fill = await rowValues(frame, "Fülllage");
             t.check("fill row", fill && fill.type === "Fill", JSON.stringify(fill));
-            t.check("unit note", (await frame.textContent(".wps-panel:nth-of-type(2)")).includes("converted from cm/min"));
+            t.check("unit note", (await frame.textContent("#content")).includes("converted from cm/min"));
             t.check("raw text shown", (await frame.textContent(".wps-raw pre")).includes("Schweißanweisung"));
 
             // Zelle bearbeiten, uebernehmen
@@ -135,7 +142,7 @@ module.exports = [
         name: "manual entry when the PDF has no table",
         async run(t) {
             const { frame } = await t.openApp("editor");
-            await frame.click("#wpsBtn");
+            await openWps(frame);
             const pdfPath = path.join(t.tmpDir, "empty.pdf");
             fs.writeFileSync(pdfPath, makePdf([{ x: 40, y: 500, text: "Deckblatt ohne Parametertabelle" }]));
             await frame.setInputFiles("#wpsFileInput", [pdfPath]);
@@ -163,7 +170,7 @@ module.exports = [
             const sample = name => t.file(`Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/${name}`);
             await frame.setInputFiles("#fileInput", [sample("0402-Hotpass1.xml"), sample("0404-Fill-OUT.xml"), sample("0407-Comp.xml"), sample("0408-Cap.xml")]);
             await page.waitForTimeout(400);
-            await frame.click("#wpsBtn");
+            await openWps(frame);
             await frame.setInputFiles("#wpsFileInput", [t.file(pdf)]);
             await frame.waitForSelector(".wps-range-table tbody tr", { timeout: 30000 });
             const status = await frame.textContent("#wpsStatus");
@@ -177,7 +184,7 @@ module.exports = [
             const cap = await rowValues(frame, "Decklage (m-141)");
             t.check("cap layer", cap && cap.type === "Cap" && cap.files === "0408"
                 && cap.numbers.join("|") === "108|200|8.7|11.6|50|100|0.8|3|0.47|0.7", JSON.stringify(cap));
-            t.check("manual root/hot pass (141) skipped", (await frame.textContent(".wps-panel:nth-of-type(2)")).includes("Wurzel-/Stützlage (141) skipped"));
+            t.check("manual root/hot pass (141) skipped", (await frame.textContent("#content")).includes("Wurzel-/Stützlage (141) skipped"));
             t.check("raw text of page 24 only", (await frame.textContent(".wps-raw summary")).includes("page 24") && !(await frame.textContent(".wps-raw pre")).includes("HIC-O01- 2P"));
             await frame.selectOption("#wpsFormSelect", "1");
             t.check("switch to page 27", await frame.inputValue("#wpsNumberInput") === "HIC-O01-2P Rev.005");
@@ -205,7 +212,7 @@ module.exports = [
             })));
             await frame.setInputFiles("#fileInput", [t.file(REF)]);
             await page.waitForTimeout(300);
-            await frame.click("#wpsBtn");
+            await openWps(frame);
             const xml = (section, key) => frame.evaluate(([sectionName, name]) => {
                 const file = loadedFiles[0];
                 const parent = sectionName === "overrides" ? file.sections.overrides : file.sections.segments[0];
@@ -261,7 +268,7 @@ module.exports = [
                 rows: [{ label: "Hotpass", passType: "Hot pass", files: ["0402"], current: { min: null, max: null }, voltage: { min: null, max: null },
                     travel: { min: null, max: null }, wire: { min: null, max: null }, heat: { min: null, max: limit } }]
             })), max);
-            await frame.click("#wpsBtn");
+            await openWps(frame);
             const heatStatus = () => frame.evaluate(() => document.querySelector(".wps-check-table .wps-cell[data-field=heat]").className);
             t.check("before: heat override range outside", (await heatStatus()).includes("is-warn"), await heatStatus());
             await frame.click("#wpsFitOverridesBtn");
@@ -270,6 +277,38 @@ module.exports = [
             t.check("max heat input <= WPS max", result.maxHeatInput <= max + 1e-6 && result.heatInput === heat.heatInput, `${result.maxHeatInput} vs ${max}`);
             const amp = await frame.evaluate(() => [...loadedFiles[0].sections.overrides.children].find(child => child.tagName === "pri_amp_max").textContent);
             t.check("overrides reduced, one decimal", /^\d+\.\d0{5}$/.test(amp) && Number(amp) < 10, amp);
+        }
+    },
+    {
+        name: "travel speed is never changed; heat input corrected by the current",
+        async run(t) {
+            const { page, frame } = await t.openApp("editor");
+            await frame.setInputFiles("#fileInput", [t.file(REF)]);
+            await page.waitForTimeout(300);
+            const heat = await frame.evaluate(() => calculateSegmentHeatInput(loadedFiles[0].sections.segments[0], loadedFiles[0].sections.overrides));
+            // Vorschub 75 mm/min ausserhalb 80–90; Heat Input 10 % ueber dem WPS-Maximum; Strom 120–190 (pri 180, bkg 140).
+            const max = Number((heat.heatInput / 1.1).toFixed(3));
+            await frame.evaluate(limit => localStorage.setItem("scheduleEditorWpsRanges", JSON.stringify({
+                document: "test.pdf", wpsNumber: "T-3", checkMode: "separate",
+                rows: [{ label: "Hotpass", passType: "Hot pass", files: ["0402"], current: { min: 120, max: 190 }, voltage: { min: null, max: null },
+                    travel: { min: 80, max: 90 }, wire: { min: null, max: null }, heat: { min: null, max: limit } }]
+            })), max);
+            await openWps(frame);
+            const value = key => frame.evaluate(name => {
+                const file = loadedFiles[0];
+                const parent = name.endsWith("_max") ? file.sections.overrides : file.sections.segments[0];
+                return [...parent.children].find(child => child.tagName === name).textContent;
+            }, key);
+            const travelBefore = [await value("pri_travel"), await value("bkg_travel"), await value("travel_max")];
+            await frame.click("#wpsFitValuesBtn");
+            t.check("travel unchanged by Fit Values", JSON.stringify([await value("pri_travel"), await value("bkg_travel"), await value("travel_max")]) === JSON.stringify(travelBefore));
+            const result = await frame.textContent("#wpsFitResult");
+            t.check("travel reported, not changed", result.includes("pri_travel 75 mm/min is outside the WPS (travel speed is never changed)"), result);
+            const after = await frame.evaluate(() => calculateSegmentHeatInput(loadedFiles[0].sections.segments[0], loadedFiles[0].sections.overrides));
+            t.check("heat input inside by lower current", after.heatInput <= max + 1e-6 && Number(await value("pri_amp")) < 180 && Number(await value("bkg_amp")) < 140, `${after.heatInput} ${await value("pri_amp")} ${await value("bkg_amp")}`);
+            t.check("current stays inside the WPS", Number(await value("bkg_amp")) >= 120 && Number(await value("pri_amp")) <= 190, await value("bkg_amp"));
+            await frame.click("#wpsFitOverridesBtn");
+            t.check("travel unchanged by Fit Overrides", JSON.stringify([await value("pri_travel"), await value("bkg_travel"), await value("travel_max")]) === JSON.stringify(travelBefore));
         }
     }
 ];

@@ -28,6 +28,7 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
   - sets `config_version` and `jog_speed_edit_mode`=1.
 - **Heat input** (05): `calculateSegmentHeatInput` is in 01. The target ranges are `{id,name,min,max,files|null}` and are matched by the 4-digit schedule prefix (`fileTargetKey`).
   - Open question: the oscillation cycle uses one excursion. Machine data suggests two; see `docs/PLAN_Excel_Vorlage.md`.
+- **Heat Input & WPS** is one tool (`#heatInputBtn`) with two tabs. `openHeatTool(tab)` and `renderHeatTool()` (in 05) render either `renderHeatInput` (05) or `renderWps` (13). Both views start with `appendHeatToolHeader`.
 - **WPS** (13):
   - `readWpsPdf` (pdf.js text layer; the worker runs in the main thread, no OCR) → `parseWpsDocument`. Units are converted to A, V, mm/min, m/min, kJ/mm (`detectWpsUnit`; "m/min" is not read inside "cm/min").
     - First `parseWpsForms`: forms with the passes as columns and parameter rows with `min.`/`max.` lines, one form per page. Only `m-…` process columns are kept if the form has any. The WPS no. is read next to "Sp.-Nr."/"WPS-no.". Several forms can be chosen in the UI (`wpsFormSelect`).
@@ -35,7 +36,8 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
     - The check uses a relative tolerance of 1e-6, so conversion rest values at a WPS bound do not count as outside.
   - Fit (`applyWpsFit`, under `recordHistoryAction`, change log through `wpsWriteValue`; applies to the selected files with a WPS row):
     - `fitWpsOverrides` only lowers the overrides of `WPS_OVERRIDE_MAP` (floored to 0.1 %). It then scales `WPS_HEAT_OVERRIDES` together by binary search until the heat min/max fit.
-    - `fitWpsValues` clamps the values to the WPS bound, rounded inwards. If the heat input is still outside, it scales pri/bkg travel, within the travel range.
+    - `fitWpsValues` clamps the values to the WPS bound, rounded inwards. If the heat input is still outside, it scales pri/bkg amps, within the current range.
+    - **Travel speed is never changed:** the `fixed` entry in `WPS_OVERRIDE_MAP` covers pri/bkg_travel and travel_max, and `travel_max` is not part of `WPS_HEAT_OVERRIDES`. Travel speed is only checked and reported.
     - Both use the same tolerance as the check (`wpsAbove`/`wpsBelow`).
   - Editable review table, then `applyWps`. It stores `scheduleEditorWpsRanges` and replaces the heat input targets with `source: "wps"`; manual targets stay.
   - `wpsCheckFile` compares pri/bkg amp, ahc, travel and wire (stored in in/min) and the heat input per segment. Results: fail (nominal outside), warn (override range outside), ok. `confirmWpsBeforeSave` runs in Batch Save.
