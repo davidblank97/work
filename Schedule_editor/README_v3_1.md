@@ -68,6 +68,8 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
    - Die Einheiten werden umgerechnet (Strom A, Spannung V, Vorschub mm/min, Draht cm/min, Heat Input kJ/mm).
    - Zwei Tabellenformen werden erkannt: eine Zeile je Lage, oder Formulare mit den **Lagen als Spalten** und je einer `min.`/`max.`-Zeile pro Parameter (Bilfinger-Vordruck, z. B. Seite 24 im WDP-3).
    - Bei Formularen werden nur **mechanisierte Prozesse (m-141)** uebernommen; Spalten mit Handschweissen (141, z. B. Wurzel-/Stuetzlage) werden mit Hinweis uebersprungen.
+   - Lauf-Tabellen wie „Mechanised Orbital Parameters“ (RCC-M-WPS, z. B. BPT-0000131115): eine Zeile je Lauf („Run 3+“, „Run 4+“), auch wenn ein Lauf ueber mehrere Textzeilen geht oder die Zahlen in der PDF Zeichen fuer Zeichen stehen. Tabellen mit Handschweissen (141, z. B. „Manual Parameters“) werden uebersprungen.
+   - **Getrennte Bereiche fuer Puls (P) und Grund (B)** (z. B. Strom B 140–250 / P 180–290 A, Drahtvorschub B=110–250 / P=150–270 cm/min) werden uebernommen: geprueft wird `pri_…` gegen P und `bkg_…` gegen B; in der Tabelle sind beide Bereiche einzeln editierbar, Fit Overrides/Fit Values richten sich ebenfalls danach.
    - Enthaelt die PDF mehrere WPS (z. B. HIC-O01-1P auf Seite 24 und HIC-O01-2P auf Seite 27), kann die WPS ausgewaehlt werden; die WPS-Nummer wird aus dem Kopf gelesen.
 2. **Pruefen und korrigieren:**
    - Die erkannten Werte stehen in einer Tabelle zum Bearbeiten. Der gelesene Text ist zum Vergleich aufklappbar.

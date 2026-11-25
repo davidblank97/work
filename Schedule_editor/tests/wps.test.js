@@ -368,5 +368,50 @@ module.exports = [
             const cells = await frame.evaluate(checkCells);
             t.check("no override setting can leave the WPS", Object.values(cells).every(cell => cell.status === "is-ok"), JSON.stringify(cells));
         }
+    },
+    {
+        // RCC-M-WPS (BPT-0000131115): Lauf-Tabelle "Mechanised Orbital Parameters" auf Seite 3, Zahlen Zeichen fuer
+        // Zeichen gespeichert, ein Lauf ueber drei Textzeilen, getrennte Bereiche fuer Puls (P) und Grund (B).
+        name: "real WPS document (run table with P/B ranges)",
+        async run(t) {
+            const pdf = "Schedule_editor/data/samples/BPT-0000131115_003_003 (6).PDF";
+            if (!fs.existsSync(t.file(pdf))) {
+                t.check("sample WPS not present – skipped", true);
+                return;
+            }
+            const { page, frame } = await t.openApp("editor");
+            const sample = name => t.file(`Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/${name}`);
+            await frame.setInputFiles("#fileInput", [sample("0404-Fill-OUT.xml"), sample("0408-Cap.xml")]);
+            await page.waitForTimeout(300);
+            await openWps(frame);
+            await frame.setInputFiles("#wpsFileInput", [t.file(pdf)]);
+            await frame.waitForSelector(".wps-range-table tbody tr", { timeout: 30000 });
+            t.check("WPS number", await frame.inputValue("#wpsNumberInput") === "HIC_O01-1 Rev 003");
+            const notes = await frame.textContent("#content");
+            t.check("manual table skipped", notes.includes("Manual runs skipped") && notes.includes("Run TACK (141)"), notes.slice(0, 400));
+            const rows = await frame.evaluate(() => wpsDraft.rows.map(row => ({ label: row.label, current: row.current, voltage: row.voltage, travel: row.travel, wire: row.wire, heat: row.heat })));
+            const run3 = rows.find(row => row.label === "Run 3+ (141-m)");
+            const run4 = rows.find(row => row.label === "Run 4+ (141-m)");
+            t.check("two mechanised runs", rows.length === 2 && run3 && run4, JSON.stringify(rows.map(row => row.label)));
+            t.check("run 3+: current P/B", run3 && JSON.stringify(run3.current) === JSON.stringify({ min: 140, max: 290, pri: { min: 180, max: 290 }, bkg: { min: 140, max: 250 } }), JSON.stringify(run3?.current));
+            t.check("run 3+: voltage, travel, heat", run3 && run3.voltage.min === 9 && run3.voltage.max === 11 && run3.travel.min === 65 && run3.travel.max === 85
+                && run3.heat.min === 0.81 && run3.heat.max === 1.54, JSON.stringify(run3));
+            t.check("run 3+: wire P/B (cm/min)", run3 && run3.wire.pri.min === 150 && run3.wire.pri.max === 270 && run3.wire.bkg.min === 110 && run3.wire.bkg.max === 250, JSON.stringify(run3?.wire));
+            t.check("run 4+", run4 && run4.current.pri.max === 190 && run4.current.bkg.min === 110 && run4.travel.min === 90 && run4.travel.max === 110
+                && run4.wire.bkg.max === 90 && run4.heat.min === 0.45 && run4.heat.max === 0.66, JSON.stringify(run4));
+            t.check("split inputs shown", await frame.locator(".wps-range-table .wps-current-pri-min").count() === 2 && await frame.locator(".wps-range-table .wps-wire-bkg-max").count() === 2);
+            // Pulsstrom gegen P, Grundstrom gegen B: 0408 (Run 4+): pri 180 > P 190? nein; bkg 150 = B max 150 -> innerhalb
+            await frame.fill(".wps-range-table tbody tr:nth-child(1) .wps-files-input", "0404");
+            await frame.fill(".wps-range-table tbody tr:nth-child(2) .wps-files-input", "0408");
+            await frame.fill(".wps-range-table tbody tr:nth-child(2) .wps-current-pri-max", "170");
+            await frame.click("#wpsApplyBtn");
+            const store = await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorWpsRanges")));
+            t.check("edited P max stored, union updated", store.rows[1].current.pri.max === 170 && store.rows[1].current.max === 170, JSON.stringify(store.rows[1].current));
+            const cells = await frame.evaluate(() => {
+                const row = document.querySelector('.wps-check-table tr[data-file="0408-Cap.xml"]');
+                return ["pri", "bkg"].map(part => row.querySelector(`[data-field=current][data-part=${part}]`).className);
+            });
+            t.check("pri checked against P (180 > 170), bkg against B (150 within 110–150)", cells[0].includes("is-fail") && !cells[1].includes("is-fail"), JSON.stringify(cells));
+        }
     }
 ];

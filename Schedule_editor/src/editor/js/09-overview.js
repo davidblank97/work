@@ -86,7 +86,9 @@
                 const members = results.filter(result => result.rows[0] === wpsRow);
                 if (!members.length) return;
                 check += `<tr class="group"><td>${escapeHtml(wpsRow.label)}</td>`
-                    + pairFields.map(key => `<td colspan="2" class="num sep range">${escapeHtml(describeWpsRange(wpsRow[key], key))}</td>`).join("")
+                    + pairFields.map(key => (!mean && (wpsRow[key].pri || wpsRow[key].bkg)
+                        ? `<td class="num sep range">${escapeHtml(describeWpsRange(wpsPartRange(wpsRow[key], "pri"), key).replace(/^P /, ""))}</td><td class="num range">${escapeHtml(describeWpsRange(wpsPartRange(wpsRow[key], "bkg"), key).replace(/^B /, ""))}</td>`
+                        : `<td colspan="2" class="num sep range">${escapeHtml(describeWpsRange(wpsRow[key], key))}</td>`)).join("")
                     + `<td class="num sep range">${escapeHtml(describeWpsRange(wpsRow.heat, "heat"))}</td><td class="range">WPS range</td></tr>`;
                 members.forEach(result => {
                     result.entries.forEach(entry => {

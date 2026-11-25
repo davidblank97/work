@@ -32,6 +32,9 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
 - **WPS** (13):
   - `readWpsPdf` (pdf.js text layer; the worker runs in the main thread, no OCR) → `parseWpsDocument`. Units are converted to A, V, mm/min (travel), cm/min (wire), kJ/mm. The store has `wireUnit: "cm/min"`; older stores in m/min are converted when read (`detectWpsUnit`; "m/min" is not read inside "cm/min").
     - First `parseWpsForms`: forms with the passes as columns and parameter rows with `min.`/`max.` lines, one form per page. Only `m-…` process columns are kept if the form has any. The WPS no. is read next to "Sp.-Nr."/"WPS-no.". Several forms can be chosen in the UI (`wpsFormSelect`).
+    - Then `parseWpsRunTables`: run tables such as "Mechanised Orbital Parameters" (RCC-M WPS). One run can span several lines, anchored at the run label. Sub-columns B/P or Min/Max and "B=… P=…" text are read. Manual runs (141) are dropped when 141-m exists.
+    - `readWpsPdf` merges touching text items into words, because some PDFs store numbers character by character.
+    - Ranges may carry `pri`/`bkg` sub-ranges, and `min`/`max` is then their union. `wpsPartRange` and `wpsKeyPart` select the sub-range: the check, `wpsCombinedRange(rows, field, part)` and both fits measure pri/bkg values against it.
     - Otherwise `parseWpsRowTable`: one row per pass. The header row is found by keywords (DE/EN), the columns by x position, and ranges by `parseWpsRange`.
     - The check uses a relative tolerance of 1e-6, so conversion rest values at a WPS bound do not count as outside.
   - Fit (`applyWpsFit`, under `recordHistoryAction`, change log through `wpsWriteValue`; applies to the selected files with a WPS row):

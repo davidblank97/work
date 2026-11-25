@@ -23,9 +23,8 @@
             const rows = stored.rows.map(normalizeWpsRow);
             // Fruehere Versionen speicherten den Drahtvorschub in m/min -> cm/min
             if (stored.wireUnit !== "cm/min") {
-                rows.forEach(row => {
-                    ["min", "max"].forEach(bound => { if (row.wire[bound] !== null) row.wire[bound] = Number((row.wire[bound] * 100).toPrecision(6)); });
-                });
+                const scale = range => ["min", "max"].forEach(bound => { if (range && range[bound] !== null) range[bound] = Number((range[bound] * 100).toPrecision(6)); });
+                rows.forEach(row => { scale(row.wire); scale(row.wire.pri); scale(row.wire.bkg); });
             }
             return { ...stored, wireUnit: "cm/min", checkMode: stored.checkMode === "mean" ? "mean" : "separate", rows };
         }
@@ -34,11 +33,21 @@
             try { localStorage.setItem(WPS_STORE_KEY, JSON.stringify({ ...store, wireUnit: "cm/min" })); } catch (error) { console.warn("Could not store the WPS ranges.", error); }
         }
 
+        // Bereich {min, max}; optional getrennt fuer Puls (pri) und Grund (bkg), z. B. Strom "B 140–250 / P 180–290".
+        // min/max ist dann die Vereinigung beider Teilbereiche.
         function normalizeWpsRow(row) {
-            const range = value => ({
+            const simple = value => ({
                 min: Number.isFinite(value?.min) ? value.min : null,
                 max: Number.isFinite(value?.max) ? value.max : null
             });
+            const range = value => {
+                const result = simple(value);
+                ["pri", "bkg"].forEach(part => {
+                    const sub = value?.[part] && simple(value[part]);
+                    if (sub && (sub.min !== null || sub.max !== null)) result[part] = sub;
+                });
+                return result;
+            };
             const result = {
                 label: String(row?.label ?? ""),
                 passType: WPS_PASS_TYPES.includes(row?.passType) ? row.passType : "Other",
@@ -94,6 +103,19 @@
                 });
                 pageLines.forEach(line => {
                     line.items.sort((a, b) => a.x - b.x);
+                    // Aneinanderstossende Textstuecke zu Woertern zusammenfuegen ("1" "4" "0" "-" -> "140-"):
+                    // manche PDFs speichern Zahlen Zeichen fuer Zeichen.
+                    const merged = [];
+                    line.items.forEach(item => {
+                        const last = merged[merged.length - 1];
+                        if (last && Math.abs(last.y - item.y) < 0.6 && item.x >= last.x && item.x - (last.x + last.w) <= 0.6) {
+                            last.str += item.str;
+                            last.w = item.x + item.w - last.x;
+                        } else {
+                            merged.push({ ...item });
+                        }
+                    });
+                    line.items = merged;
                     line.text = line.items.map(item => item.str).join(" ");
                 });
                 lines.push(...pageLines);
@@ -130,10 +152,12 @@
             const value = text.toLowerCase().replace(/-\s+/g, "").replace(/\s+/g, " ");
             if (/w(ä|ae)rmeeinbring|streckenenergie|heat ?input|energy ?input|arc energy/.test(value)) return "heat";
             if (/draht|wire/.test(value)) return /vorschub|geschw|feed|speed|m\/min/.test(value) ? "wire" : null;
+            if (/\bwfs\b/.test(value)) return "wire";
+            if (/^(process|prozess|verfahren)\b/.test(value)) return "process";
             if (/stromart|art des strom|polung|polarit|type of current|current type|kind of current/.test(value)) return null;
             if (/schwei(ß|ss)geschw|vorschub|travel|welding speed|geschwindigkeit/.test(value)) return "travel";
             if (/spannung|voltage|\bu\b ?\(?v\)?/.test(value)) return "voltage";
-            if (/strom|current|\bi\b ?\(?a\)?|ampere/.test(value)) return "current";
+            if (/strom|current|\bi\b ?\(?a\)?|ampere|amperage/.test(value)) return "current";
             if (/raupe|lage|pass|run|layer|bead/.test(value)) return "pass";
             return null;
         }
@@ -248,8 +272,155 @@
             return forms;
         }
 
+        // Lauf-Tabellen (z. B. RCC-M-WPS "Mechanised Orbital Parameters"): eine Zeile je Lauf ("3+", "4+"), ein Lauf
+        // ueber mehrere Textzeilen, Unterspalten B/P (Grund/Puls) oder Min/Max, Angaben wie "B=110-250 P=150-270".
+        // Je Seite und Tabelle ein Formular; nur mechanisierte Prozesse (141-m), wenn das Dokument solche enthaelt.
+        function parseWpsRunTables(lines) {
+            const forms = [];
+            [...new Set(lines.map(line => line.page))].forEach(pageNumber => {
+                const pageLines = lines.filter(line => line.page === pageNumber);
+                const items = pageLines.flatMap(line => line.items);
+                const numberLine = pageLines.map(line => line.text.match(/^\s*p?WPS\s+([A-Z0-9][\w./-]{2,30})(?:\s+(Rev\.?\s*\w+))?/i)).find(Boolean);
+                const wpsNumber = numberLine ? [numberLine[1], numberLine[2]].filter(Boolean).join(" ") : "";
+                items.filter(item => /^(amperage|current|strom|stromst(ä|ae)rke)$/i.test(item.str)).forEach(anchor => {
+                    const near = (item, distance) => Math.abs(item.y - anchor.y) <= distance;
+                    if (!items.some(item => /^(voltage|spannung)$/i.test(item.str) && near(item, 12))) return;
+                    if (!items.some(item => /^heat ?input$|w(ä|ae)rmeeinbringung/i.test(item.str) && near(item, 12))) return;
+                    if (!items.some(item => /^(run|pass|lage|raupe)$/i.test(item.str) && near(item, 14))) return;
+                    // Kopf: Zeilen um die Ueberschriften bis zur Zeile mit den Unterspalten (B/P, Min/Max)
+                    const subLabel = /^(b|p|min|max)$/i;
+                    const subs = items.filter(item => subLabel.test(item.str) && item.y < anchor.y && item.y > anchor.y - 25);
+                    const bottom = subs.length ? Math.min(...subs.map(item => item.y)) : anchor.y - 14;
+                    const headerItems = items.filter(item => item.y <= anchor.y + 14 && item.y >= bottom - 1 && !subs.includes(item));
+                    const columns = [];
+                    [...headerItems].sort((a, b) => a.x - b.x).forEach(item => {
+                        const column = columns.find(candidate => item.x <= candidate.right + 2 && item.x + item.w >= candidate.left - 2);
+                        if (column) {
+                            column.left = Math.min(column.left, item.x);
+                            column.right = Math.max(column.right, item.x + item.w);
+                            column.items.push(item);
+                        } else {
+                            columns.push({ left: item.x, right: item.x + item.w, items: [item] });
+                        }
+                    });
+                    columns.forEach(column => {
+                        column.text = column.items.sort((a, b) => b.y - a.y || a.x - b.x).map(item => item.str).join(" ");
+                        column.field = classifyWpsColumn(column.text);
+                        column.center = (column.left + column.right) / 2;
+                        column.subs = subs.filter(sub => sub.x + sub.w / 2 >= column.left - 3 && sub.x + sub.w / 2 <= column.right + 3)
+                            .map(sub => ({ label: sub.str.toLowerCase(), x: sub.x + sub.w / 2 }));
+                    });
+                    const passColumn = columns.find(column => column.field === "pass");
+                    if (!passColumn) return;
+                    const columnOf = item => {
+                        const center = item.x + item.w / 2;
+                        return columns.reduce((best, candidate) => {
+                            const distance = center >= candidate.left - 3 && center <= candidate.right + 3 ? 0 : Math.abs(candidate.center - center);
+                            return !best || distance < best.distance ? { column: candidate, distance } : best;
+                        }, null)?.column;
+                    };
+                    // Datenbereich bis zur naechsten Ueberschrift (Notes, General …)
+                    const stopY = Math.max(-Infinity, ...items.filter(item => item.y < bottom - 1 && /^(general|notes?|remarks|bemerkung)/i.test(item.str)).map(item => item.y));
+                    const dataItems = items.filter(item => item.y < bottom - 1 && item.y > stopY);
+                    const labels = dataItems.filter(item => columnOf(item) === passColumn && /^[A-Za-z0-9+]{1,8}$/.test(item.str)).sort((a, b) => b.y - a.y);
+                    if (!labels.length) return;
+                    const notes = [];
+                    const rawRows = labels.map((label, index) => {
+                        const top = index > 0 ? (labels[index - 1].y + label.y) / 2 : label.y + 12;
+                        const low = index + 1 < labels.length ? (label.y + labels[index + 1].y) / 2 : label.y - 12;
+                        const cells = {};
+                        dataItems.filter(item => item.y < top && item.y >= low && item !== label).sort((a, b) => b.y - a.y || a.x - b.x).forEach(item => {
+                            const column = columnOf(item);
+                            if (!column || !column.field || column === passColumn) return;
+                            let key = column.field;
+                            if (column.subs.length) {
+                                const center = item.x + item.w / 2;
+                                key += `:${column.subs.reduce((best, sub) => (Math.abs(sub.x - center) < Math.abs(best.x - center) ? sub : best)).label}`;
+                            }
+                            cells[key] = cells[key] ? `${cells[key]} ${item.str}` : item.str;
+                        });
+                        return { label: label.str, cells };
+                    });
+                    const units = {};
+                    ["travel", "wire", "heat"].forEach(field => {
+                        const column = columns.find(item => item.field === field);
+                        units[field] = column ? detectWpsUnit(field, column.text) : null;
+                    });
+                    const factorOf = field => (units[field] && WPS_FIELDS[field].units[units[field]]) || 1;
+                    const convert = (range, field) => (range ? {
+                        min: range.min === null ? null : Number((range.min * factorOf(field)).toPrecision(6)),
+                        max: range.max === null ? null : Number((range.max * factorOf(field)).toPrecision(6))
+                    } : null);
+                    const partRange = (text, part) => {
+                        const match = String(text || "").match(new RegExp(`(?:^|\\s)${part}\\s*=\\s*([^=]+?)(?=\\s+[BP]\\s*=|$)`, "i"));
+                        return match ? parseWpsRange(match[1]) : null;
+                    };
+                    const rows = [];
+                    rawRows.forEach(raw => {
+                        const row = normalizeWpsRow({ label: `Run ${raw.label}`, passType: wpsPassType(raw.label) });
+                        const process = raw.cells.process || "";
+                        let found = 0;
+                        WPS_FIELD_KEYS.forEach(field => {
+                            let pri = null;
+                            let bkg = null;
+                            let range = null;
+                            if (raw.cells[`${field}:p`] || raw.cells[`${field}:b`]) {
+                                pri = parseWpsRange(raw.cells[`${field}:p`]);
+                                bkg = parseWpsRange(raw.cells[`${field}:b`]);
+                            } else if (raw.cells[`${field}:min`] || raw.cells[`${field}:max`]) {
+                                range = { min: wpsNumberValue((raw.cells[`${field}:min`] || "").match(/\d+(?:[.,]\d+)?/)?.[0] ?? ""), max: wpsNumberValue((raw.cells[`${field}:max`] || "").match(/\d+(?:[.,]\d+)?/)?.[0] ?? "") };
+                            } else if (raw.cells[field]) {
+                                pri = partRange(raw.cells[field], "P");
+                                bkg = partRange(raw.cells[field], "B");
+                                if (!pri && !bkg) range = parseWpsRange(raw.cells[field]);
+                            }
+                            pri = convert(pri, field);
+                            bkg = convert(bkg, field);
+                            range = convert(range, field);
+                            if (pri || bkg) {
+                                const parts = [pri, bkg].filter(Boolean);
+                                const mins = parts.map(part => part.min).filter(value => value !== null);
+                                const maxs = parts.map(part => part.max).filter(value => value !== null);
+                                range = { min: mins.length ? Math.min(...mins) : null, max: maxs.length ? Math.max(...maxs) : null };
+                                if (pri) range.pri = pri;
+                                if (bkg) range.bkg = bkg;
+                            }
+                            if (range && (range.min !== null || range.max !== null)) {
+                                row[field] = normalizeWpsRow({ [field]: range })[field];
+                                found++;
+                            }
+                        });
+                        if (found < 2) return;
+                        row.process = process;
+                        rows.push(row);
+                    });
+                    if (!rows.length) return;
+                    Object.entries(units).forEach(([field, unit]) => {
+                        if (unit && WPS_FIELDS[field].units[unit] !== 1) notes.push(`${WPS_FIELDS[field].label}: converted from ${unit} to ${WPS_FIELDS[field].unit}.`);
+                    });
+                    if (rows.some(row => row.current.pri || row.wire.pri)) notes.push("Current and wire feed have separate ranges for pulse (P) and background (B): pri values are checked against P, bkg values against B.");
+                    forms.push({ page: pageNumber, wpsNumber, rows, notes });
+                });
+            });
+            // Nur mechanisierte Prozesse (z. B. "141-m"), wenn das Dokument solche enthaelt
+            const mechanized = row => /(^|[^a-z])m([^a-z]|$)/i.test(row.process || "");
+            if (forms.some(form => form.rows.some(mechanized))) {
+                const skipped = [];
+                forms.forEach(form => {
+                    const manual = form.rows.filter(row => !mechanized(row));
+                    if (manual.length) skipped.push(`page ${form.page}: ${manual.map(row => `${row.label} (${row.process || "no process"})`).join(", ")}`);
+                    form.rows = form.rows.filter(mechanized);
+                });
+                if (skipped.length) {
+                    forms.forEach(form => form.notes.unshift(`Manual runs skipped (only mechanized processes, 141-m, are imported) – ${skipped.join("; ")}.`));
+                }
+            }
+            forms.forEach(form => form.rows.forEach(row => { if (row.process) row.label = `${row.label} (${row.process})`; delete row.process; }));
+            return forms.filter(form => form.rows.length);
+        }
+
         function parseWpsDocument(lines) {
-            const forms = parseWpsForms(lines);
+            const forms = [...parseWpsForms(lines), ...parseWpsRunTables(lines)].sort((a, b) => a.page - b.page);
             if (forms.length) {
                 return { wpsNumber: forms[0].wpsNumber, rows: forms[0].rows, notes: forms[0].notes, forms, formIndex: 0 };
             }
@@ -418,6 +589,10 @@
             return store;
         }
 
+        // Teilbereich fuer Puls/Grund, falls die WPS ihn getrennt angibt; sonst der gemeinsame Bereich.
+        const wpsPartRange = (range, part) => ((part === "pri" || part === "bkg") && range?.[part] ? range[part] : range);
+        const wpsKeyPart = key => (/^pri_/.test(key) ? "pri" : /^bkg_/.test(key) ? "bkg" : "");
+
         const wpsReadValue = (parent, name) => {
             const element = parent && [...parent.children].find(child => child.tagName === name);
             const value = Number(element?.textContent);
@@ -479,12 +654,12 @@
                             const value = mean(pri, bkg);
                             if (value !== null) checks.push({ row, part: "mean", value, ...wpsRate(value, Math.max(priPercent, bkgPercent), range) });
                             else {
-                                if (pri !== null) checks.push({ row, part: "pri", value: pri, ...wpsRate(pri, priPercent, range) });
-                                if (bkg !== null) checks.push({ row, part: "bkg", value: bkg, ...wpsRate(bkg, bkgPercent, range) });
+                                if (pri !== null) checks.push({ row, part: "pri", value: pri, ...wpsRate(pri, priPercent, wpsPartRange(range, "pri")) });
+                                if (bkg !== null) checks.push({ row, part: "bkg", value: bkg, ...wpsRate(bkg, bkgPercent, wpsPartRange(range, "bkg")) });
                             }
                         } else {
-                            if (pri !== null) checks.push({ row, part: "pri", value: pri, ...wpsRate(pri, priPercent, range) });
-                            if (bkg !== null) checks.push({ row, part: "bkg", value: bkg, ...wpsRate(bkg, bkgPercent, range) });
+                            if (pri !== null) checks.push({ row, part: "pri", value: pri, ...wpsRate(pri, priPercent, wpsPartRange(range, "pri")) });
+                            if (bkg !== null) checks.push({ row, part: "bkg", value: bkg, ...wpsRate(bkg, bkgPercent, wpsPartRange(range, "bkg")) });
                         }
                     });
                     const status = checks.some(check => check.status === "fail") ? "fail" : checks.some(check => check.status === "warn") ? "warn" : checks.length ? "ok" : "na";
@@ -515,9 +690,10 @@
         const wpsBelow = (value, range) => range.min !== null && value < range.min - wpsEps(range.min);
 
         // Gemeinsamer Bereich aller zugeordneten WPS-Zeilen (Schnittmenge).
-        function wpsCombinedRange(rows, field) {
-            const mins = rows.map(row => row[field].min).filter(value => value !== null);
-            const maxs = rows.map(row => row[field].max).filter(value => value !== null);
+        function wpsCombinedRange(rows, field, part = "") {
+            const ranges = rows.map(row => wpsPartRange(row[field], part));
+            const mins = ranges.map(range => range.min).filter(value => value !== null);
+            const maxs = ranges.map(range => range.max).filter(value => value !== null);
             if (!mins.length && !maxs.length) return null;
             return { min: mins.length ? Math.max(...mins) : null, max: maxs.length ? Math.min(...maxs) : null };
         }
@@ -562,10 +738,11 @@
                 const current = wpsReadValue(overrides, override);
                 if (current === null) return;
                 const maximize = WPS_HEAT_OVERRIDES.includes(override) || override === "wire_max";
-                const range = wpsCombinedRange(rows, field);
                 let allowed = maximize ? WPS_OVERRIDE_TARGET : current;
-                if (range) {
+                if (wpsCombinedRange(rows, field)) {
                     wpsSegmentsOf(file).forEach(segment => keys.forEach(key => {
+                        // Puls-/Grundwert gegen seinen Teilbereich, falls die WPS ihn getrennt angibt
+                        const range = wpsCombinedRange(rows, field, wpsKeyPart(key));
                         const raw = wpsReadValue(segment, key);
                         if (raw === null || raw <= 0) return;
                         const value = raw * factor;
@@ -649,9 +826,9 @@
                 const segmentIndex = segment.getAttribute("index") || "";
                 const segmentLabel = `${label} · Segment ${segmentDisplayNumber(segment, file.sections.segments.indexOf(segment))}`;
                 WPS_OVERRIDE_MAP.forEach(({ field, keys, factor, fixed }) => {
-                    const range = wpsCombinedRange(rows, field);
-                    if (!range) return;
+                    if (!wpsCombinedRange(rows, field)) return;
                     keys.forEach(key => {
+                        const range = wpsCombinedRange(rows, field, wpsKeyPart(key));
                         const raw = wpsReadValue(segment, key);
                         if (raw === null) return;
                         const node = [...segment.children].find(child => child.tagName === key);
@@ -674,16 +851,15 @@
                 else if (wpsBelow(result.heatInput, heatRange)) target = heatRange.min * (1 + 1e-4);
                 if (target === null) return;
                 // Heat Input ~ Strom (U·I): Puls- und Grundstrom mit demselben Faktor aendern, im WPS-Strombereich.
-                const currentRange = wpsCombinedRange(rows, "current");
                 let ratio = target / result.heatInput;
                 const amps = ["pri_amp", "bkg_amp"].map(key => ({ key, value: wpsReadValue(segment, key) })).filter(item => item.value > 0);
                 if (!amps.length || amps.some(item => isLocked(item.key))) { issues.push(`${segmentLabel}: heat input outside, current cannot be changed`); return; }
-                if (currentRange) {
-                    amps.forEach(({ value }) => {
-                        if (currentRange.max !== null && ratio > 1) ratio = Math.min(ratio, currentRange.max / value);
-                        if (currentRange.min !== null && ratio < 1) ratio = Math.max(ratio, currentRange.min / value);
-                    });
-                }
+                amps.forEach(({ key, value }) => {
+                    const currentRange = wpsCombinedRange(rows, "current", wpsKeyPart(key));
+                    if (!currentRange) return;
+                    if (currentRange.max !== null && ratio > 1) ratio = Math.min(ratio, currentRange.max / value);
+                    if (currentRange.min !== null && ratio < 1) ratio = Math.max(ratio, currentRange.min / value);
+                });
                 amps.forEach(({ key, value }) => {
                     const node = [...segment.children].find(child => child.tagName === key);
                     wpsWriteValue(file, segment, "segments", segmentIndex, key, wpsFormatLike(node.textContent, value * ratio, ratio < 1 ? "down" : "up"), changes);
@@ -757,6 +933,10 @@
 
         function describeWpsRange(range, field) {
             if (!range || (range.min === null && range.max === null)) return "–";
+            // Getrennte Puls-/Grundbereiche: "P 180 – 290 · B 140 – 250"
+            if (range.pri || range.bkg) {
+                return ["pri", "bkg"].filter(part => range[part]).map(part => `${part === "pri" ? "P" : "B"} ${describeWpsRange({ min: range[part].min, max: range[part].max }, field)}`).join(" · ");
+            }
             if (range.min === null) return `≤ ${formatWpsNumber(range.max, field)}`;
             if (range.max === null) return `≥ ${formatWpsNumber(range.min, field)}`;
             return `${formatWpsNumber(range.min, field)} – ${formatWpsNumber(range.max, field)}`;
@@ -927,11 +1107,38 @@
                 tr.appendChild(typeCell);
                 tr.appendChild(textCell(row.files.join(", "), value => { row.files = value.split(/[\s,;]+/).filter(Boolean); }, "wps-files-input"));
                 WPS_FIELD_KEYS.forEach(key => {
+                    const parts = ["pri", "bkg"].filter(part => row[key][part]);
                     ["min", "max"].forEach(bound => {
-                        tr.appendChild(textCell(row[key][bound] === null ? "" : String(row[key][bound]), value => {
-                            const number = value.trim() === "" ? null : parseNumberInput(value);
-                            row[key][bound] = Number.isFinite(number) ? number : null;
-                        }, `wps-number-input wps-${key}-${bound}`));
+                        if (!parts.length) {
+                            tr.appendChild(textCell(row[key][bound] === null ? "" : String(row[key][bound]), value => {
+                                const number = value.trim() === "" ? null : parseNumberInput(value);
+                                row[key][bound] = Number.isFinite(number) ? number : null;
+                            }, `wps-number-input wps-${key}-${bound}`));
+                            return;
+                        }
+                        // Getrennte Bereiche fuer Puls (P) und Grund (B): je eine Eingabe, min/max = Vereinigung
+                        const td = document.createElement("td");
+                        td.className = "wps-split-cell";
+                        parts.forEach(part => {
+                            const line = document.createElement("label");
+                            line.className = "wps-split-line";
+                            const tag = document.createElement("span");
+                            tag.textContent = part === "pri" ? "P" : "B";
+                            const field = document.createElement("input");
+                            field.type = "text";
+                            field.className = `wps-number-input wps-${key}-${part}-${bound}`;
+                            field.value = row[key][part][bound] === null ? "" : String(row[key][part][bound]);
+                            field.oninput = () => {
+                                const number = field.value.trim() === "" ? null : parseNumberInput(field.value);
+                                row[key][part][bound] = Number.isFinite(number) ? number : null;
+                                const values = parts.map(name => row[key][name][bound]).filter(value => value !== null);
+                                row[key][bound] = values.length ? (bound === "min" ? Math.min(...values) : Math.max(...values)) : null;
+                                markDirty();
+                            };
+                            line.append(tag, field);
+                            td.appendChild(line);
+                        });
+                        tr.appendChild(td);
                     });
                 });
                 const removeCell = document.createElement("td");
@@ -1091,15 +1298,20 @@
                     name.className = "wps-group-name";
                     name.textContent = group.rows.map(row => row.label).join(" + ");
                     groupRow.appendChild(name);
-                    const rangeCell = (key, span) => {
+                    const rangeCell = (key, span, part = "", separator = true) => {
                         const td = document.createElement("td");
-                        td.className = "num wps-range-cell wps-col-group";
+                        td.className = `num wps-range-cell${separator ? " wps-col-group" : ""}`;
                         if (span) td.colSpan = span;
-                        const range = group.rows.length === 1 ? group.rows[0][key] : wpsCombinedRange(group.rows, key);
+                        const range = wpsCombinedRange(group.rows, key, part);
                         td.textContent = describeWpsRange(range, key);
                         return td;
                     };
-                    pairFields.forEach(key => groupRow.appendChild(rangeCell(key, 2)));
+                    // Getrennte P/B-Bereiche unter den Spalten P und B, sonst ein Bereich ueber beide
+                    pairFields.forEach(key => {
+                        const split = !mean && group.rows.some(row => row[key].pri || row[key].bkg);
+                        if (split) groupRow.append(rangeCell(key, 0, "pri"), rangeCell(key, 0, "bkg", false));
+                        else groupRow.appendChild(rangeCell(key, 2));
+                    });
                     groupRow.appendChild(rangeCell("heat"));
                     const rangeLabel = document.createElement("td");
                     rangeLabel.className = "wps-range-label";

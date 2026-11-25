@@ -3601,3 +3601,28 @@
             color: var(--text-muted);
             font-size: 12px;
         }
+
+        .wps-split-cell {
+            white-space: nowrap;
+        }
+
+        .wps-split-line {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .wps-split-line + .wps-split-line {
+            margin-top: 3px;
+        }
+
+        .wps-split-line span {
+            width: 9px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .wps-range-table .wps-split-line input {
+            width: 44px;
+        }
