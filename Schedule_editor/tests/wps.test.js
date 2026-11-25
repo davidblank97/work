@@ -97,9 +97,9 @@ module.exports = [
             const hot = await rowValues(frame, "Hotpass");
             // Reihenfolge: Strom, Spannung, Vorschub (mm/min), Draht (m/min), Heat Input – je min/max
             t.check("hot pass row", hot && hot.type === "Hot pass" && hot.files === "0402"
-                && hot.numbers.join("|") === "130|190|9|11|60|80|100|150||1.2", JSON.stringify(hot));
+                && hot.numbers.join("|") === "130|190|9|11|60|80|100|150||||||1.2", JSON.stringify(hot));
             const root = await rowValues(frame, "Wurzel");
-            t.check("root row (decimal comma, cm/min -> mm/min)", root && root.type === "Root" && root.numbers.join("|") === "80|120|9|11|60|90|50|100|0.5|0.9", JSON.stringify(root));
+            t.check("root row (decimal comma, cm/min -> mm/min)", root && root.type === "Root" && root.numbers.join("|") === "80|120|9|11|60|90|50|100|||||0.5|0.9", JSON.stringify(root));
             const cap = await rowValues(frame, "Decklage");
             t.check("cap row (± range)", cap && cap.type === "Cap" && cap.numbers.slice(4, 6).join("|") === "70|110", JSON.stringify(cap));
             const fill = await rowValues(frame, "Fülllage");
@@ -195,10 +195,10 @@ module.exports = [
             const fill = await rowValues(frame, "Füllage (m-141)");
             // Strom, Spannung, Vorschub (cm/min -> mm/min), Draht (cm/min -> m/min), Heat Input
             t.check("filling layer", fill && fill.type === "Fill" && fill.files === "0404, 0407"
-                && fill.numbers.join("|") === "108|300|8.6|11.77|50|100|80|300|0.46|1.52", JSON.stringify(fill));
+                && fill.numbers.join("|") === "108|300|8.6|11.77|50|100|80|300|0.2|0.8|0.2|0.6|0.46|1.52", JSON.stringify(fill));
             const cap = await rowValues(frame, "Decklage (m-141)");
             t.check("cap layer", cap && cap.type === "Cap" && cap.files === "0408"
-                && cap.numbers.join("|") === "108|200|8.7|11.6|50|100|80|300|0.47|0.7", JSON.stringify(cap));
+                && cap.numbers.join("|") === "108|200|8.7|11.6|50|100|80|300|0.2|0.6|0.2|0.6|0.47|0.7", JSON.stringify(cap));
             t.check("manual root/hot pass (141) skipped", (await frame.textContent("#content")).includes("Wurzel-/Stützlage (141) skipped"));
             t.check("raw text of page 24 only", (await frame.textContent(".wps-raw summary")).includes("page 24") && !(await frame.textContent(".wps-raw pre")).includes("HIC-O01- 2P"));
             await frame.selectOption("#wpsFormSelect", "1");
@@ -244,9 +244,9 @@ module.exports = [
             let after = await statuses();
             t.check("after overrides: current and voltage ok, wire still outside", after.current === "is-ok" && after.voltage === "is-ok" && after.wire === "is-fail", JSON.stringify(after));
             t.check("not solved: wire value", (await frame.textContent("#wpsFitResult")).includes("pri_wire 170 cm/min is outside the WPS"), await frame.textContent("#wpsFitResult"));
-            t.check("dwell/excursion raised to 10 %", await xml("overrides", "dwell_max") === "10.000000" && await xml("overrides", "excursion_max") === "10.000000",
+            t.check("dwell/excursion overrides always 0 %", await xml("overrides", "dwell_max") === "0.000000" && await xml("overrides", "excursion_max") === "0.000000",
                 `${await xml("overrides", "dwell_max")} ${await xml("overrides", "excursion_max")}`);
-            t.check("change log entries", await frame.evaluate(() => changeLog.filter(entry => entry.section === "overrides").length) === 5);
+            t.check("change log entries", await frame.evaluate(() => changeLog.filter(entry => entry.section === "overrides").length) === 3);
 
             // Fit Values fragt nach; Abbrechen aendert nichts
             await frame.click("#wpsFitValuesBtn");
@@ -362,7 +362,8 @@ module.exports = [
             await openWps(frame);
             await frame.click("#wpsFitOverridesBtn");
             const after = await read();
-            t.check("heat input overrides at 10 %", ["pri_amp_max", "bkg_amp_max", "avc_override_max", "dwell_max", "excursion_max"].every(name => after[name] === "10.000000"), JSON.stringify(after));
+            t.check("current/voltage overrides at 10 %", ["pri_amp_max", "bkg_amp_max", "avc_override_max"].every(name => after[name] === "10.000000"), JSON.stringify(after));
+            t.check("dwell/excursion overrides at 0 %", after.dwell_max === "0.000000" && after.excursion_max === "0.000000", JSON.stringify(after));
             t.check("wire_max enlarged to 10 %", before.wire_max === "3.000000" && after.wire_max === "10.000000", JSON.stringify([before.wire_max, after.wire_max]));
             t.check("values and travel_max unchanged", after.values === before.values && after.travel_max === before.travel_max, JSON.stringify([before, after]));
             const cells = await frame.evaluate(checkCells);
@@ -412,6 +413,45 @@ module.exports = [
                 return ["pri", "bkg"].map(part => row.querySelector(`[data-field=current][data-part=${part}]`).className);
             });
             t.check("pri checked against P (180 > 170), bkg against B (150 within 110–150)", cells[0].includes("is-fail") && !cells[1].includes("is-fail"), JSON.stringify(cells));
+        }
+    },
+    {
+        // 0402: indwell 0.6 s, outdwell 0.4 s, excursion 0.3 s. WPS: Dwell In 0.2–0.5, Out 0.2–0.8, Excursion 0.2–0.25.
+        name: "dwell and excursion checked; their overrides always 0 %",
+        async run(t) {
+            const { page, frame } = await t.openApp("editor");
+            await frame.evaluate(() => localStorage.setItem("scheduleEditorWpsRanges", JSON.stringify({
+                document: "test.pdf", wpsNumber: "T-5", checkMode: "separate", wireUnit: "cm/min",
+                rows: [{ label: "Hotpass", passType: "Hot pass", files: ["0402"], current: { min: null, max: null }, voltage: { min: null, max: null },
+                    travel: { min: null, max: null }, wire: { min: null, max: null },
+                    dwell: { min: 0.2, max: 0.8, in: { min: 0.2, max: 0.5 }, out: { min: 0.2, max: 0.8 } }, excursion: { min: 0.2, max: 0.25 }, heat: { min: null, max: null } }]
+            })));
+            await frame.setInputFiles("#fileInput", [t.file(REF)]);
+            await page.waitForTimeout(300);
+            await frame.evaluate(() => { [...loadedFiles[0].sections.overrides.children].find(child => child.tagName === "dwell_max").textContent = "5.000000"; });
+            await openWps(frame);
+            const cell = (field, part) => frame.evaluate(([name, piece]) => {
+                const element = document.querySelector(`.wps-check-table [data-field="${name}"][data-part="${piece}"]`);
+                return element ? { text: element.textContent, status: [...element.classList].find(item => item.startsWith("is-")) } : null;
+            }, [field, part]);
+            const head = await frame.textContent(".wps-check-table thead");
+            t.check("columns Dwell In/Out and Excursion", head.includes("Dwell (s)") && head.includes("In") && head.includes("Out") && head.includes("Excursion (s)"), head);
+            t.check("indwell 0.6 outside In 0.2–0.5", JSON.stringify(await cell("dwell", "in")) === JSON.stringify({ text: "0.6", status: "is-fail" }), JSON.stringify(await cell("dwell", "in")));
+            t.check("outdwell 0.4 inside, but dwell_max 5 % reaches nothing outside", (await cell("dwell", "out")).status === "is-ok", JSON.stringify(await cell("dwell", "out")));
+            t.check("excursion 0.3 outside 0.2–0.25", (await cell("excursion", "")).status === "is-fail", JSON.stringify(await cell("excursion", "")));
+            const group = await frame.textContent(".wps-check-table .wps-group-row");
+            t.check("group row shows In/Out ranges", group.includes("0.2 – 0.5") && group.includes("0.2 – 0.8") && group.includes("0.2 – 0.25"), group);
+            await frame.click("#wpsFitOverridesBtn");
+            const value = name => frame.evaluate(key => {
+                const file = loadedFiles[0];
+                const parent = key.endsWith("_max") ? file.sections.overrides : file.sections.segments[0];
+                return [...parent.children].find(child => child.tagName === key).textContent;
+            }, name);
+            t.check("Fit Overrides: dwell_max and excursion_max 0", await value("dwell_max") === "0.000000" && await value("excursion_max") === "0.000000");
+            await frame.click("#wpsFitValuesBtn");
+            await frame.click("#wpsFitValuesConfirmBtn");
+            t.check("Fit Values: indwell to 0.5, excursion to 0.25", await value("indwell") === "0.500000" && await value("excursion") === "0.250000" && await value("outdwell") === "0.400000",
+                `${await value("indwell")} ${await value("excursion")} ${await value("outdwell")}`);
         }
     }
 ];

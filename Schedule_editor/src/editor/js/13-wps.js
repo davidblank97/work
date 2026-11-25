@@ -13,7 +13,21 @@
             wire: { label: "Wire feed", unit: "cm/min", units: { "cm/min": 1, "m/min": 100, "mm/min": 0.1, "mm/s": 6, "in/min": 2.54, "ipm": 2.54 } },
             heat: { label: "Heat input", unit: "kJ/mm", units: { "kj/mm": 1, "kj/cm": 0.1, "j/mm": 0.001, "kj/in": 1 / 25.4 } }
         };
-        const WPS_FIELD_KEYS = ["current", "voltage", "travel", "wire", "heat"];
+        WPS_FIELDS.dwell = { label: "Dwell", unit: "s", units: {} };
+        WPS_FIELDS.excursion = { label: "Excursion", unit: "s", units: {} };
+        const WPS_FIELD_KEYS = ["current", "voltage", "travel", "wire", "dwell", "excursion", "heat"];
+        // Pruefspalten je Feld: Teilbereich (part), Schedule-Feld, Faktor in die WPS-Einheit, Override, Kurzzeichen.
+        const WPS_CHECK_PARTS = {
+            current: [{ part: "pri", key: "pri_amp", override: "pri_amp_max", tag: "P" }, { part: "bkg", key: "bkg_amp", override: "bkg_amp_max", tag: "B" }],
+            voltage: [{ part: "pri", key: "pri_ahc", override: "avc_override_max", tag: "P" }, { part: "bkg", key: "bkg_ahc", override: "avc_override_max", tag: "B" }],
+            travel: [{ part: "pri", key: "pri_travel", override: "travel_max", tag: "P", factor: 25.4 }, { part: "bkg", key: "bkg_travel", override: "travel_max", tag: "B", factor: 25.4 }],
+            wire: [{ part: "pri", key: "pri_wire", override: "wire_max", tag: "P", factor: 2.54 }, { part: "bkg", key: "bkg_wire", override: "wire_max", tag: "B", factor: 2.54 }],
+            dwell: [{ part: "in", key: "indwell", override: "dwell_max", tag: "In" }, { part: "out", key: "outdwell", override: "dwell_max", tag: "Out" }],
+            excursion: [{ part: "", key: "excursion", override: "excursion_max", tag: "" }],
+            heat: [{ part: "", key: null, override: null, tag: "nominal" }]
+        };
+        const WPS_SUB_PARTS = ["pri", "bkg", "in", "out"];
+        const WPS_PART_TAGS = { pri: "P", bkg: "B", in: "In", out: "Out" };
         let wpsDraft = null;          // eingelesene, noch nicht uebernommene WPS
         let pdfJsPromise = null;
 
@@ -42,7 +56,7 @@
             });
             const range = value => {
                 const result = simple(value);
-                ["pri", "bkg"].forEach(part => {
+                WPS_SUB_PARTS.forEach(part => {
                     const sub = value?.[part] && simple(value[part]);
                     if (sub && (sub.min !== null || sub.max !== null)) result[part] = sub;
                 });
@@ -153,6 +167,8 @@
             if (/w(ä|ae)rmeeinbring|streckenenergie|heat ?input|energy ?input|arc energy/.test(value)) return "heat";
             if (/draht|wire/.test(value)) return /vorschub|geschw|feed|speed|m\/min/.test(value) ? "wire" : null;
             if (/\bwfs\b/.test(value)) return "wire";
+            if (/\bdwell|haltez/.test(value)) return "dwell";
+            if (/oscillation|excursion|weave/.test(value) && !/width|breite|ampl|\(mm\)/.test(value)) return "excursion";
             if (/^(process|prozess|verfahren)\b/.test(value)) return "process";
             if (/stromart|art des strom|polung|polarit|type of current|current type|kind of current/.test(value)) return null;
             if (/schwei(ß|ss)geschw|vorschub|travel|welding speed|geschwindigkeit/.test(value)) return "travel";
@@ -237,6 +253,36 @@
                         return parseWpsRange(single) || { min: null, max: null };
                     });
                 });
+                // Pulszeiten: "Haltez. in / geschw. Rate / Haltez. Aussen" mit den Unterspalten dwell in / weave rate /
+                // dwell out je Lage; dwell in/out -> Dwell (indwell/outdwell), weave rate -> Excursion.
+                const dwellLabel = items.find(item => item.x < 170 && item.y < headerY && /^(haltez|dwell in)/i.test(item.str.trim()));
+                if (dwellLabel) {
+                    const subs = items.filter(item => item.x > 200 && near(item.y, dwellLabel.y, 4)
+                        && /^(dwell in|weave rate|dwell out|haltez\.? ?(in|au(ß|ss)en)|geschw\.? ?rate)$/i.test(item.str.trim()));
+                    const valueItems = items.filter(item => item.x > 200 && item.y < dwellLabel.y - 3 && item.y > dwellLabel.y - 16 && parseWpsRange(item.str));
+                    const dwell = [];
+                    const excursion = [];
+                    columns.forEach(column => {
+                        const own = subs.filter(sub => inColumn(sub, column));
+                        const found = {};
+                        valueItems.filter(item => inColumn(item, column)).forEach(item => {
+                            const center = item.x + item.w / 2;
+                            const sub = own.reduce((best, candidate) => (!best || Math.abs(candidate.x + candidate.w / 2 - center) < Math.abs(best.x + best.w / 2 - center) ? candidate : best), null);
+                            if (!sub) return;
+                            const kind = /out|au(ß|ss)en/i.test(sub.str) ? "out" : /weave|rate/i.test(sub.str) ? "exc" : "in";
+                            found[kind] = parseWpsRange(item.str);
+                        });
+                        const parts = ["in", "out"].filter(kind => found[kind]);
+                        const union = bound => (parts.length ? (bound === "min" ? Math.min(...parts.map(kind => found[kind].min)) : Math.max(...parts.map(kind => found[kind].max))) : null);
+                        const range = { min: union("min"), max: union("max") };
+                        const same = parts.length === 2 && found.in.min === found.out.min && found.in.max === found.out.max;
+                        if (parts.length && !same) parts.forEach(kind => { range[kind] = found[kind]; });
+                        dwell.push(range);
+                        excursion.push(found.exc || { min: null, max: null });
+                    });
+                    if (dwell.some(range => range.min !== null || range.max !== null)) values.dwell = dwell;
+                    if (excursion.some(range => range.min !== null || range.max !== null)) values.excursion = excursion;
+                }
                 const fields = Object.keys(values);
                 if (fields.length < 2) return;
                 // WPS-Nummer: Wert rechts neben "Sp.-Nr.:" bzw. "WPS-no.:" (ggf. mit "Rev.…").
@@ -260,7 +306,7 @@
                         const range = values[field][index];
                         const factor = units[field] && WPS_FIELDS[field].units[units[field]] ? WPS_FIELDS[field].units[units[field]] : 1;
                         const convert = value => (value === null ? null : Number((value * factor).toPrecision(6)));
-                        row[field] = { min: convert(range.min), max: convert(range.max) };
+                        row[field] = normalizeWpsRow({ [field]: { ...range, min: convert(range.min), max: convert(range.max) } })[field];
                     });
                     if (WPS_FIELD_KEYS.some(field => row[field].min !== null || row[field].max !== null)) rows.push(row);
                 });
@@ -590,8 +636,8 @@
         }
 
         // Teilbereich fuer Puls/Grund, falls die WPS ihn getrennt angibt; sonst der gemeinsame Bereich.
-        const wpsPartRange = (range, part) => ((part === "pri" || part === "bkg") && range?.[part] ? range[part] : range);
-        const wpsKeyPart = key => (/^pri_/.test(key) ? "pri" : /^bkg_/.test(key) ? "bkg" : "");
+        const wpsPartRange = (range, part) => (part && range?.[part] ? range[part] : range);
+        const wpsKeyPart = key => (/^pri_/.test(key) ? "pri" : /^bkg_/.test(key) ? "bkg" : key === "indwell" ? "in" : key === "outdwell" ? "out" : "");
 
         const wpsReadValue = (parent, name) => {
             const element = parent && [...parent.children].find(child => child.tagName === name);
@@ -627,12 +673,6 @@
                 const priTime = (read("indwell") ?? 0) + (read("outdwell") ?? 0);
                 const bkgTime = read("excursion") ?? 0;
                 const mean = (pri, bkg) => (pri === null || bkg === null || priTime + bkgTime <= 0 ? null : (pri * priTime + bkg * bkgTime) / (priTime + bkgTime));
-                const pairs = {
-                    current: [read("pri_amp"), read("bkg_amp"), percent("pri_amp_max"), percent("bkg_amp_max")],
-                    voltage: [read("pri_ahc"), read("bkg_ahc"), percent("avc_override_max"), percent("avc_override_max")],
-                    travel: [read("pri_travel"), read("bkg_travel"), percent("travel_max"), percent("travel_max")].map((value, index) => (index < 2 && value !== null ? value * 25.4 : value)),
-                    wire: [read("pri_wire"), read("bkg_wire"), percent("wire_max"), percent("wire_max")].map((value, index) => (index < 2 && value !== null ? value * 2.54 : value))
-                };
                 const heat = calculateSegmentHeatInput(segment, overrides);
                 const values = {};
                 WPS_FIELD_KEYS.forEach(field => {
@@ -649,18 +689,21 @@
                             checks.push({ row, part: "", value: heat.heatInput, ...rating });
                             return;
                         }
-                        const [pri, bkg, priPercent, bkgPercent] = pairs[field];
-                        if (store.checkMode === "mean") {
-                            const value = mean(pri, bkg);
-                            if (value !== null) checks.push({ row, part: "mean", value, ...wpsRate(value, Math.max(priPercent, bkgPercent), range) });
-                            else {
-                                if (pri !== null) checks.push({ row, part: "pri", value: pri, ...wpsRate(pri, priPercent, wpsPartRange(range, "pri")) });
-                                if (bkg !== null) checks.push({ row, part: "bkg", value: bkg, ...wpsRate(bkg, bkgPercent, wpsPartRange(range, "bkg")) });
+                        const parts = WPS_CHECK_PARTS[field].map(item => {
+                            const raw = read(item.key);
+                            return { ...item, value: raw === null ? null : raw * (item.factor || 1), percent: percent(item.override) };
+                        });
+                        // Mittelwert-Modus nur fuer Puls/Grund-Paare (zeitgewichtet ueber Dwell/Excursion)
+                        if (store.checkMode === "mean" && parts.length === 2 && parts[0].part === "pri") {
+                            const value = mean(parts[0].value, parts[1].value);
+                            if (value !== null) {
+                                checks.push({ row, part: "mean", value, ...wpsRate(value, Math.max(parts[0].percent, parts[1].percent), range) });
+                                return;
                             }
-                        } else {
-                            if (pri !== null) checks.push({ row, part: "pri", value: pri, ...wpsRate(pri, priPercent, wpsPartRange(range, "pri")) });
-                            if (bkg !== null) checks.push({ row, part: "bkg", value: bkg, ...wpsRate(bkg, bkgPercent, wpsPartRange(range, "bkg")) });
                         }
+                        parts.forEach(item => {
+                            if (item.value !== null) checks.push({ row, part: item.part, value: item.value, ...wpsRate(item.value, item.percent, wpsPartRange(range, item.part)) });
+                        });
                     });
                     const status = checks.some(check => check.status === "fail") ? "fail" : checks.some(check => check.status === "warn") ? "warn" : checks.length ? "ok" : "na";
                     values[field] = { status, checks };
@@ -679,10 +722,14 @@
             { field: "current", override: "bkg_amp_max", keys: ["bkg_amp"], factor: 1 },
             { field: "voltage", override: "avc_override_max", keys: ["pri_ahc", "bkg_ahc"], factor: 1 },
             { field: "travel", override: "travel_max", keys: ["pri_travel", "bkg_travel"], factor: 25.4, fixed: true },
-            { field: "wire", override: "wire_max", keys: ["pri_wire", "bkg_wire"], factor: 2.54 }
+            { field: "wire", override: "wire_max", keys: ["pri_wire", "bkg_wire"], factor: 2.54 },
+            { field: "dwell", override: "dwell_max", keys: ["indwell", "outdwell"], factor: 1 },
+            { field: "excursion", override: "excursion_max", keys: ["excursion"], factor: 1 }
         ];
         // Gemeinsam reduzierbare Heat-Input-Overrides (travel_max bleibt unveraendert).
-        const WPS_HEAT_OVERRIDES = ["pri_amp_max", "bkg_amp_max", "avc_override_max", "dwell_max", "excursion_max"];
+        const WPS_HEAT_OVERRIDES = ["pri_amp_max", "bkg_amp_max", "avc_override_max"];
+        // Dwell/Excursion: Werte werden geprueft, die Overrides immer auf 0 % gesetzt (kein Spielraum fuer den Schweisser).
+        const WPS_ZERO_OVERRIDES = ["dwell_max", "excursion_max"];
 
         // Gleiche Toleranz wie die Pruefung (wpsRate): Werte genau auf der Grenze gelten als innerhalb.
         const wpsEps = bound => Math.max(1e-6, Math.abs(bound) * 1e-6);
@@ -736,7 +783,7 @@
             const targets = {};
             WPS_OVERRIDE_MAP.forEach(({ field, override, keys, factor, fixed }) => {
                 const current = wpsReadValue(overrides, override);
-                if (current === null) return;
+                if (current === null || WPS_ZERO_OVERRIDES.includes(override)) return;
                 const maximize = WPS_HEAT_OVERRIDES.includes(override) || override === "wire_max";
                 let allowed = maximize ? WPS_OVERRIDE_TARGET : current;
                 if (wpsCombinedRange(rows, field)) {
@@ -764,8 +811,7 @@
                 const next = Math.floor(Math.max(0, allowed) * 10 + 1e-9) / 10;   // abgerundet auf 0.1 %: sicher innerhalb
                 if (maximize || next < current) targets[override] = next;
             });
-            // Ohne WPS-Bereich (Dwell, Excursion): bis zum Zielwert, begrenzt nur durch den Heat Input.
-            ["dwell_max", "excursion_max"].forEach(name => { if (nodeOf(overrides, name)) targets[name] = WPS_OVERRIDE_TARGET; });
+            WPS_ZERO_OVERRIDES.forEach(name => { if (nodeOf(overrides, name)) targets[name] = 0; });
             Object.keys(targets).forEach(name => {
                 const current = wpsReadValue(overrides, name);
                 if (isLocked(name) && targets[name] !== current) {
@@ -934,8 +980,8 @@
         function describeWpsRange(range, field) {
             if (!range || (range.min === null && range.max === null)) return "–";
             // Getrennte Puls-/Grundbereiche: "P 180 – 290 · B 140 – 250"
-            if (range.pri || range.bkg) {
-                return ["pri", "bkg"].filter(part => range[part]).map(part => `${part === "pri" ? "P" : "B"} ${describeWpsRange({ min: range[part].min, max: range[part].max }, field)}`).join(" · ");
+            if (WPS_SUB_PARTS.some(part => range[part])) {
+                return WPS_SUB_PARTS.filter(part => range[part]).map(part => `${WPS_PART_TAGS[part]} ${describeWpsRange({ min: range[part].min, max: range[part].max }, field)}`).join(" · ");
             }
             if (range.min === null) return `≤ ${formatWpsNumber(range.max, field)}`;
             if (range.max === null) return `≥ ${formatWpsNumber(range.min, field)}`;
@@ -1107,7 +1153,7 @@
                 tr.appendChild(typeCell);
                 tr.appendChild(textCell(row.files.join(", "), value => { row.files = value.split(/[\s,;]+/).filter(Boolean); }, "wps-files-input"));
                 WPS_FIELD_KEYS.forEach(key => {
-                    const parts = ["pri", "bkg"].filter(part => row[key][part]);
+                    const parts = WPS_SUB_PARTS.filter(part => row[key][part]);
                     ["min", "max"].forEach(bound => {
                         if (!parts.length) {
                             tr.appendChild(textCell(row[key][bound] === null ? "" : String(row[key][bound]), value => {
@@ -1123,7 +1169,7 @@
                             const line = document.createElement("label");
                             line.className = "wps-split-line";
                             const tag = document.createElement("span");
-                            tag.textContent = part === "pri" ? "P" : "B";
+                            tag.textContent = WPS_PART_TAGS[part];
                             const field = document.createElement("input");
                             field.type = "text";
                             field.className = `wps-number-input wps-${key}-${part}-${bound}`;
@@ -1241,14 +1287,14 @@
                 fitOverrides.className = "btn-secondary";
                 fitOverrides.id = "wpsFitOverridesBtn";
                 fitOverrides.textContent = "Fit Overrides";
-                fitOverrides.title = "Set the heat input overrides (current, voltage, dwell, excursion) of the selected files to the largest range up to 10 % so that no override setting can leave the WPS (each value and the heat input). wire_max likewise up to 10 % within the WPS wire range. Values and travel_max are not changed.";
+                fitOverrides.title = "Set the current and voltage overrides of the selected files to the largest range up to 10 % so that no override setting can leave the WPS (each value and the heat input); dwell_max and excursion_max are set to 0 %. wire_max likewise up to 10 % within the WPS wire range. Values and travel_max are not changed.";
                 fitOverrides.onclick = () => applyWpsFit("overrides");
                 const fitValues = document.createElement("button");
                 fitValues.type = "button";
                 fitValues.className = "btn-secondary";
                 fitValues.id = "wpsFitValuesBtn";
                 fitValues.textContent = "Fit Values";
-                fitValues.title = "Set current, voltage and wire of the selected files to the nearest WPS limit; then correct the heat input with the current (within the WPS current range). The travel speed is never changed.";
+                fitValues.title = "Set current, voltage, wire, dwell and excursion of the selected files to the nearest WPS limit; then correct the heat input with the current (within the WPS current range). The travel speed is never changed.";
                 fitValues.onclick = confirmWpsFitValues;
                 const fitHint = document.createElement("span");
                 fitHint.className = "wps-hint";
@@ -1264,20 +1310,21 @@
                 // Tabelle: je WPS-Lage eine Gruppenzeile mit den Bereichen, darunter je Datei/Segment eine Zeile;
                 // Puls (P) und Grund (B) in eigenen Spalten, Status als Wort.
                 const mean = store.checkMode === "mean";
-                const pairFields = WPS_FIELD_KEYS.filter(key => key !== "heat");
-                const columnCount = 1 + pairFields.length * 2 + 2;
+                // Spalten je Feld (P/B, In/Out oder ein Wert); im Mittelwert-Modus P/B zusammengefasst
+                const fieldParts = key => (mean && WPS_CHECK_PARTS[key][0].part === "pri" ? [{ part: "mean", tag: "mean" }] : WPS_CHECK_PARTS[key]);
+                const columnCount = 2 + WPS_FIELD_KEYS.reduce((sum, key) => sum + fieldParts(key).length, 0);
                 const checkTable = document.createElement("table");
                 checkTable.className = "heat-table wps-check-table";
                 checkTable.innerHTML = "<thead><tr><th rowspan=\"2\">Schedule</th>"
-                    + pairFields.map(key => `<th colspan="2" class="wps-col-group">${WPS_FIELDS[key].label} (${WPS_FIELDS[key].unit})</th>`).join("")
-                    + `<th class="wps-col-group">${WPS_FIELDS.heat.label} (${WPS_FIELDS.heat.unit})</th><th rowspan="2">Status</th></tr>`
-                    + "<tr class=\"heat-unit-row\">" + pairFields.map(() => (mean ? "<th colspan=\"2\" class=\"num wps-col-group\">mean</th>" : "<th class=\"num wps-col-group\">P</th><th class=\"num\">B</th>")).join("")
-                    + "<th class=\"num wps-col-group\">nominal</th></tr></thead>";
+                    + WPS_FIELD_KEYS.map(key => `<th colspan="${fieldParts(key).length}" class="wps-col-group">${WPS_FIELDS[key].label} (${WPS_FIELDS[key].unit})</th>`).join("")
+                    + "<th rowspan=\"2\">Status</th></tr><tr class=\"heat-unit-row\">"
+                    + WPS_FIELD_KEYS.map(key => fieldParts(key).map((item, index) => `<th class="num${index === 0 ? " wps-col-group" : ""}">${item.tag}</th>`).join("")).join("")
+                    + "</tr></thead>";
                 const checkBody = document.createElement("tbody");
                 const statusWord = { ok: "OK", warn: "Override", fail: "Outside", na: "–", off: "Off" };
                 const worst = list => (list.some(item => item.status === "fail") ? "fail" : list.some(item => item.status === "warn") ? "warn" : list.length ? "ok" : "na");
                 const describeCheck = (check, key) => {
-                    const part = { pri: "pulse", bkg: "background", mean: "mean", "": "nominal" }[check.part];
+                    const part = { pri: "pulse", bkg: "background", in: "in-dwell", out: "out-dwell", mean: "mean", "": "nominal" }[check.part];
                     const state = { ok: "inside", warn: "override range outside", fail: "outside", na: "–" }[check.status];
                     const span = check.low !== undefined ? ` (override ${formatWpsNumber(check.low, key)} – ${formatWpsNumber(check.high, key)})` : "";
                     return `${check.row.label}: ${part} ${formatWpsNumber(check.value, key)} ${WPS_FIELDS[key].unit}, WPS ${describeWpsRange(check.row[key], key)} → ${state}${span}`;
@@ -1306,13 +1353,13 @@
                         td.textContent = describeWpsRange(range, key);
                         return td;
                     };
-                    // Getrennte P/B-Bereiche unter den Spalten P und B, sonst ein Bereich ueber beide
-                    pairFields.forEach(key => {
-                        const split = !mean && group.rows.some(row => row[key].pri || row[key].bkg);
-                        if (split) groupRow.append(rangeCell(key, 0, "pri"), rangeCell(key, 0, "bkg", false));
-                        else groupRow.appendChild(rangeCell(key, 2));
+                    // Getrennte Teilbereiche (P/B, In/Out) unter ihren Spalten, sonst ein Bereich ueber alle Spalten des Felds
+                    WPS_FIELD_KEYS.forEach(key => {
+                        const parts = fieldParts(key);
+                        const split = parts.length > 1 && group.rows.some(row => parts.some(item => row[key][item.part]));
+                        if (split) parts.forEach((item, index) => groupRow.appendChild(rangeCell(key, 0, item.part, index === 0)));
+                        else groupRow.appendChild(rangeCell(key, parts.length > 1 ? parts.length : 0));
                     });
-                    groupRow.appendChild(rangeCell("heat"));
                     const rangeLabel = document.createElement("td");
                     rangeLabel.className = "wps-range-label";
                     rangeLabel.textContent = "WPS range";
@@ -1335,11 +1382,11 @@
                             label.textContent = result.file.name.replace(/\.xml$/i, "")
                                 + (segmentCount > 1 ? ` · Seg ${segmentDisplayNumber(segment, entry.segmentIndex)}` : "");
                             tr.appendChild(label);
-                            const valueCell = (key, checks, part, span) => {
+                            const valueCell = (key, checks, part, span, first) => {
                                 const td = document.createElement("td");
                                 td.className = "num wps-cell";
                                 if (span) td.colSpan = span;
-                                if (part === "pri" || part === "mean" || part === "") td.classList.add("wps-col-group");
+                                if (first) td.classList.add("wps-col-group");
                                 if (!checks.length) { td.textContent = "–"; return td; }
                                 td.classList.add(`is-${worst(checks)}`);
                                 td.dataset.field = key;
@@ -1348,17 +1395,12 @@
                                 td.title = checks.map(check => describeCheck(check, key)).join("\n");
                                 return td;
                             };
-                            pairFields.forEach(key => {
+                            WPS_FIELD_KEYS.forEach(key => {
+                                const parts = fieldParts(key);
                                 const checks = entry.values[key]?.checks || [];
-                                if (entry.disabled) { const off = valueCell(key, [], "pri", 2); tr.appendChild(off); return; }
-                                if (mean && checks.some(check => check.part === "mean")) {
-                                    tr.appendChild(valueCell(key, checks.filter(check => check.part === "mean"), "mean", 2));
-                                } else {
-                                    tr.appendChild(valueCell(key, checks.filter(check => check.part === "pri"), "pri"));
-                                    tr.appendChild(valueCell(key, checks.filter(check => check.part === "bkg"), "bkg"));
-                                }
+                                if (entry.disabled) { tr.appendChild(valueCell(key, [], "", parts.length > 1 ? parts.length : 0, true)); return; }
+                                parts.forEach((item, index) => tr.appendChild(valueCell(key, checks.filter(check => check.part === item.part), item.part, 0, index === 0)));
                             });
-                            tr.appendChild(valueCell("heat", entry.disabled ? [] : entry.values.heat?.checks || [], ""));
                             const statusCell = document.createElement("td");
                             statusCell.className = `wps-status-cell is-${status}`;
                             statusCell.textContent = statusWord[status] || "–";
@@ -1383,7 +1425,7 @@
                 checkPanel.appendChild(checkWrap);
                 const legend = document.createElement("p");
                 legend.className = "wps-hint";
-                legend.textContent = "P = pulse (pri), B = background (bkg). Outside: value outside the WPS. Override: value inside, but value ± override (pri/bkg_amp_max, avc_override_max, travel_max, wire_max; heat input min/max) reaches outside. Travel and wire converted from in/min. Click a row to open the segment; hover a value for details.";
+                legend.textContent = "P = pulse (pri), B = background (bkg). Outside: value outside the WPS. Override: value inside, but value ± override (pri/bkg_amp_max, avc_override_max, travel_max, wire_max, dwell_max, excursion_max; heat input min/max) reaches outside. Dwell: In = indwell, Out = outdwell. Travel and wire converted from in/min. Click a row to open the segment; hover a value for details.";
                 checkPanel.appendChild(legend);
             }
             content.appendChild(checkPanel);

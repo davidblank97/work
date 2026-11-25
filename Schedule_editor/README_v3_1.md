@@ -79,22 +79,24 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
    - Speichert die Bereiche im Browser.
    - Uebernimmt den Heat-Input-Bereich jeder Lage als **Target Range** (Reiter „Heat Input“). Ein erneuter Import ersetzt nur diese WPS-Bereiche; eigene Bereiche bleiben.
 4. **Pruefung** der geladenen Schedules je Segment:
-   - Strom (pri/bkg_amp), Spannung (pri/bkg_ahc), Vorschub und Draht (umgerechnet aus in/min) sowie Heat Input.
+   - Strom (pri/bkg_amp), Spannung (pri/bkg_ahc), Vorschub und Draht (umgerechnet aus in/min), **Dwell** (`indwell`/`outdwell`, Spalten In/Out), **Excursion** (`excursion`) sowie Heat Input.
+   - Dwell- und Excursion-Bereiche werden gelesen aus „Haltez. in / geschw. Rate / Haltez. Außen“ (dwell in / weave rate / dwell out) bzw. aus den Spalten „Dwell (s)“ und „Oscillation (s)“.
    - **Rot:** Wert ausserhalb der WPS.
-   - **Gelb:** Wert innerhalb, aber der Override-Bereich (pri/bkg_amp_max, avc_override_max, travel_max, wire_max bzw. Heat-Input min/max) reicht hinaus.
+   - **Gelb:** Wert innerhalb, aber der Override-Bereich (pri/bkg_amp_max, avc_override_max, travel_max, wire_max, dwell_max, excursion_max bzw. Heat-Input min/max) reicht hinaus.
    - Waehlbar: Puls- und Grundwert einzeln (Standard) oder zeitgewichteter Mittelwert (Dwell/Excursion).
    - Tabelle: je WPS-Lage eine Zeile mit den Bereichen („WPS range“), darunter je Schedule eine Zeile. Puls (P) und Grund (B) stehen in eigenen Spalten, rechts die Spalte **Status** (OK / Override / Outside).
    - Ein Klick oeffnet das Segment; beim Ueberfahren eines Werts stehen die Details im Tooltip.
 5. **An die WPS anpassen** (fuer die markierten Dateien mit WPS-Zeile; Rueckgaengig mit Strg+Z, jede Aenderung steht im Change Log und darunter in einer Liste):
    - **Fit Overrides** (Ziel: dem Schweisser einen moeglichst grossen Bereich lassen, ohne dass er die WPS verletzen kann):
-     - Die Heat-Input-relevanten Overrides (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`, `dwell_max`, `excursion_max`) werden auf den **groesstmoeglichen Bereich bis 10 %** gesetzt, also auch vergroessert.
+     - Die Overrides fuer Strom und Spannung (`pri_amp_max`, `bkg_amp_max`, `avc_override_max`) werden auf den **groesstmoeglichen Bereich bis 10 %** gesetzt, also auch vergroessert.
+     - `dwell_max` und `excursion_max` werden **immer auf 0 %** gesetzt (Pendelzeiten ohne Spielraum fuer den Schweisser).
      - Jeder Wert ± Override muss in der WPS liegen. Nahe der Grenze wird der Override kleiner (z. B. 10,9 V bei max. 11,77 V → 7,9 %). Abgerundet wird auf 0,1 %.
      - Der Heat Input muss auch im ungunstigsten Fall (alle Overrides gleichzeitig) in der WPS bleiben. Sonst werden diese Overrides gemeinsam so wenig wie noetig reduziert (z. B. Decklage mit 0,47–0,70 kJ/mm → alle 3,9 %).
      - `wire_max` nach derselben Logik: groesstmoeglich bis 10 %, sodass Draht ± Override in der WPS bleibt (kein Einfluss auf den Heat Input). `travel_max` bleibt unveraendert.
      - **Die Werte selbst werden nie geaendert.** Liegt ein Wert schon ausserhalb, wird er als „Not solved“ gemeldet (dann Fit Values).
    - **Fit Values:**
      - Da hier die Programmwerte selbst geaendert werden, erscheint vorher eine **Sicherheitsabfrage** mit den betroffenen Programmen („Cancel“ ist vorausgewaehlt).
-     - Strom, Spannung und Draht ausserhalb der WPS werden auf die naechste WPS-Grenze gesetzt (nach innen gerundet, mit den Nachkommastellen der Datei).
+     - Strom, Spannung, Draht, Dwell und Excursion ausserhalb der WPS werden auf die naechste WPS-Grenze gesetzt (nach innen gerundet, mit den Nachkommastellen der Datei).
      - Liegt der Heat Input danach noch ausserhalb, wird der Strom (Puls- und Grundstrom mit demselben Faktor) angepasst, soweit der WPS-Strombereich es erlaubt.
      - Ein Wert auf der Grenze laesst den Override gelb; dann zusaetzlich **Fit Overrides**.
    - Werte genau auf der WPS-Grenze gelten als innerhalb und werden nicht veraendert.

@@ -3368,21 +3368,21 @@
 
         .wps-range-table input,
         .wps-range-table select {
-            width: 52px;
+            width: 46px;
             padding: 3px 6px;
             font-size: 12px;
         }
 
         .wps-range-table .wps-label-input {
-            width: 128px;
+            width: 112px;
         }
 
         .wps-range-table .wps-files-input {
-            width: 96px;
+            width: 84px;
         }
 
         .wps-range-table select {
-            width: 88px;
+            width: 78px;
         }
 
         .wps-range-table th,
@@ -3624,5 +3624,5 @@
         }
 
         .wps-range-table .wps-split-line input {
-            width: 44px;
+            width: 40px;
         }

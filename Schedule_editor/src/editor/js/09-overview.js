@@ -65,7 +65,6 @@
             const store = readWpsStore();
             if (!store || !store.rows.length) return "";
             const fields = WPS_FIELD_KEYS;
-            const pairFields = fields.filter(key => key !== "heat");
             const ranges = '<table class="wps"><thead><tr><th>Pass</th><th>Schedules</th>'
                 + fields.map(key => `<th class="num">${escapeHtml(WPS_FIELDS[key].label)}<br><small>${escapeHtml(WPS_FIELDS[key].unit)}</small></th>`).join("")
                 + "</tr></thead><tbody>"
@@ -77,19 +76,25 @@
             const unassigned = files.filter(file => !store.rows.some(row => row.files.includes(fileTargetKey(file)))).map(fileShortLabel);
             const word = { ok: "OK", warn: "Override", fail: "Outside", off: "Off", na: "–" };
             const worst = list => (list.some(item => item.status === "fail") ? "fail" : list.some(item => item.status === "warn") ? "warn" : list.length ? "ok" : "na");
+            // Spalten je Feld wie im Editor (P/B, In/Out oder ein Wert; Mittelwert-Modus fasst P/B zusammen)
+            const fieldParts = key => (mean && WPS_CHECK_PARTS[key][0].part === "pri" ? [{ part: "mean", tag: "mean" }] : WPS_CHECK_PARTS[key]);
             let check = '<table class="wps check"><thead><tr><th rowspan="2">Schedule</th>'
-                + pairFields.map(key => `<th colspan="2" class="num sep">${escapeHtml(WPS_FIELDS[key].label)} <small>${escapeHtml(WPS_FIELDS[key].unit)}</small></th>`).join("")
-                + `<th class="num sep">${escapeHtml(WPS_FIELDS.heat.label)} <small>${escapeHtml(WPS_FIELDS.heat.unit)}</small></th><th rowspan="2">Status</th></tr><tr>`
-                + pairFields.map(() => (mean ? '<th colspan="2" class="num sep"><small>mean</small></th>' : '<th class="num sep"><small>P</small></th><th class="num"><small>B</small></th>')).join("")
-                + '<th class="num sep"><small>nominal</small></th></tr></thead><tbody>';
+                + fields.map(key => `<th colspan="${fieldParts(key).length}" class="num sep">${escapeHtml(WPS_FIELDS[key].label)} <small>${escapeHtml(WPS_FIELDS[key].unit)}</small></th>`).join("")
+                + '<th rowspan="2">Status</th></tr><tr>'
+                + fields.map(key => fieldParts(key).map((item, index) => `<th class="num${index === 0 ? " sep" : ""}"><small>${escapeHtml(item.tag)}</small></th>`).join("")).join("")
+                + "</tr></thead><tbody>";
             store.rows.forEach(wpsRow => {
                 const members = results.filter(result => result.rows[0] === wpsRow);
                 if (!members.length) return;
                 check += `<tr class="group"><td>${escapeHtml(wpsRow.label)}</td>`
-                    + pairFields.map(key => (!mean && (wpsRow[key].pri || wpsRow[key].bkg)
-                        ? `<td class="num sep range">${escapeHtml(describeWpsRange(wpsPartRange(wpsRow[key], "pri"), key).replace(/^P /, ""))}</td><td class="num range">${escapeHtml(describeWpsRange(wpsPartRange(wpsRow[key], "bkg"), key).replace(/^B /, ""))}</td>`
-                        : `<td colspan="2" class="num sep range">${escapeHtml(describeWpsRange(wpsRow[key], key))}</td>`)).join("")
-                    + `<td class="num sep range">${escapeHtml(describeWpsRange(wpsRow.heat, "heat"))}</td><td class="range">WPS range</td></tr>`;
+                    + fields.map(key => {
+                        const parts = fieldParts(key);
+                        if (parts.length > 1 && parts.some(item => wpsRow[key][item.part])) {
+                            return parts.map((item, index) => `<td class="num${index === 0 ? " sep" : ""} range">${escapeHtml(describeWpsRange(wpsPartRange(wpsRow[key], item.part), key))}</td>`).join("");
+                        }
+                        return `<td${parts.length > 1 ? ` colspan="${parts.length}"` : ""} class="num sep range">${escapeHtml(describeWpsRange(wpsRow[key], key))}</td>`;
+                    }).join("")
+                    + '<td class="range">WPS range</td></tr>';
                 members.forEach(result => {
                     result.entries.forEach(entry => {
                         const segment = result.file.sections.segments[entry.segmentIndex];
@@ -100,12 +105,10 @@
                             ? `<td class="num ${separator ? "sep " : ""}is-${worst(checks)}"${span ? ` colspan="${span}"` : ""}>${escapeHtml(formatWpsNumber(checks[0].value, key))}</td>`
                             : `<td class="num${separator ? " sep" : ""}"${span ? ` colspan="${span}"` : ""}>–</td>`);
                         check += `<tr><td>${escapeHtml(name)}</td>`
-                            + pairFields.map(key => {
+                            + fields.map(key => {
                                 const checks = entry.disabled ? [] : entry.values[key]?.checks || [];
-                                if (mean && checks.some(item => item.part === "mean")) return cell(key, checks.filter(item => item.part === "mean"), 2, true);
-                                return cell(key, checks.filter(item => item.part === "pri"), 0, true) + cell(key, checks.filter(item => item.part === "bkg"), 0, false);
+                                return fieldParts(key).map((item, index) => cell(key, checks.filter(check => check.part === item.part), 0, index === 0)).join("");
                             }).join("")
-                            + cell("heat", entry.disabled ? [] : entry.values.heat?.checks || [], 0, true)
                             + `<td class="status is-${status}">${word[status] || "–"}</td></tr>`;
                     });
                 });

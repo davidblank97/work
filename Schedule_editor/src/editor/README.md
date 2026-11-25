@@ -38,7 +38,8 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
     - Otherwise `parseWpsRowTable`: one row per pass. The header row is found by keywords (DE/EN), the columns by x position, and ranges by `parseWpsRange`.
     - The check uses a relative tolerance of 1e-6, so conversion rest values at a WPS bound do not count as outside.
   - Fit (`applyWpsFit`, under `recordHistoryAction`, change log through `wpsWriteValue`; applies to the selected files with a WPS row):
-    - `fitWpsOverrides` sets `WPS_HEAT_OVERRIDES` (amps, avc, dwell, excursion) to the largest value up to `WPS_OVERRIDE_TARGET` (10 %) at which every value ± override stays in the WPS (floored to 0.1 %).
+    - Check columns per field come from `WPS_CHECK_PARTS`: P/B, In/Out (dwell: indwell/outdwell) or a single value (excursion, heat). Sub-ranges use `pri`, `bkg`, `in` and `out` (`WPS_SUB_PARTS`).
+    - `fitWpsOverrides` always sets `WPS_ZERO_OVERRIDES` (dwell_max, excursion_max) to 0. It sets `WPS_HEAT_OVERRIDES` (amps, avc) to the largest value up to `WPS_OVERRIDE_TARGET` (10 %) at which every value ± override stays in the WPS (floored to 0.1 %).
       - If the heat min/max (all overrides together) is outside, it scales them together by binary search and checks the result again.
       - Values are never changed. `wire_max` uses the same logic, up to 10 % within the WPS wire range; it is not part of the heat scaling. `travel_max` is never changed.
       - It writes once, after the scaling.
