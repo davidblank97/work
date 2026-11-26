@@ -76,5 +76,64 @@ module.exports = [
             t.check("export works with plain-text keys", backup.data.scheduleEditorOverviewSeamName === "Naht 1" && backup.data.scheduleSuiteLanguage === "de", JSON.stringify(backup.data));
             t.check("export status translated", (await frame.textContent("#localStorageBackupStatus")) === "JSON-Sicherung heruntergeladen.");
         }
+    },
+    {
+        name: "every visible text has a German translation",
+        async run(t) {
+            // Geht im deutschen Modus alle Ansichten durch und meldet englische Texte ohne Eintrag in shared/i18n-de.js.
+            const { page, frame } = await t.openApp("editor", {
+                beforeLoad: page => page.addInitScript(() => {
+                    localStorage.setItem("scheduleSuiteLanguage", "de");
+                    localStorage.setItem("scheduleEditorHeatInputTargets", JSON.stringify([{ id: "t1", name: "Hot pass", min: "0.5", max: "1.0", files: ["0402"] }]));
+                    localStorage.setItem("scheduleEditorHeatMargin", JSON.stringify({ mode: "percent", value: 10, side: "both" }));
+                    const range = (min, max) => ({ min, max });
+                    localStorage.setItem("scheduleEditorWpsRanges", JSON.stringify({
+                        document: "test.pdf", wpsNumber: "T-M", checkMode: "separate", wireUnit: "cm/min",
+                        rows: [{ label: "Hotpass", passType: "Hot pass", files: ["0402", "0403"],
+                            current: { min: 100, max: 200, pri: range(150, 200), bkg: range(80, 120) }, voltage: range(9, 11), travel: range(50, 90),
+                            wire: range(50, 200), dwell: range(0.1, 0.5), excursion: range(0.1, 0.4), heat: range(0.5, 1.0) }]
+                    }));
+                })
+            });
+            page.on("dialog", dialog => dialog.dismiss());
+            const dir = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/";
+            await frame.setInputFiles("#fileInput", ["0402-Hotpass1.xml", "0403-Hotpass2.xml", "0404-Fill-OUT.xml"].map(name => t.file(dir + name)));
+            await page.waitForTimeout(500);
+            const click = async selector => { await frame.click(selector, { timeout: 3000 }).catch(() => {}); await page.waitForTimeout(200); };
+            const escape = async () => { await frame.press("body", "Escape").catch(() => {}); await page.waitForTimeout(100); };
+            await click("#selectAllBtn");
+            for (const section of ["description", "global", "limits", "overrides", "segments"]) {
+                await frame.evaluate(name => { try { showSection(name); } catch (error) { /* section missing */ } }, section);
+                await page.waitForTimeout(100);
+            }
+            for (const selector of ["#compareBtn", "#heatInputBtn", "#heatTabWps", "#wpsFitOverridesBtn", "#heatTabHeat", "#schemaCheckBtn", "#hiddenManagerBtn", "#changeLogBtn"]) await click(selector);
+            for (const selector of ["#helpBtn", "#localStorageBackupBtn", "#batchSaveBtn"]) { await click(selector); await escape(); }
+            await click("#xmlViewerBtn");
+            await click("#programOverviewBtn");
+            await click("#overviewConfirmBtn");
+            await page.waitForTimeout(500);
+            for (const route of ["wdr", "pendant", ""]) {
+                await page.evaluate(route => { location.hash = route; }, route);
+                await page.waitForTimeout(800);
+            }
+
+            const missing = await page.evaluate(() => {
+                const german = new Set(Object.values(SUITE_I18N_DE.exact));
+                const ignore = [
+                    /^[a-z0-9_.\-]+$/,                    // XML keys, pendant key functions, numbers
+                    /^[\d\s.,:–\-+×%°/()]+/,                 // starts with a number
+                    /\.(xml|csv|pdf)\b/i,                  // file names
+                    /\b[a-z]+_[a-z0-9_]+\b/,                // texts that name an XML key only (e.g. tooltips per parameter)
+                    /^G\d+ · /,                             // pipe sizes
+                    /^(Schedule Editor|WDR Converter|Pendant Layout|Liburdi Schedule Suite [\d.]+|David Blank, Bilfinger)$/,
+                    /^(NGRT|NG|H2)[\w +-]*$/,                // head values from the files
+                    /^(Hotpass|WPS T-M.*|Comp|In|Out|Min|Max|Rev1)$/, // data of this test, labels kept English
+                    /^((min|max) )?(A|V|s|mm|kJ\/mm|mm\/min|cm\/min|in\/min)$/, // units
+                    /^(JOG|WELD2?)$/                             // pendant modes
+                ];
+                return SuiteI18n.misses().filter(text => !german.has(text) && !ignore.some(regex => regex.test(text)));
+            });
+            t.check("no untranslated UI text (add entries to src/shared/i18n-de.js)", missing.length === 0, missing.join(" | "));
+        }
     }
 ];

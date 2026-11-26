@@ -4,7 +4,9 @@
   "description": "Browser tests for Lib_Schedule_Editor_v3_2.html (Playwright, Chromium)",
   "scripts": {
     "pretest": "node ../build.js --check",
-    "test": "node run.js"
+    "test": "node run.js",
+    "pretest:quick": "node ../build.js --check",
+    "test:quick": "node run.js --quick"
   },
   "devDependencies": {
     "playwright": "1.65.1"

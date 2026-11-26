@@ -5,7 +5,9 @@
 - **Start every task** with `Schedule_editor/src/MAP.md` (topic → file). Then read only the module README and the files it points to.
 - **After every change**, from `Schedule_editor/`:
   - `node build.js`
-  - `cd tests && npm test` (the pretest checks that the build is current; filter: `node run.js <name>`)
+  - tests (the pretest checks that the build is current):
+    - while working: only the affected area, `cd tests && node run.js <name>` (e.g. `wps`), or `npm run test:quick` (skips the slow cases);
+    - before every commit/merge: the full `cd tests && npm test` (test files run in parallel, about 80 s).
   - check the VS Code diagnostics
 - **Do not read** (large, never needed for edits): the built HTML, `src/vendor/`, `src/editor/data/*.xdr`/`*.xml`, `Schedule_editor/data/` (samples, logs, machine backup), `_archiv/`.
 - **Workflow:**

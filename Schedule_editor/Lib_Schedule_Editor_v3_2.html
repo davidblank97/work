@@ -298,6 +298,9 @@
                 "Could not open the XML Viewer. Please allow pop-ups for this page.": "Der XML-Viewer konnte nicht geöffnet werden. Bitte Pop-ups für diese Seite erlauben.",
                 "[MISSING VALUE]": "[FEHLENDER WERT]",
                 "Saved XDR schema": "Gespeichertes XDR-Schema",
+                "Section": "Bereich",
+                "Old": "Alt",
+                "New": "Neu",
                 "Loading schemas…": "Schemas werden geladen…",
                 "Loading saved XDR schemas…": "Gespeicherte XDR-Schemas werden geladen…",
                 "Highlight changes since last save": "Änderungen seit dem letzten Speichern hervorheben",
@@ -547,6 +550,7 @@
                 "Add the sheet \"Raw data\" with all log columns (about twice the file size)": "Blatt „Raw data“ mit allen Log-Spalten hinzufügen (etwa doppelte Dateigröße)",
                 "On start you will be asked for a target folder (Chrome/Edge). The Excel files are saved there directly. Other browsers download a ZIP archive (split into several parts for large batches). XML files are copied unchanged. CSV files that are not Liburdi data logs are written as raw data.": "Beim Start wird nach einem Zielordner gefragt (Chrome/Edge). Die Excel-Dateien werden direkt dort gespeichert. Andere Browser laden ein ZIP-Archiv herunter (bei großen Mengen in mehrere Teile aufgeteilt). XML-Dateien werden unverändert kopiert. CSV-Dateien, die keine Liburdi-Datenlogs sind, werden als Rohdaten geschrieben.",
                 "START CONVERSION": "KONVERTIERUNG STARTEN",
+                "Ready.": "Bereit.",
                 "Processing files...": "Dateien werden verarbeitet…",
                 "The converted files were packed into a ZIP archive.": "Die konvertierten Dateien wurden in ein ZIP-Archiv gepackt.",
                 "Conversion completed successfully!": "Konvertierung erfolgreich abgeschlossen.",
@@ -683,6 +687,7 @@
                 [/Invalid data for backup entry: (.*)/, "Ungültige Daten für Sicherungseintrag: $1"],
                 [/… and (\d+) more/, "… und $1 weitere"],
                 [/File (.+) \(not loaded\)/, "Datei $1 (nicht geladen)"],
+                [/File (\S+)/, "Datei $1"],
 
                 // Schema / upgrade
                 [/Active schema: (.+) \(built-in\) · v(\S+)/, "Aktives Schema: $1 (integriert) · v$2"],
@@ -1833,12 +1838,15 @@
             z-index: 100;
             visibility: hidden;
             opacity: 0;
-            transition: all 0.2s ease;
+            /* visibility wechselt beim Oeffnen sofort (sonst greift focus() bei langsamen Frames nicht),
+               beim Schliessen erst nach dem Ausblenden */
+            transition: opacity 0.2s ease, visibility 0s linear 0.2s;
         }
 
         .modal-overlay.show {
             visibility: visible;
             opacity: 1;
+            transition: opacity 0.2s ease, visibility 0s;
         }
 
         .modal-box {

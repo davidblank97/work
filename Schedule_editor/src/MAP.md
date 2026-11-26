@@ -36,4 +36,4 @@ All JS files of one app run as one classic script in the app's iframe: they shar
 | Pendant markup / styles / logic | `pendant/index.html`, `pendant/style.css`, `pendant/pendant.js` |
 | Libraries (minified, do not read) | `vendor/` (JSZip in editor and WDR, SheetJS in WDR, pdf.js in editor) |
 
-**Tests:** `../tests/*.test.js`. The test helpers are in `../tests/lib.js` (`startServer`, `t.openApp(route)` returns `{page, frame}`, `t.check`, `t.file`, `smallCsv`).
+**Tests:** `../tests/*.test.js`. The test helpers are in `../tests/lib.js` (`startServer`, `t.openApp(route)` returns `{page, frame}`, `t.check`, `t.file`, `smallCsv`). `run.js` runs the files in parallel (`--jobs=N`, default 3); `--quick` skips `SLOW_TESTS`. Tests must wait for conditions (`waitForFunction`), not fixed timeouts, because parallel runs are slower.

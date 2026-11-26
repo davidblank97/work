@@ -250,7 +250,7 @@ module.exports = [
 
             // Fit Values fragt nach; Abbrechen aendert nichts
             await frame.click("#wpsFitValuesBtn");
-            await page.waitForTimeout(150);
+            await frame.waitForFunction(() => document.activeElement.id === "wpsFitValuesCancelBtn", null, { timeout: 3000 }).catch(() => {});
             t.check("confirmation dialog", await frame.locator("#wpsFitValuesModal.show").count() === 1
                 && (await frame.textContent("#wpsFitValuesText")).includes("Affected program(s) (1): 0402")
                 && await frame.evaluate(() => document.activeElement.id) === "wpsFitValuesCancelBtn", JSON.stringify([await frame.locator("#wpsFitValuesModal.show").count(), await frame.textContent("#wpsFitValuesText"), await frame.evaluate(() => document.activeElement.id)]));

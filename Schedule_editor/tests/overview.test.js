@@ -91,7 +91,7 @@ module.exports = [
             await frame.setInputFiles("#fileInput", [t.file("Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml")]);
             await page.waitForTimeout(300);
             await frame.click("#programOverviewBtn");
-            await page.waitForTimeout(150);
+            await frame.waitForFunction(() => document.activeElement.id === "seamNameInput", null, { timeout: 3000 }).catch(() => {});
             t.check("last seam name and author suggested", await frame.inputValue("#seamNameInput") === "Naht 07" && await frame.inputValue("#preparedByInput") === "A. Beispiel");
             t.check("input focused", await frame.evaluate(() => document.activeElement.id) === "seamNameInput");
             let opened = 0;
