@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liburdi Schedule Suite 3.1</title>
+    <script>
+<!-- @include shared/i18n-de.js -->
+<!-- @include shared/i18n.js -->
+    </script>
     <!--
         GENERATED FILE – do not edit. Source: Schedule_editor/src/ (see src/MAP.md), build: `node build.js`.
         Liburdi Schedule Suite 3.1: start page + three independent apps in <template> blocks
@@ -70,6 +74,56 @@
             font-weight: 700;
             letter-spacing: 0.12em;
             text-transform: uppercase;
+        }
+
+        .launcher-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .launcher-top .launcher-eyebrow {
+            margin: 0;
+        }
+
+        /* Sprachauswahl (shared/i18n.js) */
+        .language-switch {
+            display: inline-flex;
+            gap: 2px;
+            padding: 2px;
+            border: 1px solid var(--border-color);
+            border-radius: 7px;
+            background: var(--bg-panel);
+        }
+
+        .language-option {
+            height: 28px;
+            padding: 0 14px;
+            border: none;
+            border-radius: 5px;
+            background: transparent;
+            color: var(--text-muted);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .language-option:hover {
+            color: var(--text-main);
+        }
+
+        .language-option[aria-pressed="true"] {
+            background: var(--accent);
+            color: #24150d;
+        }
+
+        .language-option:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
         }
 
         .launcher-content h1 {
@@ -232,7 +286,13 @@
 <body>
     <main id="launcher">
         <div class="launcher-content">
-            <p class="launcher-eyebrow">Liburdi Schedule Suite · Version 3.1</p>
+            <div class="launcher-top">
+                <p class="launcher-eyebrow">Liburdi Schedule Suite · Version 3.1</p>
+                <div class="language-switch" role="group" aria-label="Language / Sprache" data-no-i18n>
+                    <button type="button" class="language-option" data-language="en" lang="en" aria-pressed="true">English</button>
+                    <button type="button" class="language-option" data-language="de" lang="de" aria-pressed="false">Deutsch</button>
+                </div>
+            </div>
             <h1>Which tool do you want to open?</h1>
             <p class="launcher-intro">All tools run entirely in your browser. Files are only written when you download or save them.</p>
             <nav class="app-cards" aria-label="Applications">

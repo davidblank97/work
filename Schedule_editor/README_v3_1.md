@@ -10,6 +10,7 @@ Die Suite fasst den **Schedule Editor**, den **WDR Converter** (Welddata Convert
   - Pruefung aller Schedules gegen die WPS, mit Tabelle je Lage: Puls und Grund getrennt, Status OK / Override / Outside.
   - **Fit Overrides:** groesstmoeglicher Override-Bereich bis 10 %, ohne dass die WPS verletzt werden kann, auch beim Heat Input.
   - **Fit Values** (mit Sicherheitsabfrage): Werte auf die WPS-Grenze setzen. Die Schweissgeschwindigkeit wird nie veraendert.
+- **Sprache English | Deutsch:** Umschalter oben rechts auf der Startseite; gilt fuer Startseite, Schedule Editor, WDR Converter und Pendant Layout (siehe „Sprache“).
 - **Anzeige:**
   - Alle Zahlen mit hoechstens 2 Nachkommastellen; die Datei behaelt ihre Genauigkeit.
   - Der Drahtvorschub in der WPS-Pruefung wird in cm/min angezeigt.
@@ -52,7 +53,11 @@ python3 -m http.server 8000
 
 Danach `http://localhost:8000/Schedule_editor/Lib_Schedule_Editor_v3_1.html` oeffnen.
 
-Die Oberflaeche ist englisch; diese Anleitung ist deutsch.
+### Sprache
+
+Oben rechts auf der Startseite schaltet **English | Deutsch** die ganze Suite um: Startseite, Schedule Editor, WDR Converter und Pendant Layout, einschliesslich Meldungen, Tooltips, Hilfe, Programmuebersicht und XML Viewer. Bereits geoeffnete Anwendungen wechseln sofort, ohne Neuladen; geladene Dateien bleiben erhalten. Die Wahl wird im Browser gespeichert (`scheduleSuiteLanguage`) und gilt beim naechsten Start wieder.
+
+Nicht uebersetzt werden: Parameternamen (XML-Schluessel wie `pri_amp`), Produktnamen, „Overrides“, „WPS“, „Head“ und „Schedule“, die Inhalte der Dateien sowie die erzeugten Excel- und XML-Dateien. Diese Anleitung nennt die Bedienelemente mit ihren englischen Namen; im deutschen Modus heissen sie z. B. „Wärmeeinbringung & WPS“ (Heat Input & WPS), „Zielbereich“ (Target range), „Sicherheitsabstand“ (Safety margin), „Overrides anpassen“ / „Werte anpassen“ (Fit Overrides / Fit Values), „Batch-Speichern“ (Batch Save), „Einstellungen“ (Settings).
 
 **Aufbau der Datei:** Startseite und Umschaltung stehen am Anfang und Ende der Datei. Die beiden Anwendungen liegen unveraendert in `<template id="app-editor">` bzw. `<template id="app-wdr">` und werden beim Oeffnen jeweils als eigenes Dokument (iframe) gestartet, damit sich CSS und JavaScript nicht gegenseitig stoeren. Aenderungen am Editor oder Converter werden direkt im jeweiligen Template vorgenommen. Einstellungen im `localStorage` (ausgeblendete/gesperrte Parameter, Reihenfolge usw.) sind dieselben wie bei der Einzeldatei, solange sie ueber dieselbe Adresse geoeffnet wird.
 
@@ -443,7 +448,7 @@ Die Anzeige in der Kopfzeile nennt die Zahl ungespeicherter Dateien. Beim Schlie
 
 ## Lokale Einstellungen
 
-Ausgeblendete, wichtige und gesperrte Parameter, die Parameter-Reihenfolge, die XDR-Schemas, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll (`Tools > Change Log`) bleibt ueber Sitzungen erhalten. Die XDR-Schema-Versionen liegen ebenfalls dort (`scheduleEditorXdrSchemas`, aktive Version in `scheduleEditorActiveXdr`). Mit `Tools > Settings` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden.
+Ausgeblendete, wichtige und gesperrte Parameter, die Parameter-Reihenfolge, die XDR-Schemas, eigene Head-Werte, Einheiten, Aenderungsprotokoll und Sidebar-Ausklappzustaende werden im `localStorage` des Browsers gespeichert. Diese Einstellungen sind browser- und profilbezogen. Beschaedigte Eintraege werden beim Start ignoriert und durch Standardwerte ersetzt. Das Aenderungsprotokoll (`Tools > Change Log`) bleibt ueber Sitzungen erhalten. Die XDR-Schema-Versionen liegen ebenfalls dort (`scheduleEditorXdrSchemas`, aktive Version in `scheduleEditorActiveXdr`). Mit `Tools > Settings` koennen diese Daten als JSON exportiert und spaeter wieder importiert werden (auch Sprache, WPS-Bereiche, Safety Margin, Nahtname und „Prepared by“).
 
 Der Editor erwartet Schedule-XML-Dateien mit den bekannten Liburdi-Bereichen. Nicht passende oder fehlerhafte XML-Dateien werden beim Laden abgewiesen.
 

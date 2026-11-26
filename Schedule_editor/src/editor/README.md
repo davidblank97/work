@@ -73,7 +73,7 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
   - `danger` = invalid or destructive.
   - Do not spread `teal`.
 - **Copy:**
-  - English, with parameters named exactly as their XML keys.
+  - English, with parameters named exactly as their XML keys. Every new UI text or message needs a German entry in `../shared/i18n-de.js` (exact text, or a pattern for messages with numbers/names); see `../suite/README.md`.
   - Units always visible, e.g. "Length (mm)".
   - Buttons are short verbs in title case: "…" when a button opens a dialog or file picker, "+" when it appends (`+ Add segment`).
   - Status text is plain, without "!". No emoji; icons are Unicode glyphs.

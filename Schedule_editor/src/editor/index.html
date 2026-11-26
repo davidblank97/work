@@ -231,8 +231,8 @@
 
     <div class="modal-overlay" id="helpModal">
         <div class="modal-box help-modal-box" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-            <h3 id="helpTitle">Liburdi Schedule Editor v2.9 - Help</h3>
-            <div class="help-content">
+            <h3 id="helpTitle"><span data-lang="en">Liburdi Schedule Editor 3.1 – Help</span><span data-lang="de">Liburdi Schedule Editor 3.1 – Hilfe</span></h3>
+            <div class="help-content" data-lang="en">
                 <h4>Start</h4>
                 <p>Open this HTML file in a current browser. For the full feature set (segment field order, XDR
                     schemas from the Schedule Database) serve the project folder with
@@ -310,6 +310,95 @@
                 <h4>Local settings</h4>
                 <p>Hidden and important parameters, custom heads, units, the change log and the sidebar state are
                     stored in the browser's localStorage.</p>
+            </div>
+            <div class="help-content" data-lang="de">
+                <h4>Start</h4>
+                <p>Diese HTML-Datei in einem aktuellen Browser öffnen. Für den vollen Funktionsumfang (Feldreihenfolge der
+                    Segmente, XDR-Schemas aus der Schedule Database) den Projektordner mit
+                    <code>python3 -m http.server 8000</code> bereitstellen.</p>
+
+                <h4>XML-Dateien laden</h4>
+                <ol>
+                    <li><strong>XML öffnen…</strong> klicken oder XML-Dateien auf <strong>XML-Dateien hier ablegen</strong> ziehen.</li>
+                    <li>Nur gültige Schedules (<code>&lt;sched&gt;</code> mit mindestens einem Segment) werden übernommen.</li>
+                    <li>Eine Datei in der Liste anklicken, um sie zur aktiven Datei zu machen.</li>
+                    <li>Mit den Checkboxen (oder <strong>Alle / Leeren / Umkehren</strong>) Dateien für Sammelaktionen auswählen.</li>
+                </ol>
+                <p>Dateien werden nur im Browser verarbeitet. Die Dateien auf der Festplatte bleiben unverändert, bis gespeichert wird.</p>
+
+                <h4>Bearbeiten</h4>
+                <p>Die Bereiche <strong>Beschreibung</strong>, <strong>Global</strong>, <strong>Grenzwerte</strong>,
+                    <strong>Overrides</strong> und <strong>Segmente</strong> sind direkt bearbeitbar. Dezimalkomma und
+                    -punkt werden akzeptiert. Geänderte Werte sind hervorgehoben; beim Überfahren eines Werts erscheint
+                    der zuletzt gespeicherte Wert.</p>
+                <p>Ist die aktive Datei ausgewählt, werden Änderungen außerhalb der Segmente auch in alle anderen
+                    ausgewählten Dateien übernommen.</p>
+                <p>Beim Überfahren einer Parameterzeile lässt sie sich als wichtig markieren (★) oder ausblenden (⊘).
+                    Doppelklick und Rechtsklick auf den Namen tun dasselbe.</p>
+                <p>Eine Parameterzeile am Namen oder Griff (⠿) ziehen, um sie zu verschieben; Alt+↑/↓ auf dem Griff
+                    verschiebt sie um eine Zeile. Die Reihenfolge wird pro Bereich gespeichert (alle Segmente teilen eine
+                    Reihenfolge) und ist Teil der Sicherung der lokalen Einstellungen. <strong>Reihenfolge zurücksetzen</strong>
+                    im Kopf des Bereichs stellt die Standardreihenfolge wieder her. Gesperrte Parameter (🔒) lassen sich
+                    nicht verschieben und behalten ihre Position.</p>
+                <p>Unter Segmente lassen sich Segmente duplizieren, verschieben und löschen. Das gewählte Segment bleibt geöffnet.</p>
+
+                <h4>Tastenkürzel</h4>
+                <ul>
+                    <li><strong>Strg+S</strong> alle geänderten Dateien speichern (im Editor, im Änderungsprotokoll vermerkt)</li>
+                    <li><strong>Strg+Z</strong> rückgängig, <strong>Strg+Y</strong> / <strong>Strg+Umschalt+Z</strong> wiederholen
+                        (in einem Eingabefeld gilt das Rückgängig des Browsers)</li>
+                    <li><strong>Strg+F</strong> oder <strong>/</strong> suchen, <strong>Esc</strong> Suche leeren oder
+                        Dialog schließen</li>
+                </ul>
+
+                <h4>Speichern</h4>
+                <ul>
+                    <li><strong>Speichern:</strong> speichert alle geänderten Dateien im Editor (neue Basis für die
+                        „geändert“-Markierungen, Zurücksetzen und den XML-Viewer) und trägt „Gespeichert“ mit der Zahl der
+                        Änderungen ins Änderungsprotokoll ein. Es wird nichts heruntergeladen; gespeicherte, nicht
+                        heruntergeladene Dateien zeigen <em>Gespeichert ↓</em>. Zum Umbenennen den Dateinamen über den
+                        Bereichen bearbeiten.</li>
+                    <li><strong>Batch-Speichern:</strong> der einzige Weg zum Herunterladen: speichert die ausgewählten
+                        Dateien (alle, wenn keine ausgewählt ist) und lädt sie herunter. Ein optionaler Revisions-Tag
+                        (z. B. <code>Rev1</code>) wird an jeden Dateinamen angehängt (<code>Name_Rev1.xml</code>); ein
+                        vorhandenes <code>_Rev…</code> wird ersetzt und die Dateien werden im Editor umbenannt. Mehrere
+                        Dateien werden als ZIP-Archiv gespeichert. Liegt die Wärmeeinbringung eines Segments außerhalb der
+                        Grenzwerte der Datei oder des Zielbereichs (Werkzeuge › Wärmeeinbringung &amp; WPS), listet eine
+                        Meldung die Segmente, bevor etwas heruntergeladen wird.</li>
+                    <li><strong>Zurücksetzen:</strong> setzt alle geladenen Dateien auf den zuletzt gespeicherten Stand zurück.</li>
+                </ul>
+
+                <h4>Werkzeuge</h4>
+                <ul>
+                    <li><strong>Vergleich:</strong> geladene Dateien vergleichen, Werte bearbeiten, Werte in alle Dateien
+                        übernehmen, optional nur Unterschiede anzeigen.</li>
+                    <li><strong>Wärmeeinbringung &amp; WPS:</strong> Wärmeeinbringung pro Segment mit Wirkungsgrad η = 0,6
+                        (Grundstromwerte während der Excursion, Pulswerte während indwell/outdwell); Min/Max aus den
+                        prozentualen Overrides. Ein Diagramm zeigt den Min-Max-Bereich und den Nennwert pro Segment, die
+                        Grenzwerte aus &lt;limits&gt; als gestrichelte Linien, Zielbereiche als rote und den
+                        Sicherheitsabstand als gelbe Linien. Im Reiter WPS wird eine WPS (digitale PDF) eingelesen und die
+                        Schedules werden gegen sie geprüft und angepasst.</li>
+                    <li><strong>Ausgeblendete Parameter:</strong> ausgeblendete Parameter wiederherstellen.</li>
+                    <li><strong>Änderungsprotokoll:</strong> erfasste Änderungen anzeigen; <em>Protokoll leeren</em> löscht alle Einträge (Rückgängig stellt sie wieder her).</li>
+                    <li><strong>XML-Viewer:</strong> schreibgeschütztes XML der aktiven Datei; Änderungen seit dem letzten
+                        Speichern sind hervorgehoben (grün hinzugefügt, rot entfernt, gelb geändert mit altem Wert); mit
+                        einem gespeicherten XDR-Schema sind fehlende Pflichtwerte rot markiert.</li>
+                    <li><strong>Schemaprüfung:</strong> prüft alle geladenen Dateien gegen das aktive XDR-Schema (Pflicht- und
+                        unbekannte Elemente, Reihenfolge, Attribute, Datentypen) und vergleicht die Dateiversion mit der
+                        Schemaversion. <strong>Upgrade</strong> bringt ältere Dateien auf die Schemaversion: Werte bleiben
+                        erhalten, fehlende Felder kommen aus der Layout-Vorlage (NGRT/NG nach Head), unbekannte Felder
+                        werden entfernt.</li>
+                    <li><strong>Programmübersicht (PDF):</strong> druckbare Zusammenfassung aller geladenen Dateien –
+                        hervorgehobene (★) Global-Werte, die wichtigsten Segmentwerte in Gruppen, Diagramm und Tabelle der
+                        Wärmeeinbringung, die verwendeten Overrides und die WPS-Bereiche; über den Druckdialog als PDF speichern.</li>
+                    <li><strong>Einstellungen:</strong> XDR-Schemaversionen verwalten (laden, aktivieren, löschen) und die
+                        Editor-Einstellungen als JSON exportieren oder importieren.</li>
+                </ul>
+                <p>Die Sprache (English | Deutsch) wird auf der Startseite umgeschaltet.</p>
+
+                <h4>Lokale Einstellungen</h4>
+                <p>Ausgeblendete und wichtige Parameter, eigene Heads, Einheiten, das Änderungsprotokoll und der Zustand
+                    der Seitenleiste werden im localStorage des Browsers gespeichert.</p>
             </div>
             <div class="modal-actions">
                 <button id="helpCloseBtn" class="btn-primary" type="button">Close</button>

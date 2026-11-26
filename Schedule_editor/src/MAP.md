@@ -7,7 +7,8 @@ All JS files of one app run as one classic script in the app's iframe: they shar
 | Topic | File |
 |---|---|
 | Start page, suite bar, header comment | `suite/shell.html` |
-| Router: iframe per app, `#editor`/`#wdr`/`#pendant` | `suite/router.js` |
+| Router: iframe per app, `#editor`/`#wdr`/`#pendant`; language switch buttons | `suite/router.js` |
+| Language switch EN/DE: engine (runtime translation of all app documents) / German dictionary — see `suite/README.md` | `shared/i18n.js`, `shared/i18n-de.js` |
 | **Editor** overview, state, conventions | `editor/README.md` |
 | Editor markup (sidebar, panels, modals) | `editor/index.html` |
 | Editor styles | `editor/style.css` |

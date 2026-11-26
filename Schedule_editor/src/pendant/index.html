@@ -26,12 +26,19 @@
         <main class="panel p-6 rounded-xl shadow-lg">
 
             <!-- Scope banner -->
-            <div class="scope-banner text-sm p-3 rounded-lg mb-6">
+            <div class="scope-banner text-sm p-3 rounded-lg mb-6" data-lang="en">
                 This simplified editor only shows the three most-used pages:
                 <strong>JOG</strong>, <strong>WELD</strong>, and <strong>WELD2</strong>.
                 The generated XML still contains all nine modes — the others
                 (NUMPAD, AUXJOG, MENU, INPUT, VIEW, EDIT) are written using factory defaults
                 or, if a file is loaded, the values from that file.
+            </div>
+            <div class="scope-banner text-sm p-3 rounded-lg mb-6" data-lang="de">
+                Dieser vereinfachte Editor zeigt nur die drei meistgenutzten Seiten:
+                <strong>JOG</strong>, <strong>WELD</strong> und <strong>WELD2</strong>.
+                Das erzeugte XML enthält trotzdem alle neun Modi – die übrigen
+                (NUMPAD, AUXJOG, MENU, INPUT, VIEW, EDIT) werden mit Werkseinstellungen geschrieben
+                oder, wenn eine Datei geladen ist, mit den Werten aus dieser Datei.
             </div>
 
             <!-- File Loader Section -->
@@ -126,6 +133,7 @@
     <div id="help-modal" class="hidden fixed inset-0 overflow-y-auto h-full w-full flex items-center justify-center" style="background-color: rgba(0, 0, 0, 0.8);">
         <div class="relative mx-auto p-5 panel w-full max-w-md shadow-lg rounded-md">
             <div class="mt-3 text-center">
+                <div data-lang="en">
                 <h3 class="text-lg leading-6 font-medium" style="color: var(--accent);">How to Use the Simplified Editor</h3>
                 <div class="mt-2 px-7 py-3 text-left">
                     <p class="text-sm mb-4" style="color: var(--text-secondary);">
@@ -148,6 +156,32 @@
                         <li><span class="font-semibold" style="color: var(--accent);">Preview as PDF:</span> Click "Preview Layout as PDF" to open a printable view of the three editable pages with their button icons. Use the print dialog's "Save as PDF" option to keep a copy.</li>
                         <li><span class="font-semibold" style="color: var(--accent);">Saving:</span> Enter an author and file suffix, then click "Generate &amp; Download XML". The output contains all nine modes.</li>
                     </ol>
+                </div>
+                </div>
+                <div data-lang="de">
+                <h3 class="text-lg leading-6 font-medium" style="color: var(--accent);">Bedienung des vereinfachten Editors</h3>
+                <div class="mt-2 px-7 py-3 text-left">
+                    <p class="text-sm mb-4" style="color: var(--text-secondary);">
+                        Dies ist die vereinfachte Version des Layout-Editors. Nur die drei meistgenutzten Seiten
+                        (<strong>JOG</strong>, <strong>WELD</strong>, <strong>WELD2</strong>) sind bearbeitbar.
+                        Das erzeugte XML enthält trotzdem alle neun Modi – die anderen sechs werden mit Werkseinstellungen
+                        geschrieben oder, falls eine Datei geladen ist, mit deren Werten.
+                    </p>
+                    <ol class="list-decimal list-inside space-y-3" style="color: var(--text-primary);">
+                        <li><span class="font-semibold" style="color: var(--accent);">Laden:</span> Über „Datei auswählen“ eine vorhandene <code>key_layout_*.xml</code> laden. Alle neun Modi werden eingelesen, aber nur JOG, WELD und WELD2 sind bearbeitbar.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Bearbeiten:</span>
+                            <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                                <li>Mit den orangen Reitern zwischen JOG, WELD und WELD2 wechseln.</li>
+                                <li>Die Funktion jeder Taste über ihr Auswahlfeld ändern.</li>
+                                <li>Für eigene Funktionen „--- CUSTOM ---“ wählen und einen Wert eingeben.</li>
+                            </ul>
+                        </li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Kopieren / Einfügen:</span> Mit „Seite kopieren“ den aktuellen Modus übernehmen, dann zu einem anderen Modus wechseln und mit „Seite einfügen“ überschreiben. Die Zwischenablage-Anzeige zeigt, welcher Modus gerade gehalten wird.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Leere Seite:</span> „Seite mit blank_black füllen“ leert den aktuellen Modus für einen Neuanfang. Vorher erscheint eine Sicherheitsabfrage.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Vorschau als PDF:</span> „Layout als PDF anzeigen“ öffnet eine druckbare Ansicht der drei bearbeitbaren Seiten mit ihren Tastensymbolen. Mit „Als PDF speichern“ im Druckdialog eine Kopie ablegen.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Speichern:</span> Autor und Dateisuffix eingeben, dann „XML erzeugen &amp; herunterladen“ klicken. Die Ausgabe enthält alle neun Modi.</li>
+                    </ol>
+                </div>
                 </div>
                 <div class="items-center px-4 py-3">
                     <button id="close-help-button" class="btn-primary px-4 py-2 text-base rounded-md w-full shadow-sm">

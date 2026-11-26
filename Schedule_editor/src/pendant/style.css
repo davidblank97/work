@@ -373,3 +373,9 @@ input, select, textarea { font: inherit; }
         .scope-banner strong {
             color: var(--accent);
         }
+
+        /* Sprachumschaltung (shared/i18n.js): Textbloecke je Sprache */
+        html:not([lang="de"]) [data-lang="de"],
+        html[lang="de"] [data-lang="en"] {
+            display: none !important;
+        }

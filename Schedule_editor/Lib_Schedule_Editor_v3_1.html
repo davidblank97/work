@@ -5,6 +5,996 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liburdi Schedule Suite 3.1</title>
+    <script>
+        // German dictionary for shared/i18n.js.
+        // exact:    English UI text (inner whitespace collapsed, trimmed) -> German.
+        // patterns: [regex (anchored, matched against the whole text), replacement]; $1… insert the groups,
+        //           and a group that is itself an exact key is translated as well. The replacement may also be a
+        //           function (as in String.replace).
+        // Product names (Schedule Editor, WDR Converter, Pendant Layout), parameter names (XML keys such as
+        // pri_amp), "Overrides", "WPS", "Head" and "Schedule" stay English.
+        // Glossary: heat input = Wärmeeinbringung, target range = Zielbereich, safety margin = Sicherheitsabstand,
+        // weld seam length = Nahtlänge, travel speed = Schweißgeschwindigkeit, wire feed = Drahtvorschub,
+        // pass = Lage, bead = Raupe, dwell = Verweilzeit.
+        window.SUITE_I18N_DE = {
+            exact: {
+                // ---- Start page and suite bar ----
+                "Which tool do you want to open?": "Welches Werkzeug möchtest du öffnen?",
+                "All tools run entirely in your browser. Files are only written when you download or save them.": "Alle Werkzeuge laufen vollständig im Browser. Dateien werden nur geschrieben, wenn du sie herunterlädst oder speicherst.",
+                "Applications": "Anwendungen",
+                "Back to the start page": "Zurück zur Startseite",
+                "⌂ Start": "⌂ Start",
+                "Open": "Geöffnet",
+                "Open Schedule Editor →": "Schedule Editor öffnen →",
+                "Open WDR Converter →": "WDR Converter öffnen →",
+                "Open Pendant Layout →": "Pendant Layout öffnen →",
+                "Edit, compare and save Liburdi schedule XML files: segments, heat input, batch save.": "Liburdi-Schedule-XML-Dateien bearbeiten, vergleichen und speichern: Segmente, Wärmeeinbringung, Batch-Speichern.",
+                "Convert weld data recordings (CSV/XML) into Excel workbooks and download them as a ZIP.": "Schweißdatenaufzeichnungen (CSV/XML) in Excel-Arbeitsmappen umwandeln und als ZIP herunterladen.",
+                "Edit the pendant key layout (JOG, WELD, WELD2) and export the key_layout XML or a PDF preview.": "Tastenbelegung des Pendants (JOG, WELD, WELD2) bearbeiten und als key_layout-XML oder PDF-Vorschau ausgeben.",
+                "Tip: switch between the tools with the bar at the top; open tools keep their loaded files.": "Tipp: Über die Leiste oben zwischen den Werkzeugen wechseln; geöffnete Werkzeuge behalten ihre geladenen Dateien.",
+                "Liburdi Schedule Suite · Version 3.1": "Liburdi Schedule Suite · Version 3.1",
+                "Welddata Converter": "Schweißdaten-Konverter",
+                "Liburdi Welddata Converter": "Liburdi Schweißdaten-Konverter",
+                "Created by: David Blank, Bilfinger": "Erstellt von: David Blank, Bilfinger",
+                "Created by": "Erstellt von",
+
+                // ---- General ----
+                "Apply": "Übernehmen",
+                "Apply to all": "Auf alle anwenden",
+                "Cancel": "Abbrechen",
+                "Close": "Schließen",
+                "Confirm": "Bestätigen",
+                "Delete": "Löschen",
+                "Discard": "Verwerfen",
+                "Dismiss": "Ausblenden",
+                "Error": "Fehler",
+                "Warning": "Warnung",
+                "Help": "Hilfe",
+                "Remove": "Entfernen",
+                "Reset": "Zurücksetzen",
+                "Restore": "Wiederherstellen",
+                "Show": "Anzeigen",
+                "Show all": "Alle anzeigen",
+                "Hide all": "Alle ausblenden",
+                "Save": "Speichern",
+                "Save anyway": "Trotzdem speichern",
+                "Saved": "Gespeichert",
+                "Saved ↓": "Gespeichert ↓",
+                "Unsaved": "Nicht gespeichert",
+                "Downloaded": "Heruntergeladen",
+                "Loaded": "Geladen",
+                "Status": "Status",
+                "No.": "Nr.",
+                "State": "Zustand",
+                "Name": "Name",
+                "File": "Datei",
+                "Files": "Dateien",
+                "File name": "Dateiname",
+                "Version": "Version",
+                "Date": "Datum",
+                "Time": "Zeit",
+                "Total": "Gesamt",
+                "Other": "Andere",
+                "Custom": "Benutzerdefiniert",
+                "Results": "Ergebnisse",
+                "Result": "Ergebnis",
+                "Same": "Gleich",
+                "Different": "Unterschiedlich",
+                "Clear": "Leeren",
+                "Invert": "Umkehren",
+                "Settings": "Einstellungen",
+                "Settings:": "Einstellungen:",
+                "Tools": "Werkzeuge",
+                "Got it": "Verstanden",
+                "Enter": "Enter",
+                "Esc": "Esc",
+                "Escape": "Esc",
+                "Ctrl+F": "Strg+F",
+                "Ctrl+S": "Strg+S",
+                "Ctrl+Y": "Strg+Y",
+                "Ctrl+Z": "Strg+Z",
+                "Ctrl+Shift+Z": "Strg+Umschalt+Z",
+                "all files": "alle Dateien",
+                "All files": "Alle Dateien",
+                "both limits": "beide Grenzen",
+                "lower limit (min)": "untere Grenze (min)",
+                "upper limit (max)": "obere Grenze (max)",
+                "(lower limit only)": "(nur untere Grenze)",
+                "(upper limit only)": "(nur obere Grenze)",
+
+                // ---- Editor: header, sidebar, file list ----
+                "Liburdi Schedule Editor": "Liburdi Schedule Editor",
+                "Open XML…": "XML öffnen…",
+                "Open XML files": "XML-Dateien öffnen",
+                "Drop XML files here": "XML-Dateien hier ablegen",
+                "Undo": "Rückgängig",
+                "Undo (Ctrl+Z)": "Rückgängig (Strg+Z)",
+                "Redo": "Wiederholen",
+                "Redo (Ctrl+Y)": "Wiederholen (Strg+Y)",
+                "Search parameter or value": "Parameter oder Wert suchen",
+                "Search… (Ctrl+F)": "Suchen… (Strg+F)",
+                "Clear search": "Suche leeren",
+                "Clear search (Esc)": "Suche leeren (Esc)",
+                "Revert": "Zurücksetzen",
+                "Revert all loaded files to the last saved state": "Alle geladenen Dateien auf den zuletzt gespeicherten Stand zurücksetzen",
+                "Revert to last saved": "Auf zuletzt gespeicherten Wert zurücksetzen",
+                "Save all changed files in the editor and log them in the Change Log – no download (Ctrl+S)": "Alle geänderten Dateien im Editor speichern und im Änderungsprotokoll vermerken – kein Download (Strg+S)",
+                "Batch Save": "Batch-Speichern",
+                "Batch Save…": "Batch-Speichern…",
+                "Download the selected files, optionally with a revision tag (ZIP for several files)": "Ausgewählte Dateien herunterladen, optional mit Revisions-Tag (ZIP bei mehreren Dateien)",
+                "Download files (ZIP for several files)": "Dateien herunterladen (ZIP bei mehreren Dateien)",
+                "File selection": "Dateiauswahl",
+                "Select all": "Alle",
+                "Select all loaded files": "Alle geladenen Dateien auswählen",
+                "Clear selection": "Auswahl aufheben",
+                "Clear the file selection": "Dateiauswahl aufheben",
+                "Invert the file selection": "Dateiauswahl umkehren",
+                "Invert file selection": "Dateiauswahl umkehren",
+                "Include in batch actions": "In Sammelaktionen einbeziehen",
+                "Remove file": "Datei entfernen",
+                "Remove file from the editor": "Datei aus dem Editor entfernen",
+                "Rename file": "Datei umbenennen",
+                "Sort files": "Dateien sortieren",
+                "No file loaded": "Keine Datei geladen",
+                "No files loaded.": "Keine Dateien geladen.",
+                "No files selected": "Keine Dateien ausgewählt",
+                "Please select one or more Liburdi XML schedule files above to begin.": "Zum Starten oben eine oder mehrere Liburdi-Schedule-XML-Dateien auswählen.",
+                "Sections": "Bereiche",
+                "Description": "Beschreibung",
+                "Global": "Global",
+                "Limits": "Grenzwerte",
+                "Overrides": "Overrides",
+                "Segments": "Segmente",
+                "Segment": "Segment",
+                "Head": "Head",
+                "Schedule": "Schedule",
+                "Parameter": "Parameter",
+                "Comparison": "Vergleich",
+                "Comparison:": "Vergleich:",
+                "Schedule Comparison": "Schedule-Vergleich",
+                "Heat Input & WPS": "Wärmeeinbringung & WPS",
+                "Heat Input": "Wärmeeinbringung",
+                "Heat Input:": "Wärmeeinbringung:",
+                "Heat input": "Wärmeeinbringung",
+                "Schema Check": "Schemaprüfung",
+                "Schema Check:": "Schemaprüfung:",
+                "Program Overview (PDF)": "Programmübersicht (PDF)",
+                "Program Overview (PDF):": "Programmübersicht (PDF):",
+                "Program overview": "Programmübersicht",
+                "Hidden Parameters": "Ausgeblendete Parameter",
+                "Hidden Parameters:": "Ausgeblendete Parameter:",
+                "Change Log": "Änderungsprotokoll",
+                "Change Log:": "Änderungsprotokoll:",
+                "XML Viewer": "XML-Viewer",
+                "XML Viewer:": "XML-Viewer:",
+                "Files, segments, overrides, heat input": "Dateien, Segmente, Overrides, Wärmeeinbringung",
+                "Heat input per segment and target ranges; WPS import (PDF) and check of the schedules against the WPS": "Wärmeeinbringung pro Segment und Zielbereiche; WPS-Import (PDF) und Prüfung der Schedules gegen die WPS",
+                "Printable summary of all loaded files (save as PDF)": "Druckbare Zusammenfassung aller geladenen Dateien (als PDF speichern)",
+                "Local settings": "Lokale Einstellungen",
+
+                // ---- Editor: panels, parameters ----
+                "Hide field": "Feld ausblenden",
+                "Restore field": "Feld wiederherstellen",
+                "Lock field": "Feld sperren",
+                "Unlock field": "Feld entsperren",
+                "Locked parameter": "Gesperrter Parameter",
+                "Lock parameter (protect against changes)": "Parameter sperren (vor Änderungen schützen)",
+                "Unlock parameter (allow editing)": "Parameter entsperren (Bearbeiten erlauben)",
+                "Locked – cannot be moved (unlock with 🔒)": "Gesperrt – nicht verschiebbar (mit 🔒 entsperren)",
+                "Hide parameter (restore via Tools › Hidden Parameters)": "Parameter ausblenden (wiederherstellen über Werkzeuge › Ausgeblendete Parameter)",
+                "Mark as important": "Als wichtig markieren",
+                "Unmark as important": "Markierung „wichtig“ entfernen",
+                "Toggle important field": "Wichtiges Feld umschalten",
+                "Move parameter": "Parameter verschieben",
+                "Move up": "Nach oben",
+                "Move down": "Nach unten",
+                "Reset order": "Reihenfolge zurücksetzen",
+                "Reset parameter order": "Parameterreihenfolge zurücksetzen",
+                "Restore the default parameter order for this section": "Standardreihenfolge der Parameter für diesen Bereich wiederherstellen",
+                "Parameter order reset.": "Parameterreihenfolge zurückgesetzt.",
+                "Drag (or drag the name) to reorder · Alt+↑/↓ moves the row": "Ziehen (oder am Namen ziehen) zum Verschieben · Alt+↑/↓ verschiebt die Zeile",
+                "Change unit": "Einheit ändern",
+                "New value (not in the last saved file)": "Neuer Wert (nicht in der zuletzt gespeicherten Datei)",
+                "Change head": "Head ändern",
+                "New head": "Neuer Head",
+                "Add new head": "Neuen Head hinzufügen",
+                "Add new head...": "Neuen Head hinzufügen…",
+                "Value for the XML attribute \"head\":": "Wert für das XML-Attribut „head“:",
+                "Save to keep the changes.": "Speichern, um die Änderungen zu behalten.",
+                "Section not available.": "Bereich nicht verfügbar.",
+                "Pipe size (outer diameter in mm)": "Rohrgröße (Außendurchmesser in mm)",
+                "Diameter": "Durchmesser",
+                "Further values": "Weitere Werte",
+                "Segments – main values": "Segmente – Hauptwerte",
+
+                // ---- Editor: segments ----
+                "+ Add segment": "+ Segment hinzufügen",
+                "Add segment": "Segment hinzufügen",
+                "Append a copy of the last segment": "Kopie des letzten Segments anhängen",
+                "Duplicate segment": "Segment duplizieren",
+                "Delete segment": "Segment löschen",
+                "Move segment": "Segment verschieben",
+                "Open segment": "Segment öffnen",
+                "Segment disabled": "Segment deaktiviert",
+                "Segment deleted.": "Segment gelöscht.",
+                "Segment duplicated.": "Segment dupliziert.",
+                "Segment moved.": "Segment verschoben.",
+                "Segment Number": "Segmentnummer",
+                "The last segment cannot be deleted.": "Das letzte Segment kann nicht gelöscht werden.",
+                "Weld seam length (mm)": "Nahtlänge (mm)",
+                "Total weld seam length (mm)": "Gesamte Nahtlänge (mm)",
+                "Set weld seam length": "Nahtlänge festlegen",
+                "Edit segment length": "Segmentlänge bearbeiten",
+                "Edit the total weld seam length; it is split evenly over all segments": "Gesamte Nahtlänge bearbeiten; sie wird gleichmäßig auf alle Segmente verteilt",
+                "Enter the total weld seam length; it is split evenly into segment_time of all segments.": "Gesamte Nahtlänge eingeben; sie wird gleichmäßig auf segment_time aller Segmente verteilt.",
+                "Split evenly": "Gleichmäßig verteilen",
+                "Split weld seam evenly": "Naht gleichmäßig verteilen",
+                "Distribute the weld seam length evenly over all segments again": "Nahtlänge wieder gleichmäßig auf alle Segmente verteilen",
+                "Please enter a weld seam length greater than 0.": "Bitte eine Nahtlänge größer als 0 eingeben.",
+                "Length (mm)": "Länge (mm)",
+                "Angle (°)": "Winkel (°)",
+                "Turns": "Umdrehungen",
+                "Weld time": "Schweißzeit",
+                "weld time": "Schweißzeit",
+                "Weld time can be edited with two or more segments and valid travel/dwell values": "Die Schweißzeit ist ab zwei Segmenten mit gültigen Travel-/Dwell-Werten bearbeitbar",
+                "segment_time is locked – unlock it to change the weld seam length": "segment_time ist gesperrt – zum Ändern der Nahtlänge entsperren",
+                "segment_time is locked.": "segment_time ist gesperrt.",
+                "segment_time set manually; other segments adjust to keep the weld seam length": "segment_time manuell gesetzt; die anderen Segmente passen sich an, damit die Nahtlänge bleibt",
+                "Custom split": "Eigene Aufteilung",
+                "Dwell and excursion times must be >= 0.": "Dwell- und Excursion-Zeiten müssen >= 0 sein.",
+                "Total cycle time must be > 0.": "Die Gesamtzykluszeit muss > 0 sein.",
+                "Travel speed must be > 0.": "Die Schweißgeschwindigkeit muss > 0 sein.",
+                "Voltage must be > 0 and current >= 0.": "Die Spannung muss > 0 und der Strom >= 0 sein.",
+                "Travel override must not allow a travel speed of 0 or less.": "Der Travel-Override darf keine Schweißgeschwindigkeit von 0 oder weniger zulassen.",
+                "Calculation not possible; please check the override values.": "Berechnung nicht möglich; bitte die Override-Werte prüfen.",
+                "Calculation not possible; please check the values.": "Berechnung nicht möglich; bitte die Werte prüfen.",
+
+                // ---- Editor: save, revert, batch save ----
+                "No changes": "Keine Änderungen",
+                "No changes to save.": "Keine Änderungen zu speichern.",
+                "No changes since the last save.": "Keine Änderungen seit dem letzten Speichern.",
+                "Nothing to revert.": "Nichts zurückzusetzen.",
+                "All files reverted to the last saved state.": "Alle Dateien auf den zuletzt gespeicherten Stand zurückgesetzt.",
+                "Saved files that were not downloaded yet – use Batch Save": "Gespeicherte, noch nicht heruntergeladene Dateien – Batch-Speichern verwenden",
+                "Saved in the editor, not downloaded yet – use Batch Save to download": "Im Editor gespeichert, noch nicht heruntergeladen – zum Herunterladen Batch-Speichern verwenden",
+                "Please load at least one file to save.": "Bitte mindestens eine Datei zum Speichern laden.",
+                "Revision tag (optional, appended to every file name):": "Revisions-Tag (optional, wird an jeden Dateinamen angehängt):",
+                "Download ZIP file": "ZIP-Datei herunterladen",
+                "Rename only": "Nur umbenennen",
+                "Batch save rename": "Batch-Speichern umbenennen",
+                "Nothing to do: no revision tag and download disabled.": "Nichts zu tun: kein Revisions-Tag und Download deaktiviert.",
+                "Could not store the revision tag.": "Der Revisions-Tag konnte nicht gespeichert werden.",
+                "Batch save cancelled: heat input outside the limits (Tools › Heat Input & WPS).": "Batch-Speichern abgebrochen: Wärmeeinbringung außerhalb der Grenzwerte (Werkzeuge › Wärmeeinbringung & WPS).",
+                "Batch save cancelled: values outside the WPS (Tools › Heat Input & WPS).": "Batch-Speichern abgebrochen: Werte außerhalb der WPS (Werkzeuge › Wärmeeinbringung & WPS).",
+                "Save cancelled: schema errors (Tools › Schema Check).": "Speichern abgebrochen: Schemafehler (Werkzeuge › Schemaprüfung).",
+                "Heat input outside the limits": "Wärmeeinbringung außerhalb der Grenzwerte",
+                "Heat input outside the target range": "Wärmeeinbringung außerhalb des Zielbereichs",
+                "Values outside the WPS": "Werte außerhalb der WPS",
+                "Schema errors": "Schemafehler",
+                "Show details": "Details anzeigen",
+                "Show the individual changes": "Einzelne Änderungen anzeigen",
+                "File removed.": "Datei entfernt.",
+                "unsaved changes": "ungespeicherte Änderungen",
+                "saved, not downloaded": "gespeichert, nicht heruntergeladen",
+                "saved": "gespeichert",
+
+                // ---- Editor: change log, hidden parameters, viewer ----
+                "Clear log": "Protokoll leeren",
+                "Clear change log": "Änderungsprotokoll leeren",
+                "Delete all change log entries (can be undone)": "Alle Einträge des Änderungsprotokolls löschen (rückgängig machbar)",
+                "Change log cleared.": "Änderungsprotokoll geleert.",
+                "No changes recorded yet.": "Noch keine Änderungen erfasst.",
+                "Changes since the last save:": "Änderungen seit dem letzten Speichern:",
+                "Back to list": "Zurück zur Liste",
+                "No parameters are hidden.": "Keine Parameter ausgeblendet.",
+                "schema upgrade": "Schema-Upgrade",
+                "No XDR schema active.": "Kein XDR-Schema aktiv.",
+                "Select an XDR schema": "XDR-Schema auswählen",
+                "Select an XDR schema to show missing required elements and values.": "XDR-Schema auswählen, um fehlende Pflichtelemente und -werte anzuzeigen.",
+                "Select the XDR schema to check for missing required elements and values.": "XDR-Schema für die Prüfung auf fehlende Pflichtelemente und -werte auswählen.",
+                "No saved XDR schema available": "Kein gespeichertes XDR-Schema vorhanden",
+                "No saved XDR schema found. Load a schema in Schedule Database and reopen the viewer.": "Kein gespeichertes XDR-Schema gefunden. Ein Schema in der Schedule Database laden und den Viewer erneut öffnen.",
+                "No missing required elements or values found. This view does not change the XML.": "Keine fehlenden Pflichtelemente oder -werte gefunden. Diese Ansicht ändert das XML nicht.",
+                "Could not open the XML Viewer. Please allow pop-ups for this page.": "Der XML-Viewer konnte nicht geöffnet werden. Bitte Pop-ups für diese Seite erlauben.",
+                "[MISSING VALUE]": "[FEHLENDER WERT]",
+                "Saved XDR schema": "Gespeichertes XDR-Schema",
+                "Loading schemas…": "Schemas werden geladen…",
+                "Loading saved XDR schemas…": "Gespeicherte XDR-Schemas werden geladen…",
+                "Highlight changes since last save": "Änderungen seit dem letzten Speichern hervorheben",
+                "Changes only": "Nur Änderungen",
+                "[MISSING REQUIRED ELEMENT / VALUE]": "[FEHLENDES PFLICHTELEMENT / FEHLENDER WERT]",
+
+                // ---- Editor: schema, upgrade, settings ----
+                "Schema": "Schema",
+                "XDR schema": "XDR-Schema",
+                "Load XDR…": "XDR laden…",
+                "Manage schemas…": "Schemas verwalten…",
+                "Drop a new .XDR version here or": "Neue .XDR-Version hier ablegen oder",
+                "WELDSCHEDULE.XDR (built-in)": "WELDSCHEDULE.XDR (integriert)",
+                "● Active": "● Aktiv",
+                "✓ Valid": "✓ Gültig",
+                "No schema active. Load an XDR file.": "Kein Schema aktiv. Eine XDR-Datei laden.",
+                "No findings – the file matches the schema.": "Keine Befunde – die Datei entspricht dem Schema.",
+                "file version unknown": "Dateiversion unbekannt",
+                "– all match the schema.": "– alle entsprechen dem Schema.",
+                "Upgrade": "Upgrade",
+                "Upgrade schedule": "Schedule upgraden",
+                "Review & upgrade…": "Prüfen & upgraden…",
+                "Upgrade to the latest schema version": "Auf die neueste Schemaversion upgraden",
+                "Upgrade layout templates:": "Layout-Vorlagen für das Upgrade:",
+                "Load template XML…": "Vorlagen-XML laden…",
+                "Schedule XML of the latest version; assigned to NGRT or NG by its head": "Schedule-XML der neuesten Version; nach Head NGRT oder NG zugeordnet",
+                "Bring all files with schema errors or an older version to the active schema version": "Alle Dateien mit Schemafehlern oder älterer Version auf die aktive Schemaversion bringen",
+                "7777-layout new NG.xml (built-in)": "7777-layout new NG.xml (integriert)",
+                "8888-layout new NGRT.xml (built-in)": "8888-layout new NGRT.xml (integriert)",
+                "Schedules are checked against the active XDR schema (results: Tools › Schema Check). Load new XDR versions here; they are stored in the browser.": "Schedules werden gegen das aktive XDR-Schema geprüft (Ergebnis: Werkzeuge › Schemaprüfung). Neue XDR-Versionen hier laden; sie werden im Browser gespeichert.",
+                "Backup": "Sicherung",
+                "Export or import the local editor settings (including the XDR versions) as a JSON file. Importing replaces the stored editor settings and reloads the page.": "Die lokalen Editor-Einstellungen (inklusive der XDR-Versionen) als JSON-Datei exportieren oder importieren. Der Import ersetzt die gespeicherten Einstellungen und lädt die Seite neu.",
+                "Import JSON": "JSON importieren",
+                "Export JSON": "JSON exportieren",
+                "JSON backup downloaded.": "JSON-Sicherung heruntergeladen.",
+                "The file is not a valid Schedule Editor backup.": "Die Datei ist keine gültige Schedule-Editor-Sicherung.",
+                "The local editor settings will be replaced by the backup. Continue?": "Die lokalen Editor-Einstellungen werden durch die Sicherung ersetzt. Fortfahren?",
+                "Could not read saved XDR schemas.": "Gespeicherte XDR-Schemas konnten nicht gelesen werden.",
+                "Could not store the XDR schemas.": "Die XDR-Schemas konnten nicht gespeichert werden.",
+                "Could not open the saved schema database.": "Die gespeicherte Schema-Datenbank konnte nicht geöffnet werden.",
+                "Reading saved XDR schemas was aborted.": "Das Lesen der gespeicherten XDR-Schemas wurde abgebrochen.",
+                "The saved schema database is busy. Close other application tabs and try again.": "Die gespeicherte Schema-Datenbank ist belegt. Andere Tabs der Anwendung schließen und erneut versuchen.",
+                "This browser does not support IndexedDB.": "Dieser Browser unterstützt IndexedDB nicht.",
+                "The browser storage is full. Delete an old schema version and try again.": "Der Browserspeicher ist voll. Eine alte Schemaversion löschen und erneut versuchen.",
+                "Root element <sched> is missing.": "Das Wurzelelement <sched> fehlt.",
+                "Could not load segments_sorting.json; using the default order.": "segments_sorting.json konnte nicht geladen werden; die Standardreihenfolge wird verwendet.",
+                "Invalid XML format.": "Ungültiges XML-Format.",
+                "Please load an XML file first.": "Bitte zuerst eine XML-Datei laden.",
+
+                // ---- Editor: comparison ----
+                "Show differences only": "Nur Unterschiede anzeigen",
+                "Grey rows: same value in all files.": "Graue Zeilen: gleicher Wert in allen Dateien.",
+                "Apply comparison value": "Vergleichswert übernehmen",
+                "Edit comparison value": "Vergleichswert bearbeiten",
+                "Please show at least two files to compare them.": "Bitte mindestens zwei Dateien zum Vergleichen anzeigen.",
+                "Please show at least one more file to compare them.": "Bitte mindestens eine weitere Datei zum Vergleichen anzeigen.",
+                "All files are hidden. Tick a file above to show it.": "Alle Dateien sind ausgeblendet. Oben eine Datei anhaken, um sie anzuzeigen.",
+
+                // ---- Editor: heat input ----
+                "Heat input per segment for all loaded files; values are listed in the table below.": "Wärmeeinbringung pro Segment für alle geladenen Dateien; die Werte stehen in der Tabelle unten.",
+                "Heat input per segment (kJ/mm) — bar: min–max from overrides, dot: nominal": "Wärmeeinbringung pro Segment (kJ/mm) — Balken: Min–Max aus den Overrides, Punkt: Nennwert",
+                "Bar: min–max with the overrides, dot: nominal. No target range set.": "Balken: Min–Max mit den Overrides, Punkt: Nennwert. Kein Zielbereich gesetzt.",
+                "Heat input target": "Zielwert Wärmeeinbringung",
+                "Heat input limits": "Grenzwerte Wärmeeinbringung",
+                "Target ranges (red lines)": "Zielbereiche (rote Linien)",
+                "Target range": "Zielbereich",
+                "Target range name": "Name des Zielbereichs",
+                "Target min": "Ziel min",
+                "Target max": "Ziel max",
+                "Target": "Ziel",
+                "+ Add target range": "+ Zielbereich hinzufügen",
+                "No target range": "Kein Zielbereich",
+                "no target range": "kein Zielbereich",
+                "No target range set": "Kein Zielbereich gesetzt",
+                "No target range – add one to check the heat input of selected files against it.": "Kein Zielbereich – einen hinzufügen, um die Wärmeeinbringung der ausgewählten Dateien dagegen zu prüfen.",
+                "Use this range for every file": "Diesen Bereich für jede Datei verwenden",
+                "Could not store the heat input target ranges.": "Die Zielbereiche der Wärmeeinbringung konnten nicht gespeichert werden.",
+                "Please enter heat input values >= 0 (kJ/mm).": "Bitte Werte der Wärmeeinbringung >= 0 eingeben (kJ/mm).",
+                "Range with overrides": "Bereich mit Overrides",
+                "Avg. current": "Mittl. Strom",
+                "Heat input (kJ/mm)": "Wärmeeinbringung (kJ/mm)",
+                "Voltage (V)": "Spannung (V)",
+                "Travel speed (mm/min)": "Schweißgeschwindigkeit (mm/min)",
+                "Wire feed (cm/min)": "Drahtvorschub (cm/min)",
+                "Dwell (s)": "Verweilzeit (s)",
+                "Excursion (s)": "Excursion (s)",
+                "Current, voltage, travel, wire:": "Strom, Spannung, Travel, Draht:",
+                "Files, segments, overrides, heat input, WPS": "Dateien, Segmente, Overrides, Wärmeeinbringung, WPS",
+                "Time-weighted mean (dwell/excursion)": "Zeitgewichtetes Mittel (Dwell/Excursion)",
+                "✓ OK": "✓ OK",
+                "Comp": "Comp",
+                "Set current, voltage, wire, dwell and excursion of the selected files to the nearest WPS limit; then correct the heat input with the current (within the WPS current range). The travel speed is never changed.": "Strom, Spannung, Draht, Verweilzeit und Excursion der ausgewählten Dateien auf die nächste WPS-Grenze setzen; danach die Wärmeeinbringung über den Strom korrigieren (innerhalb des WPS-Strombereichs). Die Schweißgeschwindigkeit wird nie geändert.",
+                "Range the welder may change the value by (±). Used for the heat input range; wire_max for the WPS check of the wire feed.": "Bereich, um den der Schweißer den Wert ändern darf (±). Wird für den Bereich der Wärmeeinbringung verwendet; wire_max für die WPS-Prüfung des Drahtvorschubs.",
+                "Range (min – max)": "Bereich (min – max)",
+                "Safety margin (yellow lines)": "Sicherheitsabstand (gelbe Linien)",
+                "Narrows every target range at the chosen limit(s) (also the WPS check and Fit Overrides). The yellow lines must not be exceeded.": "Verengt jeden Zielbereich an der gewählten Grenze bzw. an beiden (auch für die WPS-Prüfung und Overrides anpassen). Die gelben Linien dürfen nicht überschritten werden.",
+                "Safety margin switched off.": "Sicherheitsabstand ausgeschaltet.",
+                "Safety margin: please enter a number ≥ 0.": "Sicherheitsabstand: bitte eine Zahl ≥ 0 eingeben.",
+                "Could not store the safety margin.": "Der Sicherheitsabstand konnte nicht gespeichert werden.",
+                "margin max": "Abstand max",
+                "margin min": "Abstand min",
+                "No segment with a valid heat input to chart.": "Kein Segment mit gültiger Wärmeeinbringung für das Diagramm.",
+                "Show heat input": "Wärmeeinbringung anzeigen",
+                "Show WPS check": "WPS-Prüfung anzeigen",
+                "not calculable": "nicht berechenbar",
+                "Not calculable": "Nicht berechenbar",
+                "! not calculable": "! nicht berechenbar",
+                "! outside limit": "! außerhalb Grenzwert",
+                "! outside target": "! außerhalb Ziel",
+                "! Range outside the <limits> values": "! Bereich außerhalb der <limits>-Werte",
+                "! Range outside the target range": "! Bereich außerhalb des Zielbereichs",
+                "within limits": "innerhalb der Grenzwerte",
+                "active": "aktiv",
+                "at": "an",
+                "pulse": "Puls",
+                "background": "Grundstrom",
+                "nominal": "Nennwert",
+                "in-dwell": "In-Dwell",
+                "out-dwell": "Out-Dwell",
+                "inside": "innerhalb",
+                "outside": "außerhalb",
+                "In": "In",
+                "Out": "Out",
+                "Min": "Min",
+                "Max": "Max",
+                "Hot pass": "Hot Pass",
+                "Fill": "Füllung",
+                "Root": "Wurzel",
+                "Cap": "Decklage",
+
+                // ---- Editor: WPS ----
+                "WPS Import / Check": "WPS-Import / Prüfung",
+                "Load WPS (PDF)…": "WPS laden (PDF)…",
+                "Enter ranges manually": "Bereiche manuell eingeben",
+                "Digital PDF (text can be selected). The parameter table is read per pass; the values are shown below for checking before they are applied.": "Digitale PDF (Text lässt sich markieren). Die Parametertabelle wird pro Lage gelesen; die Werte erscheinen unten zur Kontrolle, bevor sie übernommen werden.",
+                "No WPS imported yet.": "Noch keine WPS importiert.",
+                "WPS in the document:": "WPS im Dokument:",
+                "WPS no.": "WPS-Nr.",
+                "WPS range": "WPS-Bereich",
+                "WPS pass": "WPS-Lage",
+                "Pass": "Lage",
+                "Type": "Art",
+                "Schedules": "Schedules",
+                "Schedules (4-digit no.)": "Schedules (4-stellige Nr.)",
+                "+ Add row": "+ Zeile hinzufügen",
+                "Remove row": "Zeile entfernen",
+                "Ranges read from the WPS (not applied yet)": "Aus der WPS gelesene Bereiche (noch nicht übernommen)",
+                "Store the ranges and set the heat input ranges as target ranges (Heat Input tab)": "Bereiche speichern und die Bereiche der Wärmeeinbringung als Zielbereiche setzen (Reiter Wärmeeinbringung)",
+                "Pulse and background separately": "Puls und Grundstrom getrennt",
+                "Current": "Strom",
+                "Voltage": "Spannung",
+                "Travel": "Travel",
+                "Travel speed": "Schweißgeschwindigkeit",
+                "Wire": "Draht",
+                "Wire feed": "Drahtvorschub",
+                "Dwell": "Verweilzeit",
+                "Excursion": "Excursion",
+                "Amps": "Ampere",
+                "Volts": "Volt",
+                "Pri Amps": "Pri Ampere",
+                "Bkg Amps": "Bkg Ampere",
+                "Pri Travel": "Pri Travel",
+                "Bkg Travel": "Bkg Travel",
+                "Current (A)": "Strom (A)",
+                "Voltage / AHC (V)": "Spannung / AHC (V)",
+                "Travel speed (in/min)": "Schweißgeschwindigkeit (in/min)",
+                "Wire feed (in/min)": "Drahtvorschub (in/min)",
+                "Check of the loaded schedules": "Prüfung der geladenen Schedules",
+                "Load schedules to check them against the WPS.": "Schedules laden, um sie gegen die WPS zu prüfen.",
+                "Current and wire feed have separate ranges for pulse (P) and background (B): pri values are checked against P, bkg values against B.": "Strom und Drahtvorschub haben getrennte Bereiche für Puls (P) und Grundstrom (B): pri-Werte werden gegen P, bkg-Werte gegen B geprüft.",
+                "OK": "OK",
+                "Outside": "Außerhalb",
+                "Override": "Override",
+                "override range outside": "Override-Bereich außerhalb",
+                "Fit Overrides": "Overrides anpassen",
+                "Fit Values": "Werte anpassen",
+                "Fit overrides": "Overrides anpassen",
+                "Fit values": "Werte anpassen",
+                "Fit overrides to WPS": "Overrides an WPS anpassen",
+                "Fit values to WPS": "Werte an WPS anpassen",
+                "Overrides fitted": "Overrides angepasst",
+                "Values fitted": "Werte angepasst",
+                "Not solved": "Nicht gelöst",
+                "Applies to the selected files with a WPS row · undo with Ctrl+Z · listed in the change log": "Gilt für die ausgewählten Dateien mit WPS-Zeile · rückgängig mit Strg+Z · im Änderungsprotokoll vermerkt",
+                "Change the program values?": "Programmwerte ändern?",
+                "Change values": "Werte ändern",
+                "Fit Values changes the welding parameters of the program itself, not only the overrides:": "Werte anpassen ändert die Schweißparameter des Programms selbst, nicht nur die Overrides:",
+                "Current, voltage, wire feed, dwell and excursion outside the WPS are set to the nearest WPS limit.": "Strom, Spannung, Drahtvorschub, Verweilzeit und Excursion außerhalb der WPS werden auf die nächste WPS-Grenze gesetzt.",
+                "If the heat input is still outside, pulse and background current are changed together.": "Liegt die Wärmeeinbringung danach noch außerhalb, werden Puls- und Grundstrom gemeinsam geändert.",
+                "The travel speed is never changed.": "Die Schweißgeschwindigkeit wird nie geändert.",
+                "Fit Values cancelled – no values changed.": "Werte anpassen abgebrochen – keine Werte geändert.",
+                "Nothing to change: all values and override ranges are inside the WPS.": "Nichts zu ändern: alle Werte und Override-Bereiche liegen innerhalb der WPS.",
+                "No selected program is assigned to a WPS pass – nothing will be changed.": "Kein ausgewähltes Programm ist einer WPS-Lage zugeordnet – es wird nichts geändert.",
+                "Could not store the WPS ranges.": "Die WPS-Bereiche konnten nicht gespeichert werden.",
+                "The PDF contains no text (scanned document?). Enter the values manually.": "Die PDF enthält keinen Text (gescanntes Dokument?). Die Werte manuell eingeben.",
+                "No parameter table found (header with current, voltage, travel speed …). Enter the values manually.": "Keine Parametertabelle gefunden (Kopfzeile mit Strom, Spannung, Schweißgeschwindigkeit …). Die Werte manuell eingeben.",
+                "Table header found, but no rows with values. Enter the values manually.": "Tabellenkopf gefunden, aber keine Zeilen mit Werten. Die Werte manuell eingeben.",
+                "Some values are single values (min = max). Please check them against the document.": "Einige Werte sind Einzelwerte (min = max). Bitte mit dem Dokument abgleichen.",
+                "pdf.js could not be started.": "pdf.js konnte nicht gestartet werden.",
+                "Set current, voltage, wire, dwell and excursion of the selected files to the nearest WPS limit; then correct the heat input with the current (within the WPS current range). Travel speed is never changed.": "Strom, Spannung, Draht, Verweilzeit und Excursion der ausgewählten Dateien auf die nächste WPS-Grenze setzen; danach die Wärmeeinbringung über den Strom korrigieren (innerhalb des WPS-Strombereichs). Die Schweißgeschwindigkeit wird nie geändert.",
+
+                // ---- Editor: program overview ----
+                "Open Overview": "Übersicht öffnen",
+                "Weld seam name (used as the heading)": "Nahtname (wird als Überschrift verwendet)",
+                "Prepared by": "Erstellt von",
+                "Enter your name or ID": "Name oder Kennung eingeben",
+                "Print / Save as PDF": "Drucken / Als PDF speichern",
+                "Please load at least one XML file for the program overview.": "Bitte mindestens eine XML-Datei für die Programmübersicht laden.",
+                "Could not open the program overview. Please allow pop-ups for this page.": "Die Programmübersicht konnte nicht geöffnet werden. Bitte Pop-ups für diese Seite erlauben.",
+                "Heat input per segment": "Wärmeeinbringung pro Segment",
+                "Overrides used for the heat input": "Für die Wärmeeinbringung verwendete Overrides",
+                "WPS – ranges and check": "WPS – Bereiche und Prüfung",
+                "Factors and limits": "Faktoren und Grenzwerte",
+                "Machine limits (LIMITS_TAGS)": "Maschinengrenzwerte (LIMITS_TAGS)",
+
+                // ---- Editor: keyboard/help remnants ----
+                "Keyboard shortcuts": "Tastenkürzel",
+                "Editing": "Bearbeiten",
+                "Saving": "Speichern",
+                "Loading XML files": "XML-Dateien laden",
+                "Start": "Start",
+
+                // ---- WDR Converter ----
+                "1. Select CSV/XML source files or folders": "1. CSV/XML-Quelldateien oder -Ordner auswählen",
+                "2. Heat input evaluation": "2. Auswertung der Wärmeeinbringung",
+                "3. Output format": "3. Ausgabeformat",
+                "4. Download": "4. Download",
+                "Select files...": "Dateien auswählen…",
+                "Select folder...": "Ordner auswählen…",
+                "Drop files/folders here or use the buttons": "Dateien/Ordner hier ablegen oder die Schaltflächen verwenden",
+                "Multiple folders can be selected one after another and are added to the list.": "Mehrere Ordner können nacheinander ausgewählt werden und werden der Liste hinzugefügt.",
+                "Heat input evaluation: Excel per CSV file (data, charts, limits) + summary": "Auswertung der Wärmeeinbringung: Excel pro CSV-Datei (Daten, Diagramme, Grenzwerte) + Zusammenfassung",
+                "Raw data only: Excel (.xlsx) per CSV file": "Nur Rohdaten: Excel (.xlsx) pro CSV-Datei",
+                "CSV → Excel (.xlsx)": "CSV → Excel (.xlsx)",
+                "Process factor k": "Prozessfaktor k",
+                "0.6 = heat input for TIG (EN ISO 1011-1), as used by the machine and the Schedule Editor; 1 = arc energy.": "0,6 = Wärmeeinbringung für WIG (EN ISO 1011-1), wie von der Maschine und dem Schedule Editor verwendet; 1 = Streckenenergie.",
+                "Oscillation period if the log has none": "Pendelperiode, falls das Log keine enthält",
+                "Oscillation (s)": "Pendelung (s)",
+                "Filler wire (wire consumption in the summary)": "Zusatzdraht (Drahtverbrauch in der Zusammenfassung)",
+                "mm, density": "mm, Dichte",
+                "g/cm³ (steel 7.85)": "g/cm³ (Stahl 7,85)",
+                "Evaluation range and rolling averages": "Auswertebereich und gleitende Mittelwerte",
+                "Statistics cover the steady state from the set points of the log (without up- and down-slope). The rolling averages \"per period\" / \"per 10 periods\" use the oscillation period from the log (In-Dwell + Out-Dwell + 2 × Excursion). All values are converted to metric units.": "Die Statistik umfasst den stationären Bereich aus den Sollwerten des Logs (ohne Up- und Down-Slope). Die gleitenden Mittelwerte „pro Periode“ / „pro 10 Perioden“ verwenden die Pendelperiode aus dem Log (In-Dwell + Out-Dwell + 2 × Excursion). Alle Werte werden in metrische Einheiten umgerechnet.",
+                "Check against the heat input target ranges of the Schedule Editor": "Prüfung gegen die Zielbereiche der Wärmeeinbringung aus dem Schedule Editor",
+                "No target ranges set in the Schedule Editor (Tools › Heat Input) – the beads are not checked.": "Keine Zielbereiche im Schedule Editor gesetzt (Werkzeuge › Wärmeeinbringung) – die Raupen werden nicht geprüft.",
+                "Summary workbook of all beads (Heat_input_summary_<date>.xlsx)": "Zusammenfassung aller Raupen (Heat_input_summary_<Datum>.xlsx)",
+                "Add the sheet \"Raw data\" with all log columns (about twice the file size)": "Blatt „Raw data“ mit allen Log-Spalten hinzufügen (etwa doppelte Dateigröße)",
+                "On start you will be asked for a target folder (Chrome/Edge). The Excel files are saved there directly. Other browsers download a ZIP archive (split into several parts for large batches). XML files are copied unchanged. CSV files that are not Liburdi data logs are written as raw data.": "Beim Start wird nach einem Zielordner gefragt (Chrome/Edge). Die Excel-Dateien werden direkt dort gespeichert. Andere Browser laden ein ZIP-Archiv herunter (bei großen Mengen in mehrere Teile aufgeteilt). XML-Dateien werden unverändert kopiert. CSV-Dateien, die keine Liburdi-Datenlogs sind, werden als Rohdaten geschrieben.",
+                "START CONVERSION": "KONVERTIERUNG STARTEN",
+                "Processing files...": "Dateien werden verarbeitet…",
+                "The converted files were packed into a ZIP archive.": "Die konvertierten Dateien wurden in ein ZIP-Archiv gepackt.",
+                "Conversion completed successfully!": "Konvertierung erfolgreich abgeschlossen.",
+                "Conversion failed.": "Konvertierung fehlgeschlagen.",
+                "Compressing workbook…": "Arbeitsmappe wird komprimiert…",
+                "Creating summary workbook...": "Zusammenfassung wird erstellt…",
+                "Error: no CSV/XML files selected.": "Fehler: keine CSV/XML-Dateien ausgewählt.",
+                "No valid .csv or .xml files were found in the selection.": "In der Auswahl wurden keine gültigen .csv- oder .xml-Dateien gefunden.",
+                "No files could be processed. Please check that the CSV files contain data.": "Es konnten keine Dateien verarbeitet werden. Bitte prüfen, ob die CSV-Dateien Daten enthalten.",
+                "No ZIP file available. Please run the conversion first.": "Keine ZIP-Datei vorhanden. Bitte zuerst die Konvertierung ausführen.",
+                "Folder selection not available, falling back to ZIP download:": "Ordnerauswahl nicht verfügbar, stattdessen ZIP-Download:",
+                "Error in summary workbook:": "Fehler in der Zusammenfassung:",
+                "Heat input evaluation not possible, raw data written": "Auswertung der Wärmeeinbringung nicht möglich, Rohdaten geschrieben",
+                "set target ranges in the Schedule Editor (Heat Input) to check the beads": "Zielbereiche im Schedule Editor (Wärmeeinbringung) setzen, um die Raupen zu prüfen",
+
+                // ---- Pendant Layout ----
+                "Pendant Key Layout Editor": "Pendant-Tastenlayout-Editor",
+                "Pendant Key Layout Editor — Simplified": "Pendant-Tastenlayout-Editor — vereinfacht",
+                "Pendant Editor": "Pendant-Editor",
+                "Simplified": "Vereinfacht",
+                "Load from XML File:": "Aus XML-Datei laden:",
+                "Layout Author:": "Layout-Autor:",
+                "File Name Suffix:": "Dateinamen-Suffix:",
+                "e.g., custom_v1": "z. B. custom_v1",
+                "Tabs": "Reiter",
+                "Current mode:": "Aktueller Modus:",
+                "Clipboard:": "Zwischenablage:",
+                "empty": "leer",
+                "Copy page": "Seite kopieren",
+                "Paste page": "Seite einfügen",
+                "Paste page?": "Seite einfügen?",
+                "Paste onto the same page?": "Auf dieselbe Seite einfügen?",
+                "Fill page": "Seite füllen",
+                "Fill page with blank_black": "Seite mit blank_black füllen",
+                "Fill page with blank_black?": "Seite mit blank_black füllen?",
+                "Copy the current mode page to the clipboard": "Seite des aktuellen Modus in die Zwischenablage kopieren",
+                "Paste the clipboard contents onto the current mode page": "Inhalt der Zwischenablage auf die Seite des aktuellen Modus einfügen",
+                "Fill the current mode page with blank_black on every key": "Jede Taste der aktuellen Modusseite mit blank_black füllen",
+                "Preview Layout as PDF": "Layout als PDF anzeigen",
+                "Generate & Download XML": "XML erzeugen & herunterladen",
+                "Generated XML Preview": "Vorschau des erzeugten XML",
+                "Your generated XML will appear here...": "Das erzeugte XML erscheint hier…",
+                "Edit JOG, WELD, and WELD2 only — all other modes are written with defaults.": "Nur JOG, WELD und WELD2 bearbeiten — alle anderen Modi werden mit Standardwerten geschrieben.",
+                "No editable modes are configured to preview.": "Keine bearbeitbaren Modi für die Vorschau konfiguriert.",
+                "Could not open preview window. Please allow pop-ups for this page and try again.": "Das Vorschaufenster konnte nicht geöffnet werden. Bitte Pop-ups für diese Seite erlauben und erneut versuchen.",
+                "Root element must be <termkeys> or <infinitykeys>.": "Das Wurzelelement muss <termkeys> oder <infinitykeys> sein.",
+                "No <mode> tags found in XML.": "Keine <mode>-Tags im XML gefunden.",
+                "Failed to load or parse XML file:": "XML-Datei konnte nicht geladen oder gelesen werden:",
+                "Error: Could not load the selected file. Please ensure it is a valid key_layout XML file (<termkeys> or legacy <infinitykeys> root).": "Fehler: Die gewählte Datei konnte nicht geladen werden. Bitte sicherstellen, dass es eine gültige key_layout-XML-Datei ist (Wurzel <termkeys> oder das ältere <infinitykeys>).",
+                "(empty)": "(leer)"
+            },
+            patterns: [
+                // Start page / titles
+                [/Liburdi Schedule Editor v?([\d.]+) [-–] Help/, "Liburdi Schedule Editor $1 – Hilfe"],
+                [/Pendant Key Layout Editor · Simplified v(\d+) — Offline \(JOG \/ WELD \/ WELD2 \+ PDF preview\) · XML format:/, "Pendant-Tastenlayout-Editor · vereinfacht v$1 — offline (JOG / WELD / WELD2 + PDF-Vorschau) · XML-Format:"],
+
+                // Parameter row actions (title attributes per XML key)
+                [/Hide (\S+)/, "$1 ausblenden"],
+                [/Lock (\S+)/, "$1 sperren"],
+                [/Mark as important: (\S+)/, "Als wichtig markieren: $1"],
+                [/Unmark as important: (\S+)/, "Markierung „wichtig“ entfernen: $1"],
+                [/Move (\S+) \(Alt\+Arrow keys\)/, "$1 verschieben (Alt+Pfeiltasten)"],
+                [/(\S+) Double-click: mark as important · Right-click: hide/, "$1\nDoppelklick: als wichtig markieren · Rechtsklick: ausblenden"],
+                [/(\S+) is locked and cannot be moved\.?/, "$1 ist gesperrt und kann nicht verschoben werden."],
+                [/(\S+) locked against changes\./, "$1 gegen Änderungen gesperrt."],
+                [/Locked – unlock with 🔒 to edit(.*)/, "Gesperrt – zum Bearbeiten mit 🔒 entsperren$1"],
+                [/(\S+) also set in (\d+) other selected file\(s\)\./, "$1 auch in $2 weiteren ausgewählten Datei(en) gesetzt."],
+                [/Note: (\S+) was rounded to (\S+) \((\d+) decimal places\)\./, "Hinweis: $1 wurde auf $2 gerundet ($3 Nachkommastellen)."],
+                [/Invalid value in the file: "(.*)" – enter a number/, "Ungültiger Wert in der Datei: „$1“ – eine Zahl eingeben"],
+                [/Last saved: (.*)/, "Zuletzt gespeichert: $1"],
+                [/Apply the value of (.+) to all visible files/, "Wert von $1 in alle sichtbaren Dateien übernehmen"],
+                [/Pipe size for (.+)/, "Rohrgröße für $1"],
+                [/outer_diameter set to (\S+) \((.+) mm = (.+) in\)\./, "outer_diameter auf $1 gesetzt ($2 mm = $3 in)."],
+                [/Head applied to (\d+) file\(s\)\./, "Head auf $1 Datei(en) angewendet."],
+                [/(\d+) of (\d+) parameters differ\./, "$1 von $2 Parametern unterscheiden sich."],
+
+                // Segments
+                [/Segment (\d+)/, "Segment $1"],
+                [/segment (\d+)\.(\S+)/, "Segment $1.$2"],
+                [/Delete segment (\d+)/, "Segment $1 löschen"],
+                [/Duplicate segment (\d+)/, "Segment $1 duplizieren"],
+                [/Move up (\d+)/, "Nach oben $1"],
+                [/Move down (\d+)/, "Nach unten $1"],
+                [/Delete segment (\d+)\? The weld seam length is split across the remaining segments\./, "Segment $1 löschen? Die Nahtlänge wird auf die übrigen Segmente verteilt."],
+                [/Segment (\d+) angle \(°\)/, "Segment $1 Winkel (°)"],
+                [/Segment (\d+) length \(mm\)/, "Segment $1 Länge (mm)"],
+                [/Segment (\d+) turns/, "Segment $1 Umdrehungen"],
+                [/Segment (\d+) added; weld seam length split into (\d+) segments\./, "Segment $1 hinzugefügt; Nahtlänge auf $2 Segmente verteilt."],
+                [/Segment (\d+) set to (\S+) mm\./, "Segment $1 auf $2 mm gesetzt."],
+                [/Edit (length \(mm\)|angle \(°\)|turns); segment_time is recalculated and the other segments adjust/, "$1 bearbeiten; segment_time wird neu berechnet und die anderen Segmente passen sich an"],
+                [/Edit Length \(mm\); segment_time is recalculated and the other segments adjust/, "Länge (mm) bearbeiten; segment_time wird neu berechnet und die anderen Segmente passen sich an"],
+                [/Estimated weld time: (.+)/, "Geschätzte Schweißzeit: $1"],
+                [/(\d+) min (\d+) s/, "$1 min $2 s"],
+                [/Custom split · (\d+) segments/, "Eigene Aufteilung · $1 Segmente"],
+                [/Weld seam length (\S+) mm split into (\d+) segment\(s\) of (\S+) mm\./, "Nahtlänge $1 mm auf $2 Segment(e) zu je $3 mm verteilt."],
+                [/Weld seam length (\S+) mm split into (\d+) segment\(s\)\./, "Nahtlänge $1 mm auf $2 Segment(e) verteilt."],
+                [/Weld seam length split evenly into (\d+) segment\(s\)\./, "Nahtlänge gleichmäßig auf $1 Segment(e) verteilt."],
+                [/Weld seam length kept at (\S+) mm; (\d+) other segment\(s\) set to (\S+) mm\./, "Nahtlänge bleibt bei $1 mm; $2 andere(s) Segment(e) auf $3 mm gesetzt."],
+                [/Warning: fixed segments \((\S+) mm\) reach the weld seam length \((\S+) mm\); other segments were not adjusted\./, "Warnung: feste Segmente ($1 mm) erreichen die Nahtlänge ($2 mm); die anderen Segmente wurden nicht angepasst."],
+                [/Segments total (\S+) mm ≠ seam length/, "Segmente gesamt $1 mm ≠ Nahtlänge"],
+                [/Segment layout; diameter (.+) mm; total angle (\S+) degrees/, "Segmentanordnung; Durchmesser $1 mm; Gesamtwinkel $2 Grad"],
+                [/Segment layout; diameter not specified; total angle (\S+) degrees/, "Segmentanordnung; Durchmesser nicht angegeben; Gesamtwinkel $1 Grad"],
+                [/Ø (\S+) mm/, "Ø $1 mm"],
+                [/(\d+) segments? × (.+)/, "$1 Segment(e) × $2"],
+                [/(\S+) turns/, "$1 Umdrehungen"],
+
+                // Files, save, batch save
+                [/(\d+) file\(s\) loaded successfully\./, "$1 Datei(en) erfolgreich geladen."],
+                [/· (\d+) file\(s\)/, "· $1 Datei(en)"],
+                [/(\d+) unsaved files?/, "$1 ungespeicherte Datei(en)"],
+                [/(\d+) not downloaded/, "$1 nicht heruntergeladen"],
+                [/Saved (\d+) files? \((\d+) changes? logged\)\. Download with Batch Save\./, "$1 Datei(en) gespeichert ($2 Änderung(en) protokolliert). Herunterladen mit Batch-Speichern."],
+                [/All files are saved – (\d+) not downloaded yet \(Batch Save\)\./, "Alle Dateien gespeichert – $1 noch nicht heruntergeladen (Batch-Speichern)."],
+                [/"(.+)" has changes that were not downloaded \(Batch Save\)\. Remove it anyway\?/, "„$1“ hat Änderungen, die nicht heruntergeladen wurden (Batch-Speichern). Trotzdem entfernen?"],
+                [/(.+) \(not a Liburdi schedule\)/, "$1 (kein Liburdi-Schedule)"],
+                [/(.+) \(not valid XML\)/, "$1 (kein gültiges XML)"],
+                [/(.+) \(read error\)/, "$1 (Lesefehler)"],
+                [/Error in file (.+):/, "Fehler in Datei $1:"],
+                [/Could not read (.+): (.*)/, "$1 konnte nicht gelesen werden: $2"],
+                [/(\d+) file\(s\) saved as ZIP archive\./, "$1 Datei(en) als ZIP-Archiv gespeichert."],
+                [/(\d+) file\(s\) renamed with tag "(.+)" \(not downloaded\)\./, "$1 Datei(en) mit Tag „$2“ umbenannt (nicht heruntergeladen)."],
+                [/(\d+) file\(s\) renamed only, no download(.*)/, "$1 Datei(en) nur umbenannt, kein Download$2"],
+                [/Batch save cancelled: duplicate file name\(s\) (.+)\./, "Batch-Speichern abgebrochen: doppelte Dateinamen $1."],
+                [/Batch save failed: (.*)/, "Batch-Speichern fehlgeschlagen: $1"],
+                [/(\d+) segment\(s\) are outside the heat input limits\. Save anyway\?/, "$1 Segment(e) liegen außerhalb der Grenzwerte der Wärmeeinbringung. Trotzdem speichern?"],
+                [/(\d+) segment\(s\) have values outside the WPS(.*)\. Save anyway\?/, "$1 Segment(e) haben Werte außerhalb der WPS$2. Trotzdem speichern?"],
+                [/(\d+) file\(s\) do not match the schema (.*)\. Save anyway\?/, "$1 Datei(en) entsprechen nicht dem Schema $2. Trotzdem speichern?"],
+                [/Delete all (\d+) change log entries\? \(Undo restores them\.\)/, "Alle $1 Einträge des Änderungsprotokolls löschen? (Rückgängig stellt sie wieder her.)"],
+                [/Missing\/invalid values: (.+)/, "Fehlende/ungültige Werte: $1"],
+                [/Invalid override value: (.+)/, "Ungültiger Override-Wert: $1"],
+                [/Export failed: (.*)/, "Export fehlgeschlagen: $1"],
+                [/Import failed: (.*)/, "Import fehlgeschlagen: $1"],
+                [/Unknown backup entry: (.*)/, "Unbekannter Sicherungseintrag: $1"],
+                [/Invalid data for backup entry: (.*)/, "Ungültige Daten für Sicherungseintrag: $1"],
+                [/… and (\d+) more/, "… und $1 weitere"],
+                [/File (.+) \(not loaded\)/, "Datei $1 (nicht geladen)"],
+
+                // Schema / upgrade
+                [/Active schema: (.+) \(built-in\) · v(\S+)/, "Aktives Schema: $1 (integriert) · v$2"],
+                [/Active schema: (.+) · v(\S+)/, "Aktives Schema: $1 · v$2"],
+                [/Active schema: (.+) \(v(\S+)\)\./, "Aktives Schema: $1 (v$2)."],
+                [/Schema v(\S+) · files v(.+)/, "Schema v$1 · Dateien v$2"],
+                [/file v(\S+) = schema ✓/, "Datei v$1 = Schema ✓"],
+                [/file v(\S+) newer than schema v(\S+) – load a newer XDR/, "Datei v$1 neuer als Schema v$2 – ein neueres XDR laden"],
+                [/file v(\S+) older than schema v(\S+)/, "Datei v$1 älter als Schema v$2"],
+                [/! (\d+) errors?/, "! $1 Fehler"],
+                [/△ (\d+) warnings?/, "△ $1 Warnung(en)"],
+                [/Avg\. current: (.+)/, "Mittl. Strom: $1"],
+                [/(\d+) schema errors?/, "$1 Schemafehler"],
+                [/(\d+) file\(s\) do not match the schema \(Tools › Schema Check\)\./, "$1 Datei(en) entsprechen nicht dem Schema (Werkzeuge › Schemaprüfung)."],
+                [/(\d+) file\(s\) do not match schema v(\S+)(.*)/, "$1 Datei(en) entsprechen nicht Schema v$2$3"],
+                [/(\d+) file\(s\) upgraded to v(\S+)/, "$1 Datei(en) auf v$2 upgegradet"],
+                [/– (\d+) still with schema errors\./, "– $1 noch mit Schemafehlern."],
+                [/Upgrade all to v(\S+) \((\d+)\)/, "Alle auf v$1 upgraden ($2)"],
+                [/Upgrade to v(\S+)/, "Upgrade auf v$1"],
+                [/Check against the stored schema (.+)/, "Gegen das gespeicherte Schema $1 prüfen"],
+                [/Schema (.+) \(v(\S+)\) loaded and activated\./, "Schema $1 (v$2) geladen und aktiviert."],
+                [/Schema version (\S+) is already stored \((.+)\)\. Replace it\?/, "Schemaversion $1 ist bereits gespeichert ($2). Ersetzen?"],
+                [/Delete schema (.+) \(v(\S+)\)\?/, "Schema $1 (v$2) löschen?"],
+                [/Schema could not be used: (.*)/, "Schema konnte nicht verwendet werden: $1"],
+                [/XDR not loaded: (.*)/, "XDR nicht geladen: $1"],
+                [/Template not loaded: (.*)/, "Vorlage nicht geladen: $1"],
+                [/Could not load saved XDR schemas: (.*)/, "Gespeicherte XDR-Schemas konnten nicht geladen werden: $1"],
+                [/Layout template (.+) \(v(\S+)\) used for (\S+) heads\./, "Layout-Vorlage $1 (v$2) wird für $3-Heads verwendet."],
+                [/Required element <(\S+)> is missing in <(\S+)>\./, "Pflichtelement <$1> fehlt in <$2>."],
+                [/Required attribute "(\S+)" is missing on <(\S+)>\./, "Pflichtattribut „$1“ fehlt an <$2>."],
+                [/Unknown element <(\S+)> in <(\S+)>\./, "Unbekanntes Element <$1> in <$2>."],
+                [/Wrong order in <(\S+)>: <(\S+)> must come before <(\S+)>\./, "Falsche Reihenfolge in <$1>: <$2> muss vor <$3> stehen."],
+                [/Value of <(\S+)> is empty \(expected (.+)\)\./, "Wert von <$1> ist leer (erwartet $2)."],
+                [/<(\S+)> must contain a value, not elements\./, "<$1> muss einen Wert enthalten, keine Elemente."],
+                [/expected number \((.+)\), found "(.*)"/, "Zahl erwartet ($1), gefunden „$2“"],
+                [/expected integer \((.+)\), found "(.*)"/, "Ganzzahl erwartet ($1), gefunden „$2“"],
+                [/expected boolean \(0 or 1\), found "(.*)"/, "Boolean erwartet (0 oder 1), gefunden „$1“"],
+                [/(.+): XML could not be parsed for schema comparison\./, "$1: XML konnte für den Schemavergleich nicht gelesen werden."],
+                [/(.+): no version found \(xmlns:version on <Schema>\)\./, "$1: keine Version gefunden (xmlns:version an <Schema>)."],
+                [/(.+): not a schedule XML\./, "$1: kein Schedule-XML."],
+                [/(.+): not a valid schedule XML\./, "$1: kein gültiges Schedule-XML."],
+                [/(\d+) missing required element\(s\) or value\(s\) are highlighted\. This view does not change the XML\./, "$1 fehlende Pflichtelemente oder -werte sind hervorgehoben. Diese Ansicht ändert das XML nicht."],
+                [/\+ (\d+) added/, "+ $1 hinzugefügt"],
+                [/− (\d+) removed/, "− $1 entfernt"],
+                [/~ (\d+) changed/, "~ $1 geändert"],
+                [/(.+) \(editor\) \((.+)\)/, "$1 (Editor) ($2)"],
+                [/XML Viewer - (.+)/, "XML-Viewer - $1"],
+                [/Last upgrade: (.+)/, "Letztes Upgrade: $1"],
+
+                // Heat input
+                [/Target range "(.+)" removed\./, "Zielbereich „$1“ entfernt."],
+                [/Target range "(.+)" updated\./, "Zielbereich „$1“ aktualisiert."],
+                [/Remove target range "(.+)"/, "Zielbereich „$1“ entfernen"],
+                [/(.+): min must be smaller than max\./, "$1: min muss kleiner als max sein."],
+                [/(.+): the safety margin is larger than the range – no heat input can fulfil it\./, "$1: Der Sicherheitsabstand ist größer als der Bereich – keine Wärmeeinbringung kann ihn erfüllen."],
+                [/Safety margin set to (.+)\./, "Sicherheitsabstand auf $1 gesetzt."],
+                [/Heat input safety margin (.+)/, "Sicherheitsabstand der Wärmeeinbringung $1"],
+                [/margin (\S+) – (\S+)/, "Abstand $1 – $2"],
+                [/margin (\S+)/, "Abstand $1"],
+                [/(.+) margin (max|min) (\S+)/, "$1 Abstand $2 $3"],
+                [/\(safety margin (.+)\)/, "(Sicherheitsabstand $1)"],
+                [/limit max (\S+)/, "Grenzwert max $1"],
+                [/limit min (\S+)/, "Grenzwert min $1"],
+                [/within (.+)/, "innerhalb $1"],
+                [/(.+) (max|min) ([\d.,]+)/, "$1 $2 $3"],
+                [/Bar: min–max with the overrides, dot: nominal\. Target ranges \(red lines\): (.+?)\.(?: Yellow lines: safety margin (.+) \(must not be exceeded\)\.)?/,
+                    (match, ranges, margin) => `Balken: Min–Max mit den Overrides, Punkt: Nennwert. Zielbereiche (rote Linien): ${ranges.replace(/ for /g, " für ")}.`
+                        + (margin ? ` Gelbe Linien: Sicherheitsabstand ${margin} (darf nicht überschritten werden).` : "")],
+                [/Yellow lines: safety margin (.+) \(must not be exceeded\)\./, "Gelbe Linien: Sicherheitsabstand $1 (darf nicht überschritten werden)."],
+                [/(.+): (pulse|background|nominal|in-dwell|out-dwell) (.+?), WPS (.+) → (inside|outside|override range outside)(.*)/, "$1: $2 $3, WPS $4 → $5$6"],
+                [/P = pulse, B = background\. Outside: value outside the WPS\. Override: value inside, but value ± override reaches outside\. Not assigned to a WPS pass: (.+)\./, "P = Puls, B = Grundstrom. Außerhalb: Wert außerhalb der WPS. Override: Wert innerhalb, aber Wert ± Override reicht hinaus. Keiner WPS-Lage zugeordnet: $1."],
+                [/P = pulse, B = background\. Outside: value outside the WPS\. Override: value inside, but value ± override reaches outside\./, "P = Puls, B = Grundstrom. Außerhalb: Wert außerhalb der WPS. Override: Wert innerhalb, aber Wert ± Override reicht hinaus."],
+                [/Target ranges \(red lines\): (.+)/, (match, ranges) => `Zielbereiche (rote Linien): ${ranges.replace(/ for /g, " für ")}`],
+
+                // WPS
+                [/(.+): converted from (\S+) to (\S+)\./, "$1: von $2 in $3 umgerechnet."],
+                [/(.+): no unit in the document, assumed (\S+)\./, "$1: keine Einheit im Dokument, $2 angenommen."],
+                [/(.+) \((.+)\) skipped: only mechanized processes \(m-…\) are imported\./, "$1 ($2) übersprungen: nur mechanisierte Prozesse (m-…) werden importiert."],
+                [/Manual runs skipped \(only mechanized processes, 141-m, are imported\) – (.+)\./, "Manuelle Lagen übersprungen (nur mechanisierte Prozesse, 141-m, werden importiert) – $1."],
+                [/(\d+) WPS forms in the document \(pages (.+)\); showing page (\d+)\./, "$1 WPS-Formulare im Dokument (Seiten $2); Seite $3 wird angezeigt."],
+                [/(.+): (\d+) pass row\(s\) found(.*) Check the values and click "Apply"\./, "$1: $2 Lagenzeile(n) gefunden$3 Werte prüfen und „Übernehmen“ klicken."],
+                [/(.+): (\d+) pass row\(s\) found(.*)/, "$1: $2 Lagenzeile(n) gefunden$3"],
+                [/WPS ranges applied \((\d+) pass row\(s\)\); heat input target ranges updated\./, "WPS-Bereiche übernommen ($1 Lagenzeile(n)); Zielbereiche der Wärmeeinbringung aktualisiert."],
+                [/WPS ranges in use(.*)/, "Verwendete WPS-Bereiche$1"],
+                [/Text read from the PDF(.*)/, "Aus der PDF gelesener Text$1"],
+                [/(\d+) file\(s\) checked · (\d+) value\(s\) outside the WPS · (\d+) value\(s\) with override range outside/, "$1 Datei(en) geprüft · $2 Wert(e) außerhalb der WPS · $3 Wert(e) mit Override-Bereich außerhalb"],
+                [/Not checked \(no WPS pass assigned\): (.+)/, "Nicht geprüft (keine WPS-Lage zugeordnet): $1"],
+                [/· no WPS row: (.+)/, "· keine WPS-Zeile: $1"],
+                [/Not solved – (.+)/, "Nicht gelöst – $1"],
+                [/Not solved: (.+)/, "Nicht gelöst: $1"],
+                [/(Overrides fitted|Values fitted) to the WPS: (\d+) value\(s\) changed in (\d+) file\(s\) \(undo with Ctrl\+Z\)\./, "$1: $2 Wert(e) in $3 Datei(en) geändert (rückgängig mit Strg+Z)."],
+                [/Affected program\(s\) \((\d+)\): (.+)\. Every change is listed in the change log and can be undone with Ctrl\+Z\./, "Betroffene Programme ($1): $2. Jede Änderung steht im Änderungsprotokoll und kann mit Strg+Z rückgängig gemacht werden."],
+                [/(.+): (\S+) (\S+) (\S+) is outside the WPS \(travel speed is never changed\)/, "$1: $2 $3 $4 liegt außerhalb der WPS (die Schweißgeschwindigkeit wird nie geändert)"],
+                [/(.+): (\S+) (\S+) (\S+) is outside the WPS \(use Fit Values\)/, "$1: $2 $3 $4 liegt außerhalb der WPS (Werte anpassen verwenden)"],
+                [/(.+): (\S+) (\S+) % reaches outside the WPS \(travel speed is never changed\)/, "$1: $2 $3 % reicht aus der WPS hinaus (die Schweißgeschwindigkeit wird nie geändert)"],
+                [/(.+): heat input min\/max outside the WPS also without heat input overrides \(locked overrides or travel_max\)/, "$1: Wärmeeinbringung min/max auch ohne Overrides außerhalb der WPS (gesperrte Overrides oder travel_max)"],
+                [/(.+): nominal heat input is outside the WPS \(use Fit Values\)/, "$1: Nennwert der Wärmeeinbringung liegt außerhalb der WPS (Werte anpassen verwenden)"],
+                [/(.+): heat input (\S+) kJ\/mm still outside \(current at the WPS limit\)/, "$1: Wärmeeinbringung $2 kJ/mm weiterhin außerhalb (Strom an der WPS-Grenze)"],
+                [/(.+): heat input outside, current cannot be changed/, "$1: Wärmeeinbringung außerhalb, Strom kann nicht geändert werden"],
+                [/Set the current and voltage overrides of the selected files to the largest range up to 10 % (.*)/, "Strom- und Spannungs-Overrides der ausgewählten Dateien auf den größten Bereich bis 10 % setzen, sodass keine Override-Einstellung die WPS verlässt (jeder Wert und die Wärmeeinbringung); dwell_max und excursion_max auf 0 %. Werte und Schweißgeschwindigkeit bleiben unverändert."],
+                [/P = pulse \(pri\), B = background \(bkg\)\. (.*)/, "P = Puls (pri), B = Grundstrom (bkg). Außerhalb: Wert außerhalb der WPS. Override: Wert innerhalb, aber Wert ± Override reicht aus der WPS hinaus."],
+
+                // Program overview
+                [/Program overview of (\d+) file\(s\) opened – use "Print \/ Save as PDF"\./, "Programmübersicht von $1 Datei(en) geöffnet – „Drucken / Als PDF speichern“ verwenden."],
+                [/Program overview – (.+)/, "Programmübersicht – $1"],
+                [/Prepared by (.+)/, "Erstellt von $1"],
+                [/e\.g\. (.+)/, "z. B. $1"],
+
+                // WDR
+                [/(\d+) target ranges? found in the Schedule Editor \(Tools › Heat Input\)\.(.*)/, "$1 Zielbereich(e) im Schedule Editor gefunden (Werkzeuge › Wärmeeinbringung). Die Bereiche werden über die 4-stellige Schedule-Nummer zugeordnet.$2"],
+                [/Processing file (\d+) of (\d+)\.\.\./, "Datei $1 von $2 wird verarbeitet…"],
+                [/Creating ZIP part (\d+)\.\.\./, "ZIP-Teil $1 wird erstellt…"],
+                [/Writing data row (\d+) of (\d+)…/, "Datenzeile $1 von $2 wird geschrieben…"],
+                [/Writing raw data line (\d+)…/, "Rohdatenzeile $1 wird geschrieben…"],
+                [/Done: (\d+) of (\d+) files saved in "(.+)"\./, "Fertig: $1 von $2 Dateien in „$3“ gespeichert."],
+                [/Process completed! (\d+) of (\d+) files were saved in the folder "(.+)"\./, "Vorgang abgeschlossen.\n\n$1 von $2 Dateien wurden im Ordner „$3“ gespeichert."],
+                [/Process completed! Successfully processed: (\d+) of (\d+) files in (\d+) ZIP file\(s\)\./, "Vorgang abgeschlossen.\n\nErfolgreich verarbeitet: $1 von $2 Dateien in $3 ZIP-Datei(en)."],
+                [/ZIP archive with (\d+) of (\d+) files was created\. If the download did not start automatically, click the button\./, "ZIP-Archiv mit $1 von $2 Dateien wurde erstellt. Falls der Download nicht automatisch startet, die Schaltfläche klicken."],
+                [/(\d+) of (\d+) files were downloaded in (\d+) ZIP parts\. If the browser asks, allow multiple downloads\. The button downloads the last part again\./, "$1 von $2 Dateien wurden in $3 ZIP-Teilen heruntergeladen. Falls der Browser fragt, mehrere Downloads erlauben. Die Schaltfläche lädt den letzten Teil erneut herunter."],
+                [/Summary workbook: (.*)/, "Zusammenfassung: $1"],
+                [/The evaluation range is empty \(log has (\d+) data rows\)\./, "Der Auswertebereich ist leer (Log hat $1 Datenzeilen)."],
+
+                // Catch-all for "N file(s) …" (keep last among the file patterns)
+                [/(\d+) file\(s\) as ZIP archive(.*)/, "$1 Datei(en) als ZIP-Archiv$2"],
+                [/(\d+) file\(s\)(.*)/, "$1 Datei(en)$2"],
+
+                // Pendant
+                [/Editable modes: (.+)/, "Bearbeitbare Modi: $1"],
+                [/Use "Fill page with blank_black" to wipe the current mode and start from scratch\. A confirmation prompt appears first\./, "„Seite mit blank_black füllen“ leert den aktuellen Modus. Vorher erscheint eine Sicherheitsabfrage."]
+            ]
+        };
+        // Language switch (English | Deutsch) for the whole suite.
+        // The UI is written in English. One engine in the shell translates the start page and every app
+        // document (iframes, overview/viewer windows) at runtime from the dictionary SUITE_I18N_DE
+        // (shared/i18n-de.js). English originals are kept per node, so switching back restores them.
+        (() => {
+            const STORAGE_KEY = "scheduleSuiteLanguage";
+            const ATTRIBUTES = ["title", "placeholder", "aria-label", "alt"];
+            const SKIP = new Set(["SCRIPT", "STYLE", "TEXTAREA", "PRE", "CODE", "TEMPLATE", "NOSCRIPT"]);
+            const originals = new WeakMap(); // Text node / Attr -> { en, shown }
+            const windows = new Set();
+            const misses = new Set();
+            let exact = null;
+            let patterns = [];
+            let language = "en";
+            try { language = localStorage.getItem(STORAGE_KEY) === "de" ? "de" : "en"; } catch (error) { /* ignore */ }
+
+            function loadDictionary() {
+                if (exact) return;
+                const source = window.SUITE_I18N_DE || { exact: {}, patterns: [] };
+                exact = new Map(Object.entries(source.exact));
+                patterns = (source.patterns || []).map(([regex, replacement]) =>
+                    [new RegExp(`^(?:${regex instanceof RegExp ? regex.source : regex})$`), replacement]);
+            }
+
+            // Translates one English string. Leading/trailing whitespace is kept; inner whitespace is collapsed
+            // for the lookup. Returns null when there is no translation.
+            function lookup(text) {
+                loadDictionary();
+                const key = text.replace(/\s+/g, " ").trim();
+                if (!key || !/[A-Za-z]{2}/.test(key)) return null;
+                if (exact.has(key)) return exact.get(key);
+                for (const [regex, replacement] of patterns) {
+                    if (!regex.test(key)) continue;
+                    if (typeof replacement === "function") return key.replace(regex, replacement);
+                    return key.replace(regex, (...groups) => replacement.replace(/\$(\d)/g, (match, index) => {
+                        const value = groups[Number(index)] ?? "";
+                        return exact.has(value) ? exact.get(value) : value;
+                    }));
+                }
+                misses.add(key);
+                return null;
+            }
+
+            function translate(text) {
+                if (language !== "de" || typeof text !== "string") return text;
+                const result = lookup(text);
+                if (result === null) return text;
+                const lead = text.match(/^\s*/)[0];
+                const trail = text.match(/\s*$/)[0];
+                return lead + result + (text.trim() ? trail : "");
+            }
+
+            function skipped(element) {
+                for (let node = element; node && node.nodeType === 1; node = node.parentNode) {
+                    if (SKIP.has(node.tagName) || node.hasAttribute("data-no-i18n") || node.hasAttribute("data-lang")
+                        || node.isContentEditable) return true;
+                }
+                return false;
+            }
+
+            // Sets the shown value of a text node or attribute. "value" is the current DOM value.
+            function apply(node, value, set) {
+                let entry = originals.get(node);
+                if (!entry || value !== entry.shown) {
+                    entry = { en: value, shown: value };
+                    originals.set(node, entry);
+                }
+                const target = language === "de" ? translate(entry.en) : entry.en;
+                if (target !== value) set(target);
+                entry.shown = target;
+            }
+
+            function translateText(node) {
+                if (!node.parentNode || skipped(node.parentNode)) return;
+                apply(node, node.nodeValue, value => { node.nodeValue = value; });
+            }
+
+            function translateAttributes(element) {
+                if (skipped(element)) return;
+                for (const name of ATTRIBUTES) {
+                    const attr = element.getAttributeNode(name);
+                    if (attr) apply(attr, attr.value, value => { attr.value = value; });
+                }
+                if (element.tagName === "INPUT" && /^(button|submit|reset)$/i.test(element.type)) {
+                    const attr = element.getAttributeNode("value");
+                    if (attr) apply(attr, attr.value, value => { attr.value = value; });
+                }
+            }
+
+            function translateTree(root) {
+                if (!root) return;
+                if (root.nodeType === 3) { translateText(root); return; }
+                if (root.nodeType !== 1 && root.nodeType !== 9 && root.nodeType !== 11) return;
+                if (root.nodeType === 1) {
+                    if (SKIP.has(root.tagName)) return;
+                    translateAttributes(root);
+                }
+                const doc = root.ownerDocument || root;
+                const walker = doc.createTreeWalker(root, 1 | 4, {
+                    acceptNode: node => (node.nodeType === 1 && (SKIP.has(node.tagName) || node.hasAttribute("data-no-i18n")
+                    || node.hasAttribute("data-lang"))) ? 2 : 1
+                });
+                for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+                    if (node.nodeType === 3) translateText(node);
+                    else translateAttributes(node);
+                }
+            }
+
+            function wrapDialogs(win) {
+                ["alert", "confirm", "prompt"].forEach(name => {
+                    const original = win[name];
+                    if (typeof original !== "function" || original.__i18n) return;
+                    const wrapped = function (message, ...rest) {
+                        return original.call(win, typeof message === "string" ? translate(message) : message, ...rest);
+                    };
+                    wrapped.__i18n = true;
+                    win[name] = wrapped;
+                });
+            }
+
+            // Hooks a same-origin window: dialogs, a MutationObserver for later DOM changes, and window.open,
+            // so child windows (program overview, XML viewer) are translated as well.
+            function attach(win) {
+                if (!win || windows.has(win)) return;
+                windows.add(win);
+                wrapDialogs(win);
+                const doc = win.document;
+                if (doc.documentElement) doc.documentElement.lang = language;
+                const observer = new win.MutationObserver(records => {
+                    if (language !== "de") return;
+                    for (const record of records) {
+                        if (record.type === "childList") record.addedNodes.forEach(translateTree);
+                        else if (record.type === "characterData") translateText(record.target);
+                        else if (record.type === "attributes") translateAttributes(record.target);
+                    }
+                });
+                observer.observe(doc, {
+                    subtree: true, childList: true, characterData: true,
+                    attributes: true, attributeFilter: [...ATTRIBUTES, "value"]
+                });
+                const open = win.open;
+                win.open = function (...args) {
+                    const child = open.apply(win, args);
+                    try { if (child) attach(child); } catch (error) { /* other origin */ }
+                    return child;
+                };
+                const finish = () => translateTree(doc);
+                if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", finish);
+                finish();
+                win.addEventListener("unload", () => windows.delete(win));
+            }
+
+            function setLanguage(next) {
+                language = next === "de" ? "de" : "en";
+                try { localStorage.setItem(STORAGE_KEY, language); } catch (error) { /* ignore */ }
+                windows.forEach(win => {
+                    try {
+                        if (win.closed) { windows.delete(win); return; }
+                        win.document.documentElement.lang = language;
+                        translateTree(win.document);
+                        win.dispatchEvent(new win.CustomEvent("suite-language", { detail: language }));
+                    } catch (error) { windows.delete(win); }
+                });
+            }
+
+            // Another tab of the suite switched the language.
+            window.addEventListener("storage", event => {
+                if (event.key === STORAGE_KEY && (event.newValue === "de" ? "de" : "en") !== language) setLanguage(event.newValue);
+            });
+
+            window.SuiteI18n = {
+                attach,
+                setLanguage,
+                translate,
+                getLanguage: () => language,
+                misses: () => [...misses].sort()
+            };
+            attach(window);
+            if (language === "de") setLanguage("de");
+        })();
+    </script>
     <!--
         GENERATED FILE – do not edit. Source: Schedule_editor/src/ (see src/MAP.md), build: `node build.js`.
         Liburdi Schedule Suite 3.1: start page + three independent apps in <template> blocks
@@ -70,6 +1060,56 @@
             font-weight: 700;
             letter-spacing: 0.12em;
             text-transform: uppercase;
+        }
+
+        .launcher-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .launcher-top .launcher-eyebrow {
+            margin: 0;
+        }
+
+        /* Sprachauswahl (shared/i18n.js) */
+        .language-switch {
+            display: inline-flex;
+            gap: 2px;
+            padding: 2px;
+            border: 1px solid var(--border-color);
+            border-radius: 7px;
+            background: var(--bg-panel);
+        }
+
+        .language-option {
+            height: 28px;
+            padding: 0 14px;
+            border: none;
+            border-radius: 5px;
+            background: transparent;
+            color: var(--text-muted);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .language-option:hover {
+            color: var(--text-main);
+        }
+
+        .language-option[aria-pressed="true"] {
+            background: var(--accent);
+            color: #24150d;
+        }
+
+        .language-option:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
         }
 
         .launcher-content h1 {
@@ -232,7 +1272,13 @@
 <body>
     <main id="launcher">
         <div class="launcher-content">
-            <p class="launcher-eyebrow">Liburdi Schedule Suite · Version 3.1</p>
+            <div class="launcher-top">
+                <p class="launcher-eyebrow">Liburdi Schedule Suite · Version 3.1</p>
+                <div class="language-switch" role="group" aria-label="Language / Sprache" data-no-i18n>
+                    <button type="button" class="language-option" data-language="en" lang="en" aria-pressed="true">English</button>
+                    <button type="button" class="language-option" data-language="de" lang="de" aria-pressed="false">Deutsch</button>
+                </div>
+            </div>
             <h1>Which tool do you want to open?</h1>
             <p class="launcher-intro">All tools run entirely in your browser. Files are only written when you download or save them.</p>
             <nav class="app-cards" aria-label="Applications">
@@ -3985,6 +5031,12 @@
             color: var(--warning);
             font-size: 10.5px;
         }
+
+        /* Sprachumschaltung (shared/i18n.js): Textbloecke je Sprache */
+        html:not([lang="de"]) [data-lang="de"],
+        html[lang="de"] [data-lang="en"] {
+            display: none !important;
+        }
     </style>
 
 <div id="sidebar">
@@ -5625,8 +6677,8 @@
 
     <div class="modal-overlay" id="helpModal">
         <div class="modal-box help-modal-box" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-            <h3 id="helpTitle">Liburdi Schedule Editor v2.9 - Help</h3>
-            <div class="help-content">
+            <h3 id="helpTitle"><span data-lang="en">Liburdi Schedule Editor 3.1 – Help</span><span data-lang="de">Liburdi Schedule Editor 3.1 – Hilfe</span></h3>
+            <div class="help-content" data-lang="en">
                 <h4>Start</h4>
                 <p>Open this HTML file in a current browser. For the full feature set (segment field order, XDR
                     schemas from the Schedule Database) serve the project folder with
@@ -5704,6 +6756,95 @@
                 <h4>Local settings</h4>
                 <p>Hidden and important parameters, custom heads, units, the change log and the sidebar state are
                     stored in the browser's localStorage.</p>
+            </div>
+            <div class="help-content" data-lang="de">
+                <h4>Start</h4>
+                <p>Diese HTML-Datei in einem aktuellen Browser öffnen. Für den vollen Funktionsumfang (Feldreihenfolge der
+                    Segmente, XDR-Schemas aus der Schedule Database) den Projektordner mit
+                    <code>python3 -m http.server 8000</code> bereitstellen.</p>
+
+                <h4>XML-Dateien laden</h4>
+                <ol>
+                    <li><strong>XML öffnen…</strong> klicken oder XML-Dateien auf <strong>XML-Dateien hier ablegen</strong> ziehen.</li>
+                    <li>Nur gültige Schedules (<code>&lt;sched&gt;</code> mit mindestens einem Segment) werden übernommen.</li>
+                    <li>Eine Datei in der Liste anklicken, um sie zur aktiven Datei zu machen.</li>
+                    <li>Mit den Checkboxen (oder <strong>Alle / Leeren / Umkehren</strong>) Dateien für Sammelaktionen auswählen.</li>
+                </ol>
+                <p>Dateien werden nur im Browser verarbeitet. Die Dateien auf der Festplatte bleiben unverändert, bis gespeichert wird.</p>
+
+                <h4>Bearbeiten</h4>
+                <p>Die Bereiche <strong>Beschreibung</strong>, <strong>Global</strong>, <strong>Grenzwerte</strong>,
+                    <strong>Overrides</strong> und <strong>Segmente</strong> sind direkt bearbeitbar. Dezimalkomma und
+                    -punkt werden akzeptiert. Geänderte Werte sind hervorgehoben; beim Überfahren eines Werts erscheint
+                    der zuletzt gespeicherte Wert.</p>
+                <p>Ist die aktive Datei ausgewählt, werden Änderungen außerhalb der Segmente auch in alle anderen
+                    ausgewählten Dateien übernommen.</p>
+                <p>Beim Überfahren einer Parameterzeile lässt sie sich als wichtig markieren (★) oder ausblenden (⊘).
+                    Doppelklick und Rechtsklick auf den Namen tun dasselbe.</p>
+                <p>Eine Parameterzeile am Namen oder Griff (⠿) ziehen, um sie zu verschieben; Alt+↑/↓ auf dem Griff
+                    verschiebt sie um eine Zeile. Die Reihenfolge wird pro Bereich gespeichert (alle Segmente teilen eine
+                    Reihenfolge) und ist Teil der Sicherung der lokalen Einstellungen. <strong>Reihenfolge zurücksetzen</strong>
+                    im Kopf des Bereichs stellt die Standardreihenfolge wieder her. Gesperrte Parameter (🔒) lassen sich
+                    nicht verschieben und behalten ihre Position.</p>
+                <p>Unter Segmente lassen sich Segmente duplizieren, verschieben und löschen. Das gewählte Segment bleibt geöffnet.</p>
+
+                <h4>Tastenkürzel</h4>
+                <ul>
+                    <li><strong>Strg+S</strong> alle geänderten Dateien speichern (im Editor, im Änderungsprotokoll vermerkt)</li>
+                    <li><strong>Strg+Z</strong> rückgängig, <strong>Strg+Y</strong> / <strong>Strg+Umschalt+Z</strong> wiederholen
+                        (in einem Eingabefeld gilt das Rückgängig des Browsers)</li>
+                    <li><strong>Strg+F</strong> oder <strong>/</strong> suchen, <strong>Esc</strong> Suche leeren oder
+                        Dialog schließen</li>
+                </ul>
+
+                <h4>Speichern</h4>
+                <ul>
+                    <li><strong>Speichern:</strong> speichert alle geänderten Dateien im Editor (neue Basis für die
+                        „geändert“-Markierungen, Zurücksetzen und den XML-Viewer) und trägt „Gespeichert“ mit der Zahl der
+                        Änderungen ins Änderungsprotokoll ein. Es wird nichts heruntergeladen; gespeicherte, nicht
+                        heruntergeladene Dateien zeigen <em>Gespeichert ↓</em>. Zum Umbenennen den Dateinamen über den
+                        Bereichen bearbeiten.</li>
+                    <li><strong>Batch-Speichern:</strong> der einzige Weg zum Herunterladen: speichert die ausgewählten
+                        Dateien (alle, wenn keine ausgewählt ist) und lädt sie herunter. Ein optionaler Revisions-Tag
+                        (z. B. <code>Rev1</code>) wird an jeden Dateinamen angehängt (<code>Name_Rev1.xml</code>); ein
+                        vorhandenes <code>_Rev…</code> wird ersetzt und die Dateien werden im Editor umbenannt. Mehrere
+                        Dateien werden als ZIP-Archiv gespeichert. Liegt die Wärmeeinbringung eines Segments außerhalb der
+                        Grenzwerte der Datei oder des Zielbereichs (Werkzeuge › Wärmeeinbringung &amp; WPS), listet eine
+                        Meldung die Segmente, bevor etwas heruntergeladen wird.</li>
+                    <li><strong>Zurücksetzen:</strong> setzt alle geladenen Dateien auf den zuletzt gespeicherten Stand zurück.</li>
+                </ul>
+
+                <h4>Werkzeuge</h4>
+                <ul>
+                    <li><strong>Vergleich:</strong> geladene Dateien vergleichen, Werte bearbeiten, Werte in alle Dateien
+                        übernehmen, optional nur Unterschiede anzeigen.</li>
+                    <li><strong>Wärmeeinbringung &amp; WPS:</strong> Wärmeeinbringung pro Segment mit Wirkungsgrad η = 0,6
+                        (Grundstromwerte während der Excursion, Pulswerte während indwell/outdwell); Min/Max aus den
+                        prozentualen Overrides. Ein Diagramm zeigt den Min-Max-Bereich und den Nennwert pro Segment, die
+                        Grenzwerte aus &lt;limits&gt; als gestrichelte Linien, Zielbereiche als rote und den
+                        Sicherheitsabstand als gelbe Linien. Im Reiter WPS wird eine WPS (digitale PDF) eingelesen und die
+                        Schedules werden gegen sie geprüft und angepasst.</li>
+                    <li><strong>Ausgeblendete Parameter:</strong> ausgeblendete Parameter wiederherstellen.</li>
+                    <li><strong>Änderungsprotokoll:</strong> erfasste Änderungen anzeigen; <em>Protokoll leeren</em> löscht alle Einträge (Rückgängig stellt sie wieder her).</li>
+                    <li><strong>XML-Viewer:</strong> schreibgeschütztes XML der aktiven Datei; Änderungen seit dem letzten
+                        Speichern sind hervorgehoben (grün hinzugefügt, rot entfernt, gelb geändert mit altem Wert); mit
+                        einem gespeicherten XDR-Schema sind fehlende Pflichtwerte rot markiert.</li>
+                    <li><strong>Schemaprüfung:</strong> prüft alle geladenen Dateien gegen das aktive XDR-Schema (Pflicht- und
+                        unbekannte Elemente, Reihenfolge, Attribute, Datentypen) und vergleicht die Dateiversion mit der
+                        Schemaversion. <strong>Upgrade</strong> bringt ältere Dateien auf die Schemaversion: Werte bleiben
+                        erhalten, fehlende Felder kommen aus der Layout-Vorlage (NGRT/NG nach Head), unbekannte Felder
+                        werden entfernt.</li>
+                    <li><strong>Programmübersicht (PDF):</strong> druckbare Zusammenfassung aller geladenen Dateien –
+                        hervorgehobene (★) Global-Werte, die wichtigsten Segmentwerte in Gruppen, Diagramm und Tabelle der
+                        Wärmeeinbringung, die verwendeten Overrides und die WPS-Bereiche; über den Druckdialog als PDF speichern.</li>
+                    <li><strong>Einstellungen:</strong> XDR-Schemaversionen verwalten (laden, aktivieren, löschen) und die
+                        Editor-Einstellungen als JSON exportieren oder importieren.</li>
+                </ul>
+                <p>Die Sprache (English | Deutsch) wird auf der Startseite umgeschaltet.</p>
+
+                <h4>Lokale Einstellungen</h4>
+                <p>Ausgeblendete und wichtige Parameter, eigene Heads, Einheiten, das Änderungsprotokoll und der Zustand
+                    der Seitenleiste werden im localStorage des Browsers gespeichert.</p>
             </div>
             <div class="modal-actions">
                 <button id="helpCloseBtn" class="btn-primary" type="button">Close</button>
@@ -11728,6 +12869,7 @@ ${globalKeys.length ? `
         document.getElementById('helpCloseBtn').onclick = () => closeModal(helpModal);
 
         const LOCAL_STORAGE_BACKUP_KEYS = [
+            "scheduleSuiteLanguage",
             "hiddenFields",
             "lockedFields",
             "scheduleEditorChangeLog",
@@ -11747,6 +12889,8 @@ ${globalKeys.length ? `
             "scheduleEditorActiveXdr",
             "scheduleEditorLayoutTemplates"
         ];
+        // Keys stored as plain text (not JSON).
+        const LOCAL_STORAGE_TEXT_KEYS = ["scheduleSuiteLanguage", "scheduleEditorOverviewSeamName", "scheduleEditorOverviewPreparedBy"];
         const localStorageBackupModal = document.getElementById("localStorageBackupModal");
         const localStorageBackupStatus = document.getElementById("localStorageBackupStatus");
         const localStorageBackupFile = document.getElementById("localStorageBackupFile");
@@ -11785,6 +12929,11 @@ ${globalKeys.length ? `
                     scheduleEditorXdrSchemas: Array.isArray(value) && value.every(item => isXdrRecord(item)
                         && /<Schema\b/.test(item.xml)),
                     scheduleEditorActiveXdr: isObject && typeof value.id === "string",
+                    scheduleEditorWpsRanges: isObject && Array.isArray(value.rows),
+                    scheduleEditorHeatMargin: isObject,
+                    scheduleEditorOverviewSeamName: typeof value === "string",
+                    scheduleEditorOverviewPreparedBy: typeof value === "string",
+                    scheduleSuiteLanguage: value === "en" || value === "de",
                     scheduleEditorLayoutTemplates: isObject && Object.values(value).every(item => item && typeof item === "object"
                         && typeof item.xml === "string" && typeof item.name === "string")
                 }[key];
@@ -11805,7 +12954,8 @@ ${globalKeys.length ? `
                 const data = {};
                 for (const key of LOCAL_STORAGE_BACKUP_KEYS) {
                     const storedValue = localStorage.getItem(key);
-                    if (storedValue !== null) data[key] = JSON.parse(storedValue);
+                    if (storedValue === null) continue;
+                    data[key] = LOCAL_STORAGE_TEXT_KEYS.includes(key) ? storedValue : JSON.parse(storedValue);
                 }
                 const backup = {
                     format: "liburdi-schedule-editor-local-storage",
@@ -11838,7 +12988,7 @@ ${globalKeys.length ? `
                 try {
                     for (const key of LOCAL_STORAGE_BACKUP_KEYS) {
                         if (Object.prototype.hasOwnProperty.call(data, key)) {
-                            localStorage.setItem(key, JSON.stringify(data[key]));
+                            localStorage.setItem(key, LOCAL_STORAGE_TEXT_KEYS.includes(key) ? data[key] : JSON.stringify(data[key]));
                         } else {
                             localStorage.removeItem(key);
                         }
@@ -15736,6 +16886,12 @@ input, select, textarea { font: inherit; }
         .scope-banner strong {
             color: var(--accent);
         }
+
+        /* Sprachumschaltung (shared/i18n.js): Textbloecke je Sprache */
+        html:not([lang="de"]) [data-lang="de"],
+        html[lang="de"] [data-lang="en"] {
+            display: none !important;
+        }
     </style>
 <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-5xl">
         <header class="mb-6 flex justify-between items-center">
@@ -15756,12 +16912,19 @@ input, select, textarea { font: inherit; }
         <main class="panel p-6 rounded-xl shadow-lg">
 
             <!-- Scope banner -->
-            <div class="scope-banner text-sm p-3 rounded-lg mb-6">
+            <div class="scope-banner text-sm p-3 rounded-lg mb-6" data-lang="en">
                 This simplified editor only shows the three most-used pages:
                 <strong>JOG</strong>, <strong>WELD</strong>, and <strong>WELD2</strong>.
                 The generated XML still contains all nine modes — the others
                 (NUMPAD, AUXJOG, MENU, INPUT, VIEW, EDIT) are written using factory defaults
                 or, if a file is loaded, the values from that file.
+            </div>
+            <div class="scope-banner text-sm p-3 rounded-lg mb-6" data-lang="de">
+                Dieser vereinfachte Editor zeigt nur die drei meistgenutzten Seiten:
+                <strong>JOG</strong>, <strong>WELD</strong> und <strong>WELD2</strong>.
+                Das erzeugte XML enthält trotzdem alle neun Modi – die übrigen
+                (NUMPAD, AUXJOG, MENU, INPUT, VIEW, EDIT) werden mit Werkseinstellungen geschrieben
+                oder, wenn eine Datei geladen ist, mit den Werten aus dieser Datei.
             </div>
 
             <!-- File Loader Section -->
@@ -15856,6 +17019,7 @@ input, select, textarea { font: inherit; }
     <div id="help-modal" class="hidden fixed inset-0 overflow-y-auto h-full w-full flex items-center justify-center" style="background-color: rgba(0, 0, 0, 0.8);">
         <div class="relative mx-auto p-5 panel w-full max-w-md shadow-lg rounded-md">
             <div class="mt-3 text-center">
+                <div data-lang="en">
                 <h3 class="text-lg leading-6 font-medium" style="color: var(--accent);">How to Use the Simplified Editor</h3>
                 <div class="mt-2 px-7 py-3 text-left">
                     <p class="text-sm mb-4" style="color: var(--text-secondary);">
@@ -15878,6 +17042,32 @@ input, select, textarea { font: inherit; }
                         <li><span class="font-semibold" style="color: var(--accent);">Preview as PDF:</span> Click "Preview Layout as PDF" to open a printable view of the three editable pages with their button icons. Use the print dialog's "Save as PDF" option to keep a copy.</li>
                         <li><span class="font-semibold" style="color: var(--accent);">Saving:</span> Enter an author and file suffix, then click "Generate &amp; Download XML". The output contains all nine modes.</li>
                     </ol>
+                </div>
+                </div>
+                <div data-lang="de">
+                <h3 class="text-lg leading-6 font-medium" style="color: var(--accent);">Bedienung des vereinfachten Editors</h3>
+                <div class="mt-2 px-7 py-3 text-left">
+                    <p class="text-sm mb-4" style="color: var(--text-secondary);">
+                        Dies ist die vereinfachte Version des Layout-Editors. Nur die drei meistgenutzten Seiten
+                        (<strong>JOG</strong>, <strong>WELD</strong>, <strong>WELD2</strong>) sind bearbeitbar.
+                        Das erzeugte XML enthält trotzdem alle neun Modi – die anderen sechs werden mit Werkseinstellungen
+                        geschrieben oder, falls eine Datei geladen ist, mit deren Werten.
+                    </p>
+                    <ol class="list-decimal list-inside space-y-3" style="color: var(--text-primary);">
+                        <li><span class="font-semibold" style="color: var(--accent);">Laden:</span> Über „Datei auswählen“ eine vorhandene <code>key_layout_*.xml</code> laden. Alle neun Modi werden eingelesen, aber nur JOG, WELD und WELD2 sind bearbeitbar.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Bearbeiten:</span>
+                            <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                                <li>Mit den orangen Reitern zwischen JOG, WELD und WELD2 wechseln.</li>
+                                <li>Die Funktion jeder Taste über ihr Auswahlfeld ändern.</li>
+                                <li>Für eigene Funktionen „--- CUSTOM ---“ wählen und einen Wert eingeben.</li>
+                            </ul>
+                        </li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Kopieren / Einfügen:</span> Mit „Seite kopieren“ den aktuellen Modus übernehmen, dann zu einem anderen Modus wechseln und mit „Seite einfügen“ überschreiben. Die Zwischenablage-Anzeige zeigt, welcher Modus gerade gehalten wird.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Leere Seite:</span> „Seite mit blank_black füllen“ leert den aktuellen Modus für einen Neuanfang. Vorher erscheint eine Sicherheitsabfrage.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Vorschau als PDF:</span> „Layout als PDF anzeigen“ öffnet eine druckbare Ansicht der drei bearbeitbaren Seiten mit ihren Tastensymbolen. Mit „Als PDF speichern“ im Druckdialog eine Kopie ablegen.</li>
+                        <li><span class="font-semibold" style="color: var(--accent);">Speichern:</span> Autor und Dateisuffix eingeben, dann „XML erzeugen &amp; herunterladen“ klicken. Die Ausgabe enthält alle neun Modi.</li>
+                    </ol>
+                </div>
                 </div>
                 <div class="items-center px-4 py-3">
                     <button id="close-help-button" class="btn-primary px-4 py-2 text-base rounded-md w-full shadow-sm">
@@ -16911,7 +18101,10 @@ input, select, textarea { font: inherit; }
                 const frame = document.createElement("iframe");
                 frame.title = app.title;
                 frame.setAttribute("allow", "clipboard-read; clipboard-write");
-                frame.srcdoc = `<!DOCTYPE html><html lang="en"><head><base href="${baseHref}">${source}</html>`;
+                // Erstes Skript im Dokument: Sprachumschaltung (shared/i18n.js) anhaengen, bevor die App laeuft.
+                const lang = window.SuiteI18n ? window.SuiteI18n.getLanguage() : "en";
+                const i18n = "<script>try { parent.SuiteI18n && parent.SuiteI18n.attach(window); } catch (error) {}</" + "script>";
+                frame.srcdoc = `<!DOCTYPE html><html lang="${lang}"><head><base href="${baseHref}">${i18n}${source}</html>`;
                 frame.addEventListener("load", () => {
                     // Fenstertitel der Anwendung uebernehmen (z. B. aktive Datei im Editor).
                     try { document.title = frame.contentDocument.title || app.title; } catch (error) { /* ignore */ }
@@ -16935,7 +18128,7 @@ input, select, textarea { font: inherit; }
                     badge.hidden = !frames[badge.dataset.running];
                 });
                 if (!active) {
-                    document.title = "Liburdi Schedule Suite 3.1";
+                    document.title = window.SuiteI18n ? window.SuiteI18n.translate("Liburdi Schedule Suite 3.1") : "Liburdi Schedule Suite 3.1";
                     return;
                 }
                 const frame = getFrame(active);
@@ -16943,6 +18136,18 @@ input, select, textarea { font: inherit; }
                 try { document.title = frame.contentDocument?.title || APPS[active].title; } catch (error) { document.title = APPS[active].title; }
                 frame.focus();
             }
+
+            // Sprachauswahl auf der Startseite: gilt fuer alle Anwendungen (shared/i18n.js).
+            const languageButtons = document.querySelectorAll(".language-option");
+            function renderLanguage() {
+                const current = window.SuiteI18n ? window.SuiteI18n.getLanguage() : "en";
+                languageButtons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.language === current)));
+            }
+            languageButtons.forEach(button => button.addEventListener("click", () => {
+                if (window.SuiteI18n) window.SuiteI18n.setLanguage(button.dataset.language);
+            }));
+            window.addEventListener("suite-language", () => { renderLanguage(); showRoute(); });
+            renderLanguage();
 
             bar.addEventListener("click", event => {
                 const button = event.target.closest("[data-route]");

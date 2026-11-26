@@ -18,7 +18,10 @@
                 const frame = document.createElement("iframe");
                 frame.title = app.title;
                 frame.setAttribute("allow", "clipboard-read; clipboard-write");
-                frame.srcdoc = `<!DOCTYPE html><html lang="en"><head><base href="${baseHref}">${source}</html>`;
+                // Erstes Skript im Dokument: Sprachumschaltung (shared/i18n.js) anhaengen, bevor die App laeuft.
+                const lang = window.SuiteI18n ? window.SuiteI18n.getLanguage() : "en";
+                const i18n = "<script>try { parent.SuiteI18n && parent.SuiteI18n.attach(window); } catch (error) {}</" + "script>";
+                frame.srcdoc = `<!DOCTYPE html><html lang="${lang}"><head><base href="${baseHref}">${i18n}${source}</html>`;
                 frame.addEventListener("load", () => {
                     // Fenstertitel der Anwendung uebernehmen (z. B. aktive Datei im Editor).
                     try { document.title = frame.contentDocument.title || app.title; } catch (error) { /* ignore */ }
@@ -42,7 +45,7 @@
                     badge.hidden = !frames[badge.dataset.running];
                 });
                 if (!active) {
-                    document.title = "Liburdi Schedule Suite 3.1";
+                    document.title = window.SuiteI18n ? window.SuiteI18n.translate("Liburdi Schedule Suite 3.1") : "Liburdi Schedule Suite 3.1";
                     return;
                 }
                 const frame = getFrame(active);
@@ -50,6 +53,18 @@
                 try { document.title = frame.contentDocument?.title || APPS[active].title; } catch (error) { document.title = APPS[active].title; }
                 frame.focus();
             }
+
+            // Sprachauswahl auf der Startseite: gilt fuer alle Anwendungen (shared/i18n.js).
+            const languageButtons = document.querySelectorAll(".language-option");
+            function renderLanguage() {
+                const current = window.SuiteI18n ? window.SuiteI18n.getLanguage() : "en";
+                languageButtons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.language === current)));
+            }
+            languageButtons.forEach(button => button.addEventListener("click", () => {
+                if (window.SuiteI18n) window.SuiteI18n.setLanguage(button.dataset.language);
+            }));
+            window.addEventListener("suite-language", () => { renderLanguage(); showRoute(); });
+            renderLanguage();
 
             bar.addEventListener("click", event => {
                 const button = event.target.closest("[data-route]");

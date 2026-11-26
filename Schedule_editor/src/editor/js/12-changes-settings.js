@@ -109,6 +109,7 @@
         document.getElementById('helpCloseBtn').onclick = () => closeModal(helpModal);
 
         const LOCAL_STORAGE_BACKUP_KEYS = [
+            "scheduleSuiteLanguage",
             "hiddenFields",
             "lockedFields",
             "scheduleEditorChangeLog",
@@ -128,6 +129,8 @@
             "scheduleEditorActiveXdr",
             "scheduleEditorLayoutTemplates"
         ];
+        // Keys stored as plain text (not JSON).
+        const LOCAL_STORAGE_TEXT_KEYS = ["scheduleSuiteLanguage", "scheduleEditorOverviewSeamName", "scheduleEditorOverviewPreparedBy"];
         const localStorageBackupModal = document.getElementById("localStorageBackupModal");
         const localStorageBackupStatus = document.getElementById("localStorageBackupStatus");
         const localStorageBackupFile = document.getElementById("localStorageBackupFile");
@@ -166,6 +169,11 @@
                     scheduleEditorXdrSchemas: Array.isArray(value) && value.every(item => isXdrRecord(item)
                         && /<Schema\b/.test(item.xml)),
                     scheduleEditorActiveXdr: isObject && typeof value.id === "string",
+                    scheduleEditorWpsRanges: isObject && Array.isArray(value.rows),
+                    scheduleEditorHeatMargin: isObject,
+                    scheduleEditorOverviewSeamName: typeof value === "string",
+                    scheduleEditorOverviewPreparedBy: typeof value === "string",
+                    scheduleSuiteLanguage: value === "en" || value === "de",
                     scheduleEditorLayoutTemplates: isObject && Object.values(value).every(item => item && typeof item === "object"
                         && typeof item.xml === "string" && typeof item.name === "string")
                 }[key];
@@ -186,7 +194,8 @@
                 const data = {};
                 for (const key of LOCAL_STORAGE_BACKUP_KEYS) {
                     const storedValue = localStorage.getItem(key);
-                    if (storedValue !== null) data[key] = JSON.parse(storedValue);
+                    if (storedValue === null) continue;
+                    data[key] = LOCAL_STORAGE_TEXT_KEYS.includes(key) ? storedValue : JSON.parse(storedValue);
                 }
                 const backup = {
                     format: "liburdi-schedule-editor-local-storage",
@@ -219,7 +228,7 @@
                 try {
                     for (const key of LOCAL_STORAGE_BACKUP_KEYS) {
                         if (Object.prototype.hasOwnProperty.call(data, key)) {
-                            localStorage.setItem(key, JSON.stringify(data[key]));
+                            localStorage.setItem(key, LOCAL_STORAGE_TEXT_KEYS.includes(key) ? data[key] : JSON.stringify(data[key]));
                         } else {
                             localStorage.removeItem(key);
                         }
