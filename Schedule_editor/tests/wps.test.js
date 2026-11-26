@@ -128,13 +128,13 @@ module.exports = [
             t.check("heat input against WPS max", cells.heat?.status === heatStatus, `${JSON.stringify(cells.heat)} ${heat.heatInput}`);
             t.check("summary", /1 file\(s\) checked · 1 value\(s\) outside the WPS · 2 value\(s\) with override range outside/.test(await frame.textContent("#wpsSummary")), await frame.textContent("#wpsSummary"));
 
-            // Mittelwert-Modus: Strom (180·1.0 + 140·0.3)/1.3 = 170.77 A, Override 153.7–187.8 -> ok
+            // Mittelwert-Modus (Pendelperiode mit 2 Excursions): Strom (180·1.0 + 140·2·0.3)/1.6 = 165 A, Override 148.5–181.5 -> ok
             await frame.selectOption("#wpsCheckMode", "mean");
             const meanCurrent = await frame.evaluate(() => {
                 const cell = document.querySelector(".wps-check-table .wps-cell[data-field=current]");
                 return { text: cell.textContent, ok: cell.classList.contains("is-ok") };
             });
-            t.check("mean mode", meanCurrent.ok && meanCurrent.text === "170.77", JSON.stringify(meanCurrent));
+            t.check("mean mode", meanCurrent.ok && meanCurrent.text === "165", JSON.stringify(meanCurrent));
 
             // Erneuter Import ersetzt nur die WPS-Ziel-Bereiche.
             await frame.setInputFiles("#wpsFileInput", [pdfPath]);

@@ -27,7 +27,7 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
   - orders the fields by the XDR;
   - sets `config_version` and `jog_speed_edit_mode`=1.
 - **Heat input** (05): `calculateSegmentHeatInput` is in 01. The target ranges are `{id,name,min,max,files|null}` and are matched by the 4-digit schedule prefix (`fileTargetKey`).
-  - Open question: the oscillation cycle uses one excursion. Machine data suggests two; see `docs/PLAN_Excel_Vorlage.md`.
+  - Oscillation period = indwell + 2 × excursion + outdwell (`EXCURSIONS_PER_CYCLE` in 01; background values during both excursions). Confirmed with the machine logs (0404, 0408, 0409: within ~0.5 % of the measured heat input). The same weighting is used for the average travel/weld time (04) and the WPS mean mode (13). Test: `heat-cycle`.
 - **Heat Input & WPS** is one tool (`#heatInputBtn`) with two tabs. `openHeatTool(tab)` and `renderHeatTool()` (in 05) render either `renderHeatInput` (05) or `renderWps` (13). Both views start with `appendHeatToolHeader`.
 - **WPS** (13):
   - `readWpsPdf` (pdf.js text layer; the worker runs in the main thread, no OCR) → `parseWpsDocument`. Units are converted to A, V, mm/min (travel), cm/min (wire), kJ/mm. The store has `wireUnit: "cm/min"`; older stores in m/min are converted when read (`detectWpsUnit`; "m/min" is not read inside "cm/min").

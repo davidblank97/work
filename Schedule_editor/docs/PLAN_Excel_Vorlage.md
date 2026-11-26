@@ -68,7 +68,7 @@
 
 ## Offen / Ideen
 - Vorwärmtemperatur (Spalte „Preheat“ der Sammeltabelle) wird nicht geloggt und bleibt leer.
-- Heat-Input-Formel im Schedule Editor (`calculateSegmentHeatInput`):
-  - Sie rechnet die Pendelperiode als In-Dwell + Excursion + Out-Dwell, also mit nur einer Excursion.
-  - Die Maschinendaten (0404) passen zu zwei Excursions: Der Editor ergibt 1,2366 kJ/mm, die Maschine 1,1848 kJ/mm, die Formel mit 2 × Excursion 1,1844 kJ/mm.
-  - Das ist noch nicht geändert.
+- Erledigt (2026-11-26): Heat-Input-Formel im Schedule Editor rechnet die Pendelperiode mit 2 × Excursion (`EXCURSIONS_PER_CYCLE`).
+  - Abgleich aller Maschinen-Logs (Sollwerte aus dem Log): 1 Excursion lag 3,1–5,1 % ueber dem gemessenen k·E/Weg, 2 Excursions −0,3 bis +0,6 % (0409/DL_1: +1,7 % zum Segmentwert der Maschine).
+  - Ist-Spannung und Ist-Strom liegen sehr nah an den Sollwerten (Spannung ±0,1 V); der fruehere Unterschied kam also von der Formel, nicht von Spannungsschwankungen.
+- WDR-Auswertung: In den Logs ist PulseState 0 der Pri-Strom (Puls) und 1 der Bkg-Strom. Die Spalten „Heat Input Background/Pulse Method A“ der Auswertung sind dadurch vertauscht beschriftet (noch nicht geaendert).

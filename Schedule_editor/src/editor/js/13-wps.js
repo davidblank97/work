@@ -671,7 +671,7 @@
                 const read = name => wpsReadValue(segment, name);
                 if (read("enable") === 0) return { segmentIndex, disabled: true, values: {} };
                 const priTime = (read("indwell") ?? 0) + (read("outdwell") ?? 0);
-                const bkgTime = read("excursion") ?? 0;
+                const bkgTime = EXCURSIONS_PER_CYCLE * (read("excursion") ?? 0);
                 const mean = (pri, bkg) => (pri === null || bkg === null || priTime + bkgTime <= 0 ? null : (pri * priTime + bkg * bkgTime) / (priTime + bkgTime));
                 const heat = calculateSegmentHeatInput(segment, overrides);
                 const values = {};

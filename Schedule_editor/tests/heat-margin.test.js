@@ -1,6 +1,6 @@
 // Heat Input: Safety Margin (gelbe Linien) – verengt Target Ranges und WPS-Heat-Input an beiden Grenzen.
 const REF = "Schedule_editor/data/samples/04_HIC_PK_764_CS_NGRT_Rev1/0402-Hotpass1.xml";
-// 0402: Heat Input nominal ~0.80, mit Overrides ~0.65 – 0.97 kJ/mm
+// 0402: Heat Input nominal ~0.77, mit Overrides ~0.62 – 0.93 kJ/mm (Pendelperiode mit 2 Excursions)
 
 module.exports = [
     {
@@ -26,7 +26,7 @@ module.exports = [
             const labels = await frame.$$eval(".heat-margin-label", items => items.map(item => item.textContent));
             t.check("margin labels min 0.55 / max 0.9", labels.includes("margin 0.55") && labels.includes("margin 0.9"), labels.join(", "));
             result = await check();
-            t.check("10 %: max 0.97 above margin max 0.9 -> outside", result.outside && result.violations.includes("margin max 0.9"), JSON.stringify(result));
+            t.check("10 %: max 0.93 above margin max 0.9 -> outside", result.outside && result.violations.includes("margin max 0.9"), JSON.stringify(result));
 
             await frame.click("#batchSaveBtn");
             await frame.click("#batchSaveConfirmBtn");
@@ -34,21 +34,21 @@ module.exports = [
             await frame.click("#heatSaveCancelBtn");
 
             await frame.selectOption("#heatMarginMode", "absolute");
-            await frame.fill("#heatMarginInput", "0,05");
+            await frame.fill("#heatMarginInput", "0,08");
             await frame.press("#heatMarginInput", "Enter");
             result = await check();
-            t.check("absolute 0.05: margin max 0.95, min 0.55", result.outside && result.violations.includes("margin max 0.95"), JSON.stringify(result));
-            t.check("stored as absolute", JSON.stringify(await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorHeatMargin")))) === JSON.stringify({ mode: "absolute", value: 0.05, side: "both" }));
+            t.check("absolute 0.08: margin max 0.92, min 0.58", result.outside && result.violations.includes("margin max 0.92"), JSON.stringify(result));
+            t.check("stored as absolute", JSON.stringify(await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorHeatMargin")))) === JSON.stringify({ mode: "absolute", value: 0.08, side: "both" }));
 
-            // nur untere Grenze: max bleibt 1.0 (0.97 innerhalb), min 0.55; eine gelbe Linie
+            // nur untere Grenze: max bleibt 1.0 (0.93 innerhalb), min 0.58; eine gelbe Linie
             await frame.selectOption("#heatMarginSide", "lower");
             result = await check();
             t.check("lower only: inside, one yellow line", !result.outside && await frame.locator(".heat-chart svg .heat-margin-line").count() === 1, JSON.stringify(result));
-            t.check("lower only: label margin 0.55", (await frame.$$eval(".heat-margin-label", items => items.map(item => item.textContent))).join() === "margin 0.55");
-            // nur obere Grenze: max 0.95 -> 0.97 ausserhalb ("margin max"), min bleibt 0.5
+            t.check("lower only: label margin 0.58", (await frame.$$eval(".heat-margin-label", items => items.map(item => item.textContent))).join() === "margin 0.58");
+            // nur obere Grenze: max 0.92 -> 0.93 ausserhalb ("margin max"), min bleibt 0.5
             await frame.selectOption("#heatMarginSide", "upper");
             result = await check();
-            t.check("upper only: margin max 0.95 violated", result.outside && result.violations.join() === "margin max 0.95", JSON.stringify(result));
+            t.check("upper only: margin max 0.92 violated", result.outside && result.violations.join() === "margin max 0.92", JSON.stringify(result));
             t.check("upper only: one yellow line", await frame.locator(".heat-chart svg .heat-margin-line").count() === 1);
             t.check("side stored", (await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorHeatMargin")))).side === "upper");
             await frame.selectOption("#heatMarginSide", "both");
@@ -85,7 +85,7 @@ module.exports = [
                 const heat = calculateSegmentHeatInput(file.sections.segments[0], file.sections.overrides);
                 return { pri: get("pri_amp_max"), avc: get("avc_override_max"), max: heat.maxHeatInput, min: heat.minHeatInput };
             });
-            // Ohne Margin passt 0.65 – 0.97 in 0.5 – 1.0 (Overrides blieben 10 %); mit Margin muessen sie kleiner werden.
+            // Ohne Margin passt 0.62 – 0.93 in 0.5 – 1.0 (Overrides blieben 10 %); mit Margin muessen sie kleiner werden.
             t.check("overrides reduced below 10 %", after.pri < 10 && after.avc < 10, JSON.stringify(after));
             t.check("heat input range inside the yellow lines (0.55 – 0.9)", after.max <= 0.9 + 1e-6 && after.min >= 0.55 - 1e-6, JSON.stringify(after));
             t.check("heat cell OK after Fit Overrides", (await heatCell()).includes("is-ok"), await heatCell());

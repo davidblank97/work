@@ -64,10 +64,10 @@
                 const outdwell = readNonNegativeNumber("outdwell");
                 const cycleTime = excursion === null || indwell === null || outdwell === null
                     ? 0
-                    : excursion + indwell + outdwell;
+                    : EXCURSIONS_PER_CYCLE * excursion + indwell + outdwell;
                 const primaryTime = indwell === null || outdwell === null ? 0 : indwell + outdwell;
                 const averageTravelMmPerMinute = backgroundTravel !== null && primaryTravel !== null && cycleTime > 0
-                    ? (backgroundTravel * excursion + primaryTravel * primaryTime) / cycleTime * 25.4
+                    ? (backgroundTravel * EXCURSIONS_PER_CYCLE * excursion + primaryTravel * primaryTime) / cycleTime * 25.4
                     : 0;
                 const hasLength = rawLength !== null && Number.isFinite(rawLength) && rawLength >= 0;
                 const singleSegmentTravel = segments.length === 1 && diameter !== null && primaryTravel !== null
