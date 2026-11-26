@@ -3626,3 +3626,48 @@
         .wps-range-table .wps-split-line input {
             width: 40px;
         }
+
+        /* Safety Margin (Heat Input) */
+        .heat-margin-line {
+            stroke: var(--warning);
+            stroke-width: 2;
+            stroke-dasharray: 5 3;
+        }
+
+        .heat-margin-label {
+            fill: var(--warning);
+            font-size: 10.5px;
+            font-weight: 700;
+        }
+
+        .heat-margin-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0 4px;
+        }
+
+        .heat-margin-caption {
+            color: var(--warning);
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+
+        .heat-margin-input {
+            width: 64px;
+        }
+
+        .heat-margin-hint {
+            color: var(--text-muted);
+            font-size: 11.5px;
+        }
+
+        .heat-margin-warning {
+            color: var(--warning);
+        }
+
+        .wps-margin-range {
+            color: var(--warning);
+            font-size: 10.5px;
+        }

@@ -92,7 +92,8 @@
                         if (parts.length > 1 && parts.some(item => wpsRow[key][item.part])) {
                             return parts.map((item, index) => `<td class="num${index === 0 ? " sep" : ""} range">${escapeHtml(describeWpsRange(wpsPartRange(wpsRow[key], item.part), key))}</td>`).join("");
                         }
-                        return `<td${parts.length > 1 ? ` colspan="${parts.length}"` : ""} class="num sep range">${escapeHtml(describeWpsRange(wpsRow[key], key))}</td>`;
+                        const marginText = key === "heat" && readHeatMargin().value ? `<br><small>margin ${escapeHtml(describeWpsRange(heatMarginRange(wpsRow[key]), key))}</small>` : "";
+                        return `<td${parts.length > 1 ? ` colspan="${parts.length}"` : ""} class="num sep range">${escapeHtml(describeWpsRange(wpsRow[key], key))}${marginText}</td>`;
                     }).join("")
                     + '<td class="range">WPS range</td></tr>';
                 members.forEach(result => {
@@ -151,7 +152,11 @@
             entriesByFile.forEach(group => {
                 const targetText = [
                     group.limitLow !== null || group.limitHigh !== null ? `limits ${group.limitLow ?? "–"} – ${group.limitHigh ?? "–"}` : "",
-                    ...group.targets.map(target => `${target.min ?? "–"} – ${target.max ?? "–"}`)
+                    ...group.targets.map(target => {
+                        const margin = heatMarginRange(target);
+                        const marginText = readHeatMargin().value ? ` (margin ${Number((margin.min ?? NaN).toFixed(DISPLAY_DECIMALS)) || "–"} – ${Number((margin.max ?? NaN).toFixed(DISPLAY_DECIMALS)) || "–"})` : "";
+                        return `${target.min ?? "–"} – ${target.max ?? "–"}${marginText}`;
+                    })
                 ].filter(Boolean).join(" · ") || "–";
                 group.entries.forEach(entry => {
                     const { result } = entry;
@@ -234,7 +239,8 @@
                 + (showVersion ? "<th>Version</th>" : "") + "<th>Schema</th><th>State</th></tr>";
             const metaLines = [author ? `Prepared by ${author}` : "", now.toLocaleString(),
                 [schema ? `Schema v${schema.version}` : "", !showVersion && versions[0] !== "–" ? `files v${versions[0]}` : ""].filter(Boolean).join(" · "),
-                wpsStore?.wpsNumber ? `WPS ${wpsStore.wpsNumber}` : ""].filter(Boolean);
+                wpsStore?.wpsNumber ? `WPS ${wpsStore.wpsNumber}` : "",
+                readHeatMargin().value ? `Heat input safety margin ${describeHeatMargin()}` : ""].filter(Boolean);
             const percent = (key, value) => `${Number(Number(value).toFixed(DISPLAY_DECIMALS))} %`;
 
             return `<!DOCTYPE html>
@@ -281,6 +287,8 @@
     .heat-range { opacity: 0.55; } .heat-nominal { stroke: #fff; stroke-width: 2; }
     .heat-column.is-outside .heat-range { stroke: #b42318; stroke-width: 2; } .heat-column.is-outside .heat-nominal { stroke: #b42318; }
     .heat-target-line { stroke: #d92d20; stroke-width: 2; }
+    .heat-margin-line { stroke: #d9a400; stroke-width: 2; stroke-dasharray: 5 3; }
+    .heat-margin-label { fill: #9a7400; font-size: 10px; font-weight: 700; }
     .heat-target-label, .heat-group-label, .heat-warning { fill: #1d1a17; font-size: 11px; font-weight: 700; }
     .heat-group-divider { stroke: #b9a99b; stroke-dasharray: 2 3; }
     .legend { margin: 2px 0 0; color: #6b5f55; }
@@ -320,7 +328,7 @@ ${globalKeys.length ? `
 
     <section class="block">
     <h2>Heat input</h2>
-    <div class="muted">Bar: min–max with the overrides, dot: nominal. ${escapeHtml(targetText)}.</div>
+    <div class="muted">Bar: min–max with the overrides, dot: nominal. ${escapeHtml(targetText)}.${readHeatMargin().value ? ` Yellow lines: safety margin ${escapeHtml(describeHeatMargin())} (must not be exceeded).` : ""}</div>
     <div class="chart">${buildOverviewHeatChart(entriesByFile)}</div>
     ${buildOverviewHeatTable(entriesByFile)}
     </section>

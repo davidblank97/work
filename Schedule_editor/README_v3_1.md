@@ -78,6 +78,8 @@ Liest die Parametertabelle einer **WPS als digitale PDF** ein (Text markierbar; 
 3. **Apply:**
    - Speichert die Bereiche im Browser.
    - Uebernimmt den Heat-Input-Bereich jeder Lage als **Target Range** (Reiter „Heat Input“). Ein erneuter Import ersetzt nur diese WPS-Bereiche; eigene Bereiche bleiben.
+**Safety Margin (gelbe Linien):** Weil die gemessenen Heat-Input-Werte vom berechneten abweichen, kann im Reiter „Heat Input“ eine Safety Margin eingestellt werden – wahlweise in **%** (bezogen auf die jeweilige Grenze, z. B. 10 %: min 0,46 → 0,51, max 1,52 → 1,37) oder **absolut in kJ/mm**. Sie verengt jeden Zielbereich an **beiden** Grenzen; die engeren Grenzen erscheinen als gelbe gestrichelte Linien neben den roten und **duerfen nicht ueberschritten werden**: Heat-Input-Status, Batch-Save-Warnung, WPS-Pruefung, Fit Overrides (Overrides werden entsprechend kleiner) und Fit Values rechnen damit. Leer oder 0 schaltet die Margin aus.
+
 4. **Pruefung** der geladenen Schedules je Segment:
    - Strom (pri/bkg_amp), Spannung (pri/bkg_ahc), Vorschub und Draht (umgerechnet aus in/min), **Dwell** (`indwell`/`outdwell`, Spalten In/Out), **Excursion** (`excursion`) sowie Heat Input.
    - Dwell- und Excursion-Bereiche werden gelesen aus „Haltez. in / geschw. Rate / Haltez. Außen“ (dwell in / weave rate / dwell out) bzw. aus den Spalten „Dwell (s)“ und „Oscillation (s)“.

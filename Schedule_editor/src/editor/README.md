@@ -55,6 +55,7 @@ Edits Liburdi schedule XML files. The root element is `<sched>`, with the sectio
   - `scheduleEditorXdrSchemas`, `scheduleEditorActiveXdr`, `scheduleEditorLayoutTemplates`
   - `scheduleEditorHeatInputTargets` (also read by WDR); the old key `scheduleEditorHeatInputTarget`
   - `scheduleEditorOverviewSeamName`, `scheduleEditorOverviewPreparedBy` (last seam name and author of the program overview)
+  - `scheduleEditorHeatMargin` (`{mode: "percent"|"absolute", value}`). `heatMarginRange`/`heatMarginBound` in 05 narrow the heat input range at both limits. They are used by `heatInputCheck`, the chart (`.heat-margin-line`), `wpsCheckFile` (heat) and both fits.
   - `scheduleEditorWpsRanges` (`{document, wpsNumber, checkMode, rows[{label, passType, files, current|voltage|travel|wire|heat: {min,max}}]}`)
   - Read through `readStoredJson`, which tolerates corrupt values.
 

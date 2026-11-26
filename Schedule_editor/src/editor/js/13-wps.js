@@ -678,15 +678,19 @@
                 WPS_FIELD_KEYS.forEach(field => {
                     const checks = [];
                     rows.forEach(row => {
-                        const range = row[field];
+                        let range = row[field];
                         if (range.min === null && range.max === null) return;
                         if (field === "heat") {
                             if (heat.disabled || heat.error) return;
+                            // Heat Input gegen die Grenzen einschliesslich Safety Margin (gelbe Linien)
+                            const marginRange = heatMarginRange(range);
+                            const original = range;
+                            range = marginRange;
                             const rating = wpsRate(heat.heatInput, 0, range);
                             if (rating.status === "ok" && ((range.min !== null && heat.minHeatInput < range.min) || (range.max !== null && heat.maxHeatInput > range.max))) {
                                 rating.status = "warn"; rating.low = heat.minHeatInput; rating.high = heat.maxHeatInput;
                             }
-                            checks.push({ row, part: "", value: heat.heatInput, ...rating });
+                            checks.push({ row, part: "", value: heat.heatInput, ...rating, wpsRange: original });
                             return;
                         }
                         const parts = WPS_CHECK_PARTS[field].map(item => {
@@ -832,7 +836,7 @@
                 return copy;
             };
             let scale = 1;
-            const heatRange = wpsCombinedRange(rows, "heat");
+            const heatRange = heatMarginRange(wpsCombinedRange(rows, "heat"));   // mit Safety Margin
             if (heatRange) {
                 const heatOutside = (testOverrides, nominalOnly) => wpsSegmentsOf(file).some(segment => {
                     const result = calculateSegmentHeatInput(segment, testOverrides);
@@ -888,7 +892,7 @@
                         wpsWriteValue(file, segment, "segments", segmentIndex, key, text, changes);
                     });
                 });
-                const heatRange = wpsCombinedRange(rows, "heat");
+                const heatRange = heatMarginRange(wpsCombinedRange(rows, "heat"));   // mit Safety Margin
                 if (!heatRange) return;
                 const result = calculateSegmentHeatInput(segment, file.sections.overrides);
                 if (result.disabled || result.error) return;
@@ -1327,7 +1331,8 @@
                     const part = { pri: "pulse", bkg: "background", in: "in-dwell", out: "out-dwell", mean: "mean", "": "nominal" }[check.part];
                     const state = { ok: "inside", warn: "override range outside", fail: "outside", na: "–" }[check.status];
                     const span = check.low !== undefined ? ` (override ${formatWpsNumber(check.low, key)} – ${formatWpsNumber(check.high, key)})` : "";
-                    return `${check.row.label}: ${part} ${formatWpsNumber(check.value, key)} ${WPS_FIELDS[key].unit}, WPS ${describeWpsRange(check.row[key], key)} → ${state}${span}`;
+                    const marginText = key === "heat" && readHeatMargin().value ? ` (safety margin ${describeWpsRange(heatMarginRange(check.row[key]), key)})` : "";
+                    return `${check.row.label}: ${part} ${formatWpsNumber(check.value, key)} ${WPS_FIELDS[key].unit}, WPS ${describeWpsRange(check.row[key], key)}${marginText} → ${state}${span}`;
                 };
                 // Gruppen nach zugeordneten WPS-Zeilen (Reihenfolge wie in der WPS)
                 const groups = [];
@@ -1351,6 +1356,12 @@
                         if (span) td.colSpan = span;
                         const range = wpsCombinedRange(group.rows, key, part);
                         td.textContent = describeWpsRange(range, key);
+                        if (key === "heat" && readHeatMargin().value && range) {
+                            const margin = document.createElement("div");
+                            margin.className = "wps-margin-range";
+                            margin.textContent = `margin ${describeWpsRange(heatMarginRange(range), key)}`;
+                            td.appendChild(margin);
+                        }
                         return td;
                     };
                     // Getrennte Teilbereiche (P/B, In/Out) unter ihren Spalten, sonst ein Bereich ueber alle Spalten des Felds

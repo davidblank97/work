@@ -120,6 +120,7 @@
             "scheduleEditorHeatInputTarget",
             "scheduleEditorHeatInputTargets",
             "scheduleEditorWpsRanges",
+            "scheduleEditorHeatMargin",
             "scheduleEditorOverviewSeamName",
             "scheduleEditorOverviewPreparedBy",
             "scheduleEditorParameterOrder",

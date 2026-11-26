@@ -3940,6 +3940,51 @@
         .wps-range-table .wps-split-line input {
             width: 40px;
         }
+
+        /* Safety Margin (Heat Input) */
+        .heat-margin-line {
+            stroke: var(--warning);
+            stroke-width: 2;
+            stroke-dasharray: 5 3;
+        }
+
+        .heat-margin-label {
+            fill: var(--warning);
+            font-size: 10.5px;
+            font-weight: 700;
+        }
+
+        .heat-margin-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0 4px;
+        }
+
+        .heat-margin-caption {
+            color: var(--warning);
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+
+        .heat-margin-input {
+            width: 64px;
+        }
+
+        .heat-margin-hint {
+            color: var(--text-muted);
+            font-size: 11.5px;
+        }
+
+        .heat-margin-warning {
+            color: var(--warning);
+        }
+
+        .wps-margin-range {
+            color: var(--warning);
+            font-size: 10.5px;
+        }
     </style>
 
 <div id="sidebar">
@@ -8237,6 +8282,30 @@
                 && (target.files === null || target.files.includes(key)));
         }
 
+        // Safety Margin: verengt jeden Heat-Input-Bereich an beiden Grenzen (gelbe Linien), weil die gemessenen
+        // Werte vom berechneten Heat Input abweichen. Prozent bezogen auf die jeweilige Grenze oder absolut in kJ/mm.
+        const HEAT_MARGIN_KEY = "scheduleEditorHeatMargin";
+        function readHeatMargin() {
+            const stored = readStoredJson(HEAT_MARGIN_KEY, {});
+            const value = Number(stored?.value);
+            return { mode: stored?.mode === "absolute" ? "absolute" : "percent", value: Number.isFinite(value) && value > 0 ? value : 0 };
+        }
+        function saveHeatMargin(margin) {
+            try { localStorage.setItem(HEAT_MARGIN_KEY, JSON.stringify(margin)); } catch (error) { console.warn("Could not store the safety margin.", error); }
+        }
+        function heatMarginBound(value, bound, margin = readHeatMargin()) {
+            if (value === null || value === undefined || !margin.value) return value;
+            const delta = margin.mode === "percent" ? Math.abs(value) * margin.value / 100 : margin.value;
+            return Number((bound === "min" ? value + delta : value - delta).toFixed(6));
+        }
+        function heatMarginRange(range, margin = readHeatMargin()) {
+            if (!range) return range;
+            return { min: heatMarginBound(range.min, "min", margin), max: heatMarginBound(range.max, "max", margin) };
+        }
+        function describeHeatMargin(margin = readHeatMargin()) {
+            return margin.value ? (margin.mode === "percent" ? `${margin.value} %` : `${margin.value} kJ/mm`) : "";
+        }
+
         function describeTarget(target) {
             return `${target.name} ${target.min ?? "–"} – ${target.max ?? "–"}`;
         }
@@ -8253,11 +8322,17 @@
                 const outsideLimit = valid && (
                     (limitLow !== null && result.minHeatInput < limitLow)
                     || (limitHigh !== null && result.maxHeatInput > limitHigh));
-                // Alle zugeordneten Bereiche muessen eingehalten werden.
-                const targetViolations = valid ? targets.flatMap(target => [
-                    target.max !== null && result.maxHeatInput > target.max ? { target, bound: "max", value: target.max } : null,
-                    target.min !== null && result.minHeatInput < target.min ? { target, bound: "min", value: target.min } : null
-                ].filter(Boolean)) : [];
+                // Alle zugeordneten Bereiche muessen eingehalten werden – einschliesslich Safety Margin (gelbe Linien).
+                const margin = readHeatMargin();
+                const prefix = margin.value ? "margin " : "";
+                const targetViolations = valid ? targets.flatMap(target => {
+                    const high = heatMarginBound(target.max, "max", margin);
+                    const low = heatMarginBound(target.min, "min", margin);
+                    return [
+                        high !== null && result.maxHeatInput > high + 1e-9 ? { target, bound: `${prefix}max`, value: high } : null,
+                        low !== null && result.minHeatInput < low - 1e-9 ? { target, bound: `${prefix}min`, value: low } : null
+                    ].filter(Boolean);
+                }) : [];
                 const outsideTarget = targetViolations.length > 0;
                 return { result, segmentIndex, outsideLimit, outsideTarget, targetViolations, outside: outsideLimit || outsideTarget };
             });
@@ -8344,6 +8419,52 @@
             };
             head.append(caption, add);
             box.appendChild(head);
+            // Safety Margin (gelbe Linien): Wert und Art (Prozent der Grenze oder kJ/mm)
+            const margin = readHeatMargin();
+            const marginRow = document.createElement("div");
+            marginRow.className = "heat-margin-controls";
+            const marginLabel = document.createElement("label");
+            marginLabel.className = "heat-margin-caption";
+            marginLabel.htmlFor = "heatMarginInput";
+            marginLabel.textContent = "Safety margin (yellow lines)";
+            const marginInput = document.createElement("input");
+            marginInput.type = "text";
+            marginInput.id = "heatMarginInput";
+            marginInput.className = "heat-margin-input";
+            marginInput.value = margin.value ? String(margin.value) : "";
+            marginInput.placeholder = "0";
+            const marginMode = document.createElement("select");
+            marginMode.id = "heatMarginMode";
+            marginMode.add(new Option("%", "percent", false, margin.mode === "percent"));
+            marginMode.add(new Option("kJ/mm", "absolute", false, margin.mode === "absolute"));
+            const applyMargin = () => {
+                const number = marginInput.value.trim() === "" ? 0 : parseNumberInput(marginInput.value);
+                if (!Number.isFinite(number) || number < 0) {
+                    document.getElementById("status").textContent = "Safety margin: please enter a number ≥ 0.";
+                    return;
+                }
+                saveHeatMargin({ mode: marginMode.value, value: number });
+                document.getElementById("status").textContent = number ? `Safety margin set to ${describeHeatMargin()}.` : "Safety margin switched off.";
+                renderHeatInput();
+            };
+            marginInput.onchange = applyMargin;
+            marginInput.onkeydown = event => { if (event.key === "Enter") { event.preventDefault(); applyMargin(); } };
+            marginMode.onchange = applyMargin;
+            const marginHint = document.createElement("span");
+            marginHint.className = "heat-margin-hint";
+            marginHint.textContent = "Narrows every target range at both limits (also the WPS check and Fit Overrides). The yellow lines must not be exceeded.";
+            marginRow.append(marginLabel, marginInput, marginMode, marginHint);
+            box.appendChild(marginRow);
+            const narrow = margin.value && targets.find(target => {
+                const range = heatMarginRange(target, margin);
+                return range.min !== null && range.max !== null && range.min >= range.max;
+            });
+            if (narrow) {
+                const warning = document.createElement("div");
+                warning.className = "heat-target-empty heat-margin-warning";
+                warning.textContent = `${narrow.name}: the safety margin is larger than the range – no heat input can fulfil it.`;
+                box.appendChild(warning);
+            }
             if (!targets.length) {
                 const empty = document.createElement("div");
                 empty.className = "heat-target-empty";
@@ -8588,10 +8709,16 @@
                 const signature = groupTargets.map(item => item.id).join("|");
                 const labelTargets = signature !== previousTargetSignature && groupTargets.length > 0;
                 previousTargetSignature = signature;
+                const chartMargin = readHeatMargin();
                 groupTargets.forEach(item => {
                     [[item.min, "min"], [item.max, "max"]].forEach(([value, bound]) => {
                         if (value === null) return;
                         make("line", { x1: x(value), x2: x(value), y1: groupTop - (labelTargets ? 4 : 2), y2: groupBottom, class: "heat-target-line" });
+                        // Safety Margin: gelbe gestrichelte Linie nach innen versetzt
+                        if (chartMargin.value) {
+                            const inner = heatMarginBound(value, bound, chartMargin);
+                            make("line", { x1: x(inner), x2: x(inner), y1: groupTop, y2: groupBottom, class: "heat-margin-line" });
+                        }
                         if (labelTargets) {
                             const text = `${item.name} ${bound} ${value}`;
                             // Beschriftung zur Innenseite drehen, wenn sie sonst ueber den Rand liefe (ca. 6.5 px je Zeichen)
@@ -8604,6 +8731,22 @@
                         }
                     });
                 });
+
+                if (chartMargin.value && labelTargets) {
+                    groupTargets.forEach(item => {
+                        const low = heatMarginBound(item.min, "min", chartMargin);
+                        const high = heatMarginBound(item.max, "max", chartMargin);
+                        const text = value => Number(value.toFixed(DISPLAY_DECIMALS));
+                        const y = groupTop + 9;
+                        if (low !== null && high !== null && x(high) - x(low) < 150) {
+                            const label = make("text", { x: (x(low) + x(high)) / 2, y, class: "heat-margin-label", "text-anchor": "middle" });
+                            label.textContent = `margin ${text(low)} – ${text(high)}`;
+                            return;
+                        }
+                        if (low !== null) make("text", { x: x(low) + 4, y, class: "heat-margin-label", "text-anchor": "start" }).textContent = `margin ${text(low)}`;
+                        if (high !== null) make("text", { x: x(high) - 4, y, class: "heat-margin-label", "text-anchor": "end" }).textContent = `margin ${text(high)}`;
+                    });
+                }
 
                 // Grenzwerte dieser Datei nur ueber ihrer Gruppe (senkrecht)
                 [[group.limitLow, "low"], [group.limitHigh, "high"]].forEach(([value, name]) => {
@@ -10328,7 +10471,8 @@
                         if (parts.length > 1 && parts.some(item => wpsRow[key][item.part])) {
                             return parts.map((item, index) => `<td class="num${index === 0 ? " sep" : ""} range">${escapeHtml(describeWpsRange(wpsPartRange(wpsRow[key], item.part), key))}</td>`).join("");
                         }
-                        return `<td${parts.length > 1 ? ` colspan="${parts.length}"` : ""} class="num sep range">${escapeHtml(describeWpsRange(wpsRow[key], key))}</td>`;
+                        const marginText = key === "heat" && readHeatMargin().value ? `<br><small>margin ${escapeHtml(describeWpsRange(heatMarginRange(wpsRow[key]), key))}</small>` : "";
+                        return `<td${parts.length > 1 ? ` colspan="${parts.length}"` : ""} class="num sep range">${escapeHtml(describeWpsRange(wpsRow[key], key))}${marginText}</td>`;
                     }).join("")
                     + '<td class="range">WPS range</td></tr>';
                 members.forEach(result => {
@@ -10387,7 +10531,11 @@
             entriesByFile.forEach(group => {
                 const targetText = [
                     group.limitLow !== null || group.limitHigh !== null ? `limits ${group.limitLow ?? "–"} – ${group.limitHigh ?? "–"}` : "",
-                    ...group.targets.map(target => `${target.min ?? "–"} – ${target.max ?? "–"}`)
+                    ...group.targets.map(target => {
+                        const margin = heatMarginRange(target);
+                        const marginText = readHeatMargin().value ? ` (margin ${Number((margin.min ?? NaN).toFixed(DISPLAY_DECIMALS)) || "–"} – ${Number((margin.max ?? NaN).toFixed(DISPLAY_DECIMALS)) || "–"})` : "";
+                        return `${target.min ?? "–"} – ${target.max ?? "–"}${marginText}`;
+                    })
                 ].filter(Boolean).join(" · ") || "–";
                 group.entries.forEach(entry => {
                     const { result } = entry;
@@ -10470,7 +10618,8 @@
                 + (showVersion ? "<th>Version</th>" : "") + "<th>Schema</th><th>State</th></tr>";
             const metaLines = [author ? `Prepared by ${author}` : "", now.toLocaleString(),
                 [schema ? `Schema v${schema.version}` : "", !showVersion && versions[0] !== "–" ? `files v${versions[0]}` : ""].filter(Boolean).join(" · "),
-                wpsStore?.wpsNumber ? `WPS ${wpsStore.wpsNumber}` : ""].filter(Boolean);
+                wpsStore?.wpsNumber ? `WPS ${wpsStore.wpsNumber}` : "",
+                readHeatMargin().value ? `Heat input safety margin ${describeHeatMargin()}` : ""].filter(Boolean);
             const percent = (key, value) => `${Number(Number(value).toFixed(DISPLAY_DECIMALS))} %`;
 
             return `<!DOCTYPE html>
@@ -10517,6 +10666,8 @@
     .heat-range { opacity: 0.55; } .heat-nominal { stroke: #fff; stroke-width: 2; }
     .heat-column.is-outside .heat-range { stroke: #b42318; stroke-width: 2; } .heat-column.is-outside .heat-nominal { stroke: #b42318; }
     .heat-target-line { stroke: #d92d20; stroke-width: 2; }
+    .heat-margin-line { stroke: #d9a400; stroke-width: 2; stroke-dasharray: 5 3; }
+    .heat-margin-label { fill: #9a7400; font-size: 10px; font-weight: 700; }
     .heat-target-label, .heat-group-label, .heat-warning { fill: #1d1a17; font-size: 11px; font-weight: 700; }
     .heat-group-divider { stroke: #b9a99b; stroke-dasharray: 2 3; }
     .legend { margin: 2px 0 0; color: #6b5f55; }
@@ -10556,7 +10707,7 @@ ${globalKeys.length ? `
 
     <section class="block">
     <h2>Heat input</h2>
-    <div class="muted">Bar: min–max with the overrides, dot: nominal. ${escapeHtml(targetText)}.</div>
+    <div class="muted">Bar: min–max with the overrides, dot: nominal. ${escapeHtml(targetText)}.${readHeatMargin().value ? ` Yellow lines: safety margin ${escapeHtml(describeHeatMargin())} (must not be exceeded).` : ""}</div>
     <div class="chart">${buildOverviewHeatChart(entriesByFile)}</div>
     ${buildOverviewHeatTable(entriesByFile)}
     </section>
@@ -11576,6 +11727,7 @@ ${globalKeys.length ? `
             "scheduleEditorHeatInputTarget",
             "scheduleEditorHeatInputTargets",
             "scheduleEditorWpsRanges",
+            "scheduleEditorHeatMargin",
             "scheduleEditorOverviewSeamName",
             "scheduleEditorOverviewPreparedBy",
             "scheduleEditorParameterOrder",
@@ -12454,15 +12606,19 @@ ${globalKeys.length ? `
                 WPS_FIELD_KEYS.forEach(field => {
                     const checks = [];
                     rows.forEach(row => {
-                        const range = row[field];
+                        let range = row[field];
                         if (range.min === null && range.max === null) return;
                         if (field === "heat") {
                             if (heat.disabled || heat.error) return;
+                            // Heat Input gegen die Grenzen einschliesslich Safety Margin (gelbe Linien)
+                            const marginRange = heatMarginRange(range);
+                            const original = range;
+                            range = marginRange;
                             const rating = wpsRate(heat.heatInput, 0, range);
                             if (rating.status === "ok" && ((range.min !== null && heat.minHeatInput < range.min) || (range.max !== null && heat.maxHeatInput > range.max))) {
                                 rating.status = "warn"; rating.low = heat.minHeatInput; rating.high = heat.maxHeatInput;
                             }
-                            checks.push({ row, part: "", value: heat.heatInput, ...rating });
+                            checks.push({ row, part: "", value: heat.heatInput, ...rating, wpsRange: original });
                             return;
                         }
                         const parts = WPS_CHECK_PARTS[field].map(item => {
@@ -12608,7 +12764,7 @@ ${globalKeys.length ? `
                 return copy;
             };
             let scale = 1;
-            const heatRange = wpsCombinedRange(rows, "heat");
+            const heatRange = heatMarginRange(wpsCombinedRange(rows, "heat"));   // mit Safety Margin
             if (heatRange) {
                 const heatOutside = (testOverrides, nominalOnly) => wpsSegmentsOf(file).some(segment => {
                     const result = calculateSegmentHeatInput(segment, testOverrides);
@@ -12664,7 +12820,7 @@ ${globalKeys.length ? `
                         wpsWriteValue(file, segment, "segments", segmentIndex, key, text, changes);
                     });
                 });
-                const heatRange = wpsCombinedRange(rows, "heat");
+                const heatRange = heatMarginRange(wpsCombinedRange(rows, "heat"));   // mit Safety Margin
                 if (!heatRange) return;
                 const result = calculateSegmentHeatInput(segment, file.sections.overrides);
                 if (result.disabled || result.error) return;
@@ -13103,7 +13259,8 @@ ${globalKeys.length ? `
                     const part = { pri: "pulse", bkg: "background", in: "in-dwell", out: "out-dwell", mean: "mean", "": "nominal" }[check.part];
                     const state = { ok: "inside", warn: "override range outside", fail: "outside", na: "–" }[check.status];
                     const span = check.low !== undefined ? ` (override ${formatWpsNumber(check.low, key)} – ${formatWpsNumber(check.high, key)})` : "";
-                    return `${check.row.label}: ${part} ${formatWpsNumber(check.value, key)} ${WPS_FIELDS[key].unit}, WPS ${describeWpsRange(check.row[key], key)} → ${state}${span}`;
+                    const marginText = key === "heat" && readHeatMargin().value ? ` (safety margin ${describeWpsRange(heatMarginRange(check.row[key]), key)})` : "";
+                    return `${check.row.label}: ${part} ${formatWpsNumber(check.value, key)} ${WPS_FIELDS[key].unit}, WPS ${describeWpsRange(check.row[key], key)}${marginText} → ${state}${span}`;
                 };
                 // Gruppen nach zugeordneten WPS-Zeilen (Reihenfolge wie in der WPS)
                 const groups = [];
@@ -13127,6 +13284,12 @@ ${globalKeys.length ? `
                         if (span) td.colSpan = span;
                         const range = wpsCombinedRange(group.rows, key, part);
                         td.textContent = describeWpsRange(range, key);
+                        if (key === "heat" && readHeatMargin().value && range) {
+                            const margin = document.createElement("div");
+                            margin.className = "wps-margin-range";
+                            margin.textContent = `margin ${describeWpsRange(heatMarginRange(range), key)}`;
+                            td.appendChild(margin);
+                        }
                         return td;
                     };
                     // Getrennte Teilbereiche (P/B, In/Out) unter ihren Spalten, sonst ein Bereich ueber alle Spalten des Felds

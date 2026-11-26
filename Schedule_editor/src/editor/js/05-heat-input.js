@@ -76,6 +76,30 @@
                 && (target.files === null || target.files.includes(key)));
         }
 
+        // Safety Margin: verengt jeden Heat-Input-Bereich an beiden Grenzen (gelbe Linien), weil die gemessenen
+        // Werte vom berechneten Heat Input abweichen. Prozent bezogen auf die jeweilige Grenze oder absolut in kJ/mm.
+        const HEAT_MARGIN_KEY = "scheduleEditorHeatMargin";
+        function readHeatMargin() {
+            const stored = readStoredJson(HEAT_MARGIN_KEY, {});
+            const value = Number(stored?.value);
+            return { mode: stored?.mode === "absolute" ? "absolute" : "percent", value: Number.isFinite(value) && value > 0 ? value : 0 };
+        }
+        function saveHeatMargin(margin) {
+            try { localStorage.setItem(HEAT_MARGIN_KEY, JSON.stringify(margin)); } catch (error) { console.warn("Could not store the safety margin.", error); }
+        }
+        function heatMarginBound(value, bound, margin = readHeatMargin()) {
+            if (value === null || value === undefined || !margin.value) return value;
+            const delta = margin.mode === "percent" ? Math.abs(value) * margin.value / 100 : margin.value;
+            return Number((bound === "min" ? value + delta : value - delta).toFixed(6));
+        }
+        function heatMarginRange(range, margin = readHeatMargin()) {
+            if (!range) return range;
+            return { min: heatMarginBound(range.min, "min", margin), max: heatMarginBound(range.max, "max", margin) };
+        }
+        function describeHeatMargin(margin = readHeatMargin()) {
+            return margin.value ? (margin.mode === "percent" ? `${margin.value} %` : `${margin.value} kJ/mm`) : "";
+        }
+
         function describeTarget(target) {
             return `${target.name} ${target.min ?? "–"} – ${target.max ?? "–"}`;
         }
@@ -92,11 +116,17 @@
                 const outsideLimit = valid && (
                     (limitLow !== null && result.minHeatInput < limitLow)
                     || (limitHigh !== null && result.maxHeatInput > limitHigh));
-                // Alle zugeordneten Bereiche muessen eingehalten werden.
-                const targetViolations = valid ? targets.flatMap(target => [
-                    target.max !== null && result.maxHeatInput > target.max ? { target, bound: "max", value: target.max } : null,
-                    target.min !== null && result.minHeatInput < target.min ? { target, bound: "min", value: target.min } : null
-                ].filter(Boolean)) : [];
+                // Alle zugeordneten Bereiche muessen eingehalten werden – einschliesslich Safety Margin (gelbe Linien).
+                const margin = readHeatMargin();
+                const prefix = margin.value ? "margin " : "";
+                const targetViolations = valid ? targets.flatMap(target => {
+                    const high = heatMarginBound(target.max, "max", margin);
+                    const low = heatMarginBound(target.min, "min", margin);
+                    return [
+                        high !== null && result.maxHeatInput > high + 1e-9 ? { target, bound: `${prefix}max`, value: high } : null,
+                        low !== null && result.minHeatInput < low - 1e-9 ? { target, bound: `${prefix}min`, value: low } : null
+                    ].filter(Boolean);
+                }) : [];
                 const outsideTarget = targetViolations.length > 0;
                 return { result, segmentIndex, outsideLimit, outsideTarget, targetViolations, outside: outsideLimit || outsideTarget };
             });
@@ -183,6 +213,52 @@
             };
             head.append(caption, add);
             box.appendChild(head);
+            // Safety Margin (gelbe Linien): Wert und Art (Prozent der Grenze oder kJ/mm)
+            const margin = readHeatMargin();
+            const marginRow = document.createElement("div");
+            marginRow.className = "heat-margin-controls";
+            const marginLabel = document.createElement("label");
+            marginLabel.className = "heat-margin-caption";
+            marginLabel.htmlFor = "heatMarginInput";
+            marginLabel.textContent = "Safety margin (yellow lines)";
+            const marginInput = document.createElement("input");
+            marginInput.type = "text";
+            marginInput.id = "heatMarginInput";
+            marginInput.className = "heat-margin-input";
+            marginInput.value = margin.value ? String(margin.value) : "";
+            marginInput.placeholder = "0";
+            const marginMode = document.createElement("select");
+            marginMode.id = "heatMarginMode";
+            marginMode.add(new Option("%", "percent", false, margin.mode === "percent"));
+            marginMode.add(new Option("kJ/mm", "absolute", false, margin.mode === "absolute"));
+            const applyMargin = () => {
+                const number = marginInput.value.trim() === "" ? 0 : parseNumberInput(marginInput.value);
+                if (!Number.isFinite(number) || number < 0) {
+                    document.getElementById("status").textContent = "Safety margin: please enter a number ≥ 0.";
+                    return;
+                }
+                saveHeatMargin({ mode: marginMode.value, value: number });
+                document.getElementById("status").textContent = number ? `Safety margin set to ${describeHeatMargin()}.` : "Safety margin switched off.";
+                renderHeatInput();
+            };
+            marginInput.onchange = applyMargin;
+            marginInput.onkeydown = event => { if (event.key === "Enter") { event.preventDefault(); applyMargin(); } };
+            marginMode.onchange = applyMargin;
+            const marginHint = document.createElement("span");
+            marginHint.className = "heat-margin-hint";
+            marginHint.textContent = "Narrows every target range at both limits (also the WPS check and Fit Overrides). The yellow lines must not be exceeded.";
+            marginRow.append(marginLabel, marginInput, marginMode, marginHint);
+            box.appendChild(marginRow);
+            const narrow = margin.value && targets.find(target => {
+                const range = heatMarginRange(target, margin);
+                return range.min !== null && range.max !== null && range.min >= range.max;
+            });
+            if (narrow) {
+                const warning = document.createElement("div");
+                warning.className = "heat-target-empty heat-margin-warning";
+                warning.textContent = `${narrow.name}: the safety margin is larger than the range – no heat input can fulfil it.`;
+                box.appendChild(warning);
+            }
             if (!targets.length) {
                 const empty = document.createElement("div");
                 empty.className = "heat-target-empty";
@@ -427,10 +503,16 @@
                 const signature = groupTargets.map(item => item.id).join("|");
                 const labelTargets = signature !== previousTargetSignature && groupTargets.length > 0;
                 previousTargetSignature = signature;
+                const chartMargin = readHeatMargin();
                 groupTargets.forEach(item => {
                     [[item.min, "min"], [item.max, "max"]].forEach(([value, bound]) => {
                         if (value === null) return;
                         make("line", { x1: x(value), x2: x(value), y1: groupTop - (labelTargets ? 4 : 2), y2: groupBottom, class: "heat-target-line" });
+                        // Safety Margin: gelbe gestrichelte Linie nach innen versetzt
+                        if (chartMargin.value) {
+                            const inner = heatMarginBound(value, bound, chartMargin);
+                            make("line", { x1: x(inner), x2: x(inner), y1: groupTop, y2: groupBottom, class: "heat-margin-line" });
+                        }
                         if (labelTargets) {
                             const text = `${item.name} ${bound} ${value}`;
                             // Beschriftung zur Innenseite drehen, wenn sie sonst ueber den Rand liefe (ca. 6.5 px je Zeichen)
@@ -443,6 +525,22 @@
                         }
                     });
                 });
+
+                if (chartMargin.value && labelTargets) {
+                    groupTargets.forEach(item => {
+                        const low = heatMarginBound(item.min, "min", chartMargin);
+                        const high = heatMarginBound(item.max, "max", chartMargin);
+                        const text = value => Number(value.toFixed(DISPLAY_DECIMALS));
+                        const y = groupTop + 9;
+                        if (low !== null && high !== null && x(high) - x(low) < 150) {
+                            const label = make("text", { x: (x(low) + x(high)) / 2, y, class: "heat-margin-label", "text-anchor": "middle" });
+                            label.textContent = `margin ${text(low)} – ${text(high)}`;
+                            return;
+                        }
+                        if (low !== null) make("text", { x: x(low) + 4, y, class: "heat-margin-label", "text-anchor": "start" }).textContent = `margin ${text(low)}`;
+                        if (high !== null) make("text", { x: x(high) - 4, y, class: "heat-margin-label", "text-anchor": "end" }).textContent = `margin ${text(high)}`;
+                    });
+                }
 
                 // Grenzwerte dieser Datei nur ueber ihrer Gruppe (senkrecht)
                 [[group.limitLow, "low"], [group.limitHigh, "high"]].forEach(([value, name]) => {
