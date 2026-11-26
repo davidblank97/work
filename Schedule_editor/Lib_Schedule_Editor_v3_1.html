@@ -8288,13 +8288,18 @@
         function readHeatMargin() {
             const stored = readStoredJson(HEAT_MARGIN_KEY, {});
             const value = Number(stored?.value);
-            return { mode: stored?.mode === "absolute" ? "absolute" : "percent", value: Number.isFinite(value) && value > 0 ? value : 0 };
+            return {
+                mode: stored?.mode === "absolute" ? "absolute" : "percent",
+                value: Number.isFinite(value) && value > 0 ? value : 0,
+                side: ["lower", "upper"].includes(stored?.side) ? stored.side : "both"   // an welcher Grenze die Margin wirkt
+            };
         }
         function saveHeatMargin(margin) {
             try { localStorage.setItem(HEAT_MARGIN_KEY, JSON.stringify(margin)); } catch (error) { console.warn("Could not store the safety margin.", error); }
         }
         function heatMarginBound(value, bound, margin = readHeatMargin()) {
             if (value === null || value === undefined || !margin.value) return value;
+            if ((margin.side === "lower" && bound !== "min") || (margin.side === "upper" && bound !== "max")) return value;
             const delta = margin.mode === "percent" ? Math.abs(value) * margin.value / 100 : margin.value;
             return Number((bound === "min" ? value + delta : value - delta).toFixed(6));
         }
@@ -8303,7 +8308,9 @@
             return { min: heatMarginBound(range.min, "min", margin), max: heatMarginBound(range.max, "max", margin) };
         }
         function describeHeatMargin(margin = readHeatMargin()) {
-            return margin.value ? (margin.mode === "percent" ? `${margin.value} %` : `${margin.value} kJ/mm`) : "";
+            if (!margin.value) return "";
+            const side = { both: "", lower: " (lower limit only)", upper: " (upper limit only)" }[margin.side];
+            return `${margin.mode === "percent" ? `${margin.value} %` : `${margin.value} kJ/mm`}${side}`;
         }
 
         function describeTarget(target) {
@@ -8324,13 +8331,12 @@
                     || (limitHigh !== null && result.maxHeatInput > limitHigh));
                 // Alle zugeordneten Bereiche muessen eingehalten werden – einschliesslich Safety Margin (gelbe Linien).
                 const margin = readHeatMargin();
-                const prefix = margin.value ? "margin " : "";
                 const targetViolations = valid ? targets.flatMap(target => {
                     const high = heatMarginBound(target.max, "max", margin);
                     const low = heatMarginBound(target.min, "min", margin);
                     return [
-                        high !== null && result.maxHeatInput > high + 1e-9 ? { target, bound: `${prefix}max`, value: high } : null,
-                        low !== null && result.minHeatInput < low - 1e-9 ? { target, bound: `${prefix}min`, value: low } : null
+                        high !== null && result.maxHeatInput > high + 1e-9 ? { target, bound: high !== target.max ? "margin max" : "max", value: high } : null,
+                        low !== null && result.minHeatInput < low - 1e-9 ? { target, bound: low !== target.min ? "margin min" : "min", value: low } : null
                     ].filter(Boolean);
                 }) : [];
                 const outsideTarget = targetViolations.length > 0;
@@ -8437,23 +8443,27 @@
             marginMode.id = "heatMarginMode";
             marginMode.add(new Option("%", "percent", false, margin.mode === "percent"));
             marginMode.add(new Option("kJ/mm", "absolute", false, margin.mode === "absolute"));
+            const marginSide = document.createElement("select");
+            marginSide.id = "heatMarginSide";
+            [["both", "both limits"], ["lower", "lower limit (min)"], ["upper", "upper limit (max)"]].forEach(([value, text]) => marginSide.add(new Option(text, value, false, margin.side === value)));
             const applyMargin = () => {
                 const number = marginInput.value.trim() === "" ? 0 : parseNumberInput(marginInput.value);
                 if (!Number.isFinite(number) || number < 0) {
                     document.getElementById("status").textContent = "Safety margin: please enter a number ≥ 0.";
                     return;
                 }
-                saveHeatMargin({ mode: marginMode.value, value: number });
+                saveHeatMargin({ mode: marginMode.value, value: number, side: marginSide.value });
                 document.getElementById("status").textContent = number ? `Safety margin set to ${describeHeatMargin()}.` : "Safety margin switched off.";
                 renderHeatInput();
             };
             marginInput.onchange = applyMargin;
             marginInput.onkeydown = event => { if (event.key === "Enter") { event.preventDefault(); applyMargin(); } };
             marginMode.onchange = applyMargin;
+            marginSide.onchange = applyMargin;
             const marginHint = document.createElement("span");
             marginHint.className = "heat-margin-hint";
-            marginHint.textContent = "Narrows every target range at both limits (also the WPS check and Fit Overrides). The yellow lines must not be exceeded.";
-            marginRow.append(marginLabel, marginInput, marginMode, marginHint);
+            marginHint.textContent = "Narrows every target range at the chosen limit(s) (also the WPS check and Fit Overrides). The yellow lines must not be exceeded.";
+            marginRow.append(marginLabel, marginInput, marginMode, document.createTextNode("at"), marginSide, marginHint);
             box.appendChild(marginRow);
             const narrow = margin.value && targets.find(target => {
                 const range = heatMarginRange(target, margin);
@@ -8717,7 +8727,7 @@
                         // Safety Margin: gelbe gestrichelte Linie nach innen versetzt
                         if (chartMargin.value) {
                             const inner = heatMarginBound(value, bound, chartMargin);
-                            make("line", { x1: x(inner), x2: x(inner), y1: groupTop, y2: groupBottom, class: "heat-margin-line" });
+                            if (inner !== value) make("line", { x1: x(inner), x2: x(inner), y1: groupTop, y2: groupBottom, class: "heat-margin-line" });
                         }
                         if (labelTargets) {
                             const text = `${item.name} ${bound} ${value}`;
@@ -8734,8 +8744,10 @@
 
                 if (chartMargin.value && labelTargets) {
                     groupTargets.forEach(item => {
-                        const low = heatMarginBound(item.min, "min", chartMargin);
-                        const high = heatMarginBound(item.max, "max", chartMargin);
+                        const lowMargin = heatMarginBound(item.min, "min", chartMargin);
+                        const highMargin = heatMarginBound(item.max, "max", chartMargin);
+                        const low = lowMargin !== item.min ? lowMargin : null;     // nur Grenzen mit Margin beschriften
+                        const high = highMargin !== item.max ? highMargin : null;
                         const text = value => Number(value.toFixed(DISPLAY_DECIMALS));
                         const y = groupTop + 9;
                         if (low !== null && high !== null && x(high) - x(low) < 150) {

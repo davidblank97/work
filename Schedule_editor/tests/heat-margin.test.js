@@ -21,7 +21,7 @@ module.exports = [
 
             await frame.fill("#heatMarginInput", "10");
             await frame.press("#heatMarginInput", "Enter");
-            t.check("stored as percent", JSON.stringify(await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorHeatMargin")))) === JSON.stringify({ mode: "percent", value: 10 }));
+            t.check("stored as percent, both limits", JSON.stringify(await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorHeatMargin")))) === JSON.stringify({ mode: "percent", value: 10, side: "both" }));
             t.check("yellow lines drawn", await frame.locator(".heat-chart svg .heat-margin-line").count() === 2);
             const labels = await frame.$$eval(".heat-margin-label", items => items.map(item => item.textContent));
             t.check("margin labels min 0.55 / max 0.9", labels.includes("margin 0.55") && labels.includes("margin 0.9"), labels.join(", "));
@@ -38,7 +38,20 @@ module.exports = [
             await frame.press("#heatMarginInput", "Enter");
             result = await check();
             t.check("absolute 0.05: margin max 0.95, min 0.55", result.outside && result.violations.includes("margin max 0.95"), JSON.stringify(result));
-            t.check("stored as absolute", JSON.stringify(await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorHeatMargin")))) === JSON.stringify({ mode: "absolute", value: 0.05 }));
+            t.check("stored as absolute", JSON.stringify(await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorHeatMargin")))) === JSON.stringify({ mode: "absolute", value: 0.05, side: "both" }));
+
+            // nur untere Grenze: max bleibt 1.0 (0.97 innerhalb), min 0.55; eine gelbe Linie
+            await frame.selectOption("#heatMarginSide", "lower");
+            result = await check();
+            t.check("lower only: inside, one yellow line", !result.outside && await frame.locator(".heat-chart svg .heat-margin-line").count() === 1, JSON.stringify(result));
+            t.check("lower only: label margin 0.55", (await frame.$$eval(".heat-margin-label", items => items.map(item => item.textContent))).join() === "margin 0.55");
+            // nur obere Grenze: max 0.95 -> 0.97 ausserhalb ("margin max"), min bleibt 0.5
+            await frame.selectOption("#heatMarginSide", "upper");
+            result = await check();
+            t.check("upper only: margin max 0.95 violated", result.outside && result.violations.join() === "margin max 0.95", JSON.stringify(result));
+            t.check("upper only: one yellow line", await frame.locator(".heat-chart svg .heat-margin-line").count() === 1);
+            t.check("side stored", (await frame.evaluate(() => JSON.parse(localStorage.getItem("scheduleEditorHeatMargin")))).side === "upper");
+            await frame.selectOption("#heatMarginSide", "both");
 
             await frame.fill("#heatMarginInput", "");
             await frame.press("#heatMarginInput", "Enter");
