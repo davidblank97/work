@@ -45,7 +45,7 @@
                     badge.hidden = !frames[badge.dataset.running];
                 });
                 if (!active) {
-                    document.title = window.SuiteI18n ? window.SuiteI18n.translate("Liburdi Schedule Suite 3.1") : "Liburdi Schedule Suite 3.1";
+                    document.title = window.SuiteI18n ? window.SuiteI18n.translate("Liburdi Schedule Suite 3.2") : "Liburdi Schedule Suite 3.2";
                     return;
                 }
                 const frame = getFrame(active);

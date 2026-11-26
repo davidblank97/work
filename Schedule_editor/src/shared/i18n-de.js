@@ -24,7 +24,7 @@
                 "Convert weld data recordings (CSV/XML) into Excel workbooks and download them as a ZIP.": "Schweißdatenaufzeichnungen (CSV/XML) in Excel-Arbeitsmappen umwandeln und als ZIP herunterladen.",
                 "Edit the pendant key layout (JOG, WELD, WELD2) and export the key_layout XML or a PDF preview.": "Tastenbelegung des Pendants (JOG, WELD, WELD2) bearbeiten und als key_layout-XML oder PDF-Vorschau ausgeben.",
                 "Tip: switch between the tools with the bar at the top; open tools keep their loaded files.": "Tipp: Über die Leiste oben zwischen den Werkzeugen wechseln; geöffnete Werkzeuge behalten ihre geladenen Dateien.",
-                "Liburdi Schedule Suite · Version 3.1": "Liburdi Schedule Suite · Version 3.1",
+                "Liburdi Schedule Suite · Version 3.2": "Liburdi Schedule Suite · Version 3.2",
                 "Welddata Converter": "Schweißdaten-Konverter",
                 "Liburdi Welddata Converter": "Liburdi Schweißdaten-Konverter",
                 "Created by: David Blank, Bilfinger": "Erstellt von: David Blank, Bilfinger",

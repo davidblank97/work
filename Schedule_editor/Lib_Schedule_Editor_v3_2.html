@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liburdi Schedule Suite 3.1</title>
+    <title>Liburdi Schedule Suite 3.2</title>
     <script>
         // German dictionary for shared/i18n.js.
         // exact:    English UI text (inner whitespace collapsed, trimmed) -> German.
@@ -32,7 +32,7 @@
                 "Convert weld data recordings (CSV/XML) into Excel workbooks and download them as a ZIP.": "Schweißdatenaufzeichnungen (CSV/XML) in Excel-Arbeitsmappen umwandeln und als ZIP herunterladen.",
                 "Edit the pendant key layout (JOG, WELD, WELD2) and export the key_layout XML or a PDF preview.": "Tastenbelegung des Pendants (JOG, WELD, WELD2) bearbeiten und als key_layout-XML oder PDF-Vorschau ausgeben.",
                 "Tip: switch between the tools with the bar at the top; open tools keep their loaded files.": "Tipp: Über die Leiste oben zwischen den Werkzeugen wechseln; geöffnete Werkzeuge behalten ihre geladenen Dateien.",
-                "Liburdi Schedule Suite · Version 3.1": "Liburdi Schedule Suite · Version 3.1",
+                "Liburdi Schedule Suite · Version 3.2": "Liburdi Schedule Suite · Version 3.2",
                 "Welddata Converter": "Schweißdaten-Konverter",
                 "Liburdi Welddata Converter": "Liburdi Schweißdaten-Konverter",
                 "Created by: David Blank, Bilfinger": "Erstellt von: David Blank, Bilfinger",
@@ -997,7 +997,7 @@
     </script>
     <!--
         GENERATED FILE – do not edit. Source: Schedule_editor/src/ (see src/MAP.md), build: `node build.js`.
-        Liburdi Schedule Suite 3.1: start page + three independent apps in <template> blocks
+        Liburdi Schedule Suite 3.2: start page + three independent apps in <template> blocks
         (#app-editor, #app-wdr, #app-pendant). Each app is started as its own document (iframe srcdoc,
         same origin), so CSS and JavaScript stay separate; opened apps keep their state when switching.
     -->
@@ -1273,7 +1273,7 @@
     <main id="launcher">
         <div class="launcher-content">
             <div class="launcher-top">
-                <p class="launcher-eyebrow">Liburdi Schedule Suite · Version 3.1</p>
+                <p class="launcher-eyebrow">Liburdi Schedule Suite · Version 3.2</p>
                 <div class="language-switch" role="group" aria-label="Language / Sprache" data-no-i18n>
                     <button type="button" class="language-option" data-language="en" lang="en" aria-pressed="true">English</button>
                     <button type="button" class="language-option" data-language="de" lang="de" aria-pressed="false">Deutsch</button>
@@ -1332,7 +1332,7 @@
         <button type="button" class="suite-btn" data-route="editor">Schedule Editor</button>
         <button type="button" class="suite-btn" data-route="wdr">WDR Converter</button>
         <button type="button" class="suite-btn" data-route="pendant">Pendant Layout</button>
-        <span class="suite-version">Liburdi Schedule Suite 3.1</span>
+        <span class="suite-version">Liburdi Schedule Suite 3.2</span>
     </header>
     <div id="app-host" hidden></div>
 
@@ -6677,7 +6677,7 @@
 
     <div class="modal-overlay" id="helpModal">
         <div class="modal-box help-modal-box" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-            <h3 id="helpTitle"><span data-lang="en">Liburdi Schedule Editor 3.1 – Help</span><span data-lang="de">Liburdi Schedule Editor 3.1 – Hilfe</span></h3>
+            <h3 id="helpTitle"><span data-lang="en">Liburdi Schedule Editor 3.2 – Help</span><span data-lang="de">Liburdi Schedule Editor 3.2 – Hilfe</span></h3>
             <div class="help-content" data-lang="en">
                 <h4>Start</h4>
                 <p>Open this HTML file in a current browser. For the full feature set (segment field order, XDR
@@ -18128,7 +18128,7 @@ input, select, textarea { font: inherit; }
                     badge.hidden = !frames[badge.dataset.running];
                 });
                 if (!active) {
-                    document.title = window.SuiteI18n ? window.SuiteI18n.translate("Liburdi Schedule Suite 3.1") : "Liburdi Schedule Suite 3.1";
+                    document.title = window.SuiteI18n ? window.SuiteI18n.translate("Liburdi Schedule Suite 3.2") : "Liburdi Schedule Suite 3.2";
                     return;
                 }
                 const frame = getFrame(active);

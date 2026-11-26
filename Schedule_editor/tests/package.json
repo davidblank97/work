@@ -1,7 +1,7 @@
 {
   "name": "liburdi-schedule-suite-tests",
   "private": true,
-  "description": "Browser tests for Lib_Schedule_Editor_v3_1.html (Playwright, Chromium)",
+  "description": "Browser tests for Lib_Schedule_Editor_v3_2.html (Playwright, Chromium)",
   "scripts": {
     "pretest": "node ../build.js --check",
     "test": "node run.js"

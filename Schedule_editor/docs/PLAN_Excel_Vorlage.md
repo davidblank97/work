@@ -2,7 +2,7 @@
 
 > **Status (2026-11-23): umgesetzt** auf Branch `wdr-heat-input`.
 >
-> Der Converter erzeugt die Auswertung der Vorlage `template_metric_Short.xlsx` jetzt selbst: je CSV eine Excel-Datei und dazu eine Sammeltabelle. Die Bedienung beschreibt `Schedule_editor/README_v3_1.md`, Abschnitt „WDR Converter: Heat-Input-Auswertung“.
+> Der Converter erzeugt die Auswertung der Vorlage `template_metric_Short.xlsx` jetzt selbst: je CSV eine Excel-Datei und dazu eine Sammeltabelle. Die Bedienung beschreibt `Schedule_editor/README_v3_2.md`, Abschnitt „WDR Converter: Heat-Input-Auswertung“.
 >
 > Der frühere Plan, eine beliebige .xlsx-Vorlage per ZIP zu befüllen (Platzhalter `{{SCHEDULE}}` usw.), ist damit überholt. Grund: Die echte Vorlage rechnet mit über 120.000 Formelzeilen und hat die unten genannten Fehler. Ein bloßes Befüllen hätte diese Fehler übernommen.
 
